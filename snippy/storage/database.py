@@ -437,7 +437,7 @@ class Database(object):
 
         return collection
 
-    def _select_uuid(self, uuid):
+    def _select_uuid(self, suuid):
         """Select content based on uuid.
 
         Args:
@@ -449,8 +449,8 @@ class Database(object):
 
         collection = Collection()
         if self._connection:
-            query = ('SELECT * FROM contents WHERE uuid={0}'.format(self._placeholder))
-            qargs = [uuid]
+            query = ('SELECT * FROM contents WHERE uuid = {0}'.format(self._placeholder))
+            qargs = [suuid]
             self._logger.debug('running select uuid query: %s :with qargs: %s', query, qargs)
             try:
                 with closing(self._connection.cursor()) as cursor:
@@ -586,10 +586,10 @@ class Database(object):
             qargs = [sdigest+'%']
         elif suuid is not None:
             if query_type == Database.QUERY_TYPE_TOTAL:
-                query = ('SELECT count(*) FROM contents WHERE uuid LIKE {0}'.format(self._placeholder))
+                query = ('SELECT count(*) FROM contents WHERE uuid = {0}'.format(self._placeholder))
             else:
-                query = ('SELECT * FROM contents WHERE uuid LIKE {0}'.format(self._placeholder))
-            qargs = [suuid+'%']
+                query = ('SELECT * FROM contents WHERE uuid = {0}'.format(self._placeholder))
+            qargs = [suuid]
         elif sdata:
             if query_type == Database.QUERY_TYPE_TOTAL:
                 query = ('SELECT count(*) FROM contents WHERE data LIKE {0}'.format(self._placeholder))

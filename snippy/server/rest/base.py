@@ -303,7 +303,7 @@ class ApiContentUuidBase(object):
         Config.load(api)
         self._content.run()
         if len(self._content.collection) != 1:
-            Cause.push(Cause.HTTP_NOT_FOUND, 'content uuid: %s was not unique and matched to: %d resources' %
+            Cause.push(Cause.HTTP_NOT_FOUND, 'unique content uuid: %s :was not found: %d' %
                        (uuid, len(self._content.collection)))
         if Cause.is_ok():
             response.content_type = ApiContentBase.MEDIA_JSON_API

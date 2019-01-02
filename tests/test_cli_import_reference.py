@@ -337,7 +337,7 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
         file_content = Content.get_file_content(Content.YAML, content)
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             yaml.safe_load.return_value = file_content
-            cause = snippy.run(['snippy', 'import', '--reference', '-u', '12c', '-f', 'one-reference.yaml'])
+            cause = snippy.run(['snippy', 'import', '--reference', '-u', '12cd5827-b6ef-4067-b5ac-3ceac07dde9f', '-f', 'one-reference.yaml'])
             assert cause == Cause.ALL_OK
             Content.assert_storage(content)
             mock_file.assert_called_once_with('one-reference.yaml', 'r')

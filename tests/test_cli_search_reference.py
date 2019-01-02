@@ -116,7 +116,7 @@ class TestCliSearchReference(object):
     def test_cli_search_reference_005(self, snippy, capsys):
         """Search reference with --uuid option.
 
-        Search reference by explicitly defining short content uuid.
+        Search reference by explicitly defining content uuid.
         """
 
         output = (
@@ -128,7 +128,7 @@ class TestCliSearchReference(object):
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--reference', '--uuid', '12cd5827', '--no-ansi'])
+        cause = snippy.run(['snippy', 'search', '--reference', '--uuid', '12cd5827-b6ef-4067-b5ac-3ceac07dde9f', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -153,36 +153,17 @@ class TestCliSearchReference(object):
     def test_cli_search_reference_007(self, snippy, capsys):
         """Search reference with --uuid option.
 
-        Search references by defining empty string for uuid. This matches to
-        all content in all categories.
+        Try to search references by defining empty string for uuid which is
+        invalid. This must not result any content
         """
 
         output = (
-            '1. How to write commit messages @git [5c2071094dbfaa33]',
-            '',
-            '   > https://chris.beams.io/posts/git-commit/',
-            '   # commit,git,howto',
-            '',
-            '2. Python regular expression @python [cb9225a81eab8ced]',
-            '',
-            '   > https://www.cheatography.com/davechild/cheat-sheets/regular-expressions/',
-            '   > https://pythex.org/',
-            '   # howto,online,python,regexp',
-            '',
-            '3. Test if specific port is open @linux [f3fd167c64b6f97e]',
-            '',
-            '   $ nc -v 10.183.19.189 443',
-            '   $ nmap 10.183.19.189',
-            '',
-            '   # linux,netcat,networking,port',
-            '   > https://www.commandlinux.com/man-page/man1/nc.1.html',
-            '',
-            'OK',
+            'NOK: cannot find content with given search criteria',
             ''
         )
         cause = snippy.run(['snippy', 'search', '--reference', '--uuid', '', '--no-ansi'])
         out, err = capsys.readouterr()
-        assert cause == Cause.ALL_OK
+        assert cause == 'NOK: cannot find content with given search criteria'
         assert out == Const.NEWLINE.join(output)
         assert not err
 
@@ -190,36 +171,19 @@ class TestCliSearchReference(object):
     def test_cli_search_reference_008(self, snippy, capsys):
         """Search reference with --uuid option.
 
-        Search references by defining short uuid that matches to multiple
-        contents in different categories.
+        Try to search references by defining short uuid that matches to
+        multiple contents in different categories. Since uuid must be
+        unique and it must match to only one content, this must not
+        find any content.
         """
 
         output = (
-            '1. How to write commit messages @git [5c2071094dbfaa33]',
-            '',
-            '   > https://chris.beams.io/posts/git-commit/',
-            '   # commit,git,howto',
-            '',
-            '2. Python regular expression @python [cb9225a81eab8ced]',
-            '',
-            '   > https://www.cheatography.com/davechild/cheat-sheets/regular-expressions/',
-            '   > https://pythex.org/',
-            '   # howto,online,python,regexp',
-            '',
-            '3. Test if specific port is open @linux [f3fd167c64b6f97e]',
-            '',
-            '   $ nc -v 10.183.19.189 443',
-            '   $ nmap 10.183.19.189',
-            '',
-            '   # linux,netcat,networking,port',
-            '   > https://www.commandlinux.com/man-page/man1/nc.1.html',
-            '',
-            'OK',
+            'NOK: cannot find content with given search criteria',
             ''
         )
         cause = snippy.run(['snippy', 'search', '--reference', '--uuid', '1', '--no-ansi'])
         out, err = capsys.readouterr()
-        assert cause == Cause.ALL_OK
+        assert cause == 'NOK: cannot find content with given search criteria'
         assert out == Const.NEWLINE.join(output)
         assert not err
 

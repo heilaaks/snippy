@@ -81,17 +81,19 @@ class TestCliDeleteReference(object):
     def test_cli_delete_reference_004(self, snippy):
         """Delete reference with uuid.
 
-        Delete reference with short content uuid.
+        Try to delete reference with short content UUID. Since the UUID is
+        unique, this must not delete the content.
         """
 
         content = {
             'data': [
-                Reference.GITLOG
+                Reference.GITLOG,
+                Reference.REGEXP
             ]
         }
         Content.assert_storage_size(2)
         cause = snippy.run(['snippy', 'delete', '-u', '16cd5827'])
-        assert cause == Cause.ALL_OK
+        assert cause == 'NOK: cannot find content with content uuid: 16cd5827'
         Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-references')
@@ -144,7 +146,7 @@ class TestCliDeleteReference(object):
             ]
         }
         cause = snippy.run(['snippy', 'delete', '-u', '1'])
-        assert cause == 'NOK: content uuid: 1 :matched more than once: 2 :preventing: delete :operation'
+        assert cause == 'NOK: cannot find content with content uuid: 1'
         Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-references')

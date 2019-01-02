@@ -157,7 +157,8 @@ class TestCliUpdateReference(object):
     def test_cli_update_reference_007(self, snippy, edited_gitlog):
         """Update reference with uuid.
 
-        Update reference based on short uuid. Only content links are updated.
+        Update reference based on uuid. The content must be updated so that
+        only links get updated.
         """
 
         content = {
@@ -169,7 +170,7 @@ class TestCliUpdateReference(object):
         content['data'][0]['links'] = ('https://docs.docker.com', )
         content['data'][0]['digest'] = '1fc34e79a4d2bac51a039b7265da464ad787da41574c3d6651dc6a128d4c7c10'
         edited_gitlog.return_value = Content.dump_text(content['data'][0])
-        cause = snippy.run(['snippy', 'update', '--reference', '-u', '12cd5827-b6ef-4067-b5ac'])
+        cause = snippy.run(['snippy', 'update', '--reference', '-u', '12cd5827-b6ef-4067-b5ac-3ceac07dde9f'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 

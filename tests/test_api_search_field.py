@@ -582,12 +582,13 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
     def test_api_search_uuid_002(self, server):
         """Get specific content based on uuid.
 
-        Try to call GET /v1/uuid/<uuid> that matches multiple contents.
+        Try to call GET /v1/uuid/<uuid> that is not unique and it could match
+        to multiple contents.
         """
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '372'
+            'content-length': '354'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -595,7 +596,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
                 'status': '404',
                 'statusString': '404 Not Found',
                 'module': 'snippy.testing.testing:123',
-                'title': 'content uuid: 1 was not unique and matched to: 3 resources'
+                'title': 'unique content uuid: 1 :was not found: 0'
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -614,7 +615,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '379'
+            'content-length': '361'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -622,7 +623,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
                 'status': '404',
                 'statusString': '404 Not Found',
                 'module': 'snippy.testing.testing:123',
-                'title': 'content uuid: 01010101 was not unique and matched to: 0 resources'
+                'title': 'unique content uuid: 01010101 :was not found: 0'
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -722,9 +723,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
         Try to call GET /v1/uuid/<uuid>/brief to get specific content field.
         In this case the uuid 1 matches to multiple contents and specific
-        field cannot be returned. The 404 Not Found is used to simplify the
-        error handling instead of using multiple causes. The error title
-        describes the error in more detail.
+        field cannot be returned.
         """
 
         expect_headers = {
@@ -737,7 +736,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
                 'status': '404',
                 'statusString': '404 Not Found',
                 'module': 'snippy.testing.testing:123',
-                'title': 'content uuid: 1 was not unique and matched to: 3 resources'
+                'title': 'content uuid: 1 was not unique and matched to: 0 resources'
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(

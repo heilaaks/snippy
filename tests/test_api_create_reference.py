@@ -28,6 +28,7 @@ import pytest
 
 from snippy.constants import Constants as Const
 from tests.testlib.content import Content
+from tests.testlib.helper import Helper
 from tests.testlib.reference import Reference
 
 pytest.importorskip('gunicorn')
@@ -330,7 +331,7 @@ class TestApiCreateReference(object):
         Content.assert_storage(None)
 
     @pytest.mark.usefixtures('create-gitlog-utc', 'caller')
-    def test_api_create_reference_008(self, server_db):
+    def test_api_create_reference_008(self, server_db, database):
         """Try to create reference.
 
         Try to POST new reference when database throws an integrity error from
@@ -370,10 +371,22 @@ class TestApiCreateReference(object):
         }
         server = server_db[0]
         db_connect = server_db[1]
-        db_connect.return_value.commit.side_effect = [
-            sqlite3.IntegrityError('UNIQUE constraint failed: contents.uuid'),
-            sqlite3.IntegrityError('UNIQUE constraint failed: contents.uuid')
-        ]
+        if database == Helper.DB_SQLITE:
+            db_connect.return_value.commit.side_effect = [
+                sqlite3.IntegrityError('UNIQUE constraint failed: contents.uuid'),
+                sqlite3.IntegrityError('UNIQUE constraint failed: contents.uuid')
+            ]
+        elif database == Helper.DB_POSTGRESQL:
+            db_connect.return_value.commit.side_effect = [
+                sqlite3.IntegrityError(
+                    'duplicate key value violates unique constraint "contents_data_key"\n' +
+                    'DETAIL:  Key (uuid)=11cd5827-b6ef-4067-b5ac-3ceac07dde9f already exists.'
+                ),
+                sqlite3.IntegrityError(
+                    'duplicate key value violates unique constraint "contents_data_key"\n' +
+                    'DETAIL:  Key (uuid)=11cd5827-b6ef-4067-b5ac-3ceac07dde9f already exists.'
+                ),
+            ]
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/references',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},

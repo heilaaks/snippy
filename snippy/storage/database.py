@@ -53,6 +53,16 @@ class Database(object):
         (?P<column>.*)  # Catch column name.
         ''', re.VERBOSE)
 
+    # Example:
+    #
+    #   duplicate key value violates unique constraint "contents_data_key"
+    #   DETAIL:  Key (data)=(docker rm --volumes $(docker ps --all --quiet)) already exists.
+    RE_CATCH_UNIQUE_POSTGRE_COLUMN = re.compile(r'''
+        DETAIL[:]\s+Key\s+[(]   # Match leading string before column name.
+        (?P<column>[\s\S]*?)    # Catch column name.
+        [)][=]                  # Match closing parenthesis and equal sign followed by value of key.
+        ''', re.DOTALL | re.VERBOSE)
+
     def __init__(self):
         self._logger = Logger.get_logger(__name__)
         self._db = Const.DB_SQLITE
@@ -60,6 +70,7 @@ class Database(object):
         self._columns = ()
         self._regexp = 'REGEXP'
         self._placeholder = '?'
+        self._catch_violating_column = self.RE_CATCH_UNIQUE_SQLITE_COLUMN
 
     def init(self):
         """Initialize database."""
@@ -68,10 +79,12 @@ class Database(object):
             self._db = Config.storage_type
             self._regexp = 'REGEXP'
             self._placeholder = '?'
+            self._catch_violating_column = self.RE_CATCH_UNIQUE_SQLITE_COLUMN
         elif Config.storage_type in (Const.DB_POSTGRESQL, Const.DB_COCKROACHDB):
             self._db = Config.storage_type
             self._regexp = '~*'
             self._placeholder = '%s'
+            self._catch_violating_column = self.RE_CATCH_UNIQUE_POSTGRE_COLUMN
         else:
             self._logger.debug('unknown database type - using default sqlite', Config.storage_type)
 
@@ -711,7 +724,7 @@ class Database(object):
         """
 
         digest = self._get_digest(resource)
-        match = self.RE_CATCH_UNIQUE_SQLITE_COLUMN.search(str(error))
+        match = self._catch_violating_column.search(str(error))
         if match:
             if match.group('column') == 'uuid':
                 cause = Cause.HTTP_500

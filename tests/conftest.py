@@ -280,6 +280,13 @@ def server_mock(mocker):
 
     mocker.patch('snippy.server.server.SnippyServer')
 
+
+@pytest.fixture(scope='function', name='database')
+def used_database(request):
+    """Get used database."""
+
+    return request.config.getoption("--snippy-db")
+
 # Logging
 @pytest.fixture(scope='function', name='logger')
 def logger_wrapper(request):

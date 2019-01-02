@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""database: Helper methods for testing with generic database."""
+"""database: Helper methods for testing with any database."""
 
 from __future__ import print_function
 
@@ -32,7 +32,9 @@ import pkg_resources
 try:
     import psycopg2
 except ImportError:
-    class psycopg2(object): pass  # noqa pylint: disable=W,C,R
+    class psycopg2(object):  # noqa pylint: disable=C,R
+        """Dummy psycopg2 class to use exceptions."""
+
     setattr(psycopg2, 'IntegrityError', sqlite3.IntegrityError)
     setattr(psycopg2, 'Error', sqlite3.Error)
 
@@ -45,9 +47,9 @@ class Database(object):
     """Helper methods for testing with generic database."""
 
     # Database options.
-    DB_SQLITE = 'sqlite'
-    DB_POSTGRESQL = 'postgresql'
-    DB_COCKROACHDB = 'cockroachdb'
+    DB_SQLITE = Helper.DB_SQLITE
+    DB_POSTGRESQL = Helper.DB_POSTGRESQL
+    DB_COCKROACHDB = Helper.DB_COCKROACHDB
     _DATABASE = DB_SQLITE
     _DATABASES = (DB_SQLITE, DB_POSTGRESQL, DB_COCKROACHDB)
     _PLACEHOLDER = '?'

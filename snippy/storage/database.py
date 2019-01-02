@@ -31,8 +31,9 @@ except ImportError:
     class psycopg2(object):  # noqa pylint: disable=C,R
         """Dummy psycopg2 class to use exceptions."""
 
-    setattr(psycopg2, 'IntegrityError', sqlite3.IntegrityError)
     setattr(psycopg2, 'Error', sqlite3.Error)
+    setattr(psycopg2, 'DataError', sqlite3.DataError)
+    setattr(psycopg2, 'IntegrityError', sqlite3.IntegrityError)
 
 from snippy.constants import Constants as Const
 from snippy.logger import Logger
@@ -429,7 +430,7 @@ class Database(object):
                     rows = cursor.fetchall()
                     collection.convert(rows)
             except (sqlite3.Error, psycopg2.Error) as error:
-                Cause.push(Cause.HTTP_500, 'selecting content from database with data failed with exception {}'.format(error))
+                Cause.push(Cause.HTTP_500, 'selecting content from database with data failed with exception: {}'.format(error))
         else:
             Cause.push(Cause.HTTP_500, 'internal error prevented searching from database')
 
@@ -457,11 +458,17 @@ class Database(object):
                     cursor.execute(query, qargs)
                     rows = cursor.fetchall()
                     collection.convert(rows)
+            except (sqlite3.DataError, psycopg2.DataError) as error:
+                # This method is used only validated content which should
+                # always have valid external UUID field. Because of this,
+                # the error here is internal server error.
+                self._connection.rollback()
+                self._set_data_error(error)
+                Cause.push(Cause.HTTP_500, 'invalid user data for search: {}'.format(qargs))
             except (sqlite3.Error, psycopg2.Error) as error:
-                Cause.push(Cause.HTTP_500, 'selecting content from database with uuid failed with exception {}'.format(error))
+                self._set_error(error)
         else:
             Cause.push(Cause.HTTP_500, 'internal error prevented searching from database')
-
         self._logger.debug('selected rows: %s', rows)
 
         return collection
@@ -549,8 +556,25 @@ class Database(object):
                 with closing(self._connection.cursor()) as cursor:
                     cursor.execute(query, qargs)
                     rows = cursor.fetchall()
+            except (sqlite3.DataError, psycopg2.DataError) as error:
+                # This is executed with PostgreSQL when queried with invalid
+                # content external UUID field. There is also UUID field that
+                # is used only for internal purposes as a database primary
+                # key but that is always assumed to work hence no 'Internal
+                # Server Error' here.
+                #
+                # If rollback is not executed, there will be PostgreSQL error:
+                # 'current transaction is aborted, commands ignored until end
+                # of transaction block'.
+                #
+                # The only reason why Cause is not set here is that this works
+                # differently between Sqlite and PostgreSQL. The intention is
+                # to have same end user behavior also from error cause point
+                # of view.
+                self._connection.rollback()
+                self._set_data_error(error)
             except (sqlite3.Error, psycopg2.Error) as error:
-                Cause.push(Cause.HTTP_500, 'reading from database failed with exception {}'.format(error))
+                self._set_error(error)
         else:
             Cause.push(Cause.HTTP_500, 'internal error prevented reading from database')
 
@@ -667,11 +691,22 @@ class Database(object):
 
         return query, qargs
 
+    def _set_error(self, error):
+        """Set generic error.
+
+        Args:
+            error (Exception): Exception string from integrity error.
+        """
+
+        self._logger.info('database error: {}'.format(traceback.format_exc()))
+        self._logger.info('database error stack trace: {}'.format(traceback.format_stack(limit=20)))
+        Cause.push(Cause.HTTP_500, 'database operation failed with exception: {}'.format(error).lower())
+
     def _set_integrity_error(self, error, resource):
         """Set integrity error.
 
         Args:
-            error (str): Exception string from integrity error.
+            error (Exception): Exception string from integrity error.
             resource (Resource): Resource which SQL operation caused exception.
         """
 
@@ -690,13 +725,13 @@ class Database(object):
         self._logger.info('database integrity error from resource: {}'.format(Logger.remove_ansi(str(resource))))
         self._logger.info('database integrity error stack trace: {}'.format(traceback.format_stack(limit=20)))
 
-    def _set_error(self, error):
-        """Set generic database error.
+    def _set_data_error(self, error):
+        """Set data error.
 
         Args:
-            error (str): Exception string from integrity error.
+            error (Exception): Exception string from integrity error.
         """
 
-        self._logger.info('database error: {}'.format(traceback.format_exc()))
-        self._logger.info('database error stack trace: {}'.format(traceback.format_stack(limit=20)))
-        Cause.push(Cause.HTTP_500, 'database operation failed with exception: {}'.format(error).lower())
+        self._logger.info('invalid data with database operation error: {}'.format(traceback.format_exc()))
+        self._logger.info('invalid data with database operation exception: {}'.format(error))
+        self._logger.info('invalid data with database operation stack trace: {}'.format(traceback.format_stack(limit=20)))

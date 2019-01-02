@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 #  Snippy - command, solution, reference and code snippet manager.
-#  Copyright 2017-2018 Heikki J. Laaksonen  <laaksonen.heikki.j@gmail.com>
+#  Copyright 2017-2019 Heikki J. Laaksonen  <laaksonen.heikki.j@gmail.com>
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Affero General Public License as published
@@ -19,7 +19,7 @@
 """meta: Metadata for the tool."""
 
 __author__ = 'Heikki J. Laaksonen'
-__copyright__ = '2017-2018, Heikki J. Laaksonen'
+__copyright__ = '2017-2019, Heikki J. Laaksonen'
 __description__ = 'Command, solution, reference and code snippet manager.'
 __email__ = 'laaksonen.heikki.j@gmail.com'
 __homepage__ = 'https://github.com/heilaaks/snippy'

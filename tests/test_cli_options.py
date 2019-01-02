@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 #  Snippy - command, solution, reference and code snippet manager.
-#  Copyright 2017-2018 Heikki J. Laaksonen  <laaksonen.heikki.j@gmail.com>
+#  Copyright 2017-2019 Heikki J. Laaksonen  <laaksonen.heikki.j@gmail.com>
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Affero General Public License as published
@@ -92,7 +92,7 @@ class TestCliOptions(object):
         '      $ snippy --help examples',
         '',
         'Snippy version ' + __version__ + ' - license GNU AGPLv3 or later',
-        'Copyright 2017-2018 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',
+        'Copyright 2017-2019 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',
         'Homepage ' + __homepage__,
         ''
     )
@@ -142,7 +142,7 @@ class TestCliOptions(object):
         '      $ snippy import --solutions -f solutions.yaml',
         '',
         'Snippy version ' + __version__ + ' - license GNU AGPLv3 or later',
-        'Copyright 2017-2018 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',
+        'Copyright 2017-2019 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',
         'Homepage ' + __homepage__,
         ''
     )

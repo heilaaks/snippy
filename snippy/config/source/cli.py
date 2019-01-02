@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 #  Snippy - command, solution, reference and code snippet manager.
-#  Copyright 2017-2018 Heikki J. Laaksonen  <laaksonen.heikki.j@gmail.com>
+#  Copyright 2017-2019 Heikki J. Laaksonen  <laaksonen.heikki.j@gmail.com>
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Affero General Public License as published
@@ -36,7 +36,7 @@ class Cli(ConfigSourceBase):
 
     ARGS_COPYRIGHT = (
         'Snippy version ' + __version__ + ' - license GNU AGPLv3 or later',
-        'Copyright 2017-2018 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',
+        'Copyright 2017-2019 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',
         'Homepage ' + __homepage__
     )
     ARGS_USAGE = ('snippy [-v, --version] [-h, --help] <operation> [<options>] [-vv] [-q]')

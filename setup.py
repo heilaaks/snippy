@@ -41,7 +41,8 @@ extras_docs = (
 extras_server = (
     'falcon==1.4.1',
     'gunicorn==19.9.0',
-    'jsonschema==2.6.0'
+    'jsonschema==2.6.0',
+    'psycopg2-binary==2.7.6.1'
 )
 extras_tests = (
     'codecov==2.0.15',

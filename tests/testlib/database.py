@@ -147,12 +147,12 @@ class Database(object):
         try:
             connection = Database._connect()
             with closing(connection.cursor()) as cursor:
-                cursor.execute('SELECT * FROM contents')
+                cursor.execute('SELECT * FROM contents ORDER BY created ASC, brief ASC')
                 rows = cursor.fetchall()
             connection.close()
             collection.convert(rows)
-        except (sqlite3.Error, psycopg2.Error):
-            pass
+        except (sqlite3.Error, psycopg2.Error) as error:
+            print('database helper select exception: {}'.format(error))
 
         return collection
 
@@ -318,7 +318,7 @@ class Database(object):
         rows = ()
         collection = Collection()
         try:
-            query = ('SELECT * FROM contents WHERE category={0}'.format(cls._PLACEHOLDER))
+            query = ('SELECT * FROM contents WHERE category={0} ORDER BY created ASC, brief ASC'.format(cls._PLACEHOLDER))
             qargs = [category]
             connection = Database._connect()
             with closing(connection.cursor()) as cursor:

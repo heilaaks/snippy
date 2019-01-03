@@ -116,7 +116,7 @@ class TestApiCreateReference(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
-    @pytest.mark.usefixtures('create-gitlog-utc', 'create-pytest-utc')
+    @pytest.mark.usefixtures('create-pytest-utc', 'create-gitlog-utc')
     def test_api_create_reference_003(self, server):
         """Create multiple references from API.
 
@@ -125,8 +125,8 @@ class TestApiCreateReference(object):
 
         content = {
             'data': [
-                Reference.GITLOG,
-                Reference.PYTEST
+                Reference.PYTEST,
+                Reference.GITLOG
             ]
         }
         request_body = {
@@ -145,11 +145,11 @@ class TestApiCreateReference(object):
         expect_body = {
             'data': [{
                 'type': 'reference',
-                'id': Reference.GITLOG_DIGEST,
+                'id': Reference.PYTEST_DIGEST,
                 'attributes': content['data'][0]
             }, {
                 'type': 'reference',
-                'id': Reference.PYTEST_DIGEST,
+                'id': Reference.GITLOG_DIGEST,
                 'attributes': content['data'][1]
             }]
         }

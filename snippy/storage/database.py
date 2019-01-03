@@ -261,7 +261,7 @@ class Database(object):
             for _ in scat:
                 query = query + 'category={0} OR '.format(self._placeholder)
             query = query[:-4]  # Remove last ' OR ' added by the loop.
-            query = query + ')'
+            query = query + ') ORDER BY created ASC, brief ASC'
             qargs = list(scat)
             try:
                 with closing(self._connection.cursor()) as cursor:
@@ -651,7 +651,7 @@ class Database(object):
                 query = query + field + ' ' + Config.sort_fields[field].upper() + ', '
             query = query[:-2]  # Remove last ', ' added by the loop.
         else:
-            query = query + 'ORDER BY created ASC'
+            query = query + 'ORDER BY created ASC, brief ASC'
 
         # Define limit and offset.
         query = query + ' LIMIT ' + str(Config.search_limit) + ' OFFSET ' + str(Config.search_offset)

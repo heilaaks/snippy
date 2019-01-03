@@ -376,8 +376,8 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
+                Reference.PYTEST,
                 Reference.GITLOG,
-                Reference.PYTEST
             ]
         }
         file_content = Content.get_file_content(Content.YAML, content)

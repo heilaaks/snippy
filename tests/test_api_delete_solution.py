@@ -64,9 +64,9 @@ class TestApiDeleteSolution(object):
 
         content = {
             'data': [
+                Solution.KAFKA,
                 Solution.BEATS,
                 Solution.NGINX,
-                Solution.KAFKA
             ]
         }
         expect_headers = {

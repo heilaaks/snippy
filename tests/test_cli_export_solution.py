@@ -654,9 +654,9 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
+                Snippet.REMOVE,
                 Solution.BEATS,
                 Solution.NGINX,
-                Snippet.REMOVE,
                 Reference.GITLOG
             ]
         }
@@ -675,9 +675,9 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
+                Snippet.REMOVE,
                 Solution.BEATS,
                 Solution.NGINX,
-                Snippet.REMOVE,
                 Reference.GITLOG
             ]
         }

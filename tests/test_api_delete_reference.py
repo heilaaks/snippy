@@ -64,9 +64,9 @@ class TestApiDeleteReference(object):
 
         content = {
             'data': [
+                Reference.PYTEST,
                 Reference.GITLOG,
-                Reference.REGEXP,
-                Reference.PYTEST
+                Reference.REGEXP
             ]
         }
         expect_headers = {

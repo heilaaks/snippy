@@ -47,8 +47,8 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Solution.BEATS,
-                Solution.KAFKA
+                Solution.KAFKA,
+                Solution.BEATS
             ]
         }
         file_content = Content.get_file_content(Content.YAML, content)
@@ -69,8 +69,8 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Solution.BEATS,
-                Solution.KAFKA
+                Solution.KAFKA,
+                Solution.BEATS
             ]
         }
         file_content = Content.get_file_content(Content.YAML, content)
@@ -92,8 +92,8 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Solution.BEATS,
-                Solution.KAFKA
+                Solution.KAFKA,
+                Solution.BEATS
             ]
         }
         file_content = Content.get_file_content(Content.YAML, content)
@@ -114,8 +114,8 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Solution.BEATS,
-                Solution.KAFKA
+                Solution.KAFKA,
+                Solution.BEATS
             ]
         }
         file_content = Content.get_file_content(Content.JSON, content)
@@ -137,8 +137,8 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Solution.BEATS,
-                Solution.KAFKA
+                Solution.KAFKA,
+                Solution.BEATS
             ]
         }
         file_content = Content.get_file_content(Content.JSON, content)
@@ -248,8 +248,8 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Solution.BEATS,
-                Solution.KAFKA
+                Solution.KAFKA,
+                Solution.BEATS
             ]
         }
         file_content = Content.get_file_content(Content.YAML, content)
@@ -668,9 +668,9 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Reference.GITLOG,
+                Snippet.REMOVE,
                 Solution.NGINX,
-                Snippet.REMOVE
+                Reference.GITLOG
             ]
         }
         file_content = Content.get_file_content(Content.YAML, content)
@@ -722,8 +722,8 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Solution.BEATS,
-                Solution.KAFKA
+                Solution.KAFKA,
+                Solution.BEATS
             ]
         }
         file_content = Content.get_file_content(Content.MKDN, content)

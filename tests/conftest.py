@@ -198,7 +198,7 @@ def mocked_snippy_perf(mocker, request):
     """
 
     database = request.config.getoption("--snippy-db")
-    snippy = _create_snippy(mocker, (), database)
+    snippy = _create_snippy(mocker, [], database)
     def fin():
         """Clear the resources at the end."""
 

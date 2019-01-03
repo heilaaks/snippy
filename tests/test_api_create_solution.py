@@ -72,7 +72,7 @@ class TestApiCreateSolution(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
-    @pytest.mark.usefixtures('create-beats-utc', 'create-kafka-utc')
+    @pytest.mark.usefixtures('create-kafka-utc', 'create-beats-utc')
     def test_api_create_solution_002(self, server):
         """Create multiple solutions from API.
 
@@ -81,8 +81,8 @@ class TestApiCreateSolution(object):
 
         content = {
             'data': [
-                Solution.BEATS,
-                Solution.KAFKA
+                Solution.KAFKA,
+                Solution.BEATS
             ]
         }
         request_body = {
@@ -101,11 +101,11 @@ class TestApiCreateSolution(object):
         expect_body = {
             'data': [{
                 'type': 'solution',
-                'id': Solution.BEATS_DIGEST,
+                'id': Solution.KAFKA_DIGEST,
                 'attributes': content['data'][0]
             }, {
                 'type': 'solution',
-                'id': Solution.KAFKA_DIGEST,
+                'id': Solution.BEATS_DIGEST,
                 'attributes': content['data'][1]
             }]
         }

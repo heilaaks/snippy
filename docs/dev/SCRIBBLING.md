@@ -2230,7 +2230,27 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        that verify the Collection() dump and load methods (text and Markdown format
        parsers).
 
-    4. Test case layouts and data structures
+
+    4. Order of asserted result must be deterministic
+    
+       Current data structure contains list of dictionaries. This is used in the REST
+       API responses and in test helpers that assert data. This kind of data structure
+       forces strict order for content due to list context. Because of this, responses
+       and test case asserted content must be always deterministic.
+       
+       The order is that the content is first sorted in ascending order based on
+       created timestamps and then in ascending order based on brief field. This sort
+       approach is selected mainly because the test cases use same timestamp for
+       default content.
+       
+       This approach also guarantees in practise that the order is deterministic if
+       user manages to insert two contents at the same timestamp. The sort could be
+       done based on data field because that is unique but it is considered that the
+       sort based on brief in case of colliding created timestamps is more user
+       friendly because it is easier to explain and understand. Also the brief is used
+       in visible manner and it is the first row in the CLI and Markdown output formats.
+    
+    5. Test case layouts and data structures
 
        All test cases can be divided into three main categories. All the test withing
        one category must follow the same layout. The test case layout differences are

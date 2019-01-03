@@ -195,10 +195,15 @@ def mocked_snippy_perf(mocker, request):
     The uuid mock must not be used for performance testing because
     mocking all the UUIDs needed for variable length run is not
     feasible.
+
+    The --help option must be included in order to initialize the
+    Snippy object with correct database. The --help option makes
+    the command line options valid which allows running the storage
+    specific options successfully.
     """
 
     database = request.config.getoption("--snippy-db")
-    snippy = _create_snippy(mocker, [], database)
+    snippy = _create_snippy(mocker, ['--help'], database)
     def fin():
         """Clear the resources at the end."""
 
@@ -902,16 +907,17 @@ def _create_snippy(mocker, params, database):
     if database == Database.DB_SQLITE:
         mocker.patch.object(Config, '_storage_file', return_value=Database.get_storage())
     elif database == Database.DB_POSTGRESQL:
-        params.append('--storage-type')
-        params.append('postgresql')
-        params.append('--storage-host')
-        params.append('localhost:5432')
-        params.append('--storage-database')
-        params.append('postgres')
-        params.append('--storage-user')
-        params.append('postgres')
-        params.append('--storage-password')
-        params.append('postgres')
+        params = params + Database.get_cli_params()
+        #params.append('--storage-type')
+        #params.append('postgresql')
+        #params.append('--storage-host')
+        #params.append('localhost:5432')
+        #params.append('--storage-database')
+        #params.append('postgres')
+        #params.append('--storage-user')
+        #params.append('postgres')
+        #params.append('--storage-password')
+        #params.append('postgres')
 
     snippy = Snippy(params)
 

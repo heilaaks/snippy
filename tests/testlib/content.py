@@ -95,6 +95,12 @@ class Content(object):  # pylint: disable=too-many-public-methods
         Database.print_contents()
 
     @staticmethod
+    def db_cli_params():
+        """Return required CLI parameters for database."""
+
+        return Database.get_cli_params()
+
+    @staticmethod
     def deepcopy(content):
         """Return a deepcopy from given content.
 

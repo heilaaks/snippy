@@ -66,17 +66,17 @@ class TestCliPerformance(object):
             Content.assert_storage_size(4)
 
             # Search all content.
-            cause = snippy_perf.run(['snippy', 'search', '--all', '--sall', '.'])
+            cause = snippy_perf.run(['snippy', 'search', '--all', '--sall', '.'] + Content.db_cli_params())
             assert cause == Cause.ALL_OK
 
             # Delete all content.
-            cause = snippy_perf.run(['snippy', 'delete', '-d', '54e41e9b52a02b63'])
+            cause = snippy_perf.run(['snippy', 'delete', '-d', '54e41e9b52a02b63'] + Content.db_cli_params())
             assert cause == Cause.ALL_OK
-            cause = snippy_perf.run(['snippy', 'delete', '-d', '53908d68425c61dc'])
+            cause = snippy_perf.run(['snippy', 'delete', '-d', '53908d68425c61dc'] + Content.db_cli_params())
             assert cause == Cause.ALL_OK
-            cause = snippy_perf.run(['snippy', 'delete', '-d', 'db712a82662d6932'])
+            cause = snippy_perf.run(['snippy', 'delete', '-d', 'db712a82662d6932'] + Content.db_cli_params())
             assert cause == Cause.ALL_OK
-            cause = snippy_perf.run(['snippy', 'delete', '-d', '5dee85bedb7f4d3a'])
+            cause = snippy_perf.run(['snippy', 'delete', '-d', '5dee85bedb7f4d3a'] + Content.db_cli_params())
             assert cause == Cause.ALL_OK
             Content.assert_storage(None)
 
@@ -98,22 +98,22 @@ class TestCliPerformance(object):
 
         file_content = Content.get_file_content(Content.TEXT, {'data': [Snippet.REMOVE]})
         with mock.patch('snippy.content.migrate.open', file_content, create=True):
-            cause = snippy.run(['snippy', 'import', '-f', 'remove.txt'])
+            cause = snippy.run(['snippy', 'import', '-f', 'remove.txt'] + Content.db_cli_params())
             assert cause == Cause.ALL_OK
 
         file_content = Content.get_file_content(Content.TEXT, {'data': [Snippet.FORCED]})
         with mock.patch('snippy.content.migrate.open', file_content, create=True):
-            cause = snippy.run(['snippy', 'import', '-f', 'forced.txt'])
+            cause = snippy.run(['snippy', 'import', '-f', 'forced.txt'] + Content.db_cli_params())
             assert cause == Cause.ALL_OK
 
         file_content = Content.get_file_content(Content.TEXT, {'data': [Solution.BEATS]})
         with mock.patch('snippy.content.migrate.open', file_content, create=True):
-            cause = snippy.run(['snippy', 'import', '-f', 'beats.txt'])
+            cause = snippy.run(['snippy', 'import', '-f', 'beats.txt'] + Content.db_cli_params())
             assert cause == Cause.ALL_OK
 
         file_content = Content.get_file_content(Content.TEXT, {'data': [Solution.NGINX]})
         with mock.patch('snippy.content.migrate.open', file_content, create=True):
-            cause = snippy.run(['snippy', 'import', '-f', 'nginx.txt'])
+            cause = snippy.run(['snippy', 'import', '-f', 'nginx.txt'] + Content.db_cli_params())
             assert cause == Cause.ALL_OK
 
     @classmethod

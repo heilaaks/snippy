@@ -16,8 +16,15 @@ server:
 dev:
 	pip install -e .[dev]
 
-test:
-	python -m pytest -x ./tests/test_*.py --cov snippy
+test: test-sqlite
+
+test-all: test-sqlite test-postgresql
+
+test-sqlite:
+	python -m pytest -x ./tests/test_*.py --cov snippy --snippy-db sqlite
+
+test-postgresql:
+	python -m pytest -x ./tests/test_*.py --cov snippy --snippy-db postgresql
 
 test-fast:
 ifeq ($(python_version_major), 3)
@@ -28,9 +35,6 @@ else
 	@echo "##########################################################################"
 	make test
 endif
-
-test-postgresql:
-	python -m pytest -x ./tests/test_*.py --cov snippy --snippy-db postgresql
 
 coverage:
 	pytest --cov=snippy --cov-branch --cov-report html tests/
@@ -93,4 +97,4 @@ clean:
 clean-db:
 	> snippy/data/storage/snippy.db
 
-.PHONY: install upgrade uninstall server dev test test-fast test-postgresql coverage outdated docs lint pyflakes docker security-scan clean clean-db
+.PHONY: install upgrade uninstall server dev test test-all test-fast test-sqlite test-postgresql coverage outdated docs lint pyflakes docker security-scan clean clean-db

@@ -202,6 +202,25 @@ class Database(object):
         return storage
 
     @classmethod
+    def get_cli_params(cls):
+        """Return CLI parameters for database."""
+
+        params = []
+        if cls._DATABASE == cls.DB_POSTGRESQL:
+            params.append('--storage-type')
+            params.append('postgresql')
+            params.append('--storage-host')
+            params.append('localhost:5432')
+            params.append('--storage-database')
+            params.append('postgres')
+            params.append('--storage-user')
+            params.append('postgres')
+            params.append('--storage-password')
+            params.append('postgres')
+
+        return params
+
+    @classmethod
     def store(cls, content):
         """Store content into database.
 

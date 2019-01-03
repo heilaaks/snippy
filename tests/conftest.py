@@ -286,7 +286,7 @@ def server_mock(mocker):
     mocker.patch('snippy.server.server.SnippyServer')
 
 
-@pytest.fixture(scope='function', name='database')
+@pytest.fixture(scope='function', name='used_database')
 def used_database(request):
     """Get used database."""
 
@@ -312,28 +312,28 @@ def logger_wrapper(request):
     return logger
 
 # Database
-@pytest.fixture(scope='function', name='sqlitedb')
-def sqlite_mock(request, mocker):
-    """Mock sqlite for unit testing."""
+@pytest.fixture(scope='function', name='database')
+def database_mock(request, mocker):
+    """Mock database for testing."""
 
-    from snippy.storage.database import Database as Sqlite
+    from snippy.storage.database import Database as Db
 
-    Config.init(['snippy', '-q'])  # Prevent unnecessary CLI help output with quiet option.
+    Config.init(['snippy', '-q'] + Database.get_cli_params())  # Prevent unnecessary CLI help output with quiet option.
     mocker.patch.object(Config, 'storage_file', Database.get_storage(), create=True)
     mocker.patch.object(Config, 'storage_schema', Database.get_schema(), create=True)
 
-    sqlite = Sqlite()
-    sqlite.init()
+    database = Db()
+    database.init()
 
     def fin():
         """Clear the resources at the end."""
 
-        sqlite.disconnect()
+        database.disconnect()
         Database.delete_all_contents()
         Database.delete_storage()
     request.addfinalizer(fin)
 
-    return sqlite
+    return database
 
 # Cause
 @pytest.fixture(scope='function', name='cause')

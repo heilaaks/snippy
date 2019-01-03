@@ -1,34 +1,28 @@
 ## WORKING
-   - [ ] Sort the assert storage that now returns content in different order. Add ORDER somewhere? The problem is that default content has same date. This needs also sort by brief to get predictable output - see how sqlite does this.
    - [ ] Remove secret items (user name, paswd, ssl paths, server paths) from Config. Do not allow prints and make print(Config) like with CLI? But is it ok to keep with debug settings after all? Should do the print(Config) at least.
    - [ ] Remove --server flag and use --server-host in format of 'localhost:8080'. This is easier and cleaner to write than --server-ip 234234 --server-port 9090. Same form storage. This also allows formats like 'host1.8080,host2.8080,etc'. This also forces user to define the IP (leaves responsibility to set it correctly and not use unsecure defaults like star)
    - [ ] Add support to read storage and server options from env variables.
    - [ ] _read_collection can remove compute_digest since it is always in seal. Can the compute_digest be internal? It would help to get rid of external usage.
    - [ ] Sort SQL attributes so that the digest is last. Eventually the digest will contain all the fields.
    - [ ] Config get_resource could return empty Resource instead of None in failure. This is now related to new migrate refactoring that prevents migrating template resources.
-   - [ ] Rename test helpers as TSnippet or TDatabase (lint?) in order to avoid collisions with real modules?
-   - [ ] Use datetime for created and updated. Do the conversion in sqlite(database) module and do not check this in Resource since it would reveal DB type.
-   - [ ] Add option to select db from {sqlite,postgres,cockroach} and default to sqlite.
-   - [ ] Test postgreSQL SSL connection manually.
-   - [ ] Fix assert storage to support dict list in different orders. Check first why postgres does this. The order is now different in sqlite and postgres. Why this is in update?
-   - [ ] Note that that database ID changes with postgres and e.g. test cases that print check it will need something.
-   - [ ] Test API performance by disabling server start from api_performance against all db's.
-   - [ ] Add support for CockroachDB and PostgreSQL and make database modules more generic.
-   - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format.
-   - [ ] Add delete for wheel build directory for automation. If the folder exist this is a problem (at least used to be) see how to fail python release/building/something.
-   - [ ] Fix (?) updating JSON or YAML solution (only solution?) with mkdn or text data where data brief changes. This is not now updated in case of YAML/JSON solution because the dict is just read. The problem is to how to identify text or Markdown from YAML/JSON (dict)?
    - [ ] Fix better logs if --logs-json (invalid option name) is used with -vv. Now there is not proper log what went wrong with -vv/--debug?
    - [ ] Fix help text to use import --all instead of content specific commands.
-   - [ ] Add changelog to README.
    - [ ] Fix and test adding two same tags, links and categories. At least from text source two tags are duplicated. Verify others.
    - [ ] Fix '--filter 0' maps to None instead of 0?
    - [ ] Fix (remove) the LANG in Alpine based dockerfile? Is this useless as MUSL does not support locales? https://github.com/gliderlabs/docker-alpine/issues/144
+   - [ ] Change solution to Markdown and make Markdown a first class citicen. Change the default format to MKDN.
+   - [ ] Test postgreSQL SSL connection manually.
+   - [ ] Test API performance by disabling server start from api_performance against all db's. (what was this?)
+   - [ ] Add support for CockroachDB.
+   - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format.
+   - [ ] Add delete for wheel build directory for automation. If the folder exist this is a problem (at least used to be) see how to fail python release/building/something.
+   - [ ] Fix (?) updating JSON or YAML solution (only solution?) with mkdn or text data where data brief changes. This is not now updated in case of YAML/JSON solution because the dict is just read. The problem is to how to identify text or Markdown from YAML/JSON (dict)?
+   - [ ] Add changelog to README.
    - [ ] Fix does the Parser really return UTF-8 encoded strings always? For example (links/keywords) is not coverted and other use decode(utf-8) which is opposite?
-   - [ ] Fix clarify how insert multiple - one failure behaves. Should have been fail all because of simplicity. Write test and fix.
+   - [ ] Fix clarify how insert multiple - one failure behaves. Should have been fail all because of simplicity. Write test and fix. The code tries to insert all and returns inteserted content in REST API. What about CLI (same behaviour but should this change to fail immediately)?
    - [ ] Fix Parser which assumes always UTF-8. If CLI terminal has something else, this fails.
-   - [ ] Refactor and check the sqlitedb_helper somehow. At least the name can be synchronized with the snippet,solution and reference helpers.
    - [ ] Remove the column marks from cause code (the structured log data rule). The cause could strip these out from middle of the string. Keep at the end?
-   - [ ] Parse new format that supports snippets with leading comment to internal format? Or remove the support?
+   - [ ] Parse new format that supports snippets with leading comment to internal format? Or remove the support? This was the case where snippet was started with # comment followed by $ snippet
    - [ ] Is there a better way to support the special case of checking internal cause 500 and Content created cause for importing some of the content (digest integrity error)
    - [ ] Database.init can be moved to database __init__ because it is always called immediately after object init. This is likely historical left over or something that some test requires (mock?)?
    - [ ] It seems that that sqlite3 (and perhaps psycopg2) automatically rollbacks or commits with context manager (with block). So the explicit commit and rollback may (?) be unnecessary? It may better to leave those since working with different databases? Document in code?
@@ -73,6 +67,7 @@
    - [ ] Remove server name and version from HTTP responses. This would require overriding Gunicorn https://stackoverflow.com/a/21294524.
 
 ## FIX
+   - [ ] Fix timestamp usage to be Datetime native. Now the created and updated times are strings. It may be usefull in future (no use case now) to have Datetime objects instead of strings.
    - [ ] Fix the internal primary key UUID. It has MAC address which is same for multiple containers? //https://docs.docker.com/engine/reference/run/#network-settings
    - [ ] Fix long description in Markdown format does not support keeping paragraph. The description supports only one paragraph that is wrapped for Markdown. Fix or ok?
    - [ ] Fix Gunicorn info logs to debug somehow?

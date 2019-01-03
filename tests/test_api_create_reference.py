@@ -331,7 +331,7 @@ class TestApiCreateReference(object):
         Content.assert_storage(None)
 
     @pytest.mark.usefixtures('create-gitlog-utc', 'caller')
-    def test_api_create_reference_008(self, server_db, database):
+    def test_api_create_reference_008(self, server_db, used_database):
         """Try to create reference.
 
         Try to POST new reference when database throws an integrity error from
@@ -371,12 +371,12 @@ class TestApiCreateReference(object):
         }
         server = server_db[0]
         db_connect = server_db[1]
-        if database == Helper.DB_SQLITE:
+        if used_database == Helper.DB_SQLITE:
             db_connect.return_value.commit.side_effect = [
                 sqlite3.IntegrityError('UNIQUE constraint failed: contents.uuid'),
                 sqlite3.IntegrityError('UNIQUE constraint failed: contents.uuid')
             ]
-        elif database == Helper.DB_POSTGRESQL:
+        elif used_database == Helper.DB_POSTGRESQL:
             db_connect.return_value.commit.side_effect = [
                 sqlite3.IntegrityError(
                     'duplicate key value violates unique constraint "contents_data_key"\n' +

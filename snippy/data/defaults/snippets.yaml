@@ -1,4 +1,679 @@
 data:
+- brief: Stop and delete all running containers and images
+  category: snippet
+  created: '2017-10-16T12:06:07.000001+00:00'
+  data:
+  - docker stop $(docker ps -aq)
+  - docker rm $(docker ps -a -q)
+  - docker rmi $(docker images -q)
+  description: ''
+  digest: a516e2d6f8aa5c6fe94a0eac1e4585ab4b29db047e274df4902d03377e43e22c
+  filename: ''
+  groups:
+  - docker
+  links:
+  - https://docs.docker.com/engine/reference/commandline/rm/
+  - https://docs.docker.com/engine/reference/commandline/rmi/
+  - https://docs.docker.com/engine/reference/commandline/stop/
+  name: ''
+  source: ''
+  tags:
+  - cleanup
+  - container
+  - delete
+  - docker
+  - docker-ce
+  - moby
+  - stop
+  updated: '2017-10-16T12:06:07.000001+00:00'
+  uuid: d2a6a4ef-8524-42c2-85ea-c76282e4bfd6
+  versions: ''
+- brief: Find pattern from files
+  category: snippet
+  created: '2017-10-16T12:09:34.000001+00:00'
+  data:
+  - 'grep -rn ./ -e ''pattern''  #  recursive, line numbers, case sensitive'
+  - 'grep -rni ./ -e ''pattern''  #  recursive, line numbers, case insensitive'
+  - grep -rni ./ -e 'pattern' --include=\*.{ini,xml,cfg,conf,yaml}
+  description: ''
+  digest: adba4298f8e4773c0c29d6c2f892b17d5cace472c47dc708b2e246b40b997158
+  filename: ''
+  groups:
+  - linux
+  links:
+  - http://www.skrenta.com/rt/man/grep.1.html
+  - https://stackoverflow.com/questions/16956810/how-do-i-find-all-files-containing-specific-text-on-linux/
+  name: ''
+  source: ''
+  tags:
+  - linux
+  - search
+  updated: '2018-11-06T12:43:25.774128+00:00'
+  uuid: f511fc21-dad2-4275-878d-039191a15505
+  versions: ''
+- brief: Run containers and connect to them
+  category: snippet
+  created: '2017-10-16T12:43:15.000001+00:00'
+  data:
+  - docker run -td heilaaks/snippy tail -f /dev/null
+  - docker exec -it 9782f882ab34 /bin/bash
+  - docker exec -it $(docker ps | egrep -m 1 'kibana:latest' | awk '{print $1}') /bin/bash
+  description: ''
+  digest: 4b9882c41365b0ea51b23004b610b2a017ee87156d173482876bb77e59f83b2a
+  filename: ''
+  groups:
+  - docker
+  links:
+  - https://docs.docker.com/engine/reference/commandline/exec/
+  - https://docs.docker.com/engine/reference/commandline/run/
+  name: ''
+  source: ''
+  tags:
+  - container
+  - docker
+  - docker-ce
+  - exec
+  - lingering
+  - moby
+  - run
+  updated: '2017-10-16T12:43:15.000001+00:00'
+  uuid: 6af494d3-ddeb-479f-b43a-a4050f6a140b
+  versions: ''
+- brief: Compile with screen window manager
+  category: snippet
+  created: '2017-10-16T19:10:55.000001+00:00'
+  data:
+  - screen -h 10000
+  - screen -X sessionname snippy.compile
+  - <ctrl-ad>
+  - screen -ls
+  - screen -r snippy.compile
+  - screen -d snippy.compile
+  - 'echo $STY # Response like 13153.pts-3 tells that screen is active'
+  description: ''
+  digest: 9869a3866df270fc44715ec2d9508c0c65a35a6d69b09f6ce95806a09ef82fb5
+  filename: ''
+  groups:
+  - linux
+  links:
+  - http://www.skrenta.com/rt/man/screen.1.html
+  name: ''
+  source: ''
+  tags:
+  - linux
+  - screen
+  - terminal
+  updated: '2017-10-16T19:10:55.000001+00:00'
+  uuid: a01b5b4f-4bf8-4f88-bfab-d32bd9e5650d
+  versions: ''
+- brief: Build docker containers
+  category: snippet
+  created: '2017-10-16T19:42:19.000001+00:00'
+  data:
+  - docker build -t heilaaks/snippy .
+  - docker build --no-cache -t heilaaks/snippy .
+  - docker build --build-arg http_proxy=${http_proxy} --build-arg https_proxy=${https_proxy}
+    -t heilaaks/snippy .
+  description: ''
+  digest: 76e05e954e18f7668faf25ded614b7af79dfed6c4f59dc902f42559357de72d8
+  filename: ''
+  groups:
+  - docker
+  links:
+  - https://docs.docker.com/engine/reference/commandline/build/
+  name: ''
+  source: ''
+  tags:
+  - build
+  - container
+  - docker
+  - docker-ce
+  - moby
+  updated: '2017-10-16T19:42:19.000001+00:00'
+  uuid: c0aaffc8-390c-4672-b3a1-c6b7143f47e8
+  versions: ''
+- brief: Install docker compose
+  category: snippet
+  created: '2017-10-19T10:25:26.000001+00:00'
+  data:
+  - curl -L "https://github.com/docker/compose/releases/download/1.21.1/docker-compose-$(uname
+    -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+  - chmod +x /usr/local/bin/docker-compose
+  - docker-compose --version
+  description: ''
+  digest: 21161fd9f119935178427b10c5c09fabbe4292982ba205d283bf551df70f6680
+  filename: ''
+  groups:
+  - docker
+  links:
+  - https://docs.docker.com/compose/install/
+  - https://github.com/docker/compose/releases/
+  name: ''
+  source: ''
+  tags:
+  - compose
+  - container
+  - docker
+  - docker-ce
+  - install
+  - moby
+  updated: '2018-06-27T09:44:10.870314+00:00'
+  uuid: 0c7d3aec-0453-42c7-b2de-11dc2d8b896a
+  versions: ''
+- brief: Initialize, deploy and remove docker swarm
+  category: snippet
+  created: '2017-10-19T10:55:01.000001+00:00'
+  data:
+  - docker swarm init
+  - docker stack deploy --compose-file docker-compose.yml devstack
+  - docker stack ls
+  - docker service ls
+  - docker stack rm devstack
+  - docker-compose -f docker-compose.yml down -v
+  - docker swarm leave --force
+  - docker info | grep Swarm
+  description: ''
+  digest: 5f4d6ab736055173668d1e985c71ed6ec7ec7df0068940955e06f85e31fe65d7
+  filename: ''
+  groups:
+  - docker
+  links:
+  - https://docs.docker.com/engine/reference/commandline/service_ls/
+  - https://docs.docker.com/engine/reference/commandline/stack/
+  - https://docs.docker.com/engine/reference/commandline/swarm_init/
+  - https://docs.docker.com/engine/swarm/
+  name: ''
+  source: ''
+  tags:
+  - compose
+  - container
+  - deploy
+  - docker
+  - docker-ce
+  - moby
+  - swarm
+  updated: '2017-10-19T10:55:01.000001+00:00'
+  uuid: 1621cb30-9b1e-4df0-a8b9-3e75bf837429
+  versions: ''
+- brief: Solve docker networking 'has active endpoints' problem
+  category: snippet
+  created: '2017-10-19T11:02:06.000001+00:00'
+  data:
+  - docker network ls
+  - docker network inspect y0fdm2xoyuca
+  - docker network disconnect -f y0fdm2xoyuca devstack_logstash.1.7iqgrfd2xwcidj87zbkmauw4l
+  - docker network rm y0fdm2xoyuca
+  description: ''
+  digest: 6dc4b06991780012f02f89d2490e6a51b5ef83723a23da2b0aa697355e4f876c
+  filename: ''
+  groups:
+  - docker
+  links:
+  - https://github.com/moby/moby/issues/23302
+  name: ''
+  source: ''
+  tags:
+  - container
+  - docker
+  - docker-ce
+  - moby
+  - network
+  - remove
+  - solution
+  - swarm
+  updated: '2017-10-19T11:02:06.000001+00:00'
+  uuid: e13c5e94-0167-42ed-b944-985c7013fe2f
+  versions: ''
+- brief: Print logs from Kubernetes pods
+  category: snippet
+  created: '2017-10-19T11:17:37.000001+00:00'
+  data:
+  - kubectl get pods
+  - kubectl logs nginx-3107262526-k01hd
+  description: ''
+  digest: 14bc2d09409aba29b447a297cbef932465620348dbe39ad1483af7d4f914839e
+  filename: ''
+  groups:
+  - kubernetes
+  links:
+  - https://kubernetes.io/docs/user-guide/kubectl-cheatsheet/
+  name: ''
+  source: ''
+  tags:
+  - container
+  - docker
+  - docker-ce
+  - kubernetes
+  - logginig
+  - moby
+  updated: '2017-10-19T11:17:37.000001+00:00'
+  uuid: 04407398-52bb-40d9-8000-e833b167e2c8
+  versions: ''
+- brief: Debug TLS/SSL connection
+  category: snippet
+  created: '2017-10-20T05:42:26.000001+00:00'
+  data:
+  - openssl s_client -debug -connect 10.183.19.189:443
+  - openssl s_client -debug -connect kafka:9093 -tls1
+  - openssl s_client -debug -connect kafka:9093 -tls1_2
+  description: ''
+  digest: 4ec6013e6bca3193d1417d4085049bd8803d446fa33f8fc0f9ecacbf723e2f0d
+  filename: ''
+  groups:
+  - security
+  links:
+  - https://wiki.openssl.org/index.php/Command_Line_Utilities
+  name: ''
+  source: ''
+  tags:
+  - debug
+  - openssl
+  - security
+  - ssl
+  - tls
+  updated: '2017-10-20T05:42:26.000001+00:00'
+  uuid: f7bea89c-cf8e-47f9-8c41-828fe4325990
+  versions: ''
+- brief: Perform recursive git pull on subdirectories
+  category: snippet
+  created: '2017-11-07T07:58:46.000001+00:00'
+  data:
+  - find . -type d -name .git -exec sh -c "cd \"{}\"/../ && pwd && git pull" \;
+  description: ''
+  digest: ca12adbd62ce818e05ef6d48b5396ba04eaf0b485ffa6c7386d980bf01e408bc
+  filename: ''
+  groups:
+  - git
+  links:
+  - http://snipplr.com/view/62314/perform-git-pull-on-subdirectory-recursive/
+  - https://stackoverflow.com/questions/3497123/run-git-pull-over-all-subdirectories
+  name: ''
+  source: ''
+  tags:
+  - git
+  - pull
+  updated: '2017-11-07T07:58:46.000001+00:00'
+  uuid: 413308cc-b0c8-4efd-bedb-700055e736bc
+  versions: ''
+- brief: List git commit log headers
+  category: snippet
+  created: '2017-11-12T09:54:23.000001+00:00'
+  data:
+  - git log --pretty=oneline --abbrev-commit
+  description: ''
+  digest: 888b1e827db42889b35373f04260304c41b03125d2c1ce0581f0d05b7adb59ed
+  filename: ''
+  groups:
+  - git
+  links:
+  - https://git-scm.com/book/id/v2/Git-Basics-Viewing-the-Commit-History
+  - https://github.com/k88hudson/git-flight-rules
+  - https://stackoverflow.com/questions/4479225/how-to-output-git-log-with-the-first-line-only
+  name: ''
+  source: ''
+  tags:
+  - git
+  - log
+  updated: '2017-11-12T09:54:23.000001+00:00'
+  uuid: da0160de-2a8a-44a9-a73f-313bf8ea795f
+  versions: ''
+- brief: Install docker-ce on RHEL
+  category: snippet
+  created: '2017-12-04T11:30:21.000001+00:00'
+  data:
+  - yum remove docker-engine
+  - yum install -y yum-utils device-mapper-persistent-data lvm2
+  - yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+  - yum install -y ftp://ftp.pbone.net/mirror/ftp.centos.org/7.4.1708/extras/x86_64/Packages/container-selinux-2.21-2.gitba103ac.el7.noarch.rpm
+  - yum -y install docker-ce
+  - systemctl daemon-reload
+  - systemctl enable docker.service
+  - systemctl start docker
+  - docker run --rm hello-world
+  description: ''
+  digest: 90db2db20b7b64e8918d854751fa9221ce754d91aca59a54f69280e2e6af8abf
+  filename: ''
+  groups:
+  - docker
+  links:
+  - https://docs.docker.com/engine/installation/#server
+  - https://docs.docker.com/engine/installation/linux/docker-ce/fedora/
+  - https://docs.docker.com/release-notes/docker-ce/
+  - https://github.com/docker/for-linux/issues/20#issuecomment-316930840
+  name: ''
+  source: ''
+  tags:
+  - container
+  - docker
+  - docker-ce
+  - install
+  - moby
+  - rhel
+  - rpm
+  updated: '2017-12-04T11:30:21.000001+00:00'
+  uuid: 7d2a5850-8994-4fc0-92a3-a4c6f4f5f189
+  versions: ''
+- brief: Set single node Elasticsearch cluster to green state
+  category: snippet
+  created: '2017-12-05T06:48:05.000001+00:00'
+  data:
+  - curl -XPUT -u elastic:changeme "http://${HOSTNAME}:9200/*/_settings" -d '{"number_of_replicas":0}'
+  description: ''
+  digest: 91ec1e62b12bc1a67716c9ecb6e2be873e506c50a6a8ecf72e78ed76a44764f4
+  filename: ''
+  groups:
+  - elasticsearch
+  links:
+  - https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-update-settings.html
+  name: ''
+  source: ''
+  tags:
+  - api
+  - curl
+  - database
+  - elastic
+  - elasticsearch
+  - indices
+  - rest
+  - settings
+  - shards
+  updated: '2017-12-05T06:48:05.000001+00:00'
+  uuid: f6ca094e-66d1-4533-8dbe-2b98dc393cc8
+  versions: ''
+- brief: Manage Elasticsearch x-pack watches
+  category: snippet
+  created: '2017-12-05T06:48:50.000001+00:00'
+  data:
+  - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_xpack" | python -m json.tool
+  - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_xpack/watcher" | python
+    -m json.tool
+  - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_xpack/watcher/stats"
+    | python -m json.tool
+  - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_xpack/watcher/stats?metric=_all"
+    | python -m json.tool
+  - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_xpack/watcher/stats/current_watches"
+  - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/.watches/_mapping" | python
+    -m json.tool
+  - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/.watcher-history*/_search"
+  - curl -XPOST -u elastic:changeme "http://${HOSTNAME}:9200/_xpack/watcher/_stop"
+  - curl -XPOST -u elastic:changeme "http://${HOSTNAME}:9200/_xpack/watcher/_start"
+  - curl -XPOST -u elastic:changeme "http://${HOSTNAME}:9200/_xpack/watcher/_restart"
+  description: ''
+  digest: 162bc2a7b2776998acb6ee796105444d42e75218dc47e00a3f3b9b18886557d7
+  filename: ''
+  groups:
+  - elasticsearch
+  links:
+  - https://www.elastic.co/guide/en/elasticsearch/reference/current/watcher-api.html
+  name: ''
+  source: ''
+  tags:
+  - api
+  - elastic
+  - elasticsearch
+  - rest
+  - watcher
+  - x-pack
+  updated: '2017-12-05T06:48:50.000001+00:00'
+  uuid: 90484eca-e254-401f-8af9-e3ee97416ba8
+  versions: ''
+- brief: Manage Elasticsearch plugins
+  category: snippet
+  created: '2017-12-05T06:49:47.000001+00:00'
+  data:
+  - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_cat/plugins"
+  - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_nodes/plugins?filter_path=**.plugins.name&pretty"
+  description: ''
+  digest: 93ee5c79e510dd65e61a2002a73bddc3c4dbc7d0f04fb2a4f2130445b95d7244
+  filename: ''
+  groups:
+  - elasticsearch
+  links:
+  - https://www.elastic.co/guide/en/elasticsearch/plugins/current/intro.html
+  name: ''
+  source: ''
+  tags:
+  - api
+  - elastic
+  - elasticsearch
+  - plugin
+  - rest
+  - x-pack
+  updated: '2017-12-05T06:49:47.000001+00:00'
+  uuid: 71f0cd41-fa76-49c2-8c85-136f5ab411e1
+  versions: ''
+- brief: Install docker-ce on Fedora
+  category: snippet
+  created: '2017-12-07T10:27:57.000001+00:00'
+  data:
+  - dnf remove docker docker-client docker-client-latest docker-common docker-latest
+    docker-latest-logrotate docker-logrotate docker-selinux docker-engine-selinux
+    docker-engine
+  - dnf -y install dnf-plugins-core
+  - dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+  - dnf config-manager --set-enabled docker-ce-edge
+  - dnf install docker-ce
+  - dnf config-manager --set-disabled docker-ce-edge
+  - systemctl daemon-reload
+  - systemctl enable docker.service
+  - systemctl start docker
+  - docker run --rm hello-world
+  description: ''
+  digest: 4da15503f5832775571141c7cfb0dc44229082a5c4f64d8a112547796dabe5c8
+  filename: ''
+  groups:
+  - docker
+  links:
+  - https://docs.docker.com/engine/installation/linux/docker-ce/fedora/#install-using-the-repository
+  - https://docs.docker.com/install/linux/docker-ce/fedora/
+  - https://docs.docker.com/release-notes/docker-ce/
+  name: ''
+  source: ''
+  tags:
+  - container
+  - docker
+  - docker-ce
+  - fedora
+  - install
+  - moby
+  - rpm
+  updated: '2018-06-27T09:48:02.107035+00:00'
+  uuid: 4de7ec60-2a98-471a-bb7a-8220eb7c7062
+  versions: ''
+- brief: Manage Elasticsearch templates
+  category: snippet
+  created: '2017-12-11T17:34:23.000001+00:00'
+  data:
+  - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_template/*" | python
+    -m json.tool
+  - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_template/petelk*" | python
+    -m json.tool
+  - curl -XPOST -u elastic:changeme "http://${HOSTNAME}:9200/_template/petelk.counters"
+    -d '{}'
+  - curl -XDELETE -u elastic:changeme "http://${HOSTNAME}:9200/_template/petelk.counters*"
+  - curl -XDELETE -u elastic:changeme "http://${HOSTNAME}:9200/petelk.counters-2017.10.24"
+  - curl -XDELETE -u elastic:changeme "http://${HOSTNAME}:9200/petelk*"
+  description: ''
+  digest: 39ec99b4176b9bb7a58919fac5b1efb1ed91dcfdb9b72bd060e418d918812b6d
+  filename: ''
+  groups:
+  - elasticsearch
+  links:
+  - https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-templates.html
+  name: ''
+  source: ''
+  tags:
+  - api
+  - create
+  - curl
+  - database
+  - delete
+  - dump
+  - elastic
+  - elasticsearch
+  - index
+  - read
+  - rest
+  - security
+  - template
+  - update
+  updated: '2017-12-11T17:34:23.000001+00:00'
+  uuid: 8f19637b-5227-4cca-bce8-741c5bae3b83
+  versions: ''
+- brief: List, dump and delete Elasticsearch indices
+  category: snippet
+  created: '2017-12-11T17:34:40.000001+00:00'
+  data:
+  - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_cat/indices?v"
+  - curl -XGET -u elastic:changeme "${HOSTNAME}:9200/.kibana/_search?pretty=true&q=*:*"
+  - curl -XGET -u elastic:changeme -XDELETE "http://${HOSTNAME}:9200/.kibana"
+  description: ''
+  digest: c2ead9de4b955cc67bc14f99e72b7766c6a270a343dd7285e76f3dc13e1ebeec
+  filename: ''
+  groups:
+  - elasticsearch
+  links:
+  - https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-delete-index.html
+  name: ''
+  source: ''
+  tags:
+  - api
+  - cat
+  - curl
+  - database
+  - delete
+  - dump
+  - elastic
+  - elasticsearch
+  - index
+  - list
+  - rest
+  - security
+  updated: '2017-12-11T17:34:40.000001+00:00'
+  uuid: 57f688e5-42a1-43a9-8365-6864e988eb6c
+  versions: ''
+- brief: Print Elasticsearch basic information
+  category: snippet
+  created: '2017-12-12T18:17:26.000001+00:00'
+  data:
+  - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_cat/health?v"
+  - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_cat/indices?v"
+  - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_cat/nodes?v"
+  - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_cat/shards?v"
+  description: ''
+  digest: afe4207ef77585206a4e7814fbc8c2abbe2fe071a58bfc78455ffaa4521fdb52
+  filename: ''
+  groups:
+  - elasticsearch
+  links:
+  - https://www.elastic.co/guide/en/elasticsearch/reference/current/cat.html
+  name: ''
+  source: ''
+  tags:
+  - api
+  - cat
+  - curl
+  - database
+  - elastic
+  - elasticsearch
+  - rest
+  - security
+  updated: '2017-12-12T18:17:26.000001+00:00'
+  uuid: fb8f60c4-2eae-4cb1-843a-4347a4eeeaa0
+  versions: ''
+- brief: Perform recursive git status on subdirectories
+  category: snippet
+  created: '2018-01-11T07:59:46.000001+00:00'
+  data:
+  - find . -type d -name '.git' | while read dir ; do sh -c "cd $dir/../ && echo -e
+    \"\nGIT STATUS IN ${dir//\.git/}\" && git status -s" ; done
+  description: ''
+  digest: 9e1949c2810df2a50137f0a4056b7992529b37632d9db0da7040d17bf16f5bd3
+  filename: ''
+  groups:
+  - git
+  links:
+  - https://gist.github.com/tafkey/664266c00387c98631b3
+  name: ''
+  source: ''
+  tags:
+  - git
+  - status
+  updated: '2018-01-11T07:59:46.000001+00:00'
+  uuid: 11affea1-29e4-4be7-b727-466737eb9025
+  versions: ''
+- brief: Kill zombie processes
+  category: snippet
+  created: '2018-02-28T10:47:08.000001+00:00'
+  data:
+  - kill - 9 $(ps -A -ostat,ppid | awk '/[zZ]/ && !a[$2]++ {print $2}')
+  - ps aux | grep -w Z
+  description: ''
+  digest: 35e39c6477a22de08aeae392f8b1e816bc2d676e0e05c0127e69bd85efc0d548
+  filename: ''
+  groups:
+  - linux
+  links:
+  - https://stackoverflow.com/a/16944931
+  name: ''
+  source: ''
+  tags:
+  - kill
+  - linux
+  - zombie
+  updated: '2018-02-28T10:47:08.000001+00:00'
+  uuid: f42898bb-f989-46c4-a5f6-26d2282ff4f9
+  versions: ''
+- brief: Umount a busy device
+  category: snippet
+  created: '2018-05-07T11:11:55.000001+00:00'
+  data:
+  - lsof | grep '/tmp/overlayfs/overlay'
+  - kill <pid>
+  - umount /tmp/overlayfs/overlay
+  description: ''
+  digest: 490c913cf941a0bedc14e3d390894958b3db4220dc2b1b856454403c888df17f
+  filename: ''
+  groups:
+  - linux
+  links:
+  - https://stackoverflow.com/a/7878763
+  name: ''
+  source: ''
+  tags:
+  - device
+  - linux
+  - umount
+  updated: '2018-05-07T11:11:55.000001+00:00'
+  uuid: d3f5311b-597f-4a66-aa46-8ec99b7eb3b2
+  versions: ''
+- brief: Manipulate compressed tar files
+  category: snippet
+  created: '2018-05-07T11:13:17.000001+00:00'
+  data:
+  - 'tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./  #  Compress folder excluding
+    the tar.'
+  - 'tar tvf mytar.tar.gz  #  List content of compressed tar.'
+  - 'tar xfO mytar.tar.gz manifest.json  #  Cat file in compressed tar.'
+  - 'tar -zxvf mytar.tar.gz --exclude "./mytar.tar.gz"  #  Extract and exclude one
+    file.'
+  - 'tar -xf mytar.tar.gz manifest.json  #  Extract only one file.'
+  description: ''
+  digest: 61014e2d1ec56a9ae6fa71f781221b2706f69c8bd3090bf35af179c7a87f284a
+  filename: ''
+  groups:
+  - linux
+  links: []
+  name: ''
+  source: ''
+  tags:
+  - howto
+  - linux
+  - tar
+  - untar
+  updated: '2018-11-06T12:43:55.884902+00:00'
+  uuid: e45024fb-264f-4cb8-bef5-f73b12818909
+  versions: ''
 - brief: Remove all docker containers with volumes
   category: snippet
   created: '2018-09-08T12:44:23.491495+00:00'
@@ -96,682 +771,7 @@ data:
   updated: '2018-09-08T12:44:23.520766+00:00'
   uuid: 2a9354d7-b111-4163-a6e5-492c6fada5f2
   versions: ''
-- brief: Find pattern from files
-  category: snippet
-  created: '2017-10-16T12:09:34.000001+00:00'
-  data:
-  - 'grep -rn ./ -e ''pattern''  #  recursive, line numbers, case sensitive'
-  - 'grep -rni ./ -e ''pattern''  #  recursive, line numbers, case insensitive'
-  - grep -rni ./ -e 'pattern' --include=\*.{ini,xml,cfg,conf,yaml}
-  description: ''
-  digest: adba4298f8e4773c0c29d6c2f892b17d5cace472c47dc708b2e246b40b997158
-  filename: ''
-  groups:
-  - linux
-  links:
-  - http://www.skrenta.com/rt/man/grep.1.html
-  - https://stackoverflow.com/questions/16956810/how-do-i-find-all-files-containing-specific-text-on-linux/
-  name: ''
-  source: ''
-  tags:
-  - linux
-  - search
-  updated: '2018-11-06T12:43:25.774128+00:00'
-  uuid: f511fc21-dad2-4275-878d-039191a15505
-  versions: ''
-- brief: Stop and delete all running containers and images
-  category: snippet
-  created: '2017-10-16T12:06:07.000001+00:00'
-  data:
-  - docker stop $(docker ps -aq)
-  - docker rm $(docker ps -a -q)
-  - docker rmi $(docker images -q)
-  description: ''
-  digest: a516e2d6f8aa5c6fe94a0eac1e4585ab4b29db047e274df4902d03377e43e22c
-  filename: ''
-  groups:
-  - docker
-  links:
-  - https://docs.docker.com/engine/reference/commandline/rm/
-  - https://docs.docker.com/engine/reference/commandline/rmi/
-  - https://docs.docker.com/engine/reference/commandline/stop/
-  name: ''
-  source: ''
-  tags:
-  - cleanup
-  - container
-  - delete
-  - docker
-  - docker-ce
-  - moby
-  - stop
-  updated: '2017-10-16T12:06:07.000001+00:00'
-  uuid: d2a6a4ef-8524-42c2-85ea-c76282e4bfd6
-  versions: ''
-- brief: Build docker containers
-  category: snippet
-  created: '2017-10-16T19:42:19.000001+00:00'
-  data:
-  - docker build -t heilaaks/snippy .
-  - docker build --no-cache -t heilaaks/snippy .
-  - docker build --build-arg http_proxy=${http_proxy} --build-arg https_proxy=${https_proxy}
-    -t heilaaks/snippy .
-  description: ''
-  digest: 76e05e954e18f7668faf25ded614b7af79dfed6c4f59dc902f42559357de72d8
-  filename: ''
-  groups:
-  - docker
-  links:
-  - https://docs.docker.com/engine/reference/commandline/build/
-  name: ''
-  source: ''
-  tags:
-  - build
-  - container
-  - docker
-  - docker-ce
-  - moby
-  updated: '2017-10-16T19:42:19.000001+00:00'
-  uuid: c0aaffc8-390c-4672-b3a1-c6b7143f47e8
-  versions: ''
-- brief: Run containers and connect to them
-  category: snippet
-  created: '2017-10-16T12:43:15.000001+00:00'
-  data:
-  - docker run -td heilaaks/snippy tail -f /dev/null
-  - docker exec -it 9782f882ab34 /bin/bash
-  - docker exec -it $(docker ps | egrep -m 1 'kibana:latest' | awk '{print $1}') /bin/bash
-  description: ''
-  digest: 4b9882c41365b0ea51b23004b610b2a017ee87156d173482876bb77e59f83b2a
-  filename: ''
-  groups:
-  - docker
-  links:
-  - https://docs.docker.com/engine/reference/commandline/exec/
-  - https://docs.docker.com/engine/reference/commandline/run/
-  name: ''
-  source: ''
-  tags:
-  - container
-  - docker
-  - docker-ce
-  - exec
-  - lingering
-  - moby
-  - run
-  updated: '2017-10-16T12:43:15.000001+00:00'
-  uuid: 6af494d3-ddeb-479f-b43a-a4050f6a140b
-  versions: ''
-- brief: Compile with screen window manager
-  category: snippet
-  created: '2017-10-16T19:10:55.000001+00:00'
-  data:
-  - screen -h 10000
-  - screen -X sessionname snippy.compile
-  - <ctrl-ad>
-  - screen -ls
-  - screen -r snippy.compile
-  - screen -d snippy.compile
-  - 'echo $STY # Response like 13153.pts-3 tells that screen is active'
-  description: ''
-  digest: 9869a3866df270fc44715ec2d9508c0c65a35a6d69b09f6ce95806a09ef82fb5
-  filename: ''
-  groups:
-  - linux
-  links:
-  - http://www.skrenta.com/rt/man/screen.1.html
-  name: ''
-  source: ''
-  tags:
-  - linux
-  - screen
-  - terminal
-  updated: '2017-10-16T19:10:55.000001+00:00'
-  uuid: a01b5b4f-4bf8-4f88-bfab-d32bd9e5650d
-  versions: ''
-- brief: Install docker compose
-  category: snippet
-  created: '2017-10-19T10:25:26.000001+00:00'
-  data:
-  - curl -L "https://github.com/docker/compose/releases/download/1.21.1/docker-compose-$(uname
-    -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-  - chmod +x /usr/local/bin/docker-compose
-  - docker-compose --version
-  description: ''
-  digest: 21161fd9f119935178427b10c5c09fabbe4292982ba205d283bf551df70f6680
-  filename: ''
-  groups:
-  - docker
-  links:
-  - https://docs.docker.com/compose/install/
-  - https://github.com/docker/compose/releases/
-  name: ''
-  source: ''
-  tags:
-  - compose
-  - container
-  - docker
-  - docker-ce
-  - install
-  - moby
-  updated: '2018-06-27T09:44:10.870314+00:00'
-  uuid: 0c7d3aec-0453-42c7-b2de-11dc2d8b896a
-  versions: ''
-- brief: Install docker-ce on RHEL
-  category: snippet
-  created: '2017-12-04T11:30:21.000001+00:00'
-  data:
-  - yum remove docker-engine
-  - yum install -y yum-utils device-mapper-persistent-data lvm2
-  - yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-  - yum install -y ftp://ftp.pbone.net/mirror/ftp.centos.org/7.4.1708/extras/x86_64/Packages/container-selinux-2.21-2.gitba103ac.el7.noarch.rpm
-  - yum -y install docker-ce
-  - systemctl daemon-reload
-  - systemctl enable docker.service
-  - systemctl start docker
-  - docker run --rm hello-world
-  description: ''
-  digest: 90db2db20b7b64e8918d854751fa9221ce754d91aca59a54f69280e2e6af8abf
-  filename: ''
-  groups:
-  - docker
-  links:
-  - https://docs.docker.com/engine/installation/#server
-  - https://docs.docker.com/engine/installation/linux/docker-ce/fedora/
-  - https://docs.docker.com/release-notes/docker-ce/
-  - https://github.com/docker/for-linux/issues/20#issuecomment-316930840
-  name: ''
-  source: ''
-  tags:
-  - container
-  - docker
-  - docker-ce
-  - install
-  - moby
-  - rhel
-  - rpm
-  updated: '2017-12-04T11:30:21.000001+00:00'
-  uuid: 7d2a5850-8994-4fc0-92a3-a4c6f4f5f189
-  versions: ''
-- brief: Initialize, deploy and remove docker swarm
-  category: snippet
-  created: '2017-10-19T10:55:01.000001+00:00'
-  data:
-  - docker swarm init
-  - docker stack deploy --compose-file docker-compose.yml devstack
-  - docker stack ls
-  - docker service ls
-  - docker stack rm devstack
-  - docker-compose -f docker-compose.yml down -v
-  - docker swarm leave --force
-  - docker info | grep Swarm
-  description: ''
-  digest: 5f4d6ab736055173668d1e985c71ed6ec7ec7df0068940955e06f85e31fe65d7
-  filename: ''
-  groups:
-  - docker
-  links:
-  - https://docs.docker.com/engine/reference/commandline/service_ls/
-  - https://docs.docker.com/engine/reference/commandline/stack/
-  - https://docs.docker.com/engine/reference/commandline/swarm_init/
-  - https://docs.docker.com/engine/swarm/
-  name: ''
-  source: ''
-  tags:
-  - compose
-  - container
-  - deploy
-  - docker
-  - docker-ce
-  - moby
-  - swarm
-  updated: '2017-10-19T10:55:01.000001+00:00'
-  uuid: 1621cb30-9b1e-4df0-a8b9-3e75bf837429
-  versions: ''
-- brief: Solve docker networking 'has active endpoints' problem
-  category: snippet
-  created: '2017-10-19T11:02:06.000001+00:00'
-  data:
-  - docker network ls
-  - docker network inspect y0fdm2xoyuca
-  - docker network disconnect -f y0fdm2xoyuca devstack_logstash.1.7iqgrfd2xwcidj87zbkmauw4l
-  - docker network rm y0fdm2xoyuca
-  description: ''
-  digest: 6dc4b06991780012f02f89d2490e6a51b5ef83723a23da2b0aa697355e4f876c
-  filename: ''
-  groups:
-  - docker
-  links:
-  - https://github.com/moby/moby/issues/23302
-  name: ''
-  source: ''
-  tags:
-  - container
-  - docker
-  - docker-ce
-  - moby
-  - network
-  - remove
-  - solution
-  - swarm
-  updated: '2017-10-19T11:02:06.000001+00:00'
-  uuid: e13c5e94-0167-42ed-b944-985c7013fe2f
-  versions: ''
-- brief: Print Elasticsearch basic information
-  category: snippet
-  created: '2017-12-12T18:17:26.000001+00:00'
-  data:
-  - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_cat/health?v"
-  - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_cat/indices?v"
-  - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_cat/nodes?v"
-  - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_cat/shards?v"
-  description: ''
-  digest: afe4207ef77585206a4e7814fbc8c2abbe2fe071a58bfc78455ffaa4521fdb52
-  filename: ''
-  groups:
-  - elasticsearch
-  links:
-  - https://www.elastic.co/guide/en/elasticsearch/reference/current/cat.html
-  name: ''
-  source: ''
-  tags:
-  - api
-  - cat
-  - curl
-  - database
-  - elastic
-  - elasticsearch
-  - rest
-  - security
-  updated: '2017-12-12T18:17:26.000001+00:00'
-  uuid: fb8f60c4-2eae-4cb1-843a-4347a4eeeaa0
-  versions: ''
-- brief: Print logs from Kubernetes pods
-  category: snippet
-  created: '2017-10-19T11:17:37.000001+00:00'
-  data:
-  - kubectl get pods
-  - kubectl logs nginx-3107262526-k01hd
-  description: ''
-  digest: 14bc2d09409aba29b447a297cbef932465620348dbe39ad1483af7d4f914839e
-  filename: ''
-  groups:
-  - kubernetes
-  links:
-  - https://kubernetes.io/docs/user-guide/kubectl-cheatsheet/
-  name: ''
-  source: ''
-  tags:
-  - container
-  - docker
-  - docker-ce
-  - kubernetes
-  - logginig
-  - moby
-  updated: '2017-10-19T11:17:37.000001+00:00'
-  uuid: 04407398-52bb-40d9-8000-e833b167e2c8
-  versions: ''
-- brief: List, dump and delete Elasticsearch indices
-  category: snippet
-  created: '2017-12-11T17:34:40.000001+00:00'
-  data:
-  - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_cat/indices?v"
-  - curl -XGET -u elastic:changeme "${HOSTNAME}:9200/.kibana/_search?pretty=true&q=*:*"
-  - curl -XGET -u elastic:changeme -XDELETE "http://${HOSTNAME}:9200/.kibana"
-  description: ''
-  digest: c2ead9de4b955cc67bc14f99e72b7766c6a270a343dd7285e76f3dc13e1ebeec
-  filename: ''
-  groups:
-  - elasticsearch
-  links:
-  - https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-delete-index.html
-  name: ''
-  source: ''
-  tags:
-  - api
-  - cat
-  - curl
-  - database
-  - delete
-  - dump
-  - elastic
-  - elasticsearch
-  - index
-  - list
-  - rest
-  - security
-  updated: '2017-12-11T17:34:40.000001+00:00'
-  uuid: 57f688e5-42a1-43a9-8365-6864e988eb6c
-  versions: ''
-- brief: Debug TLS/SSL connection
-  category: snippet
-  created: '2017-10-20T05:42:26.000001+00:00'
-  data:
-  - openssl s_client -debug -connect 10.183.19.189:443
-  - openssl s_client -debug -connect kafka:9093 -tls1
-  - openssl s_client -debug -connect kafka:9093 -tls1_2
-  description: ''
-  digest: 4ec6013e6bca3193d1417d4085049bd8803d446fa33f8fc0f9ecacbf723e2f0d
-  filename: ''
-  groups:
-  - security
-  links:
-  - https://wiki.openssl.org/index.php/Command_Line_Utilities
-  name: ''
-  source: ''
-  tags:
-  - debug
-  - openssl
-  - security
-  - ssl
-  - tls
-  updated: '2017-10-20T05:42:26.000001+00:00'
-  uuid: f7bea89c-cf8e-47f9-8c41-828fe4325990
-  versions: ''
-- brief: Manage Elasticsearch templates
-  category: snippet
-  created: '2017-12-11T17:34:23.000001+00:00'
-  data:
-  - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_template/*" | python
-    -m json.tool
-  - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_template/petelk*" | python
-    -m json.tool
-  - curl -XPOST -u elastic:changeme "http://${HOSTNAME}:9200/_template/petelk.counters"
-    -d '{}'
-  - curl -XDELETE -u elastic:changeme "http://${HOSTNAME}:9200/_template/petelk.counters*"
-  - curl -XDELETE -u elastic:changeme "http://${HOSTNAME}:9200/petelk.counters-2017.10.24"
-  - curl -XDELETE -u elastic:changeme "http://${HOSTNAME}:9200/petelk*"
-  description: ''
-  digest: 39ec99b4176b9bb7a58919fac5b1efb1ed91dcfdb9b72bd060e418d918812b6d
-  filename: ''
-  groups:
-  - elasticsearch
-  links:
-  - https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-templates.html
-  name: ''
-  source: ''
-  tags:
-  - api
-  - create
-  - curl
-  - database
-  - delete
-  - dump
-  - elastic
-  - elasticsearch
-  - index
-  - read
-  - rest
-  - security
-  - template
-  - update
-  updated: '2017-12-11T17:34:23.000001+00:00'
-  uuid: 8f19637b-5227-4cca-bce8-741c5bae3b83
-  versions: ''
-- brief: Perform recursive git pull on subdirectories
-  category: snippet
-  created: '2017-11-07T07:58:46.000001+00:00'
-  data:
-  - find . -type d -name .git -exec sh -c "cd \"{}\"/../ && pwd && git pull" \;
-  description: ''
-  digest: ca12adbd62ce818e05ef6d48b5396ba04eaf0b485ffa6c7386d980bf01e408bc
-  filename: ''
-  groups:
-  - git
-  links:
-  - http://snipplr.com/view/62314/perform-git-pull-on-subdirectory-recursive/
-  - https://stackoverflow.com/questions/3497123/run-git-pull-over-all-subdirectories
-  name: ''
-  source: ''
-  tags:
-  - git
-  - pull
-  updated: '2017-11-07T07:58:46.000001+00:00'
-  uuid: 413308cc-b0c8-4efd-bedb-700055e736bc
-  versions: ''
-- brief: List git commit log headers
-  category: snippet
-  created: '2017-11-12T09:54:23.000001+00:00'
-  data:
-  - git log --pretty=oneline --abbrev-commit
-  description: ''
-  digest: 888b1e827db42889b35373f04260304c41b03125d2c1ce0581f0d05b7adb59ed
-  filename: ''
-  groups:
-  - git
-  links:
-  - https://git-scm.com/book/id/v2/Git-Basics-Viewing-the-Commit-History
-  - https://github.com/k88hudson/git-flight-rules
-  - https://stackoverflow.com/questions/4479225/how-to-output-git-log-with-the-first-line-only
-  name: ''
-  source: ''
-  tags:
-  - git
-  - log
-  updated: '2017-11-12T09:54:23.000001+00:00'
-  uuid: da0160de-2a8a-44a9-a73f-313bf8ea795f
-  versions: ''
-- brief: Install docker-ce on Fedora
-  category: snippet
-  created: '2017-12-07T10:27:57.000001+00:00'
-  data:
-  - dnf remove docker docker-client docker-client-latest docker-common docker-latest
-    docker-latest-logrotate docker-logrotate docker-selinux docker-engine-selinux
-    docker-engine
-  - dnf -y install dnf-plugins-core
-  - dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
-  - dnf config-manager --set-enabled docker-ce-edge
-  - dnf install docker-ce
-  - dnf config-manager --set-disabled docker-ce-edge
-  - systemctl daemon-reload
-  - systemctl enable docker.service
-  - systemctl start docker
-  - docker run --rm hello-world
-  description: ''
-  digest: 4da15503f5832775571141c7cfb0dc44229082a5c4f64d8a112547796dabe5c8
-  filename: ''
-  groups:
-  - docker
-  links:
-  - https://docs.docker.com/engine/installation/linux/docker-ce/fedora/#install-using-the-repository
-  - https://docs.docker.com/install/linux/docker-ce/fedora/
-  - https://docs.docker.com/release-notes/docker-ce/
-  name: ''
-  source: ''
-  tags:
-  - container
-  - docker
-  - docker-ce
-  - fedora
-  - install
-  - moby
-  - rpm
-  updated: '2018-06-27T09:48:02.107035+00:00'
-  uuid: 4de7ec60-2a98-471a-bb7a-8220eb7c7062
-  versions: ''
-- brief: Set single node Elasticsearch cluster to green state
-  category: snippet
-  created: '2017-12-05T06:48:05.000001+00:00'
-  data:
-  - curl -XPUT -u elastic:changeme "http://${HOSTNAME}:9200/*/_settings" -d '{"number_of_replicas":0}'
-  description: ''
-  digest: 91ec1e62b12bc1a67716c9ecb6e2be873e506c50a6a8ecf72e78ed76a44764f4
-  filename: ''
-  groups:
-  - elasticsearch
-  links:
-  - https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-update-settings.html
-  name: ''
-  source: ''
-  tags:
-  - api
-  - curl
-  - database
-  - elastic
-  - elasticsearch
-  - indices
-  - rest
-  - settings
-  - shards
-  updated: '2017-12-05T06:48:05.000001+00:00'
-  uuid: f6ca094e-66d1-4533-8dbe-2b98dc393cc8
-  versions: ''
-- brief: Manage Elasticsearch x-pack watches
-  category: snippet
-  created: '2017-12-05T06:48:50.000001+00:00'
-  data:
-  - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_xpack" | python -m json.tool
-  - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_xpack/watcher" | python
-    -m json.tool
-  - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_xpack/watcher/stats"
-    | python -m json.tool
-  - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_xpack/watcher/stats?metric=_all"
-    | python -m json.tool
-  - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_xpack/watcher/stats/current_watches"
-  - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/.watches/_mapping" | python
-    -m json.tool
-  - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/.watcher-history*/_search"
-  - curl -XPOST -u elastic:changeme "http://${HOSTNAME}:9200/_xpack/watcher/_stop"
-  - curl -XPOST -u elastic:changeme "http://${HOSTNAME}:9200/_xpack/watcher/_start"
-  - curl -XPOST -u elastic:changeme "http://${HOSTNAME}:9200/_xpack/watcher/_restart"
-  description: ''
-  digest: 162bc2a7b2776998acb6ee796105444d42e75218dc47e00a3f3b9b18886557d7
-  filename: ''
-  groups:
-  - elasticsearch
-  links:
-  - https://www.elastic.co/guide/en/elasticsearch/reference/current/watcher-api.html
-  name: ''
-  source: ''
-  tags:
-  - api
-  - elastic
-  - elasticsearch
-  - rest
-  - watcher
-  - x-pack
-  updated: '2017-12-05T06:48:50.000001+00:00'
-  uuid: 90484eca-e254-401f-8af9-e3ee97416ba8
-  versions: ''
-- brief: Manage Elasticsearch plugins
-  category: snippet
-  created: '2017-12-05T06:49:47.000001+00:00'
-  data:
-  - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_cat/plugins"
-  - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_nodes/plugins?filter_path=**.plugins.name&pretty"
-  description: ''
-  digest: 93ee5c79e510dd65e61a2002a73bddc3c4dbc7d0f04fb2a4f2130445b95d7244
-  filename: ''
-  groups:
-  - elasticsearch
-  links:
-  - https://www.elastic.co/guide/en/elasticsearch/plugins/current/intro.html
-  name: ''
-  source: ''
-  tags:
-  - api
-  - elastic
-  - elasticsearch
-  - plugin
-  - rest
-  - x-pack
-  updated: '2017-12-05T06:49:47.000001+00:00'
-  uuid: 71f0cd41-fa76-49c2-8c85-136f5ab411e1
-  versions: ''
-- brief: Perform recursive git status on subdirectories
-  category: snippet
-  created: '2018-01-11T07:59:46.000001+00:00'
-  data:
-  - find . -type d -name '.git' | while read dir ; do sh -c "cd $dir/../ && echo -e
-    \"\nGIT STATUS IN ${dir//\.git/}\" && git status -s" ; done
-  description: ''
-  digest: 9e1949c2810df2a50137f0a4056b7992529b37632d9db0da7040d17bf16f5bd3
-  filename: ''
-  groups:
-  - git
-  links:
-  - https://gist.github.com/tafkey/664266c00387c98631b3
-  name: ''
-  source: ''
-  tags:
-  - git
-  - status
-  updated: '2018-01-11T07:59:46.000001+00:00'
-  uuid: 11affea1-29e4-4be7-b727-466737eb9025
-  versions: ''
-- brief: Kill zombie processes
-  category: snippet
-  created: '2018-02-28T10:47:08.000001+00:00'
-  data:
-  - kill - 9 $(ps -A -ostat,ppid | awk '/[zZ]/ && !a[$2]++ {print $2}')
-  - ps aux | grep -w Z
-  description: ''
-  digest: 35e39c6477a22de08aeae392f8b1e816bc2d676e0e05c0127e69bd85efc0d548
-  filename: ''
-  groups:
-  - linux
-  links:
-  - https://stackoverflow.com/a/16944931
-  name: ''
-  source: ''
-  tags:
-  - kill
-  - linux
-  - zombie
-  updated: '2018-02-28T10:47:08.000001+00:00'
-  uuid: f42898bb-f989-46c4-a5f6-26d2282ff4f9
-  versions: ''
-- brief: Umount a busy device
-  category: snippet
-  created: '2018-05-07T11:11:55.000001+00:00'
-  data:
-  - lsof | grep '/tmp/overlayfs/overlay'
-  - kill <pid>
-  - umount /tmp/overlayfs/overlay
-  description: ''
-  digest: 490c913cf941a0bedc14e3d390894958b3db4220dc2b1b856454403c888df17f
-  filename: ''
-  groups:
-  - linux
-  links:
-  - https://stackoverflow.com/a/7878763
-  name: ''
-  source: ''
-  tags:
-  - device
-  - linux
-  - umount
-  updated: '2018-05-07T11:11:55.000001+00:00'
-  uuid: d3f5311b-597f-4a66-aa46-8ec99b7eb3b2
-  versions: ''
-- brief: Manipulate compressed tar files
-  category: snippet
-  created: '2018-05-07T11:13:17.000001+00:00'
-  data:
-  - 'tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./  #  Compress folder excluding
-    the tar.'
-  - 'tar tvf mytar.tar.gz  #  List content of compressed tar.'
-  - 'tar xfO mytar.tar.gz manifest.json  #  Cat file in compressed tar.'
-  - 'tar -zxvf mytar.tar.gz --exclude "./mytar.tar.gz"  #  Extract and exclude one
-    file.'
-  - 'tar -xf mytar.tar.gz manifest.json  #  Extract only one file.'
-  description: ''
-  digest: 61014e2d1ec56a9ae6fa71f781221b2706f69c8bd3090bf35af179c7a87f284a
-  filename: ''
-  groups:
-  - linux
-  links: []
-  name: ''
-  source: ''
-  tags:
-  - howto
-  - linux
-  - tar
-  - untar
-  updated: '2018-11-06T12:43:55.884902+00:00'
-  uuid: e45024fb-264f-4cb8-bef5-f73b12818909
-  versions: ''
 meta:
   homepage: https://github.com/heilaaks/snippy
-  updated: '2018-12-23T12:50:55.312626+00:00'
+  updated: '2019-01-03T16:59:07.212464+00:00'
   version: 0.9.d

@@ -530,6 +530,9 @@ class Database(object):
                     '/' +
                     Config.storage_database
                 )
+                connection.set_client_encoding('UTF8')
+                psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
+                psycopg2.extensions.register_type(psycopg2.extensions.UNICODEARRAY)
             elif self._db == Const.DB_COCKROACHDB:
                 Cause.push(Cause.HTTP_500, 'unsupported database: {}'.format(self._db))
             else:

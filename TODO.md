@@ -8,6 +8,7 @@
    - [ ] Fix and test adding two same tags, links and categories. At least from text source two tags are duplicated. Verify others.
    - [ ] Fix '--filter 0' maps to None instead of 0?
    - [ ] Fix (remove) the LANG in Alpine based dockerfile? Is this useless as MUSL does not support locales? https://github.com/gliderlabs/docker-alpine/issues/144
+   - [ ] Fix server silent startup failure if for example the port is reserved. How to get proper error cause for user?
    - [ ] Change solution to Markdown and make Markdown a first class citicen. Change the default format to MKDN.
    - [ ] Test postgreSQL SSL connection manually.
    - [ ] Test API performance by disabling server start from api_performance against all db's. (what was this?)

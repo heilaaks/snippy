@@ -1,6 +1,4 @@
 ## WORKING
-   - [ ] Add server prefix for compatc_json and app_path
-   - [ ] Remove --server flag and use --server-host in format of 'localhost:8080'. This is easier and cleaner to write than --server-ip 234234 --server-port 9090. Same form storage. This also allows formats like 'host1.8080,host2.8080,etc'. This also forces user to define the IP (leaves responsibility to set it correctly and not use unsecure defaults like star)
    - [ ] Add support to read storage and server options from env variables.
    - [ ] _read_collection can remove compute_digest since it is always in seal. Can the compute_digest be internal? It would help to get rid of external usage.
    - [ ] Sort SQL attributes so that the digest is last. Eventually the digest will contain all the fields.
@@ -46,7 +44,7 @@
    - [ ] Add support to edit markup files with cli option.
    - [ ] Add Travis CI for PyPy version v6.0 for Python 3 when it comes https://github.com/travis-ci/travis-ci/issues/9542
    - [ ] Add test client to measure performance of the server. The PyPy does not seem to work with api_performance test.
-   - [ ] Add compression for the response. Default is pretty print, the --compact-json is applied if request header does not request compression.
+   - [ ] Add compression for the response. Default is pretty print, the --server-minify-json is applied if request header does not request compression.
    - [ ] Add user management with a new user table that lins to contents table.
    - [ ] Add user authentication. Which one: sessionID, OAuth2, JWS? Maybe OAuth2 (corporate integration) or JWS (embedded, no server?).
    - [ ] Add CORS https://stackoverflow.com/a/45183343
@@ -93,7 +91,7 @@
    - [ ] Fix failing tests print the help. Something was broken. This applies only (rare?) some cases? This comes from UT sqlite cases at least.
    - [ ] Fix help tests since it is not reading new _cli_ tests. What I was thinking?
    - [ ] Fix make test if pytest cover leaves hanging files like .coverage.localhost.localdomain.4727.176219. Add --cover-erase in commmand? // https://bitbucket.org/ned/coveragepy/issues/476/coverageexception-cant-add-arcs-to
-   - [ ] Fix when server parameters are erronous, error text from argparse is misleading since it complains about the content operations. Custom errors for --server?
+   - [ ] Fix when server parameters are erronous, error text from argparse is misleading since it complains about the content operations. Custom errors for --server-host?
    - [ ] Fix OpenAPI specs. The ResponseData and the attributes contain mandatory 'dhttps://stackoverflow.com/a/33812744ata' field. This is not true if resouce field like brief is requirested.
    - [ ] Fix export the original which contains additional whitespace before the exported template in the DATE field. Was this some test?
    - [ ] Fix indention in snippy: error: argument   {create,search,update,delete,export,import}. This indention is actually "must" in --help
@@ -179,6 +177,7 @@
    - [ ] Python module jsonschema has open fault that prevent splitting schema to multiple files. // https://github.com/Julian/jsonschema/issues/313
 
 ## DONE
+   - [x] Changed server command line options to align with storage options.
    - [x] Removed sensitive log message that may reveal secrets.
    - [x] Changed OK cause to NOK when there we no content to be exported.
    - [x] Changed external UUID1 to UUID4.
@@ -216,7 +215,7 @@
    - [x] Added meta field for pagination purposes to HTTP GET responses.
    - [x] Added offset to enable GET pagination with limit.
    - [x] Added X-HTTP-Method-Override header support for POST to map it to PUT, PATCH and DELETE.
-   - [x] Added pretty print response by default. Configurable with --compact-json option for server.
+   - [x] Added pretty print response by default. Configurable with --server-minify-json option for server.
    - [x] Added documentation for content attributes how they behave when created and updated with POST, PUT and PATCH.
    - [x] Added PATCH support for partial updates.
    - [x] Removed delete operation on collections. Delete is allowed only with resource parameter in URL.

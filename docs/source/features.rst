@@ -20,9 +20,10 @@ You can run the Snippy as a server. The server can create, search, update and
 delete snippets and solutions. The server operates through RESTish API that
 follows a subset of JSON API v1.0 specification.
 
-The server starts by default in localhost port 8080. You can change the IP
-address and port from the command line. You can also define the log format
-between string and JSON and verbosity level of logs.
+The server does not bind to any address by default and the server-host option
+must be always defined. The server-host option supports format <ip>:<port.
+You can also define the log format between string and JSON and verbosity level
+of logs.
 
 The API is experimental and changes can be expected. The API is documented in
 Swagger Hub `OpenAPI definitions`_.
@@ -36,7 +37,7 @@ Docker Hub or directly from the source code.
    # message length. Always remove previosly started container before running
    # container with new options set.
    docker rm -f snippy
-   sudo docker run -d --net="host" --name snippy heilaaks/snippy --server --log-json -vv
+   sudo docker run -d --net="host" --name snippy heilaaks/snippy --server-host 127.0.0.1:8080 --log-json -vv
    curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=2" -H "accept: application/vnd.api+json" | python -m json.tool
    curl -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json" | python -m json.tool
 
@@ -44,12 +45,12 @@ Docker Hub or directly from the source code.
    # shared between the container and host. Generate full length logs with
    # the --debug option.
    docker rm -f snippy
-   sudo docker run -d --net="host" --name snippy heilaaks/snippy --server --port 8080 --ip 127.0.0.1 --log-json --debug
+   sudo docker run -d --net="host" --name snippy heilaaks/snippy --server-host 127.0.0.1:8080 --log-json --debug
    curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json" | python -m json.tool
 
    # Run the server with string logs.
    docker rm -f snippy
-   sudo docker run -d --net="host" --name snippy heilaaks/snippy --server --port 8080 --ip 127.0.0.1 -vv
+   sudo docker run -d --net="host" --name snippy heilaaks/snippy --server-host 127.0.0.1:8080 -vv
 
 You can query the server logs with the Docker log command.
 
@@ -81,6 +82,6 @@ before starting the server.
 
    snippy import --defaults --storage-path ${HOME}/devel/temp
    snippy import --defaults --solution --storage-path ${HOME}/devel/temp
-   snippy --server --storage-path ${HOME}/devel/temp --port 8080 --ip 127.0.0.1 -vv
+   snippy --server-host 127.0.0.1:8080 --storage-path ${HOME}/devel/temp -vv
 
 .. _OpenAPI definitions: https://app.swaggerhub.com/apis/heilaaks/snippy/1.0

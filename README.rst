@@ -264,29 +264,20 @@ be expected. The API is documented in Swagger Hub `OpenAPI definitions`_.
 
 .. code-block:: text
 
-   sudo docker run -d --net="host" --name snippy docker.io/heilaaks/snippy --server --log-json -vv
+   sudo docker run -d --net="host" --name snippy docker.io/heilaaks/snippy --server-host 127.0.0.1:8080 --log-json -vv
    curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=2" -H "accept: application/vnd.api+json"
    curl -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json"
 
-You can change the port and IP address by defining them from the command
-line. Remember to remove the stopped container before starting it with new
+You can see the logs from the server from the default Docker log. If you do
+not want to read JSON logs, remove the ``--log-json`` parameter from the
+server startup optons. You can remove all the logs by removing the ``-vv``
+option. Remember to remove the stopped container before starting it with new
 perameters.
 
 .. code-block:: text
 
    docker rm -f snippy
-   sudo docker run -d --net="host" --name snippy docker.io/heilaaks/snippy --server --port 8080 --ip 127.0.0.1 --log-json -vv
-   curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json"
-
-You can see the logs from the server from the default Docker log. If you do
-not want to read JSON logs, remove the ``--log-json`` parameter from the
-server startup optons. You can remove all the logs by removing the ``-vv``
-option.
-
-.. code-block:: text
-
-   docker rm -f snippy
-   sudo docker run -d --net="host" --name snippy docker.io/heilaaks/snippy --server --port 8080 --ip 127.0.0.1 -vv
+   sudo docker run -d --net="host" --name snippy docker.io/heilaaks/snippy --server-host 127.0.0.1:8080 -vv
    docker logs snippy
 
 You can remove the server with command example.
@@ -313,7 +304,7 @@ location before starting the server.
 
    snippy import --defaults --storage-path ${HOME}/devel/temp
    snippy import --defaults --solutions --storage-path ${HOME}/devel/temp
-   snippy --server --storage-path ${HOME}/devel/temp --port 8080 --ip 127.0.0.1 -vv
+   snippy --server-host 127.0.0.1:8080 --storage-path ${HOME}/devel/temp -vv
 
 Contributing
 ============

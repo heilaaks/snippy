@@ -68,7 +68,7 @@ class Server(object):  # pylint: disable=too-few-public-methods
         """Run Snippy API server."""
 
         options = {
-            'bind': '%s:%s' % (Config.server_ip, Config.server_port),
+            'bind': '%s' % (Config.server_host),
             'ca_certs': Config.server_ssl_ca_cert,
             'certfile': Config.server_ssl_cert,
             'ciphers': 'ECDHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA',
@@ -80,7 +80,7 @@ class Server(object):  # pylint: disable=too-few-public-methods
             'ssl_version': ssl.PROTOCOL_TLSv1_2,
             'workers': 1
         }
-        self._logger.debug('run rest api server application with base path: %s', Config.base_path_app)
+        self._logger.debug('run rest api server application with base path: %s', Config.server_app_base_path)
         try:
             self.api = falcon.API(media_type='application/vnd.api+json')
         except AttributeError:
@@ -92,30 +92,30 @@ class Server(object):  # pylint: disable=too-few-public-methods
         self.api.req_options.media_handlers.update({'application/vnd.api+json': falcon.media.JSONHandler()})
         self.api.resp_options.media_handlers.update({'application/vnd.api+json': falcon.media.JSONHandler()})
         self.api.add_route('/snippy', ApiHello())
-        self.api.add_route(Config.base_path_app.rstrip('/'), ApiHello())
-        self.api.add_route(urljoin(Config.base_path_app, 'hello'), ApiHello())
-        self.api.add_route(urljoin(Config.base_path_app, 'snippets'), ApiSnippets(snippet))
-        self.api.add_route(urljoin(Config.base_path_app, 'snippets/{digest}'), ApiSnippetsDigest(snippet))
-        self.api.add_route(urljoin(Config.base_path_app, 'snippets/{digest}/{field}'), ApiSnippetsField(snippet))
-        self.api.add_route(urljoin(Config.base_path_app, 'solutions'), ApiSolutions(solution))
-        self.api.add_route(urljoin(Config.base_path_app, 'solutions/{digest}'), ApiSolutionsDigest(solution))
-        self.api.add_route(urljoin(Config.base_path_app, 'solutions/{digest}/{field}'), ApiSolutionsField(solution))
-        self.api.add_route(urljoin(Config.base_path_app, 'references'), ApiReferences(reference))
-        self.api.add_route(urljoin(Config.base_path_app, 'references/{digest}'), ApiReferencesDigest(reference))
-        self.api.add_route(urljoin(Config.base_path_app, 'references/{digest}/{field}'), ApiReferencesField(reference))
-        self.api.add_route(urljoin(Config.base_path_app, 'groups/{sgrp}'), ApiGroups(fields))
-        self.api.add_route(urljoin(Config.base_path_app, 'tags/{stag}'), ApiTags(fields))
-        self.api.add_route(urljoin(Config.base_path_app, 'digest/{digest}'), ApiDigest(fields))
-        self.api.add_route(urljoin(Config.base_path_app, 'digest/{digest}/{field}'), ApiDigestField(fields))
-        self.api.add_route(urljoin(Config.base_path_app, 'uuid/{uuid}'), ApiUuid(fields))
-        self.api.add_route(urljoin(Config.base_path_app, 'uuid/{uuid}/{field}'), ApiUuidField(fields))
-        self.api.add_route(urljoin(Config.base_path_app, '{sall}'), ApiKeywords(fields))
+        self.api.add_route(Config.server_app_base_path.rstrip('/'), ApiHello())
+        self.api.add_route(urljoin(Config.server_app_base_path, 'hello'), ApiHello())
+        self.api.add_route(urljoin(Config.server_app_base_path, 'snippets'), ApiSnippets(snippet))
+        self.api.add_route(urljoin(Config.server_app_base_path, 'snippets/{digest}'), ApiSnippetsDigest(snippet))
+        self.api.add_route(urljoin(Config.server_app_base_path, 'snippets/{digest}/{field}'), ApiSnippetsField(snippet))
+        self.api.add_route(urljoin(Config.server_app_base_path, 'solutions'), ApiSolutions(solution))
+        self.api.add_route(urljoin(Config.server_app_base_path, 'solutions/{digest}'), ApiSolutionsDigest(solution))
+        self.api.add_route(urljoin(Config.server_app_base_path, 'solutions/{digest}/{field}'), ApiSolutionsField(solution))
+        self.api.add_route(urljoin(Config.server_app_base_path, 'references'), ApiReferences(reference))
+        self.api.add_route(urljoin(Config.server_app_base_path, 'references/{digest}'), ApiReferencesDigest(reference))
+        self.api.add_route(urljoin(Config.server_app_base_path, 'references/{digest}/{field}'), ApiReferencesField(reference))
+        self.api.add_route(urljoin(Config.server_app_base_path, 'groups/{sgrp}'), ApiGroups(fields))
+        self.api.add_route(urljoin(Config.server_app_base_path, 'tags/{stag}'), ApiTags(fields))
+        self.api.add_route(urljoin(Config.server_app_base_path, 'digest/{digest}'), ApiDigest(fields))
+        self.api.add_route(urljoin(Config.server_app_base_path, 'digest/{digest}/{field}'), ApiDigestField(fields))
+        self.api.add_route(urljoin(Config.server_app_base_path, 'uuid/{uuid}'), ApiUuid(fields))
+        self.api.add_route(urljoin(Config.server_app_base_path, 'uuid/{uuid}/{field}'), ApiUuidField(fields))
+        self.api.add_route(urljoin(Config.server_app_base_path, '{sall}'), ApiKeywords(fields))
 
         # The signal handler manipulation and the flush below prevent the
         # 'broken pipe' errors with grep /1,2/. The code allows clean exit
         # from server with ctrl-c when grepping logs like with the example:
         #
-        #   $ snippy --server -vv | grep -A2 -B2 'operation: run :'
+        #   $ snippy --server-host localhost:8080 -vv | grep -A2 -B2 'operation: run :'
         #
         # /1/ https://stackoverflow.com/a/16865106
         # /2/ https://stackoverflow.com/a/26738736

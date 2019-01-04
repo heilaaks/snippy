@@ -222,7 +222,7 @@ def server(mocker, request):
     if hasattr(request, 'param'):
         params = request.param
     else:
-        params.extend(['--server', '--compact-json', '-q'])
+        params.extend(['--server-host', 'localhost:8080', '--server-minify-json', '-q'])
     params.insert(0, 'snippy')  # Add the tool name args list as a first parameter.
 
     # Mock predicatable UUIDs.
@@ -252,7 +252,7 @@ def server_db(mocker, request):
     if hasattr(request, 'param'):
         params = request.param
     else:
-        params.extend(['--server', '--compact-json', '-q'])
+        params.extend(['--server-host', 'localhost:8080', '--server-minify-json', '-q'])
     params.insert(0, 'snippy')  # Add the tool name args list as a first parameter.
 
     # Mock predicatable UUIDs.

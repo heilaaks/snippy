@@ -77,7 +77,7 @@ class TestApiPerformance(object):
 
         # Clear the real database and run the real server.
         call(['make', 'clean-db'])
-        server = Popen(['python', './runner', '--server', '--compact-json'], stdout=PIPE, stderr=PIPE)
+        server = Popen(['python', './runner', '--server-host', 'localhost:8080', '--server-minify-json'], stdout=PIPE, stderr=PIPE)
         time.sleep(1)  # Wait untill server is up.
         snippets = {
             'data': [
@@ -156,7 +156,7 @@ class TestApiPerformance(object):
         print("There are %d rows in stdout" % len(out))
         print("There are %d rows in stderr" % len(err))
         print("====================================")
-        assert out == [b'snippy server running at 127.0.0.1:8080\n', b'snippy server stopped at 127.0.0.1:8080\n']
+        assert out == [b'snippy server running at: localhost:8080\n', b'snippy server stopped at: localhost:8080\n']
         assert not err
         assert runtime < 10
 
@@ -171,7 +171,7 @@ class TestApiPerformance(object):
 
         # Clear the real database and run the real server.
         call(['make', 'clean-db'])
-        server = Popen(['python', './runner', '--server', '-vv'], stdout=PIPE, stderr=PIPE)
+        server = Popen(['python', './runner', '--server-host', 'localhost:8080', '-vv'], stdout=PIPE, stderr=PIPE)
         time.sleep(1)  # Wait untill server up.
         snippets = {
             'data': [

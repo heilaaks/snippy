@@ -35,10 +35,8 @@ class TestUtCli(object):
         """
 
         cli = Cli(['snippy', 'create'])
-        assert cli.base_path_app == '/snippy/api/app/v1/'
         assert cli.brief == ''
         assert cli.category == Const.SNIPPET
-        assert not cli.compact_json
         assert cli.data == ()
         assert not cli.debug
         assert not cli.defaults
@@ -63,9 +61,9 @@ class TestUtCli(object):
         assert cli.search_filter is None
         assert cli.search_limit == Cli.LIMIT_DEFAULT_CLI
         assert cli.search_offset == 0
-        assert not cli.server
-        assert cli.server_ip == '127.0.0.1'
-        assert cli.server_port == '8080'
+        assert cli.server_app_base_path == '/snippy/api/app/v1/'
+        assert cli.server_host == ''
+        assert not cli.server_minify_json
         assert cli.server_ssl_ca_cert is None
         assert cli.server_ssl_cert is None
         assert cli.server_ssl_key is None

@@ -54,7 +54,7 @@ class GunicornServer(gunicorn.app.base.BaseApplication):  # pylint: disable=abst
         This is used to tell user that the server is running.
         """
 
-        Logger.print_status("snippy server running at {0}:{1}".format(Config.server_ip, Config.server_port))
+        Logger.print_status('snippy server running at: {}'.format(Config.server_host))
 
     @staticmethod
     def pre_request(_, __):
@@ -74,4 +74,4 @@ class GunicornServer(gunicorn.app.base.BaseApplication):  # pylint: disable=abst
         This is used to tell user that the server has been stopped.
         """
 
-        Logger.print_status("snippy server stopped at {0}:{1}".format(Config.server_ip, Config.server_port))
+        Logger.print_status('snippy server stopped at: {}'.format(Config.server_host))

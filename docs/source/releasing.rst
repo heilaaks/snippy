@@ -34,7 +34,7 @@ Releasing
       snippy import --defaults --storage-path ${HOME}/devel/temp
       snippy import --defaults --solutions --storage-path ${HOME}/devel/temp
       snippy import --defaults --references --storage-path ${HOME}/devel/temp
-      snippy --server --storage-path ${HOME}/devel/temp --port 8080 --ip 127.0.0.1 &
+      snippy --server-host 127.0.0.1:8080 --storage-path ${HOME}/devel/temp &
       curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json" | python -m json.tool
       pkill snippy
 
@@ -78,12 +78,12 @@ Releasing
       docker rmi docker.io/heilaaks/snippy:v0.7.0
       docker run heilaaks/snippy --help
       docker run heilaaks/snippy search --sall docker
-      docker run -d --net="host" --name snippy heilaaks/snippy --server --port 8080 --ip 127.0.0.1 -vv
+      docker run -d --net="host" --name snippy heilaaks/snippy --server-host 127.0.0.1:8080 -vv
       curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json"
       docker logs 632e97aa83fe
       docker stop 632e97aa83fe
       docker rm $(docker ps --all -q -f status=exited)
-      docker run -d --net="host" --name snippy heilaaks/snippy --server --log-json -vv &
+      docker run -d --net="host" --name snippy heilaaks/snippy --server-host 127.0.0.1:8080 --log-json -vv &
       curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json"
       docker logs f72b3902dd4b
 
@@ -106,7 +106,7 @@ Releasing
       sudo pypy -m pip install gunicorn
       sudo pypy -m pip install jsonschema
       pypy runner --help
-      pypy runner --server -vv
+      pypy runner --server-host 127.0.0.1:8080 -vv
       pypy -m pytest -x ./tests/test_*.py --cov snipp
       unset PYTHONPATH
 
@@ -166,9 +166,9 @@ Releasing
       docker pull snippy
       docker run docker.io/heilaaks/snippy:latest --help
       docker run docker.io/heilaaks/snippy:latest search --sall docker
-      docker run -d --net="host" --name snippy docker.io/heilaaks/snippy:latest --server --port 8080 --ip 127.0.0.1 -vv
+      docker run -d --net="host" --name snippy docker.io/heilaaks/snippy:latest --server-host 127.0.0.1:8080 -vv
       curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json"
-      docker run -d --net="host" --name snippy docker.io/heilaaks/snippy:latest --server --log-json -vv
+      docker run -d --net="host" --name snippy docker.io/heilaaks/snippy:latest --server-host 127.0.0.1:8080 --log-json -vv
       curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json"
 
 #. Release news

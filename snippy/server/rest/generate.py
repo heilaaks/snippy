@@ -212,7 +212,7 @@ class Generate(object):
         # thus they have to be defined here. In case of Python 2, there is
         # whitespace after the comma which is not there with the Python 3.
         kwargs = {'indent': 4, 'sort_keys': True, 'separators': (',', ': ')}
-        if Config.compact_json:
+        if Config.server_minify_json:
             kwargs = {}
 
         return json.dumps(response, **kwargs)

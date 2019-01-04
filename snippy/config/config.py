@@ -75,9 +75,6 @@ class Config(object):
         if not hasattr(cls, 'source'):
             return str('%s(%s)' % ('Config', ', '.join(namespace)))
 
-        namespace.append('storage_type={}'.format(cls.storage_type))
-        namespace.append('storage_file=...{}'.format(os.sep.join(os.path.normpath(cls.storage_file).split(os.sep)[5:])))
-        namespace.append('storage_schema=..{}'.format(os.sep.join(os.path.normpath(cls.storage_schema).split(os.sep)[5:])))
         namespace.append('operation={}'.format(cls.operation))
         namespace.append('operation_uuid={}'.format(cls.operation_uuid))
         namespace.append('operation_digest={}'.format(cls.operation_digest))
@@ -102,11 +99,14 @@ class Config(object):
         namespace.append('search_limit={}'.format(cls.search_limit))
         namespace.append('search_offset={}'.format(cls.search_offset))
         namespace.append('sort_fields={}'.format(cls.sort_fields))
+        namespace.append('storage_type={}'.format(cls.storage_type))
+        namespace.append('storage_file=...{}'.format(os.sep.join(os.path.normpath(cls.storage_file).split(os.sep)[5:])))
+        namespace.append('storage_schema=..{}'.format(os.sep.join(os.path.normpath(cls.storage_schema).split(os.sep)[5:])))
+        namespace.append('server_host={}'.format(cls.server_host))
+        namespace.append('server_app_base_path={}'.format(cls.server_app_base_path))
+        namespace.append('server_minify_json={}'.format(cls.server_minify_json))
         namespace.append('editor={}'.format(cls.editor))
         namespace.append('use_ansi={}'.format(cls.use_ansi))
-        namespace.append('server_host={}:{}'.format(cls.server_ip, cls.server_port))
-        namespace.append('base_path_app={}'.format(cls.base_path_app))
-        namespace.append('compact_json={}'.format(cls.compact_json))
 
         return str('%s(%s)' % ('Config', ', '.join(namespace)))
 
@@ -148,11 +148,9 @@ class Config(object):
         }
 
         # Static server configurations.
-        cls.base_path_app = cls.source.base_path_app
-        cls.compact_json = cls.source.compact_json
-        cls.server = cls.source.server
-        cls.server_ip = cls.source.server_ip
-        cls.server_port = cls.source.server_port
+        cls.server_app_base_path = cls.source.server_app_base_path
+        cls.server_minify_json = cls.source.server_minify_json
+        cls.server_host = cls.source.server_host
         cls.server_ssl_cert = cls._ssl_file(cls.source.server_ssl_cert)
         cls.server_ssl_key = cls._ssl_file(cls.source.server_ssl_key)
         cls.server_ssl_ca_cert = cls._ssl_file(cls.source.server_ssl_ca_cert)
@@ -216,7 +214,7 @@ class Config(object):
         cls.failure = cls.source.failure
 
         # Server must be updated again because only the first init starts the server.
-        cls.server = cls.source.server
+        cls.run_server = bool(cls.source.server_host)
 
         # Parsed from defined configuration.
         cls.is_operation_create = bool(cls.operation == 'create')

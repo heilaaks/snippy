@@ -45,16 +45,14 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
                   'digest', 'key')
 
     # Defaults
-    BASE_PATH = '/snippy/api'
-    BASE_PATH_APP = BASE_PATH + '/app/v1/'
-    BASE_PATH_ADMIN = BASE_PATH + '/admin/v1/'
-    BASE_PATH_AUTH = BASE_PATH + '/auth/v1/'
+    DEFAULT_LOG_MSG_MAX = Logger.DEFAULT_LOG_MSG_MAX
     LIMIT_DEFAULT_API = 20
     LIMIT_DEFAULT_CLI = 99
-    DEFAULT_LOG_MSG_MAX = Logger.DEFAULT_LOG_MSG_MAX
     OFFSET_DEFAULT = 0
-    SERVER_IP = '127.0.0.1'
-    SERVER_PORT = '8080'
+    SERVER_BASE_PATH = '/snippy/api'
+    SERVER_APP_BASE_PATH = SERVER_BASE_PATH + '/app/v1/'
+    SERVER_ADMIN_BASE_PATH = SERVER_BASE_PATH + '/admin/v1/'
+    SERVER_AUTH_BASE_PATH = SERVER_BASE_PATH + '/auth/v1/'
 
     def __init__(self, derived, parameters=None):
         self._logger = Logger.get_logger(__name__)
@@ -78,9 +76,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         if not hasattr(self, '_repr'):
             return str('%s(%s)' % ('ConfigSourceBase', ', '.join(namespace)))
 
-        namespace.append('base_path_app={}'.format(self.base_path_app))
         namespace.append('brief={}'.format(self.brief))
-        namespace.append('compact_json={}'.format(self.compact_json))
         namespace.append('data={}'.format(self.data))
         namespace.append('debug={}'.format(self.debug))
         namespace.append('defaults={}'.format(self.defaults))
@@ -105,6 +101,9 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         namespace.append('search_filter={}'.format(self.search_filter))
         namespace.append('search_limit={}'.format(self.search_limit))
         namespace.append('search_offset={}'.format(self.search_offset))
+        namespace.append('server_app_base_path={}'.format(self.server_app_base_path))
+        namespace.append('server_host={}'.format(self.server_host))
+        namespace.append('server_minify_json={}'.format(self.server_minify_json))
         namespace.append('sgrp={}'.format(self.sgrp))
         namespace.append('sort_fields={}'.format(self.sort_fields))
         namespace.append('source={}'.format(self.source))
@@ -158,9 +157,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         # This kind of parameters must be set to None by default. All other
         # parameters must have default value like empty list or string that
         # make sense.
-        self.base_path_app = parameters.get('base_path_app', self.BASE_PATH_APP)
         self.brief = parameters.get('brief', Const.EMPTY)
-        self.compact_json = parameters.get('compact_json', False)
         self.data = parameters.get('data', None)
         self.debug = parameters.get('debug', False)
         self.defaults = parameters.get('defaults', False)
@@ -185,9 +182,9 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self.search_filter = parameters.get('search_filter', None)
         self.search_limit = parameters.get('limit', self.LIMIT_DEFAULT_API)
         self.search_offset = parameters.get('offset', self.OFFSET_DEFAULT)
-        self.server = parameters.get('server', False)
-        self.server_ip = parameters.get('server_ip', self.SERVER_IP)
-        self.server_port = parameters.get('server_port', self.SERVER_PORT)
+        self.server_app_base_path = parameters.get('server_app_base_path', self.SERVER_APP_BASE_PATH)
+        self.server_host = parameters.get('server_host', Const.EMPTY)
+        self.server_minify_json = parameters.get('server_minify_json', False)
         self.server_ssl_ca_cert = parameters.get('server_ssl_ca_cert', None)
         self.server_ssl_cert = parameters.get('server_ssl_cert', None)
         self.server_ssl_key = parameters.get('server_ssl_key', None)
@@ -197,13 +194,13 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self.stag = parameters.get('stag', None)
         self.storage_path = parameters.get('storage_path', Const.EMPTY)
         self.storage_type = parameters.get('storage_type', Const.DB_SQLITE)
-        self.storage_host = parameters.get('storage_host', '')
-        self.storage_user = parameters.get('storage_user', '')
-        self.storage_password = parameters.get('storage_password', '')
-        self.storage_database = parameters.get('storage_database', '')
-        self.storage_ssl_cert = parameters.get('storage_ssl_cert', '')
-        self.storage_ssl_key = parameters.get('storage_ssl_key', '')
-        self.storage_ssl_ca_cert = parameters.get('storage_ssl_ca_cert', '')
+        self.storage_host = parameters.get('storage_host', Const.EMPTY)
+        self.storage_user = parameters.get('storage_user', Const.EMPTY)
+        self.storage_password = parameters.get('storage_password', Const.EMPTY)
+        self.storage_database = parameters.get('storage_database', Const.EMPTY)
+        self.storage_ssl_cert = parameters.get('storage_ssl_cert', Const.EMPTY)
+        self.storage_ssl_key = parameters.get('storage_ssl_key', Const.EMPTY)
+        self.storage_ssl_ca_cert = parameters.get('storage_ssl_ca_cert', Const.EMPTY)
         self.tags = parameters.get('tags', ())
         self.template = parameters.get('template', False)
         self.uuid = parameters.get('uuid', None)
@@ -540,13 +537,13 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self._logger.debug('{}: content attributes that are removed: {}'.format(self._derived, self._remove_fields))
 
     @property
-    def base_path_app(self):
+    def server_app_base_path(self):
         """Get REST application base path."""
 
-        return self._base_path_app
+        return self._server_app_base_path
 
-    @base_path_app.setter
-    def base_path_app(self, value):
+    @server_app_base_path.setter
+    def server_app_base_path(self, value):
         """Make sure that REST application base path ends with slash."""
 
         # Joining base path URL always assumes that the base path starts
@@ -563,6 +560,6 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         # just a portion of checks for possible failure cases.
         if '//' in value:
             self._logger.debug('{}: use default base path because invalid configuration: {}'.format(self._derived, value))
-            value = self.BASE_PATH_APP
+            value = self.SERVER_APP_BASE_PATH
 
-        self._base_path_app = value  # pylint: disable=attribute-defined-outside-init
+        self._server_app_base_path = value  # pylint: disable=attribute-defined-outside-init

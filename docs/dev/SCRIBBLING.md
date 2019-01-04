@@ -79,7 +79,7 @@ Random notes and scribling during development.
    $ sudo pypy -m pip install jsonschema
    $ sudo pypy -m pip install falcon
    $ pypy runner --help
-   $ pypy runner --server -vv
+   $ pypy runner --server-host 127.0.0.1:8080 -vv
    $ pypy -m pytest -x ./tests/test_*.py --cov snipp
    $ unset PYTHONPATH
    ```
@@ -248,7 +248,7 @@ Random notes and scribling during development.
    python -m pytest -x ./tests/test_*.py --cov snippy --snippy-db postgresql
    pytest tests/test_api_create_reference.py -k test_api_create_reference_001 --snippy-db postgresql
 
-   python runner --server -vv --storage-type postgresql --storage-host localhost:5432 --storage-database postgres --storage-user postgres --storage-password postgres
+   python runner --server-host 127.0.0.1:8080 -vv --storage-type postgresql --storage-host localhost:5432 --storage-database postgres --storage-user postgres --storage-password postgres
 
    # Changes round 2:
 
@@ -762,9 +762,9 @@ snippy export -d fd4c0adffa232083
 ll
 snippy import -d fd4c0adffa232083 -f kubernetes-docker-log-driver-kafka.txt
 snippy search --solution --sall docker | grep -Ev '[^\s]+:'
-sudo docker run -d --net="host" --name snippy heilaaks/snippy --server --port 8080 --ip 127.0.0.1 --log-json -vv
+sudo docker run -d --net="host" --name snippy heilaaks/snippy --server-host 127.0.0.1:8080 --log-json -vv
 snippy search --sall prune
-sudo docker run -d --net="host" --name snippy heilaaks/snippy --server --port 8080 --ip 127.0.0.1 --log-json -vv
+sudo docker run -d --net="host" --name snippy heilaaks/snippy --server-host 127.0.0.1:8080 --log-json -vv
 curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/" | python -m json.tool
 curl -s -X GET "http://127.0.0.1:8080//snippy/api/app/v1/uuid/1/brief"
 curl -v -X OPTIONS "http://127.0.0.1:8080/snippy/api/app/v1/snippets"
@@ -804,7 +804,7 @@ Good set on loggers: https://books.google.fi/books?id=7U1CIoOs5AkC&pg=PA357&lpg=
     ```
     $ pip install gunicorn
     $ pip install falcon
-    $ python runner --server
+    $ python runner --server-host 127.0.0.1:8080
     $ curl 127.0.0.1:8080/api/hello
     $ curl 127.0.0.1:8080/api/v1/hello
 
@@ -2582,7 +2582,7 @@ git update-index --no-assume-unchanged FILE_NAME # change back
     $ openssl s_client -debug -connect 127.0.0.1:8080 -ssl3    # must not work
 
     # Run server
-    $ python runner --server -vv --ssl-cert ./snippy/data/ssl/server.crt --ssl-key ./snippy/data/ssl/server.key
+    $ python runner --server-host 127.0.0.1:8080 -vv --ssl-cert ./snippy/data/ssl/server.crt --ssl-key ./snippy/data/ssl/server.key
     === WHITEBOARD ===
 
 

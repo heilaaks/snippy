@@ -77,7 +77,7 @@ class TestApiHello(object):
             'content-length': '197'
         }
         expect_body = {'meta': Content.get_api_meta()}
-        server = Snippy(['snippy', '--server', '--base-path-app', '/snippy/api/'])
+        server = Snippy(['snippy', '--server-host', 'localhost:8080', '--server-app-base-path', '/snippy/api/'])
         server.run()
         result = testing.TestClient(server.server.api).simulate_get('/snippy/api/')
         assert result.status == falcon.HTTP_200
@@ -101,7 +101,7 @@ class TestApiHello(object):
             'content-length': '197'
         }
         expect_body = {'meta': Content.get_api_meta()}
-        server = Snippy(['snippy', '--server', '--base-path-app', '/snippy/api'])
+        server = Snippy(['snippy', '--server-host', 'localhost:8080', '--server-app-base-path', '/snippy/api'])
         server.run()
         result = testing.TestClient(server.server.api).simulate_get('/snippy/api/')
         assert result.status == falcon.HTTP_200
@@ -125,7 +125,7 @@ class TestApiHello(object):
             'content-length': '197'
         }
         expect_body = {'meta': Content.get_api_meta()}
-        server = Snippy(['snippy', '--server', '--base-path-app', 'snippy/api/'])
+        server = Snippy(['snippy', '--server-host', 'localhost:8080', '--server-app-base-path', 'snippy/api/'])
         server.run()
         result = testing.TestClient(server.server.api).simulate_get('/snippy/api/')
         assert result.status == falcon.HTTP_200
@@ -149,7 +149,7 @@ class TestApiHello(object):
             'content-length': '197'
         }
         expect_body = {'meta': Content.get_api_meta()}
-        server = Snippy(['snippy', '--server', '--base-path-app', 'snippy/api'])
+        server = Snippy(['snippy', '--server-host', 'localhost:8080', '--server-app-base-path', 'snippy/api'])
         server.run()
         result = testing.TestClient(server.server.api).simulate_get('/snippy/api')
         assert result.status == falcon.HTTP_200
@@ -172,7 +172,7 @@ class TestApiHello(object):
             'content-length': '197'
         }
         expect_body = {'meta': Content.get_api_meta()}
-        server = Snippy(['snippy', '--server', '--base-path-app', '/snippy//api'])
+        server = Snippy(['snippy', '--server-host', 'localhost:8080', '--server-app-base-path', '/snippy//api'])
         server.run()
         result = testing.TestClient(server.server.api).simulate_get('/snippy/api/app/v1')
         assert result.status == falcon.HTTP_200
@@ -194,7 +194,7 @@ class TestApiHello(object):
             'content-length': '197'
         }
         expect_body = {'meta': Content.get_api_meta()}
-        server = Snippy(['snippy', '--server', '--server-ip', 'localhost', '--server-port', '8081', '--debug'])
+        server = Snippy(['snippy', '--server-host', 'localhost:8081', '--debug'])
         server.run()
         result = testing.TestClient(server.server.api).simulate_get('/snippy/api/app/v1/')
         assert 'server_host=localhost:8081' in caplog.text

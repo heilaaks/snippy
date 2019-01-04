@@ -14,11 +14,12 @@ Breaking changes
 * Change filter option behaviour `[3]`_.
 * Change default export file format from text to YAML `[4]`_.
 * Change UTC offset format from +0000 to +00:00 `[5]`_.
+* Change server command line options `[6]`_.
 
 New features
 ~~~~~~~~~~~~
 
-* Add REST API routes for: keywords, groups, tags, uuid and digest `[6]`_.
+* Add REST API routes for: keywords, groups, tags, uuid and digest `[7]`_.
 * Add support for PostgreSQL database.
 * Add support for Markdown formatted content.
 * Add export and import all default content with one command.
@@ -89,3 +90,4 @@ Security
 .. _`[4]`: https://github.com/heilaaks/snippy/commit/61f3e55156166427ec45312974ff1ed15a342d37
 .. _`[5]`: https://github.com/heilaaks/snippy/commit/1b00a4d9179bf67ada56f7ee624e851e884c7f6a
 .. _`[6]`: https://app.swaggerhub.com/apis/heilaaks/snippy/1.0
+.. _`[7]`: https://app.swaggerhub.com/apis/heilaaks/snippy/1.0

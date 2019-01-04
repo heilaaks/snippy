@@ -52,7 +52,7 @@ class Snippy(object):
 
             return Cause.reset()
 
-        if Config.server:
+        if Config.run_server:
             self._run_server()
         else:
             self._run_cli()

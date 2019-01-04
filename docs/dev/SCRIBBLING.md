@@ -287,7 +287,7 @@ Random notes and scribling during development.
 
         #self.created = row[Resource.CREATED].strftime('%Y-%m-%dT%H:%M:%S.%f+00:00')
         #self.updated = row[Resource.UPDATED].strftime('%Y-%m-%dT%H:%M:%S.%f+00:00')
-        
+
         Is not needed after the check that converts Datetime object to string in seal()?
 
    5. conftest.py and def server(mocker, request):
@@ -1504,6 +1504,34 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        In order to find all logs related cases where the tool identified internal
        server error, the logs contain prefix of 'internal server error '.
 
+    10. Security rules must be applied while writing log messages
+
+        Following rules must be followed when writing log messages:
+
+        1. Senstive data must not be printed:
+
+           - The rules here apply for all log levels. The additional 'security'
+             log level is not for printing senstive data. The 'security' log
+             level is to print possible security related notices and warnings
+             that are observed by the application.
+
+           - User names and passwords.
+
+           - SSL certificate paths and certificate names.
+
+           - Internal IP addresses, host names and service ports.
+
+           - Full file paths. File paths are truncated to prevent revealing
+             installation location in the server.
+
+           - Database table names.
+
+           - Internal database keys like the UUID primary key.
+
+           - Direct printing of command line arguments.
+
+        2. Comply with SECURITY and SECURITY HARDENING chapters.
+
     THREADING
 
     1. The tool is single threaded
@@ -2108,6 +2136,8 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        safety and security reasons. This tries to prevent extremely long log messages
        which may cause problems for the server.
 
+    3. See security rules to write log messages from LOGGING
+
     SQL
 
     1. SQL formatting
@@ -2140,7 +2170,9 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        $ git log --show-signature -1
        ```
 
-    2. Only TLSv1.2 is allowed
+    2. See security rules from LOGGIN and SECURITY HARDENING
+
+    3. Only TLSv1.2 is allowed
 
        All SSL versions are considered unsecure and compromised. TLS v1.1 and
        v1.2 are both without known security issues, but only v1.2 provides
@@ -2149,7 +2181,7 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        [1] https://github.com/ssllabs/research/wiki/SSL-and-TLS-Deployment-Best-Practices
        [2] https://wiki.mozilla.org/Security/Server_Side_TLS
 
-    3. Only selected set of ciphers are allowed
+    4. Only selected set of ciphers are allowed
 
        Only ECDHE-RSA-AES256-SHA and ECDHE-RSA-AES128-SHA ciphers are allowed
        with the TLSv1.2. This set balances compatiblity and security. Ciphers
@@ -2159,7 +2191,7 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        [1] https://superuser.com/a/224263
        [2] https://testssl.sh/openssl-rfc.mapping.html
 
-    3. Generating self signed SSL certificates
+    5. Generating self signed SSL certificates
 
        ```
        # Create private key and self signed SSL certificate to run
@@ -2232,24 +2264,24 @@ git update-index --no-assume-unchanged FILE_NAME # change back
 
 
     4. Order of asserted result must be deterministic
-    
+
        Current data structure contains list of dictionaries. This is used in the REST
        API responses and in test helpers that assert data. This kind of data structure
        forces strict order for content due to list context. Because of this, responses
        and test case asserted content must be always deterministic.
-       
+
        The order is that the content is first sorted in ascending order based on
        created timestamps and then in ascending order based on brief field. This sort
        approach is selected mainly because the test cases use same timestamp for
        default content.
-       
+
        This approach also guarantees in practise that the order is deterministic if
        user manages to insert two contents at the same timestamp. The sort could be
        done based on data field because that is unique but it is considered that the
        sort based on brief in case of colliding created timestamps is more user
        friendly because it is easier to explain and understand. Also the brief is used
        in visible manner and it is the first row in the CLI and Markdown output formats.
-    
+
     5. Test case layouts and data structures
 
        All test cases can be divided into three main categories. All the test withing

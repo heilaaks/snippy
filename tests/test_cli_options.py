@@ -315,7 +315,7 @@ class TestCliOptions(object):
         assert cause == 'NOK: cannot find content with given search criteria'
         #assert not out
         #assert not err
-        assert len(caplog.records[:]) > 30
+        assert len(caplog.records[:]) > 20
 
     @pytest.mark.parametrize('snippy', [['-vv', '--log-msg-max', '200']], indirect=True)
     def test_very_verbose_option_002(self, snippy, caplog, capsys):
@@ -335,7 +335,7 @@ class TestCliOptions(object):
         assert cause == 'NOK: cannot find content with given search criteria'
         assert 'msg max: 200' in out
         #assert not err
-        assert len(caplog.records[:]) > 30
+        assert len(caplog.records[:]) > 20
 
     @pytest.mark.usefixtures('uuid', 'default-snippets')
     @pytest.mark.parametrize('snippy', [['--debug', '--no-ansi']], indirect=True)
@@ -394,7 +394,7 @@ class TestCliOptions(object):
         assert cause == Cause.ALL_OK
         assert Const.NEWLINE.join(output) in out
         #assert not err
-        assert len(caplog.records[:]) > 30
+        assert len(caplog.records[:]) > 20
 
     @pytest.mark.parametrize('snippy', [['-q']], indirect=True)
     def test_quiet_option_001(self, snippy, capsys, caplog):

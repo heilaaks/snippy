@@ -138,7 +138,7 @@ class Cli(ConfigSourceBase):
         '') + ARGS_COPYRIGHT
 
     def __init__(self, args):
-        super(Cli, self).__init__()
+        super(Cli, self).__init__(self.__class__.__name__)
         if args is None:
             args = []
         args = args[1:]  # Remove the first parameter that is the program name.

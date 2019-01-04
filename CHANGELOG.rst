@@ -44,6 +44,7 @@ Security
 ~~~~~~~~
 
 * Remove Alpine (apk) and Python (pip) installers from Docker image.
+* Remove all log messages that may reveal secrets.
 
 0.8.0 (2018-21-07)
 ------------------

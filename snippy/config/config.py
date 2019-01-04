@@ -41,6 +41,76 @@ class Config(object):
     _logger = Logger.get_logger(__name__)
 
     @classmethod
+    def __str__(cls):
+        """Print class attributes in a controlled manner.
+
+        This is intended to limit printing of sensitive configuration values
+        by accident. This method should return only configuration values that
+        can be printed without revealing configuration that is considered
+        sensitive like:
+
+        - User names and passwords.
+
+        - SSL certificate paths and certificate names.
+
+        - IP addresses, host names and service ports.
+
+        - Full file paths. File paths are truncated to prevent revealing
+          installation location in the server.
+
+        - Database table names.
+
+        - Internal database keys like the UUID primary key.
+
+        - Direct printing of command line arguments.
+
+        No sensitive information listed here must be printed. The data is not
+        printed with any log level. The through is that if sensitive data would
+        be printed on any level, there would be accidental leak of information
+        at some point. The server would be first run with highest debug setting
+        and then left running with those.
+        """
+
+        namespace = []
+        if not hasattr(cls, 'source'):
+            return str('%s(%s)' % ('Config', ', '.join(namespace)))
+
+        namespace.append('storage_type={}'.format(cls.storage_type))
+        namespace.append('storage_file=...{}'.format(os.sep.join(os.path.normpath(cls.storage_file).split(os.sep)[5:])))
+        namespace.append('storage_schema=..{}'.format(os.sep.join(os.path.normpath(cls.storage_schema).split(os.sep)[5:])))
+        namespace.append('operation={}'.format(cls.operation))
+        namespace.append('operation_uuid={}'.format(cls.operation_uuid))
+        namespace.append('operation_digest={}'.format(cls.operation_digest))
+        namespace.append('operation_filename={}'.format(cls.operation_filename))
+        namespace.append('operation_file_format={}'.format(cls.operation_file_format))
+        namespace.append('content_category={}'.format(cls.content_category))
+        namespace.append('content_data={}'.format(cls.content_data))
+        namespace.append('content_brief={}'.format(cls.content_brief.encode('utf-8')))
+        namespace.append('content_description={}'.format(cls.content_description.encode('utf-8')))
+        namespace.append('content_groups={}'.format(cls.content_groups))
+        namespace.append('content_tags={}'.format(cls.content_tags))
+        namespace.append('content_links={}'.format(cls.content_links))
+        namespace.append('content_name={}'.format(cls.content_name.encode('utf-8')))
+        namespace.append('content_filename={}'.format(cls.content_filename))
+        namespace.append('content_versions={}'.format(cls.content_versions))
+        namespace.append('content_source={}'.format(cls.content_source))
+        namespace.append('search_all_kws={}'.format(cls.search_all_kws))
+        namespace.append('search_cat_kws={}'.format(cls.search_cat_kws))
+        namespace.append('search_tag_kws={}'.format(cls.search_tag_kws))
+        namespace.append('search_grp_kws={}'.format(cls.search_grp_kws))
+        namespace.append('search_filter={}'.format(cls.search_filter))
+        namespace.append('search_limit={}'.format(cls.search_limit))
+        namespace.append('search_offset={}'.format(cls.search_offset))
+        namespace.append('sort_fields={}'.format(cls.sort_fields))
+        namespace.append('editor={}'.format(cls.editor))
+        namespace.append('use_ansi={}'.format(cls.use_ansi))
+        namespace.append('server_host={}:{}'.format(cls.server_ip, cls.server_port))
+        namespace.append('base_path_app={}'.format(cls.base_path_app))
+        namespace.append('compact_json={}'.format(cls.compact_json))
+
+        return str('%s(%s)' % ('Config', ', '.join(namespace)))
+
+    @classmethod
     def init(cls, args):
         """Initialize global configuration."""
 
@@ -258,7 +328,6 @@ class Config(object):
         Profiler.enable(cls.profiler)
 
         cls._update_logger()
-        cls._logger.debug('config initial command line arguments: %s', args)
 
     @classmethod
     def _update_logger(cls):
@@ -273,12 +342,13 @@ class Config(object):
         })
 
         cls._logger.debug(
-            'config source debug: %s, very verbose: %s, quiet: %s, json: %s msg max: %d',
-            cls.debug_logs,
-            cls.very_verbose,
-            cls.quiet,
-            cls.log_json,
-            cls.log_msg_max
+            'config log settings debug: {} :very verbose: {} :quiet: {} :json logs: {} :log msg max: {}'.format(
+                cls.debug_logs,
+                cls.very_verbose,
+                cls.quiet,
+                cls.log_json,
+                cls.log_msg_max
+            )
         )
 
     @classmethod
@@ -574,49 +644,11 @@ class Config(object):
 
     @classmethod
     def debug(cls):
-        """Debug Config."""
+        """Debug Config.
 
-        cls._logger.debug('configured storage type: %s', cls.storage_type)
-        cls._logger.debug('configured storage schema: %s', cls.storage_schema)
-        cls._logger.debug('configured storage file: %s', cls.storage_file)
-        cls._logger.debug('configured storage host: %s', cls.storage_host)
-        cls._logger.debug('configured storage login user name: %s', cls.storage_user)
-        cls._logger.debug('configured storage database: %s', cls.storage_database)
-        cls._logger.debug('configured storage ssl certificate file: %s', cls.storage_ssl_cert)
-        cls._logger.debug('configured storage ssl key file: %s', cls.storage_ssl_key)
-        cls._logger.debug('configured storage ssl ca certificate file: %s', cls.storage_ssl_ca_cert)
-        cls._logger.debug('configured content operation: %s', cls.operation)
-        cls._logger.debug('configured content category: %s', cls.content_category)
-        cls._logger.debug('configured content data: %s', cls.content_data)
-        cls._logger.debug('configured content brief: %s', cls.content_brief)
-        cls._logger.debug('configured content description: %s', cls.content_description)
-        cls._logger.debug('configured content groups: %s', cls.content_groups)
-        cls._logger.debug('configured content tags: %s', cls.content_tags)
-        cls._logger.debug('configured content links: %s', cls.content_links)
-        cls._logger.debug('configured content name: %s', cls.content_name)
-        cls._logger.debug('configured content filename: %s', cls.content_filename)
-        cls._logger.debug('configured content versions: %s', cls.content_versions)
-        cls._logger.debug('configured content source: %s', cls.content_source)
-        cls._logger.debug('configured operation digest: %s', cls.operation_digest)
-        cls._logger.debug('configured operation uuid: %s', cls.operation_uuid)
-        cls._logger.debug('configured operation filename: "%s"', cls.operation_filename)
-        cls._logger.debug('configured operation file format: "%s"', cls.operation_file_format)
-        cls._logger.debug('configured search all keywords: %s', cls.search_all_kws)
-        cls._logger.debug('configured search cat keywords: %s', cls.search_cat_kws)
-        cls._logger.debug('configured search tag keywords: %s', cls.search_tag_kws)
-        cls._logger.debug('configured search group keywords: %s', cls.search_grp_kws)
-        cls._logger.debug('configured search result regexp filter: %s', cls.search_filter)
-        cls._logger.debug('configured search result limit: %s :and offset: %s', cls.search_limit, cls.search_offset)
-        cls._logger.debug('configured search result filter fields: %s', cls.remove_fields)
-        cls._logger.debug('configured search result sorted fields: %s', cls.sort_fields)
-        cls._logger.debug('configured option editor: %s', cls.editor)
-        cls._logger.debug('configured option use ansi characters in text output: %s', cls.use_ansi)
-        cls._logger.debug('configured option defaults: %s', cls.defaults)
-        cls._logger.debug('configured option template: %s', cls.template)
-        cls._logger.debug('configured option server: %s', cls.server)
-        cls._logger.debug('configured option server app base path: %s', cls.base_path_app)
-        cls._logger.debug('configured option server ip: %s :and port: %s', cls.server_ip, cls.server_port)
-        cls._logger.debug('configured option server compact json: %s', cls.compact_json)
-        cls._logger.debug('configured option server ssl certificate file: %s', cls.server_ssl_cert)
-        cls._logger.debug('configured option server ssl key file: %s', cls.server_ssl_key)
-        cls._logger.debug('configured option server ssl ca certificate file: %s', cls.server_ssl_ca_cert)
+        Do not print any configuration attrubutes from here. Use only the
+        string presentation of the Config class to print attributes. This
+        is because of security reasons.
+        """
+
+        cls._logger.debug('config parsed: {}'.format(Config()))

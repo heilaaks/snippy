@@ -1,5 +1,5 @@
 ## WORKING
-   - [ ] Remove secret items (user name, paswd, ssl paths, server paths) from Config. Do not allow prints and make print(Config) like with CLI? But is it ok to keep with debug settings after all? Should do the print(Config) at least.
+   - [ ] Add server prefix for compatc_json and app_path
    - [ ] Remove --server flag and use --server-host in format of 'localhost:8080'. This is easier and cleaner to write than --server-ip 234234 --server-port 9090. Same form storage. This also allows formats like 'host1.8080,host2.8080,etc'. This also forces user to define the IP (leaves responsibility to set it correctly and not use unsecure defaults like star)
    - [ ] Add support to read storage and server options from env variables.
    - [ ] _read_collection can remove compute_digest since it is always in seal. Can the compute_digest be internal? It would help to get rid of external usage.
@@ -179,6 +179,7 @@
    - [ ] Python module jsonschema has open fault that prevent splitting schema to multiple files. // https://github.com/Julian/jsonschema/issues/313
 
 ## DONE
+   - [x] Removed sensitive log message that may reveal secrets.
    - [x] Changed OK cause to NOK when there we no content to be exported.
    - [x] Changed external UUID1 to UUID4.
    - [x] Fix reading timestamps from YAML file without quotation marks.

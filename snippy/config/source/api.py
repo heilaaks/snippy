@@ -27,7 +27,7 @@ class Api(ConfigSourceBase):
     """API parameter management."""
 
     def __init__(self, category, operation, parameters):
-        super(Api, self).__init__()
+        super(Api, self).__init__(self.__class__.__name__)
         params = dict(parameters)
         params['category'] = category
         params['operation'] = operation

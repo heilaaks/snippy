@@ -56,13 +56,70 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     SERVER_IP = '127.0.0.1'
     SERVER_PORT = '8080'
 
-    def __init__(self, parameters=None):
+    def __init__(self, derived, parameters=None):
         self._logger = Logger.get_logger(__name__)
+        self._logger.debug('config source: {}'.format(derived))
+        self._derived = derived
         self._repr = self._get_repr()
         self.set_conf(parameters)
 
-    def __repr__(self):
+    def __str__(self):
+        """Print class attributes in a controlled manner.
 
+        This is intended to limit printing of sensitive configuration values
+        by accident. This method should return only configuration values that
+        can be printed without revealing configuration that is considered
+        sensitive.
+
+        See LOGGING security rules.
+        """
+
+        namespace = []
+        if not hasattr(self, '_repr'):
+            return str('%s(%s)' % ('ConfigSourceBase', ', '.join(namespace)))
+
+        namespace.append('base_path_app={}'.format(self.base_path_app))
+        namespace.append('brief={}'.format(self.brief))
+        namespace.append('compact_json={}'.format(self.compact_json))
+        namespace.append('data={}'.format(self.data))
+        namespace.append('debug={}'.format(self.debug))
+        namespace.append('defaults={}'.format(self.defaults))
+        namespace.append('description={}'.format(self.description))
+        namespace.append('digest={}'.format(self.digest))
+        namespace.append('editor={}'.format(self.editor))
+        namespace.append('failure={}'.format(self.failure))
+        namespace.append('filename={}'.format(self.filename))
+        namespace.append('groups={}'.format(self.groups))
+        namespace.append('links={}'.format(self.links))
+        namespace.append('log_json={}'.format(self.log_json))
+        namespace.append('log_msg_max={}'.format(self.log_msg_max))
+        namespace.append('merge={}'.format(self.merge))
+        namespace.append('name={}'.format(self.name))
+        namespace.append('no_ansi={}'.format(self.no_ansi))
+        namespace.append('operation={}'.format(self.operation))
+        namespace.append('profiler={}'.format(self.profiler))
+        namespace.append('quiet={}'.format(self.quiet))
+        namespace.append('remove_fields={}'.format(self.remove_fields))
+        namespace.append('sall={}'.format(self.sall))
+        namespace.append('scat={}'.format(self.scat))
+        namespace.append('search_filter={}'.format(self.search_filter))
+        namespace.append('search_limit={}'.format(self.search_limit))
+        namespace.append('search_offset={}'.format(self.search_offset))
+        namespace.append('sgrp={}'.format(self.sgrp))
+        namespace.append('sort_fields={}'.format(self.sort_fields))
+        namespace.append('source={}'.format(self.source))
+        namespace.append('stag={}'.format(self.stag))
+        namespace.append('storage_type={}'.format(self.storage_type))
+        namespace.append('tags={}'.format(self.tags))
+        namespace.append('template={}'.format(self.template))
+        namespace.append('uuid={}'.format(self.uuid))
+        namespace.append('version={}'.format(self.version))
+        namespace.append('versions={}'.format(self.versions))
+        namespace.append('very_verbose={}'.format(self.very_verbose))
+
+        return str('%s(%s)' % (self._derived, ', '.join(namespace)))
+
+    def __repr__(self):
         if hasattr(self, '_repr'):
             repr_ = self._repr
         else:
@@ -75,7 +132,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
 
         namespace = []
         class_name = type(self).__name__
-        attributes = tuple(set(self.__dict__.keys()) - set({'_logger', '_repr'}))
+        attributes = tuple(set(self.__dict__.keys()) - set({'_logger', '_repr', '_derived'}))
         # Optimization: For some reason using lstrip below to remove the
         # underscore that is always left, causes 2-3% performance penalty.
         # Using strip does not cause same effect.
@@ -453,8 +510,8 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
                 parsed[match.group('field')] = 'DESC' if match.group('direction') == '-' else 'ASC'
             else:
                 Cause.push(Cause.HTTP_BAD_REQUEST, 'sort option validation failed for non existent field={}'.format(field))
-        self._logger.debug('config source sorted fields parsed from user: %s', fields)
-        self._logger.debug('config source sorted fields parsed in sort order: %s', parsed)
+        self._logger.debug('{}: content attribute sort order from user: {}'.format(self._derived, fields))
+        self._logger.debug('{}: content attribute internal sort structure: {}'.format(self._derived, parsed))
         self._sort_fields = parsed  # pylint: disable=attribute-defined-outside-init
 
     @property
@@ -480,7 +537,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         if valid:
             self._remove_fields = tuple(set(self.ATTRIBUTES) - set(requested_fields))  # pylint: disable=attribute-defined-outside-init
 
-        self._logger.debug('config source content fields that are removed from response: %s', self._remove_fields)
+        self._logger.debug('{}: content attributes that are removed: {}'.format(self._derived, self._remove_fields))
 
     @property
     def base_path_app(self):
@@ -505,7 +562,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         # copying all the same checks as used server. Therefore this is
         # just a portion of checks for possible failure cases.
         if '//' in value:
-            self._logger.debug('config source uses default base path because invalid configuration: %s', value)
+            self._logger.debug('{}: use default base path because invalid configuration: {}'.format(self._derived, value))
             value = self.BASE_PATH_APP
 
         self._base_path_app = value  # pylint: disable=attribute-defined-outside-init

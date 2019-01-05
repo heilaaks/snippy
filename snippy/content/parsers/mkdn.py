@@ -43,9 +43,9 @@ class ContentParserMkdn(ContentParserBase):
         ){1}                        # Catch only one optional command and mandatory command.
         ''', re.MULTILINE | re.VERBOSE)
     REGEXP['data'][Const.SOLUTION] = re.compile(r'''
-        (?=[`]{3}|[#]{1,}\sSolution)    # Lookahead code block or solution header. Support Solution as 1st or 2nd level header.
-        (?P<data>.*?)                   # Catch the code data with extra code blocks marks and with the solution header.
-        (?=[#]{1,}\sMeta)               # Lookahead Meta header. Support Meta header as first or second level header
+        (?=[`]{3}|[#]{2}\s.*?)      # Lookahead for code block or first second level header.
+        (?P<data>.*?)               # Catch solution data till the Meta header.
+        (?=[#]{2}\sMeta)            # Lookahead for second level Meta header.
         ''', re.DOTALL | re.VERBOSE)
     REGEXP['data'][Const.REFERENCE] = re.compile(r'''
         \A(?!x)x'       # Never match anything because there is no data in the content.

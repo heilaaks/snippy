@@ -568,12 +568,6 @@ class TestUtContentParserMkdn(object):
         correctly from Markdown source. In this case the Markdown formatted
         solution data contains code block just before the Meta heaader which
         indicates the end of the solution data.
-
-        The Solution and Meta headers are by default defined to be level two
-        headers. These headers are also supported as level one headers. The
-        reason to use level two headers by default is that in this case all
-        the content falls nicely under the main header. This allows saving
-        mulitple contents in Markdown format in a single file.
         """
 
         text = Const.NEWLINE.join((
@@ -585,7 +579,7 @@ class TestUtContentParserMkdn(object):
             "> \\[1\\] https://docs.docker.com/engine/reference/commandline/images/  ",
             "\\[2\\] https://docs.docker.com/engine/reference/commandline/rm/",
             '',
-            '# Solution',
+            '## Solution',
             '',
             '## Description',
             '',
@@ -603,7 +597,7 @@ class TestUtContentParserMkdn(object):
             '$ kubectl logs kafka-0',
             '```',
             '',
-            '# Meta',
+            '## Meta',
             '',
             '> category : solution  ',
             'created  : 2017-10-12T11:52:11.000001+00:00  ',
@@ -623,7 +617,7 @@ class TestUtContentParserMkdn(object):
             'first remove all exited containers and the all dangling images.'
         )
         data = (
-            '# Solution',
+            '## Solution',
             '',
             '## Description',
             '',
@@ -696,7 +690,7 @@ class TestUtContentParserMkdn(object):
             '################################################################################',
             '```',
             '',
-            '# Meta',
+            '## Meta',
             '',
             '> category : solution  ',
             'created  : 2017-10-12T11:52:11.000001+00:00  ',

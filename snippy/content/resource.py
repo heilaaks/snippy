@@ -603,9 +603,18 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
                     self._logger.debug('command parsing failed: %s', command)
             data = data.rstrip()
         elif self.is_solution():
-            data = '```\n'
-            data = data + Const.DELIMITER_DATA.join(self.data)
-            data = data + '```'
+            # Add code block only for solutions in other than Markdown format.
+            # The Markdown content is identified simply by checking that the
+            # first line of the data is a second level Markdown header.
+            match = re.compile(r'''
+                [#]{2}\s\S+     # Match second level Markdown header.
+                ''', re.VERBOSE).search(self.data[0])
+            if match:
+                data = data + Const.DELIMITER_DATA.join(self.data)
+            else:
+                data = '```\n'
+                data = data + Const.DELIMITER_DATA.join(self.data)
+                data = data + '```'
 
         return data
 

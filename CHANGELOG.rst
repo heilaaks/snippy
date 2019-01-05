@@ -87,7 +87,7 @@ Security
 .. _`[1]`: https://github.com/heilaaks/snippy/commit/8d9b0558809e56ce40798f61c8636e04307743ed
 .. _`[2]`: https://github.com/heilaaks/snippy/commit/08394b6acaf8d1e0c7971e5fe4de95c04c54790b
 .. _`[3]`: https://github.com/heilaaks/snippy/commit/4be86cff53ea4d9cdb358ed487420a67d9f5bcbe
-.. _`[4]`: https://github.com/heilaaks/snippy/commit/61f3e55156166427ec45312974ff1ed15a342d37
+.. _`[4]`: https://github.com/heilaaks/snippy/commit/f43fb510172f2dbcb86cd2cae602215f4180bdf4
 .. _`[5]`: https://github.com/heilaaks/snippy/commit/1b00a4d9179bf67ada56f7ee624e851e884c7f6a
 .. _`[6]`: https://github.com/heilaaks/snippy/commit/6f878407320fa1eb8834df5402db977943c55c87
 .. _`[7]`: https://app.swaggerhub.com/apis/heilaaks/snippy/1.0

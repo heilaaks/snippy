@@ -1,4 +1,5 @@
 ## WORKING
+   - [ ] Write proper history that summarieses the Markdown and link it to change history when two MD items below are cloded.
    - [ ] Add Markdown formatted templates for all content class to create new content. Make them default. Leave the text templates available. Add --format swhich that can be used with create.
    - [ ] Convert all solutions to Markdown format.
    - [ ] Fix unnecessary newline at the end of solution in mkdn format after editor update.

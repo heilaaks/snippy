@@ -44,7 +44,7 @@ class Editor(object):  # pylint: disable=too-few-public-methods
             collection (Collection()): Collection where the content is stored.
         """
 
-        if resource.is_native_mkdn_solution() or (resource.is_template and template_format == Const.CONTENT_FORMAT_MKDN):
+        if resource.is_native_mkdn_solution() or template_format == Const.CONTENT_FORMAT_MKDN:
             content_format = Const.CONTENT_FORMAT_MKDN
             template = resource.dump_mkdn(templates)
         else:

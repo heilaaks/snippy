@@ -60,6 +60,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
     BEATS_TIME = Solution.BEATS_CREATED  # Default solution utc must be same.
     NGINX_TIME = Solution.NGINX_CREATED  # Default solution utc must be same.
     KAFKA_TIME = Solution.KAFKA_CREATED
+    KAFKA_MKDN_TIME = Solution.KAFKA_MKDN_CREATED
 
     # References
     GITLOG_TIME = Reference.GITLOG_CREATED  # Default reference utc must be same.

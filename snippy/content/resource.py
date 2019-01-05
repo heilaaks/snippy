@@ -52,10 +52,10 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     UPDATED = 14
     DIGEST = 15
 
-    SNIPPET_TEMPLATE = 'b4bedc2603e3b9ea95bcf53cb7b8aa6efa31eabb788eed60fccf3d8029a6a6cc'
-    SOLUTION_TEMPLATE = '79e4ae470cd135798d718a668c52dbca1e614187da8bb22eca63047681f8d146'
-    REFERENCE_TEMPLATE = 'e0cd55c650ef936a66633ee29500e47ee60cc497c342212381c40032ea2850d9'
-    TEMPLATES = (SNIPPET_TEMPLATE, SOLUTION_TEMPLATE, REFERENCE_TEMPLATE)
+    SNIPPET_TEMPLATE_TEXT = 'b4bedc2603e3b9ea95bcf53cb7b8aa6efa31eabb788eed60fccf3d8029a6a6cc'
+    SOLUTION_TEMPLATE_TEXT = '79e4ae470cd135798d718a668c52dbca1e614187da8bb22eca63047681f8d146'
+    REFERENCE_TEMPLATE_TEXT = 'e0cd55c650ef936a66633ee29500e47ee60cc497c342212381c40032ea2850d9'
+    TEMPLATES = (SNIPPET_TEMPLATE_TEXT, SOLUTION_TEMPLATE_TEXT, REFERENCE_TEMPLATE_TEXT)
 
     def __init__(self, category='', timestamp=''):
         self._logger = Logger.get_logger(__name__)
@@ -464,6 +464,9 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     def is_native_mkdn_solution(self):
         """Test if resource is native Markdown formatted content."""
 
+        if not self.is_solution():
+            return False
+
         try:
             match = re.compile(r'''
                 ^[#]{2}\s\S+     # Match second level Markdown header at the beginning of the content data string.
@@ -620,7 +623,11 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             # Add code block only for solutions in other than Markdown format.
             # The Markdown content is identified simply by checking that the
             # first line of the data is a second level Markdown header.
-            if self.is_native_mkdn_solution():
+            #
+            # If the content is solution and the data is empty, it is assumed
+            # that the case is Markdown native template and no Markdown code
+            # blocks are used.
+            if self.is_native_mkdn_solution() or not self.data:
                 data = data + Const.DELIMITER_DATA.join(self.data)
             else:
                 data = '```\n'

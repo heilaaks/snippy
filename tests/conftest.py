@@ -611,9 +611,15 @@ def update_kafka_time_mock(mocker):
 
 @pytest.fixture(scope='function', name='import-kafka-mkdn-utc')
 def import_kafka_mkdn_time_mock(mocker):
-    """Mock timestamps to import 'kafk_mkdn' solution."""
+    """Mock timestamps to import 'kafka_mkdn' solution."""
 
     _add_utc_time(mocker, IMPORT_KAFKA_MKDN)
+
+@pytest.fixture(scope='function', name='create-kafka-mkdn-utc')
+def create_kafka_mkdn_time_mock(mocker):
+    """Mock timestamps to create 'kafka_mkdn' solution."""
+
+    _add_utc_time(mocker, CREATE_KAFKA_MKDN)
 
 ## References
 

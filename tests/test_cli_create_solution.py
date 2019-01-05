@@ -122,6 +122,97 @@ class TestCliCreateSolution(object):
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+    @pytest.mark.usefixtures('snippy', 'create-kafka-mkdn-utc')
+    def test_cli_create_solution_007(self, snippy, editor_data):
+        """Create solution from editor.
+
+        Create new solution by using the default Markdown template. All values
+        are set with editor. The template is defined in this on purpose. This
+        tries to make sure that the testing framework does not hide possible
+        problems if the template would be generated automatically.
+
+        When content is created, the timestamp is allocated once for created
+        and updated timestamps. The timestamp must not be updated from what
+        is presented in the editor.
+        """
+
+        content = {
+            'data': [
+                Content.deepcopy(Solution.KAFKA_MKDN)
+            ]
+        }
+        template = (
+            '#  @default',
+            '',
+            '> ',
+            '',
+            '> ',
+            '',
+            '',
+            '',
+            '## Meta',
+            '',
+            '> category : solution  ',
+            'created  : 2019-01-04T10:54:49.265512+00:00  ',
+            'digest   : 4c98cf696e6a41922eea7f77da686c987e3cc8ac822c406dd1c61d25f504af6f  ',
+            'filename :   ',
+            'name     :   ',
+            'source   :   ',
+            'tags     :   ',
+            'updated  : 2019-01-04T10:54:49.265512+00:00  ',
+            'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+            'versions : ',
+            ''
+        )
+        edited = (
+            '# Testing docker log drivers @docker',
+            '',
+            '> Investigate docker log drivers and the logs2kafka log plugin',
+            '',
+            '>',
+            '',
+            '## Description',
+            '',
+            'Investigate docker log drivers.',
+            '',
+            '## Solutions',
+            '',
+            '## Whiteboard',
+            '',
+            '## Meta',
+            '',
+            '> category : solution  ',
+            'created  : 2019-01-04T10:54:49.265512+00:00  ',
+            'digest   : 18473ec207798670c302fb711a40df6555e8973e26481e4cd6b2ed205f5e633c  ',
+            'filename : kubernetes-docker-log-driver-kafka.mkdn  ',
+            'name     :   ',
+            'source   :   ',
+            'tags     : docker,driver,kafka,kubernetes,logging,logs2kafka,moby,plugin  ',
+            'updated  : 2019-01-04T10:54:49.265512+00:00  ',
+            'uuid     : 24cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+            'versions : ',
+            '')
+        content['data'][0]['data'] = (
+            '## Description',
+            '',
+            'Investigate docker log drivers.',
+            '',
+            '## Solutions',
+            '',
+            '## Whiteboard',
+            ''
+        )
+        content['data'][0]['description'] = 'Investigate docker log drivers and the logs2kafka log plugin'
+        content['data'][0]['links'] = ()
+        content['data'][0]['updated'] = '2019-01-04T10:54:49.265512+00:00'
+        content['data'][0]['uuid'] = '11cd5827-b6ef-4067-b5ac-3ceac07dde9f'
+        content['data'][0]['digest'] = '7941851522a23d3651f223b6d69441f77649ccb7ae1e72c6709890f2caf6401a'
+        editor_data.return_value = '\n'.join(edited)
+        cause = snippy.run(['snippy', 'create', '--solution'])
+        editor_data.assert_called_with('\n'.join(template))
+        assert cause == Cause.ALL_OK
+        Content.assert_storage(content)
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

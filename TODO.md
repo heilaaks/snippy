@@ -1,4 +1,6 @@
 ## WORKING
+   - [ ] Fix updating mkdn where the links from solution data do not update the header. There is fault in case test_parser_solution_006.
+   - [ ] Why new mkdn log driver kafka solution does not have brief in quotations in defaults?
    - [ ] Add support to read storage and server options from env variables.
    - [ ] _read_collection can remove compute_digest since it is always in seal. Can the compute_digest be internal? It would help to get rid of external usage.
    - [ ] Sort SQL attributes so that the digest is last. Eventually the digest will contain all the fields.
@@ -68,7 +70,7 @@
 ## FIX
    - [ ] Fix timestamp usage to be Datetime native. Now the created and updated times are strings. It may be usefull in future (no use case now) to have Datetime objects instead of strings.
    - [ ] Fix the internal primary key UUID. It has MAC address which is same for multiple containers? //https://docs.docker.com/engine/reference/run/#network-settings
-   - [ ] Fix long description in Markdown format does not support keeping paragraph. The description supports only one paragraph that is wrapped for Markdown. Fix or ok?
+   - [ ] Fix long description in Markdown format does not support keeping paragraph. The description supports only one paragraph that is wrapped for Markdown. Fix or ok? Read only one paragrap. This is good for example for solution which may have longer Description chapter as own header.
    - [ ] Fix Gunicorn info logs to debug somehow?
    - [ ] Fix Fields class. It may not have to be inherited like now. The operation ID refresh and logs are problematic now because the Fields logs would refresh OID to be different than with the base class logs. How?
    - [ ] Fix duplicated paths in swagger specs. This seems to work with OAS3.0 (at least it does not complain) But how to specific this in swagger nicely without duplicated code? // https://en.wikipedia.org/wiki/Percent-encoding and https://stackoverflow.com/questions/44150758/swagger-2-0-multiple-path-objects-with-different-paths-but-same-request-and-res

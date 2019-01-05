@@ -103,12 +103,15 @@ IMPORT_SOLUTIONS = Solution.DEFAULT_TIME
 BEATS_CREATED = Solution.BEATS_CREATED
 NGINX_CREATED = Solution.NGINX_CREATED
 KAFKA_CREATED = Solution.KAFKA_CREATED
+KAFKA_MKDN_CREATED = Solution.KAFKA_MKDN_CREATED
 CREATE_BEATS = (BEATS_CREATED,)*1
 CREATE_NGINX = (NGINX_CREATED,)*1
 CREATE_KAFKA = (KAFKA_CREATED,)*1
+CREATE_KAFKA_MKDN = (KAFKA_MKDN_CREATED,)*1
 IMPORT_BEATS = (BEATS_CREATED,)*1
 IMPORT_NGINX = (NGINX_CREATED,)*1
 IMPORT_KAFKA = (KAFKA_CREATED,)*1
+IMPORT_KAFKA_MKDN = (KAFKA_MKDN_CREATED,)*1
 EDITED_BEATS = (BEATS_CREATED,)*1
 UPDATE_BEATS = (BEATS_CREATED,)*2
 UPDATE_NGINX = (NGINX_CREATED,)*2
@@ -365,7 +368,7 @@ def import_default_snippets(mocker, snippy):
     """Import default snippets for testing purposes."""
 
     contents = [Snippet.REMOVE, Snippet.FORCED]
-    _import_content(snippy, mocker, contents, IMPORT_DEFAULT_SNIPPETS)
+    _import_content_text(snippy, mocker, contents, IMPORT_DEFAULT_SNIPPETS)
 
 @pytest.fixture(scope='function', name='default-snippets-utc')
 def import_snippets_time_mock(mocker):
@@ -378,14 +381,14 @@ def import_exited_snippet(mocker, snippy):
     """Import 'exited' snippet for testing purposes."""
 
     contents = [Snippet.EXITED]
-    _import_content(snippy, mocker, contents, IMPORT_EXITED)
+    _import_content_text(snippy, mocker, contents, IMPORT_EXITED)
 
 @pytest.fixture(scope='function', name='import-remove')
 def import_remove_snippet(mocker, snippy):
     """Import 'remove' snippet for testing purposes."""
 
     contents = [Snippet.REMOVE]
-    _import_content(snippy, mocker, contents, IMPORT_REMOVE)
+    _import_content_text(snippy, mocker, contents, IMPORT_REMOVE)
 
 @pytest.fixture(scope='function', name='create-remove-utc')
 def create_remove_time_mock(mocker):
@@ -424,7 +427,7 @@ def import_forced_snippet(mocker, snippy):
     """Import 'forced' snippet for testing purposes."""
 
     contents = [Snippet.FORCED]
-    _import_content(snippy, mocker, contents, IMPORT_FORCED)
+    _import_content_text(snippy, mocker, contents, IMPORT_FORCED)
 
 @pytest.fixture(scope='function', name='create-forced-utc')
 def create_forced_time_mock(mocker):
@@ -461,7 +464,7 @@ def import_netcat_snippet(mocker, snippy):
     """Import 'netcat' snippet for testing purposes."""
 
     contents = [Snippet.NETCAT]
-    _import_content(snippy, mocker, contents, IMPORT_NETCAT)
+    _import_content_text(snippy, mocker, contents, IMPORT_NETCAT)
 
 @pytest.fixture(scope='function', name='netcat-utc')
 def create_netcat_time_mock(mocker):
@@ -486,14 +489,14 @@ def import_umount_snippet(mocker, snippy):
     """Import 'umount' snippet for testing purposes."""
 
     contents = [Snippet.UMOUNT]
-    _import_content(snippy, mocker, contents, IMPORT_UMOUNT)
+    _import_content_text(snippy, mocker, contents, IMPORT_UMOUNT)
 
 @pytest.fixture(scope='function', name='import-interp')
 def import_interp_snippet(mocker, snippy):
     """Import 'interp' snippet for testing purposes."""
 
     contents = [Snippet.INTERP]
-    _import_content(snippy, mocker, contents, IMPORT_INTERP)
+    _import_content_text(snippy, mocker, contents, IMPORT_INTERP)
 
 ## Solutions
 
@@ -502,7 +505,7 @@ def import_default_solutions(mocker, snippy):
     """Import default soutions for testing purposes."""
 
     contents = [Solution.BEATS, Solution.NGINX]
-    _import_content(snippy, mocker, contents, IMPORT_DEFAULT_SOLUTIONS)
+    _import_content_text(snippy, mocker, contents, IMPORT_DEFAULT_SOLUTIONS)
 
 @pytest.fixture(scope='function', name='default-solutions-utc')
 def import_default_solutions_time(mocker):
@@ -515,21 +518,28 @@ def import_beats_solution(mocker, snippy):
     """Import 'beats' solution for testing purposes."""
 
     contents = [Solution.BEATS]
-    _import_content(snippy, mocker, contents, IMPORT_BEATS)
+    _import_content_text(snippy, mocker, contents, IMPORT_BEATS)
 
 @pytest.fixture(scope='function', name='import-nginx')
 def import_nginx_solution(mocker, snippy):
     """Import 'nginx' solution for testing purposes."""
 
     contents = [Solution.NGINX]
-    _import_content(snippy, mocker, contents, IMPORT_NGINX)
+    _import_content_text(snippy, mocker, contents, IMPORT_NGINX)
 
 @pytest.fixture(scope='function', name='import-kafka')
 def import_kafka_solution(mocker, snippy):
     """Import 'kafka' solution for testing purposes."""
 
     contents = [Solution.KAFKA]
-    _import_content(snippy, mocker, contents, IMPORT_KAFKA)
+    _import_content_text(snippy, mocker, contents, IMPORT_KAFKA)
+
+@pytest.fixture(scope='function', name='import-kafka-mkdn')
+def import_kafka_mkdn_solution(mocker, snippy):
+    """Import 'kafka_mkdn' solution for testing purposes."""
+
+    contents = [Solution.KAFKA_MKDN]
+    _import_content_mkdn(snippy, mocker, contents, IMPORT_KAFKA_MKDN)
 
 @pytest.fixture(scope='function', name='create-beats-utc')
 def create_beats_time_mock(mocker):
@@ -599,6 +609,12 @@ def update_kafka_time_mock(mocker):
 
     _add_utc_time(mocker, UPDATE_KAFKA)
 
+@pytest.fixture(scope='function', name='import-kafka-mkdn-utc')
+def import_kafka_mkdn_time_mock(mocker):
+    """Mock timestamps to import 'kafk_mkdn' solution."""
+
+    _add_utc_time(mocker, IMPORT_KAFKA_MKDN)
+
 ## References
 
 @pytest.fixture(scope='function', name='default-references')
@@ -606,7 +622,7 @@ def import_default_references(mocker, snippy):
     """Import default references for testing purposes."""
 
     contents = [Reference.GITLOG, Reference.REGEXP]
-    _import_content(snippy, mocker, contents, IMPORT_DEFAULT_REFERENCES)
+    _import_content_text(snippy, mocker, contents, IMPORT_DEFAULT_REFERENCES)
 
 @pytest.fixture(scope='function', name='default-references-utc')
 def import_default_references_time(mocker):
@@ -625,7 +641,7 @@ def import_gitlog_reference(mocker, snippy):
     """Import 'gitlog' reference for testing purposes."""
 
     contents = [Reference.GITLOG]
-    _import_content(snippy, mocker, contents, IMPORT_GITLOG)
+    _import_content_text(snippy, mocker, contents, IMPORT_GITLOG)
 
 @pytest.fixture(scope='function', name='import-gitlog-utc')
 def import_gitlog_time_mock(mocker):
@@ -656,7 +672,7 @@ def import_regexp_reference(mocker, snippy):
     """Import 'regexp' reference for testing purposes."""
 
     contents = [Reference.REGEXP]
-    _import_content(snippy, mocker, contents, IMPORT_REGEXP)
+    _import_content_text(snippy, mocker, contents, IMPORT_REGEXP)
 
 @pytest.fixture(scope='function', name='import-regexp-utc')
 def import_regexp_time_mock(mocker):
@@ -687,7 +703,7 @@ def import_gitlog_solution(mocker, snippy):
     """Import 'pytest' reference for testing purposes."""
 
     contents = [Reference.PYTEST]
-    _import_content(snippy, mocker, contents, IMPORT_PYTEST)
+    _import_content_text(snippy, mocker, contents, IMPORT_PYTEST)
 
 ## Templates
 @pytest.fixture(scope='function', name='template-utc')
@@ -797,6 +813,14 @@ def isfile_mock(mocker):
 
     mocker.patch('snippy.content.migrate.os.path.isfile', return_value=True)
 
+## editor
+
+@pytest.fixture(scope='function', name='editor_data')
+def editor_data(mocker):
+    """Mock editor object to allow mocking data from default editor."""
+
+    return mocker.patch.object(Editor, '_call_editor')
+
 ## devel
 
 @pytest.fixture(scope='function', name='devel_file_list')
@@ -896,6 +920,14 @@ def _get_template(dictionary):
 
     return collection.dump_text(Config.templates)
 
+def _get_template_mkdn(dictionary):
+    """Transform dictionary to Markdown template."""
+
+    collection = Collection()
+    collection.load_dict('2018-10-20T06:16:27.000001+00:00', {'data': [dictionary]})
+
+    return collection.dump_mkdn(Config.templates)
+
 def _create_snippy(mocker, params, database):
     """Create snippy with mocks."""
 
@@ -908,23 +940,13 @@ def _create_snippy(mocker, params, database):
         mocker.patch.object(Config, '_storage_file', return_value=Database.get_storage())
     elif database == Database.DB_POSTGRESQL:
         params = params + Database.get_cli_params()
-        #params.append('--storage-type')
-        #params.append('postgresql')
-        #params.append('--storage-host')
-        #params.append('localhost:5432')
-        #params.append('--storage-database')
-        #params.append('postgres')
-        #params.append('--storage-user')
-        #params.append('postgres')
-        #params.append('--storage-password')
-        #params.append('postgres')
 
     snippy = Snippy(params)
 
     return snippy
 
-def _import_content(snippy, mocker, contents, timestamps):
-    """Import requested content."""
+def _import_content_text(snippy, mocker, contents, timestamps):
+    """Import requested text content."""
 
     mocker.patch.object(Config, 'utcnow', side_effect=timestamps)
     start = len(Database.get_collection()) + 1
@@ -933,6 +955,19 @@ def _import_content(snippy, mocker, contents, timestamps):
             file_content = mocker.mock_open(read_data=_get_template(content))
             mocker.patch('snippy.content.migrate.open', file_content, create=True)
             cause = snippy.run(['snippy', 'import', '-f', 'content.txt'])
+            assert cause == Cause.ALL_OK
+            assert len(Database.get_collection()) == idx
+
+def _import_content_mkdn(snippy, mocker, contents, timestamps):
+    """Import requested Markdown content."""
+
+    mocker.patch.object(Config, 'utcnow', side_effect=timestamps)
+    start = len(Database.get_collection()) + 1
+    with mock.patch('snippy.content.migrate.os.path.isfile', return_value=True):
+        for idx, content in enumerate(contents, start=start):
+            file_content = mocker.mock_open(read_data=_get_template_mkdn(content))
+            mocker.patch('snippy.content.migrate.open', file_content, create=True)
+            cause = snippy.run(['snippy', 'import', '-f', 'content.mkdn'])
             assert cause == Cause.ALL_OK
             assert len(Database.get_collection()) == idx
 

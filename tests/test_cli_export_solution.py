@@ -783,6 +783,27 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             assert cause == Cause.ALL_OK
             Content.assert_mkdn(mock_file, './all-solutions.md', content)
 
+    @pytest.mark.usefixtures('import-kafka-mkdn', 'export-time')
+    def test_cli_export_solution_038(self, snippy):
+        """Export defined solution with digest.
+
+        Export Markdown native solution. The solution data must not be
+        surrounded with additional Markdown code blocks that are added for
+        text content. The exported file name must be based on content
+        metadata because the file name is not defined from command line.
+        """
+
+        content = {
+            'meta': Content.get_cli_meta(),
+            'data': [
+                Solution.KAFKA_MKDN
+            ]
+        }
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '-d', '18473ec207798670'])
+            assert cause == Cause.ALL_OK
+            Content.assert_mkdn(mock_file, 'kubernetes-docker-log-driver-kafka.mkdn', content)
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

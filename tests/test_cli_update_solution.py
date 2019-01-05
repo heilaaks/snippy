@@ -259,6 +259,72 @@ class TestCliUpdateSolution(object):
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+    @pytest.mark.usefixtures('import-kafka-mkdn', 'update-beats-utc')
+    def test_cli_update_solution_012(self, snippy, editor_data):
+        """Update existing solution from editor.
+
+        Update existing Markdown native solution. Editor must show existing
+        Markdown native content as is. Updated content must be identified as
+        Markdown native content. Editor must be used by default when
+        the --editor option is not used.
+        """
+
+        content = {
+            'data': [
+                Content.deepcopy(Solution.KAFKA_MKDN)
+            ]
+        }
+        edited = (
+            '# Testing docker log drivers @docker',
+            '',
+            '> Investigate docker log drivers and the logs2kafka log plugin',
+            '',
+            '> [1] https://github.com/MickayG/moby-kafka-logdriver  ',
+            '[2] https://github.com/garo/logs2kafka  ',
+            '[3] https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ',
+            '',
+            '## Description',
+            '',
+            'Investigate docker log drivers.',
+            '',
+            '## Solutions',
+            '',
+            '## Whiteboard',
+            '',
+            '## Meta',
+            '',
+            '> category : solution  ',
+            'created  : 2019-01-04T10:54:49.265512+00:00  ',
+            'digest   : 18473ec207798670c302fb711a40df6555e8973e26481e4cd6b2ed205f5e633c  ',
+            'filename : kubernetes-docker-log-driver-kafka.mkdn  ',
+            'name     :   ',
+            'source   :   ',
+            'tags     : docker,driver,kafka,kubernetes,logging,logs2kafka,moby,plugin  ',
+            'updated  : 2019-01-05T10:54:49.265512+00:00  ',
+            'uuid     : 24cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+            'versions : ',
+            '')
+        updates = content
+        updates['data'][0]['data'] = (
+            '## Description',
+            '',
+            'Investigate docker log drivers.',
+            '',
+            '## Solutions',
+            '',
+            '## Whiteboard',
+            ''
+        )
+        updates['data'][0]['description'] = 'Investigate docker log drivers and the logs2kafka log plugin'
+        updates['data'][0]['updated'] = Content.BEATS_TIME
+        updates['data'][0]['uuid'] = '11cd5827-b6ef-4067-b5ac-3ceac07dde9f'
+        updates['data'][0]['digest'] = '9286207e33cd8cc78446b4e6d070a76fadda8fb304afb6e5f4fad0cf66e491bc'
+        editor_data.return_value = '\n'.join(edited)
+        cause = snippy.run(['snippy', 'update', '-d', '18473ec207798670', '--solution'])
+        editor_data.assert_called_with(Content.dump_mkdn(Solution.KAFKA_MKDN))
+        assert cause == Cause.ALL_OK
+        Content.assert_storage(updates)
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

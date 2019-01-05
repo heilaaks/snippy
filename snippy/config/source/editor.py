@@ -43,11 +43,16 @@ class Editor(object):  # pylint: disable=too-few-public-methods
             collection (Collection()): Collection where the content is stored.
         """
 
-        template = resource.dump_text(templates)
+        if resource.is_native_mkdn_solution():
+            content_format = Const.CONTENT_FORMAT_MKDN
+            template = resource.dump_mkdn(templates)
+        else:
+            content_format = Const.CONTENT_FORMAT_TEXT
+            template = resource.dump_text(templates)
         text = cls._call_editor(template)
-        Parser(Const.CONTENT_FORMAT_TEXT, timestamp, text, collection).read()
+        Parser(content_format, timestamp, text, collection).read()
         if not collection:
-            Cause.push(Cause.HTTP_BAD_REQUEST, 'edited content could not be read - please keep template tags in place')
+            Cause.push(Cause.HTTP_BAD_REQUEST, 'edited: {} :content could not be read - please keep template tags in place'.format(content_format))  # noqa pylint: disable=line-too-long
 
     @classmethod
     def _call_editor(cls, template):

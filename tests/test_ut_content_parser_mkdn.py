@@ -566,7 +566,7 @@ class TestUtContentParserMkdn(object):
 
         Test case verifies that Snippy Markdown formatted solution is parsed
         correctly from Markdown source. In this case the Markdown formatted
-        solution data contains code block just before the Meta heaader which
+        solution data contains code block just before the Meta header which
         indicates the end of the solution data.
         """
 

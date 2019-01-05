@@ -28,6 +28,7 @@ class Solution(object):  # pylint: disable=too-few-public-methods
     _BEATS = 0
     _NGINX = 1
     _KAFKA = 2
+    _KAFKA_MKDN = 3
 
     # Default time is same for the default content. See 'Test case layouts and
     # data structures' for more information.
@@ -275,6 +276,105 @@ class Solution(object):  # pylint: disable=too-few-public-methods
         'created': '2017-10-20T06:16:27.000001+00:00',
         'updated': '2017-10-20T06:16:27.000001+00:00',
         'digest': 'fffeaf31e98e68a3dd063a1db0e334c0bc7e7c2f774262c5df0f95210c5ff1ee'
+    }, {
+        'data':('## Description',
+                '',
+                'Investigate docker log drivers and the logs2kafka log plugin.',
+                '',
+                '## References',
+                '',
+                '   ```',
+                '   # Kube Kafka log driver',
+                '   > https://github.com/MickayG/moby-kafka-logdriver',
+                '   ```',
+                '',
+                '   ```',
+                '   # Logs2Kafka',
+                '   > https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ',
+                '   > https://github.com/garo/logs2kafka',
+                '   ```',
+                '',
+                '## Commands',
+                '',
+                '   ```',
+                '   # Get logs from pods',
+                '   $ kubectl get pods',
+                '   $ kubectl logs kafka-0',
+                '   ```',
+                '',
+                '   ```',
+                '   # Install docker log driver for Kafka',
+                '   $ docker ps --format "{{.Names}}" | grep -E \'kafka|logstash\'',
+                '   $ docker inspect k8s_POD_kafka-0...',
+                '   $ docker inspect --format \'{{ .NetworkSettings.IPAddress }}\' k8s_POD_kafka-0...',
+                '   $ docker plugin install --disable mickyg/kafka-logdriver:latest',
+                '   $ docker plugin set mickyg/kafka-logdriver:latest KAFKA_BROKER_ADDR="10.2.28.10:9092"',
+                '   $ docker plugin inspect mickyg/kafka-logdriver',
+                '   $ docker plugin enable mickyg/kafka-logdriver:latest',
+                '   $ docker run --log-driver mickyg/kafka-logdriver:latest hello-world',
+                '   $ docker plugin disable mickyg/kafka-logdriver:latest',
+                '   ```',
+                '',
+                '   ```',
+                '   # Get current docker log driver',
+                '   $ docker info |grep \'Logging Driver\' # Default driver',
+                '   $ docker ps --format "{{.Names}}" | grep -E \'kafka|logstash\'',
+                '   $ docker inspect k8s_POD_kafka-0...',
+                '   $ docker inspect --format \'{{ .NetworkSettings.IPAddress }}\' k8s_POD_logstash...',
+                '   $ docker inspect --format \'{{ .NetworkSettings.IPAddress }}\' k8s_POD_kafka-0...',
+                '   $ docker inspect $(docker ps | grep POD | awk \'{print $1}\') | grep -E "Hostname|NetworkID',
+                '   $ docker inspect $(docker ps | grep POD | awk \'{print $1}\') | while read line ; do egrep -E \'"Hostname"|"IPAddress"\' ; done | while read line ; do echo $line ; done',  # noqa pylint: disable=line-too-long
+                '   ```',
+                '',
+                '## Configurations',
+                '',
+                '   ```',
+                '   # Logstash configuration',
+                '   $ vi elk-stack/logstash/build/pipeline/kafka.conf',
+                '     input {',
+                '         gelf {}',
+                '     }',
+                '',
+                '     output {',
+                '         elasticsearch {',
+                '           hosts => ["elasticsearch"]',
+                '         }',
+                '         stdout {}',
+                '     }',
+                '   ```',
+                '',
+                '   ```',
+                '   # Kafka configuration',
+                '   $ vi elk-stack/logstash/build/pipeline/kafka.conf',
+                '   kafka {',
+                '       type => "argus.docker"',
+                '       topics => ["dockerlogs"]',
+                '       codec => "plain"',
+                '       bootstrap_servers => "kafka:9092"',
+                '       consumer_threads => 1',
+                '   }',
+                '   ```',
+                '',
+                '## Solutions',
+                '',
+                '## Whiteboard',
+                ''),
+        'brief': 'Testing docker log drivers',
+        'description': 'Investigate docker log drivers and the logs2kafka log plugin',
+        'groups': ('docker',),
+        'tags': ('docker', 'driver', 'kafka', 'kubernetes', 'logging', 'logs2kafka', 'moby', 'plugin'),
+        'links': ('https://github.com/MickayG/moby-kafka-logdriver',
+                  'https://github.com/garo/logs2kafka',
+                  'https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ'),
+        'category': 'solution',
+        'name': '',
+        'filename': 'kubernetes-docker-log-driver-kafka.mkdn',
+        'versions': '',
+        'source': '',
+        'uuid': '24cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+        'created': '2019-01-04T10:54:49.265512+00:00',
+        'updated': '2019-01-05T10:54:49.265512+00:00',
+        'digest': '18473ec207798670c302fb711a40df6555e8973e26481e4cd6b2ed205f5e633c'
     })
 
     BEATS_CREATED = _DEFAULTS[_BEATS]['created']
@@ -283,6 +383,8 @@ class Solution(object):  # pylint: disable=too-few-public-methods
     NGINX_UPDATED = _DEFAULTS[_NGINX]['updated']
     KAFKA_CREATED = _DEFAULTS[_KAFKA]['created']
     KAFKA_UPDATED = _DEFAULTS[_KAFKA]['updated']
+    KAFKA_MKDN_CREATED = _DEFAULTS[_KAFKA_MKDN]['created']
+    KAFKA_MKDN_UPDATED = _DEFAULTS[_KAFKA_MKDN]['updated']
 
     if not DEFAULT_TIME == BEATS_CREATED == BEATS_UPDATED == NGINX_CREATED == NGINX_UPDATED:
         raise Exception('default content timestamps must be same - see \'Test case layouts and data structures\'')
@@ -290,10 +392,12 @@ class Solution(object):  # pylint: disable=too-few-public-methods
     BEATS_DIGEST = _DEFAULTS[_BEATS]['digest']
     NGINX_DIGEST = _DEFAULTS[_NGINX]['digest']
     KAFKA_DIGEST = _DEFAULTS[_KAFKA]['digest']
+    KAFKA_MKDN_DIGEST = _DEFAULTS[_KAFKA_MKDN]['digest']
 
     BEATS = _DEFAULTS[_BEATS]
     NGINX = _DEFAULTS[_NGINX]
     KAFKA = _DEFAULTS[_KAFKA]
+    KAFKA_MKDN = _DEFAULTS[_KAFKA_MKDN]
     DEFAULT_SOLUTIONS = (BEATS, NGINX)
 
     TEMPLATE = Helper.read_template('solution.txt').split('\n')

@@ -461,6 +461,20 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
 
         return bool(self.category == Const.REFERENCE)
 
+    def is_native_mkdn_solution(self):
+        """Test if resource is native Markdown formatted content."""
+
+        try:
+            match = re.compile(r'''
+                ^[#]{2}\s\S+     # Match second level Markdown header at the beginning of the content data string.
+                ''', re.VERBOSE).search(self.data[0])
+            if match:
+                return True
+        except IndexError:
+            pass
+
+        return False
+
     def dump_qargs(self):
         """Convert resource for storage.
 
@@ -606,10 +620,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             # Add code block only for solutions in other than Markdown format.
             # The Markdown content is identified simply by checking that the
             # first line of the data is a second level Markdown header.
-            match = re.compile(r'''
-                [#]{2}\s\S+     # Match second level Markdown header.
-                ''', re.VERBOSE).search(self.data[0])
-            if match:
+            if self.is_native_mkdn_solution():
                 data = data + Const.DELIMITER_DATA.join(self.data)
             else:
                 data = '```\n'

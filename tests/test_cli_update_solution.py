@@ -261,7 +261,7 @@ class TestCliUpdateSolution(object):
 
     @pytest.mark.usefixtures('import-kafka-mkdn', 'update-beats-utc')
     def test_cli_update_solution_012(self, snippy, editor_data):
-        """Update existing solution from editor.
+        """Update existing solution with editor.
 
         Update existing Markdown native solution. Editor must show existing
         Markdown native content as is. Updated content must be identified as
@@ -316,9 +316,10 @@ class TestCliUpdateSolution(object):
             ''
         )
         updates['data'][0]['description'] = 'Investigate docker log drivers and the logs2kafka log plugin'
+        updates['data'][0]['links'] = ()
         updates['data'][0]['updated'] = Content.BEATS_TIME
         updates['data'][0]['uuid'] = '11cd5827-b6ef-4067-b5ac-3ceac07dde9f'
-        updates['data'][0]['digest'] = '9286207e33cd8cc78446b4e6d070a76fadda8fb304afb6e5f4fad0cf66e491bc'
+        updates['data'][0]['digest'] = '7941851522a23d3651f223b6d69441f77649ccb7ae1e72c6709890f2caf6401a'
         editor_data.return_value = '\n'.join(edited)
         cause = snippy.run(['snippy', 'update', '-d', '18473ec207798670', '--solution'])
         editor_data.assert_called_with(Content.dump_mkdn(Solution.KAFKA_MKDN))

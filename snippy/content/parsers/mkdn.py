@@ -85,7 +85,10 @@ class ContentParserMkdn(ContentParserBase):
         [\[\d\]\\\s]{4,}    # Match link reference number before the link.
         (?P<links>http.*)   # Catch link.
         ''', re.VERBOSE)
-    REGEXP['links'][Const.SOLUTION] = REGEXP['links'][Const.SNIPPET]
+    REGEXP['links'][Const.SOLUTION] = re.compile(r'''
+        \s+[>]{1}\s             # Match only links that contain fixed tag preceding the link.
+        (?P<links>http.*)       # Catch link.
+        ''', re.MULTILINE | re.VERBOSE)
     REGEXP['links'][Const.REFERENCE] = REGEXP['links'][Const.SNIPPET]
 
     def __init__(self, timestamp, text, collection):

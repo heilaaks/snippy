@@ -1,5 +1,5 @@
 ## WORKING
-   - [ ] Fix updating mkdn where the links from solution data do not update the header. There is fault in case test_parser_solution_006.
+   - [ ] Fix unnecessary newline at the end of solution in mkdn format after editor update.
    - [ ] Why new mkdn log driver kafka solution does not have brief in quotations in defaults?
    - [ ] Add support to read storage and server options from env variables.
    - [ ] _read_collection can remove compute_digest since it is always in seal. Can the compute_digest be internal? It would help to get rid of external usage.

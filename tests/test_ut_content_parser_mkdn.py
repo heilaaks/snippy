@@ -538,10 +538,7 @@ class TestUtContentParserMkdn(object):
         )
         groups = ('docker',)
         tags = ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
-        links = (
-            'https://docs.docker.com/engine/reference/commandline/images/',
-            'https://docs.docker.com/engine/reference/commandline/rm/'
-        )
+        links = ()
         uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
         collection = Collection()
         Parser(self.TIMESTAMP, text, collection).read_collection()
@@ -638,10 +635,7 @@ class TestUtContentParserMkdn(object):
         )
         groups = ('docker',)
         tags = ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
-        links = (
-            'https://docs.docker.com/engine/reference/commandline/images/',
-            'https://docs.docker.com/engine/reference/commandline/rm/'
-        )
+        links = ()
         uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
         collection = Collection()
         Parser(self.TIMESTAMP, text, collection).read_collection()
@@ -830,12 +824,8 @@ class TestUtContentParserMkdn(object):
 
         Test case verifies that Snippy text formatted solution is parsed correctly
         from Markdown source. In this case there are links in the Markdown header
-        and in the solution data. Only the links from Markdown header must be read
-        in order to avoid duplicating the links. The links in the header must be
-        previously parsed from the content data and thus they must be the same in
-        the Markdown header as well as in the content data.
-
-        Same comment than for the links apply also other metadata like filename.
+        and in the solution data. The links in the header must be automatically
+        updated based on the content in the data part.
         """
 
         text = Const.NEWLINE.join((
@@ -862,7 +852,6 @@ class TestUtContentParserMkdn(object):
             '',
             '# Logs2Kafka',
             '> https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ',
-            '> https://github.com/garo/logs2kafka',
             '################################################################################',
             '## description',
             '################################################################################',
@@ -901,17 +890,15 @@ class TestUtContentParserMkdn(object):
             '',
             '# Logs2Kafka',
             '> https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ',
-            '> https://github.com/garo/logs2kafka',
             '################################################################################',
             '## description',
             '################################################################################',
-            '',
+            ''
         )
         groups = ('docker',)
         tags = ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
         links = (
             'https://github.com/MickayG/moby-kafka-logdriver',
-            'https://github.com/garo/logs2kafka',
             'https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ'
         )
         uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
@@ -931,6 +918,81 @@ class TestUtContentParserMkdn(object):
         assert resource.source == Const.EMPTY
         assert resource.uuid == uuid
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
+
+    def test_parser_solution_007(self):
+        """Test parsing solution.
+
+        Test case verifies that Snippy text formatted solution is parsed correctly
+        from Markdown source. In this case there are links in the Markdown header
+        but not in the solution data. The links in the header must be automatically
+        updated based on the content in the data part.
+        """
+
+        text = Const.NEWLINE.join((
+            '# Testing docker log drivers @docker',
+            '',
+            '> Investigate docker log drivers and the logs2kafka log plugin',
+            '',
+            '> [1] https://github.com/MickayG/moby-kafka-logdriver  ',
+            '[2] https://github.com/garo/logs2kafka  ',
+            '[3] https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ',
+            '',
+            '## Description',
+            '',
+            'Investigate docker log drivers.',
+            '',
+            '## Solutions',
+            '',
+            '## Whiteboard',
+            '',
+            '## Meta',
+            '',
+            '> category : solution  ',
+            'created  : 2019-01-04T10:54:49.265512+00:00  ',
+            'digest   : 18473ec207798670c302fb711a40df6555e8973e26481e4cd6b2ed205f5e633c  ',
+            'filename : kubernetes-docker-log-driver-kafka.mkdn  ',
+            'name     :   ',
+            'source   :   ',
+            'tags     : docker,driver,kafka,kubernetes,logging,logs2kafka,moby,plugin  ',
+            'updated  : 2019-01-05T10:54:49.265512+00:00  ',
+            'uuid     : 24cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+            'versions : ',
+            ''
+        ))
+        brief = 'Testing docker log drivers'
+        description = (
+            'Investigate docker log drivers and the logs2kafka log plugin'
+        )
+        data = (
+            '## Description',
+            '',
+            'Investigate docker log drivers.',
+            '',
+            '## Solutions',
+            '',
+            '## Whiteboard',
+            ''
+        )
+        groups = ('docker',)
+        tags = ('docker', 'driver', 'kafka', 'kubernetes', 'logging', 'logs2kafka', 'moby', 'plugin')
+        links = ()
+        uuid = '24cd5827-b6ef-4067-b5ac-3ceac07dde9f'
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
+        assert resource.category == Const.SOLUTION
+        assert resource.data == data
+        assert resource.brief == brief
+        assert resource.groups == groups
+        assert resource.description == description
+        assert resource.tags == tags
+        assert resource.links == links
+        assert resource.filename == 'kubernetes-docker-log-driver-kafka.mkdn'
+        assert resource.name == Const.EMPTY
+        assert resource.versions == Const.EMPTY
+        assert resource.source == Const.EMPTY
+        assert resource.uuid == uuid
+        assert resource.created == '2019-01-04T10:54:49.265512+00:00'
 
     def test_parser_reference_001(self):
         """Test parsing reference.

@@ -12,7 +12,7 @@ Breaking changes
 * Add new content field description `[1]`_.
 * Change content field group to groups `[2]`_.
 * Change filter option behaviour `[3]`_.
-* Change default export file format from text to YAML `[4]`_.
+* Change default file format to Markdown `[4]`_.
 * Change UTC offset format from +0000 to +00:00 `[5]`_.
 * Change server command line options `[6]`_.
 

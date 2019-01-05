@@ -35,7 +35,7 @@ from tests.testlib.reference import Reference
 class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
     """Test workflows for importing references."""
 
-    @pytest.mark.usefixtures('isfile_true', 'yaml')
+    @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_reference_001(self, snippy):
         """Import all references.
 
@@ -49,13 +49,12 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
                 Reference.REGEXP
             ]
         }
-        file_content = Content.get_file_content(Content.YAML, content)
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
-            yaml.safe_load.return_value = file_content
+        file_content = Content.get_file_content(Content.MKDN, content)
+        with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--reference'])
             assert cause == Cause.ALL_OK
             Content.assert_storage(content)
-            mock_file.assert_called_once_with('./references.yaml', 'r')
+            mock_file.assert_called_once_with('./references.mkdn', 'r')
 
     @pytest.mark.usefixtures('isfile_true', 'yaml')
     def test_cli_import_reference_002(self, snippy):
@@ -98,10 +97,10 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
         file_content = Content.get_file_content(Content.YAML, content)
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             yaml.safe_load.return_value = file_content
-            cause = snippy.run(['snippy', 'import', '-f', './all-references.yaml'])
+            cause = snippy.run(['snippy', 'import', '-f', './all-references.yml'])
             assert cause == Cause.ALL_OK
             Content.assert_storage(content)
-            mock_file.assert_called_once_with('./all-references.yaml', 'r')
+            mock_file.assert_called_once_with('./all-references.yml', 'r')
 
     @pytest.mark.usefixtures('isfile_true', 'json')
     def test_cli_import_reference_004(self, snippy):
@@ -432,7 +431,7 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(None)
             mock_file.assert_called_once_with('./reference-template.txt', 'r')
 
-    @pytest.mark.usefixtures('isfile_true', 'yaml', 'update-gitlog-utc')
+    @pytest.mark.usefixtures('isfile_true', 'update-gitlog-utc')
     def test_cli_import_reference_019(self, snippy):
         """Try to import reference which uuid collides.
 
@@ -444,13 +443,12 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
                 Reference.GITLOG
             ]
         }
-        file_content = Content.get_file_content(Content.YAML, content)
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
-            yaml.safe_load.return_value = file_content
+        file_content = Content.get_file_content(Content.MKDN, content)
+        with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--reference'])
             assert cause == Cause.ALL_OK
             Content.assert_storage(content)
-            mock_file.assert_called_once_with('./references.yaml', 'r')
+            mock_file.assert_called_once_with('./references.mkdn', 'r')
 
         content_uuid = {
             'data': [
@@ -458,13 +456,12 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             ]
         }
         content_uuid['data'][0]['uuid'] = content['data'][0]['uuid']
-        file_content = Content.get_file_content(Content.YAML, content_uuid)
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
-            yaml.safe_load.return_value = file_content
+        file_content = Content.get_file_content(Content.MKDN, content_uuid)
+        with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--reference'])
             assert cause == 'NOK: content: uuid :already exist with digest: 5c2071094dbfaa33'
             Content.assert_storage(content)
-            mock_file.assert_called_once_with('./references.yaml', 'r')
+            mock_file.assert_called_once_with('./references.mkdn', 'r')
 
     @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_reference_020(self, snippy):
@@ -506,7 +503,7 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('one-reference.yaml', 'r')
 
-    @pytest.mark.usefixtures('isfile_true', 'yaml')
+    @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_reference_022(self, snippy):
         """Try to import references wihtout UUID.
 
@@ -522,13 +519,12 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
         }
         content['data'][0]['uuid'] = ''
         content['data'][1]['uuid'] = ''
-        file_content = Content.get_file_content(Content.YAML, content)
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
-            yaml.safe_load.return_value = file_content
+        file_content = Content.get_file_content(Content.MKDN, content)
+        with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--reference'])
             assert cause == Cause.ALL_OK
             Content.assert_storage(content)
-            mock_file.assert_called_once_with('./references.yaml', 'r')
+            mock_file.assert_called_once_with('./references.mkdn', 'r')
 
     @classmethod
     def teardown_class(cls):

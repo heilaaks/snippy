@@ -512,9 +512,9 @@ class Config(object):
 
         if not filename:
             if len(categories) == 1:
-                defaults = categories[0] + 's.yaml'
+                defaults = categories[0] + 's.mkdn'
             else:
-                defaults = 'content.yaml'
+                defaults = 'content.mkdn'
             filename = os.path.join('./', defaults)
 
         return filename

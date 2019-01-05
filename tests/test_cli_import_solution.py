@@ -37,7 +37,7 @@ from tests.testlib.solution import Solution
 class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
     """Test workflows for importing solutions."""
 
-    @pytest.mark.usefixtures('isfile_true', 'yaml')
+    @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_solution_001(self, snippy):
         """Import all solutions.
 
@@ -51,13 +51,12 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
                 Solution.BEATS
             ]
         }
-        file_content = Content.get_file_content(Content.YAML, content)
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
-            yaml.safe_load.return_value = file_content
+        file_content = Content.get_file_content(Content.MKDN, content)
+        with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--solution'])
             assert cause == Cause.ALL_OK
             Content.assert_storage(content)
-            mock_file.assert_called_once_with('./solutions.yaml', 'r')
+            mock_file.assert_called_once_with('./solutions.mkdn', 'r')
 
     @pytest.mark.usefixtures('isfile_true', 'yaml')
     def test_cli_import_solution_002(self, snippy):

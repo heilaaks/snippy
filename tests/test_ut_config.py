@@ -89,9 +89,10 @@ class TestUtConfig(object):  # pylint: disable=too-many-public-methods
         assert not Config.search_filter
         assert not Config.content_filename
         assert not Config.editor
-        assert Config.get_operation_file() == './snippets.yaml'
-        assert Config.is_operation_file_yaml
+        assert Config.get_operation_file() == './snippets.mkdn'
+        assert Config.is_operation_file_mkdn
         assert not Config.is_operation_file_json
+        assert not Config.is_operation_file_yaml
         assert not Config.is_operation_file_text
         assert Config.use_ansi
 

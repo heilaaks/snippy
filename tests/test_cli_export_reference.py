@@ -37,7 +37,7 @@ from tests.testlib.solution import Solution
 class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
     """Test workflows for exporting references."""
 
-    @pytest.mark.usefixtures('yaml', 'default-references', 'export-time')
+    @pytest.mark.usefixtures('default-references', 'export-time')
     def test_cli_export_reference_001(self, snippy):
         """Export all references.
 
@@ -55,7 +55,7 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--references'])
             assert cause == Cause.ALL_OK
-            Content.assert_yaml(yaml, mock_file, './references.yaml', content)
+            Content.assert_mkdn(mock_file, './references.mkdn', content)
 
     @pytest.mark.usefixtures('yaml', 'default-references', 'export-time')
     def test_cli_export_reference_002(self, snippy):
@@ -93,7 +93,7 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_not_called()
 
-    @pytest.mark.usefixtures('yaml', 'default-references', 'export-time')
+    @pytest.mark.usefixtures('default-references', 'export-time')
     def test_cli_export_reference_004(self, snippy):
         """Export all references.
 
@@ -112,7 +112,7 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-d', 'cb9225a81eab8ced'])
             assert cause == Cause.ALL_OK
-            Content.assert_yaml(yaml, mock_file, './references.yaml', content)
+            Content.assert_mkdn(mock_file, './references.mkdn', content)
 
     @pytest.mark.usefixtures('yaml', 'default-references', 'export-time')
     def test_cli_export_reference_005(self, snippy):
@@ -129,9 +129,9 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
-            cause = snippy.run(['snippy', 'export', '-d', 'cb9225a81eab8ced', '-f', 'defined-reference.yaml'])
+            cause = snippy.run(['snippy', 'export', '-d', 'cb9225a81eab8ced', '-f', 'defined-reference.yml'])
             assert cause == Cause.ALL_OK
-            Content.assert_yaml(yaml, mock_file, 'defined-reference.yaml', content)
+            Content.assert_yaml(yaml, mock_file, 'defined-reference.yml', content)
 
     @pytest.mark.usefixtures('json', 'default-references', 'export-time')
     def test_cli_export_reference_006(self, snippy):
@@ -187,7 +187,7 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_not_called()
 
-    @pytest.mark.usefixtures('yaml', 'default-references', 'export-time')
+    @pytest.mark.usefixtures('default-references', 'export-time')
     def test_cli_export_reference_009(self, snippy):
         """Export all references.
 
@@ -203,7 +203,7 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-u', '16cd5827-b6ef-4067-b5ac-3ceac07dde9f'])
             assert cause == Cause.ALL_OK
-            Content.assert_yaml(yaml, mock_file, './references.yaml', content)
+            Content.assert_mkdn(mock_file, './references.mkdn', content)
 
     @pytest.mark.usefixtures('default-references', 'export-time')
     def test_cli_export_reference_010(self, snippy):
@@ -219,7 +219,7 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_not_called()
 
-    @pytest.mark.usefixtures('yaml', 'default-references', 'export-time')
+    @pytest.mark.usefixtures('default-references', 'export-time')
     def test_cli_export_reference_011(self, snippy):
         """Export defined reference with digest.
 
@@ -237,7 +237,7 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--sall', 'regexp', '--references'])
             assert cause == Cause.ALL_OK
-            Content.assert_yaml(yaml, mock_file, './references.yaml', content)
+            Content.assert_mkdn(mock_file, './references.mkdn', content)
 
     @pytest.mark.usefixtures('default-references', 'export-time')
     def test_cli_export_reference_012(self, snippy):
@@ -405,7 +405,7 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             defaults_references = pkg_resources.resource_filename('snippy', 'data/defaults/references.yaml')
             Content.assert_yaml(yaml, mock_file, [defaults_snippets, defaults_solutions, defaults_references], content)
 
-    @pytest.mark.usefixtures('yaml', 'default-references', 'export-time')
+    @pytest.mark.usefixtures('default-references', 'export-time')
     def test_cli_export_reference_021(self, snippy):
         """Export references with search keyword.
 
@@ -424,15 +424,15 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--sall', 'howto', '--references'])
             assert cause == Cause.ALL_OK
-            Content.assert_yaml(yaml, mock_file, './references.yaml', content)
+            Content.assert_mkdn(mock_file, './references.mkdn', content)
 
-    @pytest.mark.usefixtures('yaml', 'import-gitlog', 'import-remove', 'import-beats', 'export-time')
+    @pytest.mark.usefixtures('import-gitlog', 'import-remove', 'import-beats', 'export-time')
     def test_cli_export_reference_022(self, snippy):
         """Export content with search keyword.
 
-        Export content from two category with search keyword. In this case
-        -f|--file option is not used and the content must be stored into
-        a single default file and format.
+        Export content from two categories with search keyword. In this case
+        -f|--file option is not used and the content must be stored into a
+        single default file and format.
         """
 
         content = {
@@ -445,9 +445,9 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--scat', 'reference,snippet', '--sall', 'volumes,git'])
             assert cause == Cause.ALL_OK
-            Content.assert_yaml(yaml, mock_file, './content.yaml', content)
+            Content.assert_mkdn(mock_file, './content.mkdn', content)
 
-    @pytest.mark.usefixtures('yaml', 'import-gitlog', 'import-remove', 'import-beats', 'export-time')
+    @pytest.mark.usefixtures('import-gitlog', 'import-remove', 'import-beats', 'export-time')
     def test_cli_export_reference_023(self, snippy):
         """Export content with search keyword.
 
@@ -466,7 +466,7 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--scat', 'reference,snippet', '--sall', 'git'])
             assert cause == Cause.ALL_OK
-            Content.assert_yaml(yaml, mock_file, './references.yaml', content)
+            Content.assert_mkdn(mock_file, './references.mkdn', content)
 
     @pytest.mark.usefixtures('yaml', 'import-gitlog', 'import-remove', 'import-beats', 'export-time')
     def test_cli_export_reference_024(self, snippy):

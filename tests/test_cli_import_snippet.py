@@ -35,7 +35,7 @@ from tests.testlib.snippet import Snippet
 class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
     """Test workflows for importing snippets."""
 
-    @pytest.mark.usefixtures('isfile_true', 'yaml')
+    @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_snippet_001(self, snippy):
         """Import all snippets.
 
@@ -49,13 +49,12 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
                 Snippet.NETCAT
             ]
         }
-        file_content = Content.get_file_content(Content.YAML, content)
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
-            yaml.safe_load.return_value = file_content
+        file_content = Content.get_file_content(Content.MKDN, content)
+        with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import'])
             assert cause == Cause.ALL_OK
             Content.assert_storage(content)
-            mock_file.assert_called_once_with('./snippets.yaml', 'r')
+            mock_file.assert_called_once_with('./snippets.mkdn', 'r')
 
     @pytest.mark.usefixtures('isfile_true', 'yaml')
     def test_cli_import_snippet_002(self, snippy):
@@ -205,10 +204,10 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
         file_content = Content.get_file_content(Content.YAML, content)
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             yaml.safe_load.return_value = file_content
-            cause = snippy.run(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.yaml'])
+            cause = snippy.run(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.yml'])
             assert cause == Cause.ALL_OK
             Content.assert_storage(content)
-            mock_file.assert_called_once_with('one-snippet.yaml', 'r')
+            mock_file.assert_called_once_with('one-snippet.yml', 'r')
 
     @pytest.mark.usefixtures('isfile_true', 'yaml', 'import-remove', 'update-remove-utc')
     def test_cli_import_snippet_010(self, snippy):

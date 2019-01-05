@@ -79,7 +79,7 @@ class TestCliCreateReferece(object):
         Try to create new reference without any changes to reference template.
         """
 
-        cause = snippy.run(['snippy', 'create', '--editor'])
+        cause = snippy.run(['snippy', 'create', '--editor', '--format', 'text'])
         assert cause == 'NOK: content was not stored because mandatory content field links is empty'
         Content.assert_storage(None)
 
@@ -91,7 +91,7 @@ class TestCliCreateReferece(object):
         template is deleted and the edited reference is an empty string.
         """
 
-        cause = snippy.run(['snippy', 'create', '--editor'])
+        cause = snippy.run(['snippy', 'create', '--editor', '--format', 'text'])
         assert cause == 'NOK: could not identify content category - please keep template tags in place'
         Content.assert_storage(None)
 

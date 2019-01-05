@@ -166,6 +166,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self.editor = parameters.get('editor', False)
         self.failure = parameters.get('failure', False)
         self.filename = parameters.get('filename', Const.EMPTY)
+        self.template_format = parameters.get('format', Const.CONTENT_FORMAT_MKDN)
         self.groups = parameters.get('groups', Const.DEFAULT_GROUPS)
         self.links = parameters.get('links', ())
         self.log_json = parameters.get('log_json', False)

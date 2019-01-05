@@ -33,17 +33,18 @@ class Editor(object):  # pylint: disable=too-few-public-methods
     _logger = Logger.get_logger(__name__)
 
     @classmethod
-    def read(cls, timestamp, templates, resource, collection):
+    def read(cls, timestamp, template_format, templates, resource, collection):
         """Read content from editor.
 
         Args:
             timestamp (str): IS8601 timestamp used with created resources.
+            format (str): Content format that is requested by user.
             templates (dict): Empty content default templates.
             resource (Resource()): Empty or existing resource displayed to user.
             collection (Collection()): Collection where the content is stored.
         """
 
-        if resource.is_native_mkdn_solution():
+        if resource.is_native_mkdn_solution() or (resource.is_template and template_format == Const.CONTENT_FORMAT_MKDN):
             content_format = Const.CONTENT_FORMAT_MKDN
             template = resource.dump_mkdn(templates)
         else:

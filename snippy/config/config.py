@@ -210,6 +210,7 @@ class Config(object):
 
         # options
         cls.editor = cls.source.editor
+        cls.template_format = cls.source.template_format
         cls.use_ansi = not cls.source.no_ansi
         cls.failure = cls.source.failure
 
@@ -267,7 +268,7 @@ class Config(object):
         if cls.editor:
             if not resource:
                 resource = Collection().get_resource(cls.content_category, timestamp)
-            Editor.read(timestamp, Config.templates, resource, collection)
+            Editor.read(timestamp, Config.template_format, Config.templates, resource, collection)
         else:
             cls._read_collection(timestamp, collection)
 

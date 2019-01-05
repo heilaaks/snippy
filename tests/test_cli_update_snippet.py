@@ -46,7 +46,7 @@ class TestCliUpdateSnippet(object):
         content['data'][0]['data'] = ('docker images', )
         content['data'][0]['digest'] = 'af8c89629dc1a5313fd15c95fa9c1199b2b99874426e0b2532a952f40dcf980d'
         edited_remove.return_value = Content.dump_text(content['data'][0])
-        cause = snippy.run(['snippy', 'update', '-d', '54e41e9b52a02b63'])
+        cause = snippy.run(['snippy', 'update', '-d', '54e41e9b52a02b63', '--format', 'text'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -67,7 +67,7 @@ class TestCliUpdateSnippet(object):
         content['data'][0]['data'] = ('docker images', )
         content['data'][0]['digest'] = 'af8c89629dc1a5313fd15c95fa9c1199b2b99874426e0b2532a952f40dcf980d'
         edited_remove.return_value = Content.dump_text(content['data'][0])
-        cause = snippy.run(['snippy', 'update', '-d', '54e41'])
+        cause = snippy.run(['snippy', 'update', '-d', '54e41', '--format', 'text'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -88,7 +88,7 @@ class TestCliUpdateSnippet(object):
         content['data'][0]['data'] = ('docker images', )
         content['data'][0]['digest'] = 'af8c89629dc1a5313fd15c95fa9c1199b2b99874426e0b2532a952f40dcf980d'
         edited_remove.return_value = Content.dump_text(content['data'][0])
-        cause = snippy.run(['snippy', 'update', '-d', '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319'])
+        cause = snippy.run(['snippy', 'update', '-d', '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319', '--format', 'text'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -109,7 +109,7 @@ class TestCliUpdateSnippet(object):
         content['data'][0]['data'] = ('docker images', )
         content['data'][0]['digest'] = 'af8c89629dc1a5313fd15c95fa9c1199b2b99874426e0b2532a952f40dcf980d'
         edited_remove.return_value = Content.dump_text(content['data'][0])
-        cause = snippy.run(['snippy', 'update', '--snippets', '-d', '54e41e9b52a02b63'])
+        cause = snippy.run(['snippy', 'update', '--snippets', '-d', '54e41e9b52a02b63', '--format', 'text'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -131,7 +131,7 @@ class TestCliUpdateSnippet(object):
         content['data'][0]['data'] = ('docker images', )
         content['data'][0]['digest'] = 'af8c89629dc1a5313fd15c95fa9c1199b2b99874426e0b2532a952f40dcf980d'
         edited_remove.return_value = Content.dump_text(content['data'][0])
-        cause = snippy.run(['snippy', 'update', '--solution', '-d', '54e41e9b52a02b63'])
+        cause = snippy.run(['snippy', 'update', '--solution', '-d', '54e41e9b52a02b63', '--format', 'text'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -149,7 +149,7 @@ class TestCliUpdateSnippet(object):
                 Snippet.FORCED
             ]
         }
-        cause = snippy.run(['snippy', 'update', '-d', '123456789abcdef0'])
+        cause = snippy.run(['snippy', 'update', '-d', '123456789abcdef0', '--format', 'text'])
         assert cause == 'NOK: cannot find content with message digest: 123456789abcdef0'
         Content.assert_storage(content)
 
@@ -168,7 +168,7 @@ class TestCliUpdateSnippet(object):
                 Snippet.FORCED
             ]
         }
-        cause = snippy.run(['snippy', 'update', '-d', ''])
+        cause = snippy.run(['snippy', 'update', '-d', '', '--format', 'text'])
         assert cause == 'NOK: cannot use empty message digest for: update :operation'
         Content.assert_storage(content)
 
@@ -189,7 +189,7 @@ class TestCliUpdateSnippet(object):
                 Snippet.FORCED
             ]
         }
-        cause = snippy.run(['snippy', 'update', '-d', '5'])
+        cause = snippy.run(['snippy', 'update', '-d', '5', '--format', 'text'])
         assert cause == 'NOK: content digest: 5 :matched more than once: 2 :preventing: update :operation'
         Content.assert_storage(content)
 
@@ -209,7 +209,7 @@ class TestCliUpdateSnippet(object):
         content['data'][0]['data'] = ('docker images', )
         content['data'][0]['digest'] = 'af8c89629dc1a5313fd15c95fa9c1199b2b99874426e0b2532a952f40dcf980d'
         edited_remove.return_value = Content.dump_text(content['data'][0])
-        cause = snippy.run(['snippy', 'update', '-c', 'docker rm --volumes $(docker ps --all --quiet)'])
+        cause = snippy.run(['snippy', 'update', '-c', 'docker rm --volumes $(docker ps --all --quiet)', '--format', 'text'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 

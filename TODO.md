@@ -1,4 +1,6 @@
 ## WORKING
+   - [ ] test is_solution with is native mkdn and not template. (the later fails with creating new solution with code block)
+   - [ ] enforce editor if none of content parameters are set from command line (fast short cut to create content)
    - [ ] Write proper history that summarieses the Markdown and link it to change history when two MD items below are cloded.
    - [ ] Add Markdown formatted templates for all content class to create new content. Make them default. Leave the text templates available. Add --format swhich that can be used with create.
    - [ ] Convert all solutions to Markdown format.

@@ -48,7 +48,7 @@ class TestCliUpdateSolution(object):
         content['data'][0]['description'] = ''
         content['data'][0]['digest'] = '19baa35ea3751e7fb66a810fb20b766601dc7c61512a36a8378be7c6b0063acc'
         edited_beats.return_value = Content.dump_text(content['data'][0])
-        cause = snippy.run(['snippy', 'update', '--solution', '-d', 'db712a82662d6932'])
+        cause = snippy.run(['snippy', 'update', '--solution', '-d', 'db712a82662d6932', '--format', 'text'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -70,7 +70,7 @@ class TestCliUpdateSolution(object):
         content['data'][0]['description'] = ''
         content['data'][0]['digest'] = '19baa35ea3751e7fb66a810fb20b766601dc7c61512a36a8378be7c6b0063acc'
         edited_beats.return_value = Content.dump_text(content['data'][0])
-        cause = snippy.run(['snippy', 'update', '--solution', '--digest', 'db712'])
+        cause = snippy.run(['snippy', 'update', '--solution', '--digest', 'db712', '--format', 'text'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -92,7 +92,7 @@ class TestCliUpdateSolution(object):
         content['data'][0]['description'] = ''
         content['data'][0]['digest'] = '19baa35ea3751e7fb66a810fb20b766601dc7c61512a36a8378be7c6b0063acc'
         edited_beats.return_value = Content.dump_text(content['data'][0])
-        cause = snippy.run(['snippy', 'update', '--solution', '-d', 'db712a82662d693206004c2174a0bb1900e1e1307f21f79a0efb88a01add4151']) # pylint: disable=line-too-long
+        cause = snippy.run(['snippy', 'update', '--solution', '-d', 'db712a82662d693206004c2174a0bb1900e1e1307f21f79a0efb88a01add4151', '--format', 'text']) # pylint: disable=line-too-long
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -115,7 +115,7 @@ class TestCliUpdateSolution(object):
         content['data'][0]['description'] = ''
         content['data'][0]['digest'] = '19baa35ea3751e7fb66a810fb20b766601dc7c61512a36a8378be7c6b0063acc'
         edited_beats.return_value = Content.dump_text(content['data'][0])
-        cause = snippy.run(['snippy', 'update', '--snippet', '-d', 'db712a82662d6932'])
+        cause = snippy.run(['snippy', 'update', '--snippet', '-d', 'db712a82662d6932', '--format', 'text'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -139,7 +139,7 @@ class TestCliUpdateSolution(object):
         content['data'][0]['description'] = ''
         content['data'][0]['digest'] = '19baa35ea3751e7fb66a810fb20b766601dc7c61512a36a8378be7c6b0063acc'
         edited_beats.return_value = Content.dump_text(content['data'][0])
-        cause = snippy.run(['snippy', 'update', '-d', 'db712a82662d6932'])
+        cause = snippy.run(['snippy', 'update', '-d', 'db712a82662d6932', '--format', 'text'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -198,7 +198,7 @@ class TestCliUpdateSolution(object):
         content['data'][0]['digest'] = '19baa35ea3751e7fb66a810fb20b766601dc7c61512a36a8378be7c6b0063acc'
         edited_beats.return_value = Content.dump_text(content['data'][0])
         data = Content.dump_text(Solution.BEATS)
-        cause = snippy.run(['snippy', 'update', '--solution', '-c', data])
+        cause = snippy.run(['snippy', 'update', '--solution', '-c', data, '--format', 'text'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -254,7 +254,7 @@ class TestCliUpdateSolution(object):
             ]
         }
         edited_beats.return_value = Content.dump_text(content['data'][0])
-        cause = snippy.run(['snippy', 'update', '-d', '5dee85bedb7f4d3a', '--solution', '--editor'])
+        cause = snippy.run(['snippy', 'update', '-d', '5dee85bedb7f4d3a', '--solution', '--editor', '--format', 'text'])
         edited_beats.assert_called_with(Content.dump_text(Solution.NGINX))
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)

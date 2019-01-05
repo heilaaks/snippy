@@ -46,7 +46,7 @@ class TestCliUpdateReference(object):
         content['data'][0]['links'] = ('https://docs.docker.com', )
         content['data'][0]['digest'] = '1fc34e79a4d2bac51a039b7265da464ad787da41574c3d6651dc6a128d4c7c10'
         edited_gitlog.return_value = Content.dump_text(content['data'][0])
-        cause = snippy.run(['snippy', 'update', '--reference', '-d', '5c2071094dbfaa33'])
+        cause = snippy.run(['snippy', 'update', '--reference', '-d', '5c2071094dbfaa33', '--format', 'text'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -67,7 +67,7 @@ class TestCliUpdateReference(object):
         content['data'][0]['links'] = ('https://docs.docker.com', )
         content['data'][0]['digest'] = '1fc34e79a4d2bac51a039b7265da464ad787da41574c3d6651dc6a128d4c7c10'
         edited_gitlog.return_value = Content.dump_text(content['data'][0])
-        cause = snippy.run(['snippy', 'update', '--reference', '--digest', '5c2071'])
+        cause = snippy.run(['snippy', 'update', '--reference', '--digest', '5c2071', '--format', 'text'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -89,7 +89,7 @@ class TestCliUpdateReference(object):
         content['data'][0]['links'] = ('https://docs.docker.com', )
         content['data'][0]['digest'] = '1fc34e79a4d2bac51a039b7265da464ad787da41574c3d6651dc6a128d4c7c10'
         edited_gitlog.return_value = Content.dump_text(content['data'][0])
-        cause = snippy.run(['snippy', 'update', '--solution', '-d', '5c2071094dbfaa33'])
+        cause = snippy.run(['snippy', 'update', '--solution', '-d', '5c2071094dbfaa33', '--format', 'text'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -112,7 +112,7 @@ class TestCliUpdateReference(object):
         content['data'][0]['links'] = ('https://docs.docker.com', )
         content['data'][0]['digest'] = '1fc34e79a4d2bac51a039b7265da464ad787da41574c3d6651dc6a128d4c7c10'
         edited_gitlog.return_value = Content.dump_text(content['data'][0])
-        cause = snippy.run(['snippy', 'update', '-d', '5c2071094dbfaa33'])
+        cause = snippy.run(['snippy', 'update', '-d', '5c2071094dbfaa33', '--format', 'text'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -170,7 +170,7 @@ class TestCliUpdateReference(object):
         content['data'][0]['links'] = ('https://docs.docker.com', )
         content['data'][0]['digest'] = '1fc34e79a4d2bac51a039b7265da464ad787da41574c3d6651dc6a128d4c7c10'
         edited_gitlog.return_value = Content.dump_text(content['data'][0])
-        cause = snippy.run(['snippy', 'update', '--reference', '-u', '12cd5827-b6ef-4067-b5ac-3ceac07dde9f'])
+        cause = snippy.run(['snippy', 'update', '--reference', '-u', '12cd5827-b6ef-4067-b5ac-3ceac07dde9f', '--format', 'text'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -269,7 +269,7 @@ class TestCliUpdateReference(object):
             ]
         }
         edited_gitlog.return_value = Content.dump_text(content['data'][0])
-        cause = snippy.run(['snippy', 'update', '-d', 'cb9225a81eab8ced', '--reference', '--editor'])
+        cause = snippy.run(['snippy', 'update', '-d', 'cb9225a81eab8ced', '--reference', '--editor', '--format', 'text'])
         edited_gitlog.assert_called_with(Content.dump_text(Reference.REGEXP))
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
@@ -288,7 +288,7 @@ class TestCliUpdateReference(object):
             ]
         }
         edited_gitlog.return_value = ''
-        cause = snippy.run(['snippy', 'update', '--reference', '-d', '5c2071094dbfaa33'])
+        cause = snippy.run(['snippy', 'update', '--reference', '-d', '5c2071094dbfaa33', '--format', 'text'])
         assert cause == 'NOK: could not identify content category - please keep template tags in place'
         Content.assert_storage(content)
 

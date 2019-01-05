@@ -49,7 +49,7 @@ class TestCliCreateSolution(object):
         groups = Const.DELIMITER_GROUPS.join(content['data'][0]['groups'])
         tags = Const.DELIMITER_TAGS.join(content['data'][0]['tags'])
         links = Const.DELIMITER_LINKS.join(content['data'][0]['links'])
-        cause = snippy.run(['snippy', 'create', '--solution', '--content', data, '--brief', brief, '--groups', groups, '--tags', tags, '--links', links])  # pylint: disable=line-too-long
+        cause = snippy.run(['snippy', 'create', '--solution', '--content', data, '--brief', brief, '--groups', groups, '--tags', tags, '--links', links, '--format', 'text'])  # pylint: disable=line-too-long
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -66,7 +66,7 @@ class TestCliCreateSolution(object):
                 Solution.NGINX
             ]
         }
-        cause = snippy.run(['snippy', 'create', '--solution'])
+        cause = snippy.run(['snippy', 'create', '--solution', '--format', 'text'])
         assert cause == 'NOK: content: data :already exist with digest: db712a82662d6932'
         Content.assert_storage(content)
 
@@ -77,7 +77,7 @@ class TestCliCreateSolution(object):
         Try to create new solution without any changes to template.
         """
 
-        cause = snippy.run(['snippy', 'create', '--solution'])
+        cause = snippy.run(['snippy', 'create', '--solution', '--format', 'text'])
         assert cause == 'NOK: content was not stored because it was matching to an empty template'
         Content.assert_storage(None)
 
@@ -89,7 +89,7 @@ class TestCliCreateSolution(object):
         template is deleted and the edited solution is an empty string.
         """
 
-        cause = snippy.run(['snippy', 'create', '--solution'])
+        cause = snippy.run(['snippy', 'create', '--solution', '--format', 'text'])
         assert cause == 'NOK: could not identify content category - please keep template tags in place'
         Content.assert_storage(None)
 
@@ -102,7 +102,7 @@ class TestCliCreateSolution(object):
         it has lost tags that identify it as a solution content.
         """
 
-        cause = snippy.run(['snippy', 'create', '--solution'])
+        cause = snippy.run(['snippy', 'create', '--solution', '--format', 'text'])
         assert cause == 'NOK: could not identify content category - please keep template tags in place'
         Content.assert_storage(None)
 
@@ -118,7 +118,7 @@ class TestCliCreateSolution(object):
                 Solution.BEATS
             ]
         }
-        cause = snippy.run(['snippy', 'create', '--solution', '--editor'])
+        cause = snippy.run(['snippy', 'create', '--solution', '--editor', '--format', 'text'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 

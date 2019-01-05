@@ -101,7 +101,7 @@ class TestCliCreateSnippet(object):
         Try to create new snippet without any changes to snippet template.
         """
 
-        cause = snippy.run(['snippy', 'create', '--editor'])
+        cause = snippy.run(['snippy', 'create', '--editor', '--format', 'text'])
         assert cause == 'NOK: content was not stored because mandatory content field data is empty'
         Content.assert_storage(None)
 
@@ -113,7 +113,7 @@ class TestCliCreateSnippet(object):
         template is deleted and the edited solution is an empty string.
         """
 
-        cause = snippy.run(['snippy', 'create', '--editor'])
+        cause = snippy.run(['snippy', 'create', '--editor', '--format', 'text'])
         assert cause == 'NOK: could not identify content category - please keep template tags in place'
         Content.assert_storage(None)
 

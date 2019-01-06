@@ -14,12 +14,13 @@ Breaking changes
 * Change UTC offset format from +0000 to +00:00 `[3]`_.
 * Change server command line options `[4]`_.
 * Change ``filter`` option behaviour `[5]`_.
-* Add new content field ``description`` `[6]`_.
+* Change ``editor`` option and add ``no-editor`` option `[6]`_.
+* Add new content field ``description`` `[7]`_.
 
 New features
 ~~~~~~~~~~~~
 
-* Add REST API routes for: keywords, groups, tags, uuid and digest `[7]`_.
+* Add REST API routes for: keywords, groups, tags, uuid and digest `[8]`_.
 * Add support for PostgreSQL database.
 * Add support for Markdown formatted content.
 * Add one command to export and import all default content.
@@ -90,4 +91,5 @@ Security
 .. _`[4]`: https://github.com/heilaaks/snippy/commit/6f878407320fa1eb8834df5402db977943c55c87
 .. _`[5]`: https://github.com/heilaaks/snippy/commit/4be86cff53ea4d9cdb358ed487420a67d9f5bcbe
 .. _`[6]`: https://github.com/heilaaks/snippy/commit/8d9b0558809e56ce40798f61c8636e04307743ed
-.. _`[7]`: https://app.swaggerhub.com/apis/heilaaks/snippy/1.0
+.. _`[7]`: https://github.com/heilaaks/snippy/commit/8d9b0558809e56ce40798f61c8636e04307743ed
+.. _`[8]`: https://app.swaggerhub.com/apis/heilaaks/snippy/1.0

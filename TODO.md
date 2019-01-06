@@ -1,10 +1,9 @@
 ## WORKING
    - [ ] Why mkdn parser returns two empty items in list with empty template?
-   - [ ] Enforce editor if none of content parameters are set from command line (fast short cut to create content). Make this for all content classes and add tests.
+   - [ ] Add more tests for --(no)-editor options for all content classes and operations.
    - [ ] Write proper history that summarieses the Markdown and link it to change history when two MD items below are cloded.
    - [ ] Add Markdown formatted templates for all content class to create new content. Make them default. Leave the text templates available. Add --format swhich that can be used with create.
    - [ ] Convert all solutions to Markdown format.
-   - [ ] Fix unnecessary newline at the end of solution in mkdn format after editor update.
    - [ ] Why new mkdn log driver kafka solution does not have brief in quotations in defaults?
    - [ ] Add support to read storage and server options from env variables.
    - [ ] _read_collection can remove compute_digest since it is always in seal. Can the compute_digest be internal? It would help to get rid of external usage.
@@ -48,8 +47,10 @@
 
 ## FEATURES
    - [ ] Are the is_template and is_data internal to Resource? is the compute digest internal to resource?
+   - [ ] Fix reading data from cli that does not parse description and filename from CLI --content data test_cli_create_solution_001.
    - [ ] Make intermediate content data headers same in defaul text and mkdn template. Copy from mkdn.
    - [ ] Add support to search phrases like has 'active end'. This should return one result with default set but it returns two since each word is searched separately.
+   - [ ] Creating new content and adding field attributes like tags is not updated to created template.
    - [ ] Add support to find dead links.
    - [ ] Add support to edit markup files with cli option.
    - [ ] Add Travis CI for PyPy version v6.0 for Python 3 when it comes https://github.com/travis-ci/travis-ci/issues/9542
@@ -121,7 +122,6 @@
    - [ ] Offset based pagination is slow with large data sets (how large?). Measure with test. This was improved in laest sqlite 3.24.0 https://www.sqlite.org/changes.html
    - [ ] Refactor internal class level variables and methods to start with _ prefix.
    - [ ] Read storage schema directly to config() like the content templates.
-   - [ ] Refactor --editor? Now it always means yes. The code forces yes to some cases like update solution. This parameter could be changed to no/yes to override internals.
 
 ## TESTS
    - [ ] How to get TypeError for --filter in try re.compile? This is not tested.
@@ -187,6 +187,7 @@
    - [ ] Python module jsonschema has open fault that prevent splitting schema to multiple files. // https://github.com/Julian/jsonschema/issues/313
 
 ## DONE
+   - [x] Change --editor implicitly setting and added --no-editor option.
    - [x] Changed server command line options to align with storage options.
    - [x] Removed sensitive log message that may reveal secrets.
    - [x] Changed OK cause to NOK when there we no content to be exported.

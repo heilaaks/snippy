@@ -209,7 +209,7 @@ class TestCliUpdateSnippet(object):
         content['data'][0]['data'] = ('docker images', )
         content['data'][0]['digest'] = 'af8c89629dc1a5313fd15c95fa9c1199b2b99874426e0b2532a952f40dcf980d'
         edited_remove.return_value = Content.dump_text(content['data'][0])
-        cause = snippy.run(['snippy', 'update', '-c', 'docker rm --volumes $(docker ps --all --quiet)', '--format', 'text'])
+        cause = snippy.run(['snippy', 'update', '-c', 'docker rm --volumes $(docker ps --all --quiet)', '--format', 'text', '--editor'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 

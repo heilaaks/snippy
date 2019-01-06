@@ -68,7 +68,7 @@ class TestCliCreateReferece(object):
         brief = content['data'][0]['brief']
         groups = Reference.GITLOG['groups']
         tags = content['data'][0]['tags']
-        cause = snippy.run(['snippy', 'create', '--references', '--brief', brief, '--groups', groups, '--tags', tags, '-c', data])
+        cause = snippy.run(['snippy', 'create', '--references', '--brief', brief, '--groups', groups, '--tags', tags, '-c', data, '--no-editor'])
         assert cause == 'NOK: content was not stored because mandatory content field links is empty'
         Content.assert_storage(None)
 

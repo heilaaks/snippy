@@ -90,7 +90,7 @@ class TestCliCreateSnippet(object):
         groups = content['data'][0]['groups']
         tags = content['data'][0]['tags']
         links = content['data'][0]['links']
-        cause = snippy.run(['snippy', 'create', '--brief', brief, '--groups', groups, '--tags', tags, '--links', links])
+        cause = snippy.run(['snippy', 'create', '--brief', brief, '--groups', groups, '--tags', tags, '--links', links, '--no-editor'])
         assert cause == 'NOK: content was not stored because mandatory content field data is empty'
         Content.assert_storage(None)
 

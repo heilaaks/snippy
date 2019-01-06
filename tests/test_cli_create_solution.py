@@ -30,20 +30,23 @@ from tests.testlib.solution import Solution
 class TestCliCreateSolution(object):
     """Test workflows for creating solutions."""
 
-    @pytest.mark.usefixtures('snippy', 'edit-beats')
+    @pytest.mark.usefixtures('snippy', 'create-beats-utc')
     def test_cli_create_solution_001(self, snippy):
         """Create solution from CLI.
 
         Create new solution by defining all content parameters from command
-        line. Creating solution from command line will always use editor to
-        create the content.
+        line. Creating solution uses editor by default only if the data field
+        is not defined. In this case editor is not used.
         """
 
         content = {
             'data': [
-                Solution.BEATS
+                Content.deepcopy(Solution.BEATS)
             ]
         }
+        content['data'][0]['description'] = ''
+        content['data'][0]['filename'] = ''
+        content['data'][0]['digest'] = 'b8dfd78b2f92caac57469acda50bebf4dca9fd3e85bb9083c8408f430fc83f52'
         data = Const.DELIMITER_DATA.join(content['data'][0]['data'])
         brief = content['data'][0]['brief']
         groups = Const.DELIMITER_GROUPS.join(content['data'][0]['groups'])

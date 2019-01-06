@@ -42,7 +42,8 @@ class TestUtCli(object):
         assert not cli.defaults
         assert cli.description == ''
         assert cli.digest is None
-        assert not cli.editor
+        assert cli.editor
+        assert not cli.no_editor
         assert not cli.failure
         assert cli.filename == ''
         assert cli.groups == ('default',)

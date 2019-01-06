@@ -41,7 +41,7 @@ class TestUtConfig(object):  # pylint: disable=too-many-public-methods
         mock_utcnow.return_value = '2018-02-17 13:23:43'
 
         Config.init(None)
-        Config.load(Cli(['snippy', 'create']))
+        Config.load(Cli(['snippy', 'import']))
         assert isinstance(Config.content_category, str)
         assert isinstance(Config.content_data, tuple)
         assert isinstance(Config.content_brief, Const.TEXT_TYPE)
@@ -66,12 +66,12 @@ class TestUtConfig(object):  # pylint: disable=too-many-public-methods
         assert isinstance(Config.get_operation_file(), str)
         assert not Config.get_resource(None)
         assert not Config.get_collection()
-        assert Config.is_operation_create
+        assert not Config.is_operation_create
         assert not Config.is_operation_search
         assert not Config.is_operation_update
         assert not Config.is_operation_delete
         assert not Config.is_operation_export
-        assert not Config.is_operation_import
+        assert Config.is_operation_import
         assert Config.is_category_snippet
         assert not Config.is_category_solution
         assert not Config.is_category_reference

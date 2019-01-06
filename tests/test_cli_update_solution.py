@@ -198,7 +198,7 @@ class TestCliUpdateSolution(object):
         content['data'][0]['digest'] = '19baa35ea3751e7fb66a810fb20b766601dc7c61512a36a8378be7c6b0063acc'
         edited_beats.return_value = Content.dump_text(content['data'][0])
         data = Content.dump_text(Solution.BEATS)
-        cause = snippy.run(['snippy', 'update', '--solution', '-c', data, '--format', 'text'])
+        cause = snippy.run(['snippy', 'update', '--solution', '-c', data, '--format', 'text', '--editor'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 

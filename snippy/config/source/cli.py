@@ -47,7 +47,6 @@ class Cli(ConfigSourceBase):
         '  --all                         operate all content (search only)'
     )
     ARGS_EDITOR = (
-        '  -e, --editor                  use vi editor to add content',
         '  -c, --content CONTENT         define example content',
         '  -b, --brief BRIEF             define content brief description',
         '  -g, --groups [GROUP,...]      define comma separated list of groups',
@@ -55,6 +54,8 @@ class Cli(ConfigSourceBase):
         '  -l, --links [LINK ...]        define space separated list of links',
         '  -d, --digest DIGEST           idenfity content with digest',
         '  -u, --uuid UUID               idenfity content with uuid',
+        '  --editor                      use vi editor to manage content',
+        '  --no-editor                   do not use vi editor',
     )
     ARGS_SEARCH = (
         '  --scat [CATEGORY,...]         search keywords only from categories',
@@ -170,7 +171,6 @@ class Cli(ConfigSourceBase):
 
         # editing options
         options = parser.add_argument_group(title='edit options', description=Const.NEWLINE.join(Cli.ARGS_EDITOR))
-        options.add_argument('-e', '--editor', action='store_true', default=False, help=argparse.SUPPRESS)
         options.add_argument('-c', '--content', type=Parser.to_unicode, dest='data', default=argparse.SUPPRESS, help=argparse.SUPPRESS)
         options.add_argument('-b', '--brief', type=Parser.to_unicode, default=Const.EMPTY, help=argparse.SUPPRESS)
         options.add_argument('-g', '--groups', nargs='*', type=Parser.to_unicode, default=Const.DEFAULT_GROUPS, help=argparse.SUPPRESS)
@@ -178,8 +178,10 @@ class Cli(ConfigSourceBase):
         options.add_argument('-l', '--links', nargs='*', type=Parser.to_unicode, default=[], help=argparse.SUPPRESS)
         options.add_argument('-d', '--digest', type=Parser.to_unicode, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
         options.add_argument('-u', '--uuid', type=Parser.to_unicode, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
-        options.add_argument('--merge', action='store_true', default=False, help=argparse.SUPPRESS)
+        options.add_argument('--editor', action='store_true', default=False, help=argparse.SUPPRESS)
+        options.add_argument('--no-editor', dest='no_editor', action='store_true', default=False, help=argparse.SUPPRESS)
         options.add_argument('--format', nargs='?', choices=(Const.CONTENT_FORMAT_MKDN, Const.CONTENT_FORMAT_TEXT), default=Const.CONTENT_FORMAT_MKDN, help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
+        options.add_argument('--merge', action='store_true', default=False, help=argparse.SUPPRESS)
 
         # search options
         search = parser.add_argument_group(title='search options', description=Const.NEWLINE.join(Cli.ARGS_SEARCH))
@@ -263,24 +265,30 @@ class Cli(ConfigSourceBase):
 
     @staticmethod
     def _set_editor(parameters):
-        """Enforce editor usage for specific operations for better usability.
+        """Enforce editor implicitly.
 
-        It is assumed that longer solutions area always edited in editor when
-        shorter snippets and references are created and updated from command
-        line by default.
+        The no-editor option always prevents implicit usage of editor.
+        In other cases editor is used by default for create and update
+        operations.
+
+        Only if user provided mandatory links for reference or data for
+        other content types in create operation, editor is not used.
         """
 
         if parameters['failure']:
             return
 
-        if parameters['category'] == Const.SNIPPET and parameters['operation'] == Cli.UPDATE:
-            parameters['editor'] = True
+        if parameters['no_editor']:
+            parameters['editor'] = False
+            return
 
-        if parameters['category'] == Const.SOLUTION and (Cli.CREATE or Cli.UPDATE in parameters['operation']):
-            parameters['editor'] = True
-
-        if parameters['category'] == Const.REFERENCE and parameters['operation'] == Cli.UPDATE:
-            parameters['editor'] = True
+        if parameters['operation'] in (Cli.CREATE, Cli.UPDATE):
+            if parameters['category'] == Const.REFERENCE:
+                if not parameters['links']:
+                    parameters['editor'] = True
+            else:
+                if 'data' not in parameters:
+                    parameters['editor'] = True
 
 
 class CustomHelpAction(argparse.Action):  # pylint: disable=too-few-public-methods

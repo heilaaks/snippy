@@ -5,6 +5,7 @@
    - [ ] Add Markdown formatted templates for all content class to create new content. Make them default. Leave the text templates available. Add --format swhich that can be used with create.
    - [ ] Convert all solutions to Markdown format.
    - [ ] Why new mkdn log driver kafka solution does not have brief in quotations in defaults?
+   - [ ] CLI interface does not update default template with provided parameters like tags, groups, etc. This should be placed on top of default empty template if provided.
    - [ ] Add support to read storage and server options from env variables.
    - [ ] _read_collection can remove compute_digest since it is always in seal. Can the compute_digest be internal? It would help to get rid of external usage.
    - [ ] Sort SQL attributes so that the digest is last. Eventually the digest will contain all the fields.

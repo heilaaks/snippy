@@ -238,6 +238,106 @@ class TestCliCreateSnippet(object):
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+    @pytest.mark.usefixtures('create-remove-utc')
+    def test_cli_create_snippet_009(self, snippy, editor_data):
+        """Create snippet with editor.
+
+        Create new snippet by using the default Markdown template. All values
+        are set with editor. The template is defined in this on purpose. This
+        tries to make sure that the testing framework does not hide possible
+        problems if the template would be generated automatically.
+        """
+
+        content = {
+            'data': [
+                Snippet.REMOVE
+            ]
+        }
+        template = (
+            '#  @default',
+            '',
+            '> ',
+            '',
+            '> ',
+            '',
+            '## Meta',
+            '',
+            '> category : snippet  ',
+            'created  : 2017-10-14T19:56:31.000001+00:00  ',
+            'digest   : ' + Snippet.TEMPLATE_DIGEST + '  ',
+            'filename :   ',
+            'name     :   ',
+            'source   :   ',
+            'tags     :   ',
+            'updated  : 2017-10-14T19:56:31.000001+00:00  ',
+            'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+            'versions : ',
+            ''
+        )
+        edited = (
+            '# Remove all docker containers with volumes @docker',
+            '',
+            '> ',
+            '',
+            '> [1] https://docs.docker.com/engine/reference/commandline/rm/',
+            '',
+            '`$ docker rm --volumes $(docker ps --all --quiet)`',
+            '',
+            '## Meta',
+            '',
+            '> category : snippet  ',
+            'created  : 2017-10-14T19:56:31.000001+00:00  ',
+            'digest   : 18473ec207798670c302fb711a40df6555e8973e26481e4cd6b2ed205f5e633c  ',
+            'filename :   ',
+            'name     :   ',
+            'source   :   ',
+            'tags     : cleanup,container,docker,docker-ce,moby  ',
+            'updated  : 2017-10-14T19:56:31.000001+00:00  ',
+            'uuid     : 24cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+            'versions : ',
+            '')
+        editor_data.return_value = '\n'.join(edited)
+        cause = snippy.run(['snippy', 'create', '--editor'])
+        assert cause == Cause.ALL_OK
+        editor_data.assert_called_with('\n'.join(template))
+        Content.assert_storage(content)
+
+    @pytest.mark.usefixtures('create-remove-utc')
+    def test_cli_create_snippet_010(self, snippy, editor_data):
+        """Try to create snippet with editor.
+
+        Try to create new snippet by using the default Markdown template.  In
+        this case there are no any changes to the template.
+        """
+
+        template = (
+            '#  @default',
+            '',
+            '> ',
+            '',
+            '> ',
+            '',
+            '## Meta',
+            '',
+            '> category : snippet  ',
+            'created  : 2017-10-14T19:56:31.000001+00:00  ',
+            'digest   : ' + Snippet.TEMPLATE_DIGEST + '  ',
+            'filename :   ',
+            'name     :   ',
+            'source   :   ',
+            'tags     :   ',
+            'updated  : 2017-10-14T19:56:31.000001+00:00  ',
+            'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+            'versions : ',
+            ''
+        )
+        edited = template
+        editor_data.return_value = '\n'.join(edited)
+        cause = snippy.run(['snippy', 'create', '--editor'])
+        assert cause == 'NOK: content was not stored because it was matching to an empty template'
+        editor_data.assert_called_with('\n'.join(template))
+        Content.assert_storage(None)
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

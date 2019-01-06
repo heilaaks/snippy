@@ -223,6 +223,54 @@ class TestCliCreateSolution(object):
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+    @pytest.mark.usefixtures('snippy', 'create-kafka-mkdn-utc')
+    def test_cli_create_solution_008(self, snippy, editor_data):
+        """Try to create solution from editor.
+
+        Try to create new solution by using the default Markdown template. In
+        this case there are no any changes to the template.
+        """
+
+        template = (
+            '#  @default',
+            '',
+            '> ',
+            '',
+            '> ',
+            '',
+            '## Description',
+            '',
+            '## References',
+            '',
+            '## Commands',
+            '',
+            '## Configurations',
+            '',
+            '## Solutions',
+            '',
+            '## Whiteboard',
+            '',
+            '## Meta',
+            '',
+            '> category : solution  ',
+            'created  : 2019-01-04T10:54:49.265512+00:00  ',
+            'digest   : edf47207517dd1cd860b0f96488afecbcfcc925def7f97ace597a0f1966a60c0  ',
+            'filename :   ',
+            'name     :   ',
+            'source   :   ',
+            'tags     :   ',
+            'updated  : 2019-01-04T10:54:49.265512+00:00  ',
+            'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+            'versions : ',
+            ''
+        )
+        edited = template
+        editor_data.return_value = '\n'.join(edited)
+        cause = snippy.run(['snippy', 'create', '--solution'])
+        editor_data.assert_called_with('\n'.join(template))
+        assert cause == 'NOK: content was not stored because it was matching to an empty template'
+        Content.assert_storage(None)
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

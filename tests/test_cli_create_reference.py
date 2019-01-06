@@ -95,6 +95,106 @@ class TestCliCreateReferece(object):
         assert cause == 'NOK: could not identify content category - please keep template tags in place'
         Content.assert_storage(None)
 
+    @pytest.mark.usefixtures('create-gitlog-utc')
+    def test_cli_create_reference_005(self, snippy, editor_data):
+        """Create reference with editor.
+
+        Create new reference by using the default Markdown template. All values
+        are set with editor. The template is defined in this on purpose. This
+        tries to make sure that the testing framework does not hide possible
+        problems if the template would be generated automatically.
+        """
+
+        content = {
+            'data': [
+                Reference.GITLOG
+            ]
+        }
+        template = (
+            '#  @default',
+            '',
+            '> ',
+            '',
+            '> ',
+            '',
+            '## Meta',
+            '',
+            '> category : reference  ',
+            'created  : 2018-06-22T13:11:13.678729+00:00  ',
+            'digest   : e0cd55c650ef936a66633ee29500e47ee60cc497c342212381c40032ea2850d9  ',
+            'filename :   ',
+            'name     :   ',
+            'source   :   ',
+            'tags     :   ',
+            'updated  : 2018-06-22T13:11:13.678729+00:00  ',
+            'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+            'versions : ',
+            ''
+        )
+        edited = (
+            '# How to write commit messages @git',
+            '',
+            '> ',
+            '',
+            '> [1] https://chris.beams.io/posts/git-commit/',
+            '',
+            '`$ docker rm --volumes $(docker ps --all --quiet)`',
+            '',
+            '## Meta',
+            '',
+            '> category : reference  ',
+            'created  : 2018-06-22T13:11:13.678729+00:00  ',
+            'digest   : ' + Reference.TEMPLATE_DIGEST + '  ',
+            'filename :   ',
+            'name     :   ',
+            'source   :   ',
+            'tags     : commit,git,howto  ',
+            'updated  : 2018-06-22T13:11:13.678729+00:00  ',
+            'uuid     : 24cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+            'versions : ',
+            '')
+        editor_data.return_value = '\n'.join(edited)
+        cause = snippy.run(['snippy', 'create', '--reference', '--editor'])
+        assert cause == Cause.ALL_OK
+        editor_data.assert_called_with('\n'.join(template))
+        Content.assert_storage(content)
+
+    @pytest.mark.usefixtures('create-gitlog-utc')
+    def test_cli_create_reference_006(self, snippy, editor_data):
+        """Try to create reference with editor.
+
+        Try to create new reference by using the default Markdown template. In
+        this case there are no any changes to the template.
+        """
+
+        template = (
+            '#  @default',
+            '',
+            '> ',
+            '',
+            '> ',
+            '',
+            '## Meta',
+            '',
+            '> category : reference  ',
+            'created  : 2018-06-22T13:11:13.678729+00:00  ',
+            'digest   : e0cd55c650ef936a66633ee29500e47ee60cc497c342212381c40032ea2850d9  ',
+            'filename :   ',
+            'name     :   ',
+            'source   :   ',
+            'tags     :   ',
+            'updated  : 2018-06-22T13:11:13.678729+00:00  ',
+            'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+            'versions : ',
+            ''
+        )
+        edited = template
+        editor_data.return_value = '\n'.join(edited)
+        cause = snippy.run(['snippy', 'create', '--reference', '--editor'])
+        assert cause == 'NOK: content was not stored because it was matching to an empty template'
+        editor_data.assert_called_with('\n'.join(template))
+        Content.assert_storage(None)
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

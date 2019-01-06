@@ -43,7 +43,6 @@ class Editor(object):  # pylint: disable=too-few-public-methods
             collection (Collection()): Collection to store parsed content.
         """
 
-        print(template)
         text = cls._call_editor(template)
         Parser(template_format, timestamp, text, collection).read()
         if not collection:

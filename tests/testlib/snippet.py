@@ -178,3 +178,4 @@ class Snippet(object):  # pylint: disable=too-few-public-methods
     DEFAULT_SNIPPETS = (REMOVE, FORCED)
 
     TEMPLATE = Helper.read_template('snippet.txt').split('\n')
+    TEMPLATE_DIGEST = 'b4bedc2603e3b9ea95bcf53cb7b8aa6efa31eabb788eed60fccf3d8029a6a6cc'

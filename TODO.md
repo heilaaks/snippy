@@ -48,7 +48,7 @@
 
 ## FEATURES
    - [ ] Are the is_template and is_data internal to Resource? is the compute digest internal to resource?
-   - [ ] Remove extra space from snippet template.
+   - [ ] Make intermediate content data headers same in defaul text and mkdn template. Copy from mkdn.
    - [ ] Add support to search phrases like has 'active end'. This should return one result with default set but it returns two since each word is searched separately.
    - [ ] Add support to find dead links.
    - [ ] Add support to edit markup files with cli option.

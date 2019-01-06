@@ -52,11 +52,11 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     UPDATED = 14
     DIGEST = 15
 
-    SNIPPET_TEMPLATE_TEXT = 'b4bedc2603e3b9ea95bcf53cb7b8aa6efa31eabb788eed60fccf3d8029a6a6cc'
+    SNIPPET_TEMPLATE = 'b4bedc2603e3b9ea95bcf53cb7b8aa6efa31eabb788eed60fccf3d8029a6a6cc'
     SOLUTION_TEMPLATE_TEXT = '79e4ae470cd135798d718a668c52dbca1e614187da8bb22eca63047681f8d146'
     SOLUTION_TEMPLATE_MKDN = '073ea152d867cf06b2ee993fb1aded4c8ccbc618972db5c18158b5b68a5da6e4'
-    REFERENCE_TEMPLATE_TEXT = 'e0cd55c650ef936a66633ee29500e47ee60cc497c342212381c40032ea2850d9'
-    TEMPLATES = (SNIPPET_TEMPLATE_TEXT, SOLUTION_TEMPLATE_TEXT, SOLUTION_TEMPLATE_MKDN, REFERENCE_TEMPLATE_TEXT)
+    REFERENCE_TEMPLATE = 'e0cd55c650ef936a66633ee29500e47ee60cc497c342212381c40032ea2850d9'
+    TEMPLATES = (SNIPPET_TEMPLATE, SOLUTION_TEMPLATE_TEXT, SOLUTION_TEMPLATE_MKDN, REFERENCE_TEMPLATE)
 
     def __init__(self, category='', timestamp=''):
         self._logger = Logger.get_logger(__name__)
@@ -309,7 +309,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         """
 
         template = Const.EMPTY
-        if template_format == Const.CONTENT_FORMAT_MKDN and category == Const.SOLUTION and self.is_empty():
+        if template_format == Const.CONTENT_FORMAT_MKDN and category == Const.SOLUTION and not any(self.data):
             self.data = (
                 '## Description',
                 '',
@@ -502,7 +502,11 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         return bool(self.category == Const.REFERENCE)
 
     def is_native_mkdn_solution(self):
-        """Test if resource is native Markdown formatted content."""
+        """Test if resource is native Markdown formatted content.
+
+        The Markdown content is identified simply by checking that the first
+        line of the data is a second level Markdown header.
+        """
 
         if not self.is_solution():
             return False
@@ -616,8 +620,15 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         the metadata in the Markdown template.
         """
 
+        # This removes two unnecessary newlines from empty Markdown template
+        # for snippet content. There was no other way found to make this nice
+        # for end user.
+        data = '<data>'
+        if self.is_template() and self.is_snippet():
+            data = '<data>\n\n'
+
         mkdn = templates['mkdn'][self.category]
-        mkdn = mkdn.replace('<data>', self._dump_mkdn_data())
+        mkdn = mkdn.replace(data, self._dump_mkdn_data())
         mkdn = mkdn.replace('<brief>', self.brief)
         mkdn = mkdn.replace('<description>', textwrap.fill(self.description, 88).replace('\n', '  \n'))
         mkdn = mkdn.replace('<groups>', Const.DELIMITER_GROUPS.join(self.groups))
@@ -660,14 +671,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
                     self._logger.debug('command parsing failed: %s', command)
             data = data.rstrip()
         elif self.is_solution():
-            # Add code block only for solutions in other than Markdown format.
-            # The Markdown content is identified simply by checking that the
-            # first line of the data is a second level Markdown header.
-            #
-            # If the content is solution and the data is empty, it is assumed
-            # that the case is Markdown native template and no Markdown code
-            # blocks are used.
-            if self.is_native_mkdn_solution() or not self.data:
+            if self.is_native_mkdn_solution():
                 data = data + Const.DELIMITER_DATA.join(self.data)
             else:
                 data = '```\n'

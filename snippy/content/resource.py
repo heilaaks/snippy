@@ -54,8 +54,9 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
 
     SNIPPET_TEMPLATE_TEXT = 'b4bedc2603e3b9ea95bcf53cb7b8aa6efa31eabb788eed60fccf3d8029a6a6cc'
     SOLUTION_TEMPLATE_TEXT = '79e4ae470cd135798d718a668c52dbca1e614187da8bb22eca63047681f8d146'
+    SOLUTION_TEMPLATE_MKDN = '073ea152d867cf06b2ee993fb1aded4c8ccbc618972db5c18158b5b68a5da6e4'
     REFERENCE_TEMPLATE_TEXT = 'e0cd55c650ef936a66633ee29500e47ee60cc497c342212381c40032ea2850d9'
-    TEMPLATES = (SNIPPET_TEMPLATE_TEXT, SOLUTION_TEMPLATE_TEXT, REFERENCE_TEMPLATE_TEXT)
+    TEMPLATES = (SNIPPET_TEMPLATE_TEXT, SOLUTION_TEMPLATE_TEXT, SOLUTION_TEMPLATE_MKDN, REFERENCE_TEMPLATE_TEXT)
 
     def __init__(self, category='', timestamp=''):
         self._logger = Logger.get_logger(__name__)
@@ -290,6 +291,45 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         """Resource digest."""
 
         self._digest = value
+
+    def get_template(self, category, template_format, templates):
+        """Return resource in a text template.
+
+        If the resource is empty, an empty text template is returned. If
+        there already exist content data, the actual content is transformed
+        into a text template.
+
+        Args:
+           category (str): Content category.
+           template_format (str): Template format.
+           templates (dict): Dictionary that contains content templates.
+
+        Returns:
+            str: Content template as a string.
+        """
+
+        template = Const.EMPTY
+        if template_format == Const.CONTENT_FORMAT_MKDN and category == Const.SOLUTION and self.is_empty():
+            self.data = (
+                '## Description',
+                '',
+                '## References',
+                '',
+                '## Commands',
+                '',
+                '## Configurations',
+                '',
+                '## Solutions',
+                '',
+                '## Whiteboard'
+            )
+            self.digest = self.compute_digest()
+        if template_format == Const.CONTENT_FORMAT_MKDN:
+            template = self.dump_mkdn(templates)
+        elif template_format == Const.CONTENT_FORMAT_TEXT:
+            template = self.dump_text(templates)
+
+        return template
 
     def compute_digest(self):
         """Compute digest from the content."""

@@ -266,9 +266,20 @@ class Config(object):
         collection = Collection()
         timestamp = Config.utcnow()
         if cls.editor:
-            if not resource:
-                resource = Collection().get_resource(cls.content_category, timestamp)
-            Editor.read(timestamp, Config.template_format, Config.templates, resource, collection)
+            if resource:
+                template = resource.get_template(
+                    cls.content_category,
+                    cls.template_format,
+                    cls.templates
+                )
+            else:
+                template = Collection.get_template(
+                    timestamp,
+                    cls.content_category,
+                    cls.template_format,
+                    cls.templates
+                )
+            Editor.read(timestamp, cls.template_format, template, collection)
         else:
             cls._read_collection(timestamp, collection)
 

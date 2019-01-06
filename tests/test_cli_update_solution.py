@@ -265,8 +265,8 @@ class TestCliUpdateSolution(object):
 
         Update existing Markdown native solution. Editor must show existing
         Markdown native content as is. Updated content must be identified as
-        Markdown native content. Editor must be used by default when
-        the --editor option is not used.
+        Markdown native content. Editor must be used by default when the
+        --editor option is not used.
         """
 
         content = {

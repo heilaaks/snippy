@@ -47,6 +47,8 @@
    - [ ] Fix (optimize) the order of SQL columns. Fixed length columns first. This should ? allow database to optimize the length of data. Is this the case?
 
 ## FEATURES
+   - [ ] Are the is_template and is_data internal to Resource? is the compute digest internal to resource?
+   - [ ] Remove extra space from snippet template.
    - [ ] Add support to search phrases like has 'active end'. This should return one result with default set but it returns two since each word is searched separately.
    - [ ] Add support to find dead links.
    - [ ] Add support to edit markup files with cli option.

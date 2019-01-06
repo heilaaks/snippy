@@ -33,27 +33,21 @@ class Editor(object):  # pylint: disable=too-few-public-methods
     _logger = Logger.get_logger(__name__)
 
     @classmethod
-    def read(cls, timestamp, template_format, templates, resource, collection):
+    def read(cls, timestamp, template_format, template, collection):
         """Read content from editor.
 
         Args:
-            timestamp (str): IS8601 timestamp used with created resources.
-            format (str): Content format that is requested by user.
-            templates (dict): Empty content default templates.
-            resource (Resource()): Empty or existing resource displayed to user.
-            collection (Collection()): Collection where the content is stored.
+            timestamp (str): IS8601 timestamp to be used with created collection.
+            template_format (str): Template format.
+            template (str): Default template for editor.
+            collection (Collection()): Collection to store parsed content.
         """
 
-        if resource.is_native_mkdn_solution() or template_format == Const.CONTENT_FORMAT_MKDN:
-            content_format = Const.CONTENT_FORMAT_MKDN
-            template = resource.dump_mkdn(templates)
-        else:
-            content_format = Const.CONTENT_FORMAT_TEXT
-            template = resource.dump_text(templates)
+        print(template)
         text = cls._call_editor(template)
-        Parser(content_format, timestamp, text, collection).read()
+        Parser(template_format, timestamp, text, collection).read()
         if not collection:
-            Cause.push(Cause.HTTP_BAD_REQUEST, 'edited: {} :content could not be read - please keep template tags in place'.format(content_format))  # noqa pylint: disable=line-too-long
+            Cause.push(Cause.HTTP_BAD_REQUEST, 'edited: {} :content could not be read - please keep template tags in place'.format(template_format))  # noqa pylint: disable=line-too-long
 
     @classmethod
     def _call_editor(cls, template):

@@ -275,10 +275,7 @@ class Cli(ConfigSourceBase):
         other content types in create operation, editor is not used.
         """
 
-        if parameters['failure']:
-            return
-
-        if parameters['no_editor']:
+        if parameters['failure'] or parameters['no_editor']:
             parameters['editor'] = False
             return
 

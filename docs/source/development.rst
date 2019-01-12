@@ -169,39 +169,61 @@ descriptions of the event.
    :members:
    :member-order: bysource
 
-snippy.config.source.parser
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+snippy.content.parser
+~~~~~~~~~~~~~~~~~~~~~
 
 **Service**
 
 Parser class offers a parser to extract content fields from text source.
 
-.. autoclass:: snippy.config.source.parser.Parser
+.. autoclass:: snippy.content.parser.Parser
    :members:
    :member-order: bysource
 
-snippy.config.source.parsers.base
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+snippy.content.parsers.base
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 **Service**
 
 Content parser base class offers basic parsing methods.
 
-.. autoclass:: snippy.config.source.parsers.base.ContentParserBase
+.. autoclass:: snippy.content.parsers.base.ContentParserBase
    :members:
    :member-order: bysource
 
-snippy.config.source.parsers.text
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+snippy.content.parsers.text
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 **Service**
 
 Content parser for text content.
 
-.. autoclass:: snippy.config.source.parsers.text.ContentParserText
+.. autoclass:: snippy.content.parsers.text.ContentParserText
    :members:
    :member-order: bysource
 
+
+snippy.content.parsers.mkdn
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**Service**
+
+Content parser for Markdown content.
+
+.. autoclass:: snippy.content.parsers.mkdn.ContentParserMkdn
+   :members:
+   :member-order: bysource
+
+snippy.content.parsers.dict
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**Service**
+
+Content parser for YAML and JSON content.
+
+.. autoclass:: snippy.content.parsers.dict.ContentParserDict
+   :members:
+   :member-order: bysource
 
 snippy.storage.storage
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -215,13 +237,13 @@ actual database solution from rest of the implementation.
    :members:
    :member-order: bysource
 
-snippy.storage.sqlitedb
+snippy.storage.database
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 **Service**
 
 SqliteDb class offers database implementation for the Storage class.
 
-.. autoclass:: snippy.storage.sqlitedb.SqliteDb
+.. autoclass:: snippy.storage.database
    :members:
    :member-order: bysource

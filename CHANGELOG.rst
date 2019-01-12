@@ -23,6 +23,7 @@ New features
 * Add REST API routes for: keywords, groups, tags, uuid and digest `[8]`_.
 * Add support for PostgreSQL database.
 * Add support for Markdown formatted content.
+* Add support to output search results also in Markdown format.
 * Add one command to export and import all default content.
 * Add comment auto-alignment for snippets when printed to terminal.
 * Add ``description`` field in text content templates.

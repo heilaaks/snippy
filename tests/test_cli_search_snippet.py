@@ -1179,6 +1179,68 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+    @pytest.mark.usefixtures('default-snippets')
+    def test_cli_search_snippet_042(self, snippy, capsys):
+        """Search snippet from all fields.
+
+        List all snippets and define the output format as Markdown.
+        """
+
+        output = (
+            '# Remove all docker containers with volumes @docker',
+            '',
+            '> ',
+            '',
+            '> [1] https://docs.docker.com/engine/reference/commandline/rm/',
+            '',
+            '`$ docker rm --volumes $(docker ps --all --quiet)`',
+            '',
+            '## Meta',
+            '',
+            '> category : snippet  ',
+            'created  : 2017-10-14T19:56:31.000001+00:00  ',
+            'digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319  ',
+            'filename :   ',
+            'name     :   ',
+            'source   :   ',
+            'tags     : cleanup,container,docker,docker-ce,moby  ',
+            'updated  : 2017-10-14T19:56:31.000001+00:00  ',
+            'uuid     : 12cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+            'versions : ',
+            '',
+            '---',
+            '',
+            '# Remove docker image with force @docker',
+            '',
+            '> ',
+            '',
+            '> [1] https://docs.docker.com/engine/reference/commandline/rm/  ',
+            '[2] https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
+            '',
+            '`$ docker rm --force redis`',
+            '',
+            '## Meta',
+            '',
+            '> category : snippet  ',
+            'created  : 2017-10-14T19:56:31.000001+00:00  ',
+            'digest   : 53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5  ',
+            'filename :   ',
+            'name     :   ',
+            'source   :   ',
+            'tags     : cleanup,container,docker,docker-ce,moby  ',
+            'updated  : 2017-10-14T19:56:31.000001+00:00  ',
+            'uuid     : 16cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+            'versions :',
+            '',
+            'OK',
+            ''
+        )
+        cause = snippy.run(['snippy', 'search', '--sall', '.', '--format', 'mkdn'])
+        out, err = capsys.readouterr()
+        assert cause == Cause.ALL_OK
+        assert out == Const.NEWLINE.join(output)
+        assert not err
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

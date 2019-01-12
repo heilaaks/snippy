@@ -71,7 +71,12 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
             data=Config.content_data
         )
         if self._run_cli:
-            self.collection.dump_term(Config.use_ansi, Config.debug_logs)
+            self.collection.dump_term(
+                Config.templates,
+                Config.template_format,
+                Config.use_ansi,
+                Config.debug_logs
+            )
 
     def update(self):
         """Update content."""

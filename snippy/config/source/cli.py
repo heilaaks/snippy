@@ -145,6 +145,7 @@ class Cli(ConfigSourceBase):
         args = args[1:]  # Remove the first parameter that is the program name.
         parameters = Cli._parse_args(args)
         Cli._set_editor(parameters)
+        Cli._set_format(parameters)
         self.set_conf(parameters)
 
     @staticmethod
@@ -180,7 +181,7 @@ class Cli(ConfigSourceBase):
         options.add_argument('-u', '--uuid', type=Parser.to_unicode, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
         options.add_argument('--editor', action='store_true', default=False, help=argparse.SUPPRESS)
         options.add_argument('--no-editor', dest='no_editor', action='store_true', default=False, help=argparse.SUPPRESS)
-        options.add_argument('--format', nargs='?', choices=(Const.CONTENT_FORMAT_MKDN, Const.CONTENT_FORMAT_TEXT), default=Const.CONTENT_FORMAT_MKDN, help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
+        options.add_argument('--format', nargs='?', choices=(Const.CONTENT_FORMAT_MKDN, Const.CONTENT_FORMAT_TEXT), default=argparse.SUPPRESS, help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
         options.add_argument('--merge', action='store_true', default=False, help=argparse.SUPPRESS)
 
         # search options
@@ -286,6 +287,24 @@ class Cli(ConfigSourceBase):
             else:
                 if 'data' not in parameters:
                     parameters['editor'] = True
+
+    @staticmethod
+    def _set_format(parameters):
+        """Enforce editor implicitly.
+
+        The default is text format when searching content from command line.
+        All other cases default to Markdown format. If user defined the format
+        option, it overrides this setting.
+        """
+
+        if parameters['failure']:
+            parameters['format'] = Const.CONTENT_FORMAT_MKDN
+            return
+
+        if 'format' not in parameters and parameters['operation'] == Cli.SEARCH:
+            parameters['format'] = Const.CONTENT_FORMAT_TEXT
+        elif 'format' not in parameters:
+            parameters['format'] = Const.CONTENT_FORMAT_MKDN
 
 
 class CustomHelpAction(argparse.Action):  # pylint: disable=too-few-public-methods

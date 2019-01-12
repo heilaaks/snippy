@@ -105,7 +105,7 @@ class ContentParserMkdn(ContentParserBase):
         self._collection = collection
 
     def read_collection(self):
-        """Read collection from the given text source."""
+        """Read collection from the given Markdown source."""
 
         contents = self._text.split('---')
         for content in contents:

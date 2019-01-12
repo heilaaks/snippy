@@ -556,6 +556,53 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             call = mock_file.return_value.__enter__.return_value.write.mock_calls[0][1][0]
             assert 'Manipulate compressed tar files and define very long descrption for the content to  \nextend to two lines.\n\n' in call
 
+    @pytest.mark.usefixtures('import-exited', 'export-time')
+    def test_cli_export_snippet_029(self, snippy):
+        """Export all snippets.
+
+        Export snippets in Markdown format. This case verified that there is
+        two spaces at the end of lists like links, data and metadata. This
+        forces newlines in exported Markdown format.
+        """
+
+        content = {
+            'meta': Content.get_cli_meta(),
+            'data': [
+                Snippet.EXITED
+            ]
+        }
+        markdown = (
+            '# Remove all exited containers and dangling images @docker',
+            '',
+            '> ',
+            '',
+            '> [1] https://docs.docker.com/engine/reference/commandline/images/  ',
+            '[2] https://docs.docker.com/engine/reference/commandline/rm/  ',
+            '[3] https://docs.docker.com/engine/reference/commandline/rmi/',
+            '',
+            '`$ docker rm $(docker ps --all -q -f status=exited)`  ',
+            '`$ docker images -q --filter dangling=true | xargs docker rmi`',
+            '',
+            '## Meta',
+            '',
+            '> category : snippet  ',
+            'created  : 2017-10-20T07:08:45.000001+00:00  ',
+            'digest   : 49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73  ',
+            'filename :   ',
+            'name     :   ',
+            'source   :   ',
+            'tags     : cleanup,container,docker,docker-ce,image,moby  ',
+            'updated  : 2017-10-20T07:08:45.000001+00:00  ',
+            'uuid     : 12cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+            'versions : ',
+            ''
+        )
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '-f', './snippets.mkdn'])
+            assert cause == Cause.ALL_OK
+            assert mock_file.return_value.__enter__.return_value.write.mock_calls[0][1][0] == '\n'.join(markdown)
+            Content.assert_mkdn(mock_file, './snippets.mkdn', content)
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

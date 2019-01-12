@@ -692,7 +692,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
                         data = data + "- " + match.group('comment') + Const.NEWLINE * 2
                         data = data + "    `$ " + match.group('command') + "`" + Const.NEWLINE * 2
                     else:
-                        data = data + "`$ " + match.group('command') + "`" + Const.NEWLINE
+                        data = data + "`$ " + match.group('command') + "`  " + Const.NEWLINE
                 else:
                     self._logger.debug('command parsing failed: %s', command)
             data = data.rstrip()

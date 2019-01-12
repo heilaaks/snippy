@@ -1,6 +1,5 @@
 ## WORKING
    - [ ] Add spaces after exported mkdn.
-   - [ ] Add example text for Mkdn template in create template.
    - [ ] Is compute digest internal to resource? What about is_ in resource?
    - [ ] Why mkdn parser returns two empty items in list with empty template?
    - [ ] Add more tests for --(no)-editor options for all content classes and operations.

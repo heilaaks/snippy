@@ -52,11 +52,20 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     UPDATED = 14
     DIGEST = 15
 
-    SNIPPET_TEMPLATE = 'b4bedc2603e3b9ea95bcf53cb7b8aa6efa31eabb788eed60fccf3d8029a6a6cc'
+    SNIPPET_TEMPLATE_TEXT = 'b4bedc2603e3b9ea95bcf53cb7b8aa6efa31eabb788eed60fccf3d8029a6a6cc'
+    SNIPPET_TEMPLATE_MKDN = 'd3d97da5397794cce15ed9a2778eb1350ac2c8aa07599e21955619145ed977ce'
     SOLUTION_TEMPLATE_TEXT = '79e4ae470cd135798d718a668c52dbca1e614187da8bb22eca63047681f8d146'
-    SOLUTION_TEMPLATE_MKDN = '073ea152d867cf06b2ee993fb1aded4c8ccbc618972db5c18158b5b68a5da6e4'
-    REFERENCE_TEMPLATE = 'e0cd55c650ef936a66633ee29500e47ee60cc497c342212381c40032ea2850d9'
-    TEMPLATES = (SNIPPET_TEMPLATE, SOLUTION_TEMPLATE_TEXT, SOLUTION_TEMPLATE_MKDN, REFERENCE_TEMPLATE)
+    SOLUTION_TEMPLATE_MKDN = '3c1ddd75eeb6f32aab002a719638ab4849016a35dfe63b84da93a4c041426a8f'
+    REFERENCE_TEMPLATE_TEXT = 'e0cd55c650ef936a66633ee29500e47ee60cc497c342212381c40032ea2850d9'
+    REFERENCE_TEMPLATE_MKDN = '5f8abf17149b097453571524f403754997682cdbcfc6de8605bb0eff19fc507e'
+    TEMPLATES = (
+        SNIPPET_TEMPLATE_TEXT,
+        SNIPPET_TEMPLATE_MKDN,
+        SOLUTION_TEMPLATE_TEXT,
+        SOLUTION_TEMPLATE_MKDN,
+        REFERENCE_TEMPLATE_TEXT,
+        REFERENCE_TEMPLATE_MKDN
+    )
 
     def __init__(self, category='', timestamp=''):
         self._logger = Logger.get_logger(__name__)
@@ -299,6 +308,8 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         there already exist content data, the actual content is transformed
         into a text template.
 
+        A text template here refers to Markdown or text formatted content.
+
         Args:
            category (str): Content category.
            template_format (str): Template format.
@@ -308,8 +319,22 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             str: Content template as a string.
         """
 
+        if self._is_empty() and template_format == Const.CONTENT_FORMAT_MKDN:
+            self.brief = 'Add brief title for content'
+            self.description = 'Add a description that defines the content in one chapter.'
+            self.groups = ('groups',)
+            self.tags = ('comma', 'separated', 'tags')
+            self.links = ('https://www.example.com/add-links-here.html',)
+
+            # In order to match is_template before and after parsing, reference
+            # data must be set to links. This is done automatically after the
+            # Markdown parsing.
+            if category == Const.REFERENCE:
+                self.data = self.links
+            self.digest = self.compute_digest()
+
         template = Const.EMPTY
-        if template_format == Const.CONTENT_FORMAT_MKDN and category == Const.SOLUTION and not any(self.data):
+        if template_format == Const.CONTENT_FORMAT_MKDN and category == Const.SOLUTION and self._is_empty():
             self.data = (
                 '## Description',
                 '',

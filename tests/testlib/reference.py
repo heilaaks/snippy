@@ -108,4 +108,5 @@ class Reference(object):  # pylint: disable=too-few-public-methods
     DEFAULT_REFERENCES = (GITLOG, REGEXP)
 
     TEMPLATE = Helper.read_template('reference.txt').split('\n')
-    TEMPLATE_DIGEST = 'e0cd55c650ef936a66633ee29500e47ee60cc497c342212381c40032ea2850d9'
+    TEMPLATE_DIGEST_TEXT = 'e0cd55c650ef936a66633ee29500e47ee60cc497c342212381c40032ea2850d9'
+    TEMPLATE_DIGEST_MKDN = '5f8abf17149b097453571524f403754997682cdbcfc6de8605bb0eff19fc507e'

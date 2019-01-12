@@ -402,6 +402,7 @@ class Solution(object):  # pylint: disable=too-few-public-methods
 
     TEMPLATE = Helper.read_template('solution.txt').split('\n')
     TEMPLATE_DIGEST_TEXT = '79e4ae470cd135798d718a668c52dbca1e614187da8bb22eca63047681f8d146'
+    TEMPLATE_DIGEST_MKDN = '3c1ddd75eeb6f32aab002a719638ab4849016a35dfe63b84da93a4c041426a8f'
 
     _OUTPUTS = [(
         '',

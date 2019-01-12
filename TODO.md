@@ -1,16 +1,13 @@
 ## WORKING
+   - [ ] Make intermediate content data headers same in defaul text and mkdn template. Copy from mkdn.
    - [ ] Change markdown to use > in each row of lists. This is clearer.
-   - [ ] What about is_ in resource?
-   - [ ] Why mkdn parser returns two empty items in list with empty template?
+   - [ ] Remove the column marks from cause code (the structured log data rule). The cause could strip these out from middle of the string. Keep at the end?
+   - [ ] Document and test that update now also supports --format option and the default is Markdown.
    - [ ] Add more tests for --(no)-editor options for all content classes and operations.
-   - [ ] Write proper history that summarieses the Markdown and link it to change history when two MD items below are cloded.
-   - [ ] Add Markdown formatted templates for all content class to create new content. Make them default. Leave the text templates available. Add --format swhich that can be used with create.
-   - [ ] Convert all solutions to Markdown format.
    - [ ] Why new mkdn log driver kafka solution does not have brief in quotations in defaults?
-   - [ ] CLI interface does not update default template with provided parameters like tags, groups, etc. This should be placed on top of default empty template if provided.
+   - [ ] Convert all solutions to Markdown format and write proper history that summarieses the Markdown and link it to change history when two MD items below are cloded.
+   - [ ] CLI interface does not update default template with provided parameters like tags, groups, etc from command line. This should be placed on top of default empty template if provided.
    - [ ] Add support to read storage and server options from env variables.
-   - [ ] _read_collection can remove compute_digest since it is always in seal. Can the compute_digest be internal? It would help to get rid of external usage.
-   - [ ] Sort SQL attributes so that the digest is last. Eventually the digest will contain all the fields.
    - [ ] Config get_resource could return empty Resource instead of None in failure. This is now related to new migrate refactoring that prevents migrating template resources.
    - [ ] Fix better logs if --logs-json (invalid option name) is used with -vv. Now there is not proper log what went wrong with -vv/--debug?
    - [ ] Fix help text to use import --all instead of content specific commands.
@@ -18,7 +15,6 @@
    - [ ] Fix '--filter 0' maps to None instead of 0?
    - [ ] Fix (remove) the LANG in Alpine based dockerfile? Is this useless as MUSL does not support locales? https://github.com/gliderlabs/docker-alpine/issues/144
    - [ ] Fix server silent startup failure if for example the port is reserved. How to get proper error cause for user?
-   - [ ] Change solution to Markdown and make Markdown a first class citicen. Change the default format to MKDN.
    - [ ] Test postgreSQL SSL connection manually.
    - [ ] Test API performance by disabling server start from api_performance against all db's. (what was this?)
    - [ ] Add support for CockroachDB.
@@ -29,7 +25,6 @@
    - [ ] Fix does the Parser really return UTF-8 encoded strings always? For example (links/keywords) is not coverted and other use decode(utf-8) which is opposite?
    - [ ] Fix clarify how insert multiple - one failure behaves. Should have been fail all because of simplicity. Write test and fix. The code tries to insert all and returns inteserted content in REST API. What about CLI (same behaviour but should this change to fail immediately)?
    - [ ] Fix Parser which assumes always UTF-8. If CLI terminal has something else, this fails.
-   - [ ] Remove the column marks from cause code (the structured log data rule). The cause could strip these out from middle of the string. Keep at the end?
    - [ ] Parse new format that supports snippets with leading comment to internal format? Or remove the support? This was the case where snippet was started with # comment followed by $ snippet
    - [ ] Is there a better way to support the special case of checking internal cause 500 and Content created cause for importing some of the content (digest integrity error)
    - [ ] Database.init can be moved to database __init__ because it is always called immediately after object init. This is likely historical left over or something that some test requires (mock?)?
@@ -49,13 +44,9 @@
    - [ ] Fix (optimize) the order of SQL columns. Fixed length columns first. This should ? allow database to optimize the length of data. Is this the case?
 
 ## FEATURES
-   - [ ] Are the is_template and is_data internal to Resource? is the compute digest internal to resource?
    - [ ] Fix reading data from cli that does not parse description and filename from CLI --content data test_cli_create_solution_001.
-   - [ ] Make intermediate content data headers same in defaul text and mkdn template. Copy from mkdn.
    - [ ] Add support to search phrases like has 'active end'. This should return one result with default set but it returns two since each word is searched separately.
-   - [ ] Creating new content and adding field attributes like tags is not updated to created template.
    - [ ] Add support to find dead links.
-   - [ ] Add support to edit markup files with cli option.
    - [ ] Add Travis CI for PyPy version v6.0 for Python 3 when it comes https://github.com/travis-ci/travis-ci/issues/9542
    - [ ] Add test client to measure performance of the server. The PyPy does not seem to work with api_performance test.
    - [ ] Add compression for the response. Default is pretty print, the --server-minify-json is applied if request header does not request compression.

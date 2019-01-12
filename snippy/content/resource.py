@@ -84,7 +84,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self._uuid = self._get_external_uuid()
         self._created = timestamp
         self._updated = timestamp
-        self._digest = self.compute_digest()
+        self._digest = self._compute_digest()
 
     def __str__(self):
         """Format string from the class object."""
@@ -331,7 +331,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             # Markdown parsing.
             if category == Const.REFERENCE:
                 self.data = self.links
-            self.digest = self.compute_digest()
+            self.digest = self._compute_digest()
 
         template = Const.EMPTY
         if template_format == Const.CONTENT_FORMAT_MKDN and category == Const.SOLUTION and self._is_empty():
@@ -348,30 +348,13 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
                 '',
                 '## Whiteboard'
             )
-            self.digest = self.compute_digest()
+            self.digest = self._compute_digest()
         if template_format == Const.CONTENT_FORMAT_MKDN:
             template = self.dump_mkdn(templates)
         elif template_format == Const.CONTENT_FORMAT_TEXT:
             template = self.dump_text(templates)
 
         return template
-
-    def compute_digest(self):
-        """Compute digest from the content."""
-
-        resource_str = Const.DELIMITER_DATA.join(map(Const.TEXT_TYPE, self.data))
-        resource_str = resource_str + self.brief
-        resource_str = resource_str + self.description
-        resource_str = resource_str + Const.DELIMITER_GROUPS.join(map(Const.TEXT_TYPE, sorted(self.groups)))
-        resource_str = resource_str + Const.DELIMITER_TAGS.join(map(Const.TEXT_TYPE, sorted(self.tags)))
-        resource_str = resource_str + Const.DELIMITER_LINKS.join(map(Const.TEXT_TYPE, self.links))
-        resource_str = resource_str + self.category
-        resource_str = resource_str + self.name
-        resource_str = resource_str + self.filename
-        resource_str = resource_str + self.versions
-        digest = hashlib.sha256(resource_str.encode('UTF-8')).hexdigest()
-
-        return digest
 
     def seal(self):
         """Seal content by updating digest and run content specific tasks.
@@ -402,7 +385,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         if not self.uuid:
             self.uuid = self._get_external_uuid()
 
-        self.digest = self.compute_digest()
+        self.digest = self._compute_digest()
 
         is_template = self._is_template()
         if is_template:
@@ -416,6 +399,23 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
                 Cause.push(Cause.HTTP_BAD_REQUEST, 'content was not stored because mandatory content field links is empty')
 
         return not bool(is_empty or is_template)
+
+    def _compute_digest(self):
+        """Compute digest from the content."""
+
+        resource_str = Const.DELIMITER_DATA.join(map(Const.TEXT_TYPE, self.data))
+        resource_str = resource_str + self.brief
+        resource_str = resource_str + self.description
+        resource_str = resource_str + Const.DELIMITER_GROUPS.join(map(Const.TEXT_TYPE, sorted(self.groups)))
+        resource_str = resource_str + Const.DELIMITER_TAGS.join(map(Const.TEXT_TYPE, sorted(self.tags)))
+        resource_str = resource_str + Const.DELIMITER_LINKS.join(map(Const.TEXT_TYPE, self.links))
+        resource_str = resource_str + self.category
+        resource_str = resource_str + self.name
+        resource_str = resource_str + self.filename
+        resource_str = resource_str + self.versions
+        digest = hashlib.sha256(resource_str.encode('UTF-8')).hexdigest()
+
+        return digest
 
     def migrate(self, source):
         """Migrate source into Resource.
@@ -775,7 +775,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             text = text + meta.format(indent=indent, key='category', align=' ' * 4, value=self.category)
             text = text + meta.format(indent=indent, key='created', align=' ' * 5, value=self.created)
             text = text + meta.format(indent=indent, key='description', align=' ' * 1, value=self.description)
-            text = text + digest.format(indent=indent, key='digest', align=' ' * 6, value=self.digest, test=self.digest == self.compute_digest())  # noqa pylint: disable=line-too-long
+            text = text + digest.format(indent=indent, key='digest', align=' ' * 6, value=self.digest, test=self.digest == self._compute_digest())  # noqa pylint: disable=line-too-long
             text = text + meta.format(indent=indent, key='filename', align=' ' * 4, value=self.filename)
             text = text + meta.format(indent=indent, key='id', align=' ' * 10, value=self._id)
             text = text + meta.format(indent=indent, key='name', align=' ' * 8, value=self.name)

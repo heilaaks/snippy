@@ -173,7 +173,6 @@ class ContentParserText(ContentParserBase):
             resource.links = self._read_links(category, content)
             resource.category = category
             resource.filename = self._read_filename(category, content)
-            resource.digest = resource.compute_digest()
             self._collection.migrate(resource)
 
     def _split_contents(self):

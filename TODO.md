@@ -1,6 +1,6 @@
 ## WORKING
    - [ ] Add support to export in mkdn with search with format option.
-   - [ ] Is compute digest internal to resource? What about is_ in resource?
+   - [ ] What about is_ in resource?
    - [ ] Why mkdn parser returns two empty items in list with empty template?
    - [ ] Add more tests for --(no)-editor options for all content classes and operations.
    - [ ] Write proper history that summarieses the Markdown and link it to change history when two MD items below are cloded.
@@ -44,7 +44,7 @@
 
 ## OPTIMIZATIONS
    - [ ] Fix (optimize) migrate and dump. The dump_dict is not needed in case of text and mkdn because those methods do not need the dict format but produce string directly.
-   - [ ] Fix (optimize) digest calculation for import. Print the digest string from digest compute and see that it computes digest 4 times for same content.
+   - [x] Fix (optimize) digest computation for Resource.
    - [ ] Fix (optimize) POST API with multiple contents. Now each content in collection is *.run with own resources. The create supports collection so this should work.
    - [ ] Fix (optimize) the order of SQL columns. Fixed length columns first. This should ? allow database to optimize the length of data. Is this the case?
 

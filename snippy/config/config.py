@@ -376,7 +376,6 @@ class Config(object):
         resource.filename = cls.content_filename
         resource.versions = cls.content_versions
         resource.source = cls.content_source
-        resource.digest = resource.compute_digest()
         collection.migrate(resource)
 
     @classmethod

@@ -102,7 +102,7 @@ class TestCliCreateSnippet(object):
         """
 
         cause = snippy.run(['snippy', 'create', '--editor', '--format', 'text'])
-        assert cause == 'NOK: content was not stored because mandatory content field data is empty'
+        assert cause == 'NOK: content was not stored because it was matching to an empty template'
         Content.assert_storage(None)
 
     @pytest.mark.usefixtures('edit-empty')

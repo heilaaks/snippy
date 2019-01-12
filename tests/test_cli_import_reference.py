@@ -201,7 +201,7 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
         file_content = mock.mock_open(read_data=Const.NEWLINE.join(Reference.TEMPLATE))
         with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--reference', '-f', './reference-template.txt'])
-            assert cause == 'NOK: content was not stored because mandatory content field links is empty'
+            assert cause == 'NOK: content was not stored because it was matching to an empty template'
             Content.assert_storage(None)
             mock_file.assert_called_once_with('./reference-template.txt', 'r')
 
@@ -427,7 +427,7 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
         file_content = mock.mock_open(read_data=Const.NEWLINE.join(Reference.TEMPLATE))
         with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--reference', '--template'])
-            assert cause == 'NOK: content was not stored because mandatory content field links is empty'
+            assert cause == 'NOK: content was not stored because it was matching to an empty template'
             Content.assert_storage(None)
             mock_file.assert_called_once_with('./reference-template.txt', 'r')
 

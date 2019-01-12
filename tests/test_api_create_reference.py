@@ -308,12 +308,12 @@ class TestApiCreateReference(object):
                 'status': '400',
                 'statusString': '400 Bad Request',
                 'module': 'snippy.testing.testing:123',
-                'title': 'content was not stored because mandatory content field links is empty'
+                'title': 'content was not stored because it was matching to an empty template'
             }, {
                 'status': '400',
                 'statusString': '400 Bad Request',
                 'module': 'snippy.testing.testing:123',
-                'title': 'content was not stored because it was matching to an empty template'
+                'title': 'content was not stored because mandatory content field links is empty'
             }, {
                 'status': '404',
                 'statusString': '404 Not Found',

@@ -365,10 +365,10 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         else:
             self.links = tuple(sorted(self.links))
 
-        # There may be case where for example Yaml loading automatically
+        # There may be cases where for example Yaml loading automatically
         # converts timestamps to datetime objects if the timestamps are
-        # not surrounded by quotes. Internally the timestamps are stored
-        # as strings.
+        # not surrounded by quotes. Internally the timestamps are always
+        # stored in string format.
         if isinstance(self.created, datetime.datetime):
             self.created = self.created.strftime('%Y-%m-%dT%H:%M:%S.%f+00:00')
         if isinstance(self.updated, datetime.datetime):
@@ -379,8 +379,16 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
 
         self.digest = self.compute_digest()
 
-        is_empty = self.is_empty()
-        is_template = self.is_template()
+        is_template = self._is_template()
+        if is_template:
+            Cause.push(Cause.HTTP_BAD_REQUEST, 'content was not stored because it was matching to an empty template')
+
+        is_empty = self._is_empty()
+        if is_empty:
+            if self.category in (Const.SNIPPET, Const.SOLUTION):
+                Cause.push(Cause.HTTP_BAD_REQUEST, 'content was not stored because mandatory content field data is empty')
+            else:
+                Cause.push(Cause.HTTP_BAD_REQUEST, 'content was not stored because mandatory content field links is empty')
 
         return not bool(is_empty or is_template)
 
@@ -460,28 +468,21 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self.updated = row[Resource.UPDATED]
         self.digest = row[Resource.DIGEST]
 
-    def is_template(self):
+    def _is_template(self):
         """Test if resource data is empty template."""
-
-        if bool(self.digest in Resource.TEMPLATES):
-            Cause.push(Cause.HTTP_BAD_REQUEST, 'content was not stored because it was matching to an empty template')
 
         return bool(self.digest in Resource.TEMPLATES)
 
-    def is_empty(self):
+    def _is_empty(self):
         """Test if resource does not have mandatory data.
 
-        In case of snippet and solution, the content data must be present.
-        In case of references, the link must be present.
+        In case of snippet or solution the content data must be present. In
+        case of references, the link must be present.
         """
 
         if self.category in (Const.SNIPPET, Const.SOLUTION) and not any(self.data):
-            Cause.push(Cause.HTTP_BAD_REQUEST, 'content was not stored because mandatory content field data is empty')
-
             return True
         if self.category == Const.REFERENCE and not any(self.links):
-            Cause.push(Cause.HTTP_BAD_REQUEST, 'content was not stored because mandatory content field links is empty')
-
             return True
 
         return False
@@ -624,7 +625,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         # for snippet content. There was no other way found to make this nice
         # for end user.
         data = '<data>'
-        if self.is_template() and self.is_snippet():
+        if self._is_template() and self.is_snippet():
             data = '<data>\n\n'
 
         mkdn = templates['mkdn'][self.category]

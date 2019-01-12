@@ -390,7 +390,7 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
         file_content = mock.mock_open(read_data=Const.NEWLINE.join(Snippet.TEMPLATE))
         with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--template'])
-            assert cause == 'NOK: content was not stored because mandatory content field data is empty'
+            assert cause == 'NOK: content was not stored because it was matching to an empty template'
             Content.assert_storage(None)
             mock_file.assert_called_once_with('./snippet-template.txt', 'r')
 

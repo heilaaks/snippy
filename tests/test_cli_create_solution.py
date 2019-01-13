@@ -70,7 +70,7 @@ class TestCliCreateSolution(object):
             ]
         }
         cause = snippy.run(['snippy', 'create', '--solution', '--format', 'text'])
-        assert cause == 'NOK: content: data :already exist with digest: db712a82662d6932'
+        assert cause == 'NOK: content data already exist with digest db712a82662d6932'
         Content.assert_storage(content)
 
     @pytest.mark.usefixtures('edit-solution-template')

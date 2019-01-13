@@ -169,7 +169,7 @@ class TestCliUpdateSnippet(object):
             ]
         }
         cause = snippy.run(['snippy', 'update', '-d', '', '--format', 'text'])
-        assert cause == 'NOK: cannot use empty message digest for: update :operation'
+        assert cause == 'NOK: cannot use empty message digest for update operation'
         Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-snippets')
@@ -190,7 +190,7 @@ class TestCliUpdateSnippet(object):
             ]
         }
         cause = snippy.run(['snippy', 'update', '-d', '5', '--format', 'text'])
-        assert cause == 'NOK: content digest: 5 :matched more than once: 2 :preventing: update :operation'
+        assert cause == 'NOK: content digest 5 matched 2 times preventing update operation'
         Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-snippets')
@@ -245,7 +245,7 @@ class TestCliUpdateSnippet(object):
             ]
         }
         cause = snippy.run(['snippy', 'update', '-c', ''])
-        assert cause == 'NOK: cannot use empty content data for: update :operation'
+        assert cause == 'NOK: cannot use empty content data for update operation'
         Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-snippets')
@@ -264,7 +264,7 @@ class TestCliUpdateSnippet(object):
             ]
         }
         cause = snippy.run(['snippy', 'update', '-c', 'docker'])
-        assert cause == 'NOK: content data: docker :matched more than once: 2 :preventing: update :operation'
+        assert cause == 'NOK: content data docker matched 2 times preventing update operation'
         Content.assert_storage(content)
 
     @classmethod

@@ -236,7 +236,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '546'
+            'content-length': '545'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -244,7 +244,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
                 'status': '400',
                 'statusString': '400 Bad Request',
                 'module': 'snippy.testing.testing:123',
-                'title': "search categories: ['snippets', 'solutions'] : are not a subset of: ('snippet', 'solution', 'reference')"
+                'title': "search categories: ['snippets', 'solutions'] :are not a subset of: ('snippet', 'solution', 'reference')"
             }, {
                 'status': '404',
                 'statusString': '404 Not Found',
@@ -358,7 +358,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '558'
+            'content-length': '557'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -366,7 +366,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
                 'status': '400',
                 'statusString': '400 Bad Request',
                 'module': 'snippy.testing.testing:123',
-                'title': "search categories: ['snippet', 'solutions', 'reference'] : are not a subset of: ('snippet', 'solution', 'reference')"
+                'title': "search categories: ['snippet', 'solutions', 'reference'] :are not a subset of: ('snippet', 'solution', 'reference')"
             }, {
                 'status': '404',
                 'statusString': '404 Not Found',

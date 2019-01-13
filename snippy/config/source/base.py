@@ -389,7 +389,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
             else:
                 scat = (self.category,)
         elif not set(scat).issubset(Const.CATEGORIES):
-            Cause.push(Cause.HTTP_BAD_REQUEST, 'search categories: {} : are not a subset of: {}'.format(value, Const.CATEGORIES))
+            Cause.push(Cause.HTTP_BAD_REQUEST, 'search categories: {} :are not a subset of: {}'.format(value, Const.CATEGORIES))
             scat = (Const.UNKNOWN_CATEGORY,)
         self._scat = scat  # pylint: disable=attribute-defined-outside-init
 

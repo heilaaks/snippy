@@ -150,7 +150,7 @@ class TestCliUpdateReference(object):
             ]
         }
         cause = snippy.run(['snippy', 'update', '--reference', '-d', ''])
-        assert cause == 'NOK: cannot use empty message digest for: update :operation'
+        assert cause == 'NOK: cannot use empty message digest for update operation'
         Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-references')

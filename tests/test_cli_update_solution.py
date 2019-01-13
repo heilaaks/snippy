@@ -177,7 +177,7 @@ class TestCliUpdateSolution(object):
             ]
         }
         cause = snippy.run(['snippy', 'update', '--solution', '-d', ''])
-        assert cause == 'NOK: cannot use empty message digest for: update :operation'
+        assert cause == 'NOK: cannot use empty message digest for update operation'
         Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-solutions')
@@ -234,7 +234,7 @@ class TestCliUpdateSolution(object):
             ]
         }
         cause = snippy.run(['snippy', 'update', '--solution', '-c', ''])
-        assert cause == 'NOK: cannot use empty content data for: update :operation'
+        assert cause == 'NOK: cannot use empty content data for update operation'
         Content.assert_storage(content)
 
     @pytest.mark.usefixtures('import-nginx', 'update-beats-utc')

@@ -143,7 +143,7 @@ class TestCliDeleteSolution(object):
             ]
         }
         cause = snippy.run(['snippy', 'delete', '--solution', '-d', ''])
-        assert cause == 'NOK: cannot use empty message digest for: delete :operation'
+        assert cause == 'NOK: cannot use empty message digest for delete operation'
         Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-solutions')
@@ -234,7 +234,7 @@ class TestCliDeleteSolution(object):
             ]
         }
         cause = snippy.run(['snippy', 'delete', '--solution', '--content', ''])
-        assert cause == 'NOK: cannot use empty content data for: delete :operation'
+        assert cause == 'NOK: cannot use empty content data for delete operation'
         Content.assert_storage(content)
 
     @classmethod

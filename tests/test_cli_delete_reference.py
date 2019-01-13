@@ -110,7 +110,7 @@ class TestCliDeleteReference(object):
             ]
         }
         cause = snippy.run(['snippy', 'delete', '-u', ''])
-        assert cause == 'NOK: cannot use empty content uuid for: delete :operation'
+        assert cause == 'NOK: cannot use empty content uuid for delete operation'
         Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-references')
@@ -217,7 +217,7 @@ class TestCliDeleteReference(object):
             ]
         }
         cause = snippy.run(['snippy', 'delete', '--content', ''])
-        assert cause == 'NOK: cannot use empty content data for: delete :operation'
+        assert cause == 'NOK: cannot use empty content data for delete operation'
         Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-references')

@@ -1,5 +1,4 @@
 ## WORKING
-   - [ ] Remove the column marks from cause code (the structured log data rule). The cause could strip these out from middle of the string. Keep at the end?
    - [ ] Add more tests for --(no)-editor options for all content classes and operations.
    - [ ] Why new mkdn log driver kafka solution does not have brief in quotations in defaults?
    - [ ] Document and test that update now also supports --format option and the default is Markdown.

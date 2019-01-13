@@ -372,8 +372,8 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             yaml.safe_load.return_value = file_content
             cause = snippy.run(['snippy', 'import', '--defaults'])
-            assert cause in ('NOK: content: data :already exist with digest: 53908d68425c61dc',
-                             'NOK: content: data :already exist with digest: 54e41e9b52a02b63')
+            assert cause in ('NOK: content data already exist with digest 53908d68425c61dc',
+                             'NOK: content data already exist with digest 54e41e9b52a02b63')
             Content.assert_storage(content)
             defaults_snippets = pkg_resources.resource_filename('snippy', 'data/defaults/snippets.yaml')
             mock_file.assert_called_once_with(defaults_snippets, 'r')
@@ -441,7 +441,7 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             yaml.safe_load.return_value = file_content
             cause = snippy.run(['snippy', 'import', '-d', '5', '-f', 'one-snippet.yaml'])
-            assert cause == 'NOK: content digest: 5 :matched more than once: 2 :preventing: import :operation'
+            assert cause == 'NOK: content digest 5 matched 2 times preventing import operation'
             Content.assert_storage(content)
             mock_file.assert_not_called()
             yaml.safe_load.assert_not_called()

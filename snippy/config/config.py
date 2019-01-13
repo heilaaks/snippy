@@ -574,7 +574,7 @@ class Config(object):
                                'cannot find content with message digest: %s' % cls.operation_digest)
                 elif len(collection) > 1:
                     Cause.push(Cause.HTTP_CONFLICT,
-                               'content digest: %.16s :matched more than once: %d :preventing: %s :operation' %
+                               'content digest: %.16s :matched: %d :times preventing: %s :operation' %
                                (cls.operation_digest, len(collection), operation))
             else:
                 Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot use empty message digest for: %s :operation' % operation)
@@ -585,7 +585,7 @@ class Config(object):
                                'cannot find content with content uuid: %s' % cls.operation_uuid)
                 elif len(collection) > 1:
                     Cause.push(Cause.HTTP_CONFLICT,
-                               'content uuid: %.16s :matched more than once: %d :preventing: %s :operation' %
+                               'content uuid: %.16s :matched: %d :times preventing: %s :operation' %
                                (cls.operation_uuid, len(collection), operation))
             else:
                 Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot use empty content uuid for: %s :operation' % operation)
@@ -597,7 +597,7 @@ class Config(object):
                     Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find content with content data: %s' % data)
                 elif len(collection) > 1:
                     Cause.push(Cause.HTTP_CONFLICT,
-                               'content data: %s :matched more than once: %d :preventing: %s :operation' %
+                               'content data: %s :matched: %d :times preventing: %s :operation' %
                                (data, len(collection), operation))
             else:
                 Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot use empty content data for: %s :operation' % operation)
@@ -606,7 +606,7 @@ class Config(object):
                 Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find content with given search criteria')
             elif len(collection) > 1:
                 Cause.push(Cause.HTTP_CONFLICT,
-                           'search keywords matched more than once: %d :preventing: %s :operation' % (len(collection), operation))
+                           'search keywords matched: %d :times preventing: %s :operation' % (len(collection), operation))
         else:
             Cause.push(Cause.HTTP_BAD_REQUEST, 'no message digest, content data or search keywords were provided')
 

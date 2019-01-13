@@ -137,7 +137,7 @@ class TestCliCreateSnippet(object):
         tags = content['data'][0]['tags']
         links = content['data'][0]['links']
         cause = snippy.run(['snippy', 'create', '--content', data, '--brief', brief, '--groups', groups, '--tags', tags, '--links', links])  # pylint: disable=line-too-long
-        assert cause == 'NOK: content: data :already exist with digest: 54e41e9b52a02b63'
+        assert cause == 'NOK: content data already exist with digest 54e41e9b52a02b63'
         Content.assert_storage(content)
 
     @pytest.mark.usefixtures('create-remove-utc')

@@ -185,11 +185,33 @@ class Cause(object):
 
     @classmethod
     def get_message(cls):
-        """Return cause message."""
+        """Return cause message.
+
+        Cause codes follow the same rules as the logs with the title or
+        message. If there are variables within the message, the variables
+        are separated with colon. The end user message is beautified so
+        that if there is more than one colon, it indicates that variable
+        is in the middle of the message. This is not considered good layout
+        for command line interface messages.
+
+        How ever, if there is only one colon, it is used to sepatate the
+        last part which is considered clear for user.
+
+        Because of these rules, the colon delimiters are removed only if
+        there is more than one.
+
+        Examples:
+
+            1. cannot use empty content uuid for: delete :operation
+            2. cannot find content with content uuid: 1234567
+        """
 
         cause = Cause.ALL_OK
         if not cls.is_ok():
-            cause = 'NOK: ' + cls._list['errors'][0]['title']
+            message = cls._list['errors'][0]['title']
+            if message.count(':') > 1:
+                message = cls._list['errors'][0]['title'].replace(':', '')
+            cause = 'NOK: ' + message
 
         return cause
 

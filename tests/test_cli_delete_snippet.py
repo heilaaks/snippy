@@ -127,7 +127,7 @@ class TestCliDeleteSnippet(object):
             ]
         }
         cause = snippy.run(['snippy', 'delete', '-d', ''])
-        assert cause == 'NOK: cannot use empty message digest for: delete :operation'
+        assert cause == 'NOK: cannot use empty message digest for delete operation'
         Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-snippets')
@@ -216,7 +216,7 @@ class TestCliDeleteSnippet(object):
             ]
         }
         cause = snippy.run(['snippy', 'delete', '--content', ''])
-        assert cause == 'NOK: cannot use empty content data for: delete :operation'
+        assert cause == 'NOK: cannot use empty content data for delete operation'
         Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-snippets')
@@ -254,8 +254,8 @@ class TestCliDeleteSnippet(object):
         }
         cause = snippy.run(['snippy', 'delete', '--sall', 'docker'])
         out, _ = capsys.readouterr()
-        assert cause == 'NOK: search keywords matched more than once: 2 :preventing: delete :operation'
-        assert out == 'NOK: search keywords matched more than once: 2 :preventing: delete :operation\n'
+        assert cause == 'NOK: search keywords matched 2 times preventing delete operation'
+        assert out == 'NOK: search keywords matched 2 times preventing delete operation\n'
         Content.assert_storage(content)
 
     @classmethod

@@ -203,7 +203,6 @@ class TestCliCreateSnippet(object):
         they are printed.
         """
 
-
         content = {
             'data': [
                 Content.deepcopy(Snippet.REMOVE)
@@ -336,6 +335,18 @@ class TestCliCreateSnippet(object):
         cause = snippy.run(['snippy', 'create', '--editor'])
         assert cause == 'NOK: content was not stored because it was matching to an empty template'
         editor_data.assert_called_with('\n'.join(template))
+        Content.assert_storage(None)
+
+    @pytest.mark.usefixtures('create-remove-utc')
+    def test_cli_create_snippet_011(self, snippy):
+        """Try to create snippet from CLI.
+
+        Try to create new snippet by from command line with --no-editor option
+        when the mandatory data is not defined.
+        """
+
+        cause = snippy.run(['snippy', 'create', '--brief', 'Short brief', '--no-editor'])
+        assert cause == 'NOK: content was not stored because mandatory content field data is empty'
         Content.assert_storage(None)
 
     @classmethod

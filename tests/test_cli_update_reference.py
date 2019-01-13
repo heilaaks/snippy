@@ -34,7 +34,7 @@ class TestCliUpdateReference(object):
         """Update reference with digest.
 
         Update reference based on short message digest. Only content links
-        are updated.
+        are updated. The update is made with editor.
         """
 
         content = {

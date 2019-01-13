@@ -274,6 +274,18 @@ class TestCliCreateSolution(object):
         assert cause == 'NOK: content was not stored because it was matching to an empty template'
         Content.assert_storage(None)
 
+    @pytest.mark.usefixtures('create-remove-utc')
+    def test_cli_create_solution_009(self, snippy):
+        """Try to create solution from CLI.
+
+        Try to create new solution by from command line with --no-editor
+        option when the mandatory data is not defined.
+        """
+
+        cause = snippy.run(['snippy', 'create', '--solution', '--brief', 'Short brief', '--no-editor'])
+        assert cause == 'NOK: content was not stored because mandatory content field data is empty'
+        Content.assert_storage(None)
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

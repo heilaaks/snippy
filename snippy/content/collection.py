@@ -111,24 +111,6 @@ class Collection(object):  # pylint: disable=too-many-public-methods
             yield self[digest]
 
     @classmethod
-    def get_template(cls, timestamp, category, template_format, templates):
-        """Return empty content template.
-
-        Args:
-           timestamp (str): IS8601 timestamp used with created resources.
-           category (str): Content category.
-           template_format (str): Template format.
-           templates (dict): Dictionary that contains content templates.
-
-        Returns:
-            str: Content template as a string.
-        """
-
-        resource = Resource(category, timestamp)
-
-        return resource.get_template(category, template_format, templates)
-
-    @classmethod
     def get_resource(cls, category, timestamp):
         """Return new source."""
 

@@ -195,6 +195,19 @@ class TestCliCreateReferece(object):
         editor_data.assert_called_with('\n'.join(template))
         Content.assert_storage(None)
 
+
+    @pytest.mark.usefixtures('create-remove-utc')
+    def test_cli_create_reference_007(self, snippy):
+        """Try to create reference from CLI.
+
+        Try to create new reference by from command line with --no-editor
+        option when the mandatory links is not defined.
+        """
+
+        cause = snippy.run(['snippy', 'create', '--reference', '--brief', 'Short brief', '--no-editor'])
+        assert cause == 'NOK: content was not stored because mandatory content field links is empty'
+        Content.assert_storage(None)
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

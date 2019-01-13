@@ -244,20 +244,15 @@ class Config(object):
         Profiler.disable()
 
     @classmethod
-    def get_collection(cls, resource=None):
-        """Get resource collection from configuration source.
+    def get_collection(cls, update=None):
+        """Get collection of resources.
 
-        Get collection of resources from various configuration sources. A
-        configuration source can be a set of CLI parameters or a REST API
-        request.
-
-        If resource updates are provided on top of configured content, the
-        updates are added on top of configured content. For example when
-        existing content is updated, the stored content must be shown on
-        text editor.
+        Read collection of resources from the used configuration source. If a
+        resource update is provided on top of configured content, the update
+        is merged or migrated on top of the configuration.
 
         Args:
-            resource (Resource()): Content updates on top of configured content.
+            update (Resource()): Content updates on top of configured content.
 
         Returns:
             Collection(): Configured content in Collection object.
@@ -266,43 +261,35 @@ class Config(object):
         collection = Collection()
         timestamp = Config.utcnow()
         if cls.editor:
-            if resource:
-                template = resource.get_template(
-                    cls.content_category,
-                    cls.template_format,
-                    cls.templates
-                )
-            else:
-                template = Collection.get_template(
-                    timestamp,
-                    cls.content_category,
-                    cls.template_format,
-                    cls.templates
-                )
+            update = cls._get_config(timestamp, collection, update, merge=True)
+            template = update.get_template(
+                cls.content_category,
+                cls.template_format,
+                cls.templates
+            )
             Editor.read(timestamp, cls.template_format, template, collection)
         else:
-            cls._read_collection(timestamp, collection)
+            update = cls._get_config(timestamp, collection, update, merge=Config.merge)
+            collection.migrate(update)
 
         return collection
 
     @classmethod
-    def get_resource(cls, updates):
-        """Get resource from configuration source.
+    def get_resource(cls, update):
+        """Get resource.
 
-        The configuration source is updated with given in the Resource()
-        object.
-
-        If the resource updates from one of the configuration sources fail,
-        same content is returned.
+        Read a resource from the used configuration source. If an update is
+        provided on top of configured content, the update is merged or
+        migrated on top of configuration.
 
         Args:
-            resource (Resource()): Content updates on top of configured content.
+            update (Resource()): Update to be used on top of configuration.
 
         Returns:
-            Resource(): Updated resource from one of the configuration sources.
+            Resource(): Updated resource.
         """
 
-        collection = cls.get_collection(updates)
+        collection = cls.get_collection(update)
         if len(collection) == 1:
             resource = next(collection.resources())
         else:
@@ -310,6 +297,46 @@ class Config(object):
             resource = None
 
         return resource
+
+    @classmethod
+    def _get_config(cls, timestamp, collection, updates, merge):
+        """Read configured content fields.
+
+        Read content fields read from one of the configuration sources. The
+        configuration is migrated or merged to updates if they exist.
+
+        Args:
+            timestamp (str): IS8601 timestamp to be used with created collection.
+            collection (Collection()): Collection to store configured content.
+            updates (Resource()): Updates from existing content.
+            merge (bool): Defines if content is merged or not.
+
+        Returns:
+            Resource(): Configured content with updates.
+        """
+
+        config = collection.get_resource(cls.content_category, timestamp)
+        config.data = cls.content_data
+        config.brief = cls.content_brief
+        config.description = cls.content_description
+        config.groups = cls.content_groups
+        config.tags = cls.content_tags
+        config.links = cls.content_links
+        config.name = cls.content_name
+        config.filename = cls.content_filename
+        config.versions = cls.content_versions
+        config.source = cls.content_source
+
+        if updates:
+            if merge:
+                updates.merge(config, validate=False)
+            else:
+                updates.migrate(config, validate=False)
+        else:
+            updates = config
+        updates.seal(validate=False)
+
+        return updates
 
     @classmethod
     def _init_logs(cls, args):
@@ -360,23 +387,6 @@ class Config(object):
                 cls.log_msg_max
             )
         )
-
-    @classmethod
-    def _read_collection(cls, timestamp, collection):
-        """Read configurared content."""
-
-        resource = collection.get_resource(cls.content_category, timestamp)
-        resource.data = cls.content_data
-        resource.brief = cls.content_brief
-        resource.description = cls.content_description
-        resource.groups = cls.content_groups
-        resource.tags = cls.content_tags
-        resource.links = cls.content_links
-        resource.name = cls.content_name
-        resource.filename = cls.content_filename
-        resource.versions = cls.content_versions
-        resource.source = cls.content_source
-        collection.migrate(resource)
 
     @classmethod
     def _storage_schema(cls):

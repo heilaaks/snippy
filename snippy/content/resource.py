@@ -319,12 +319,17 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             str: Content template as a string.
         """
 
-        if self._is_empty() and template_format == Const.CONTENT_FORMAT_MKDN:
-            self.brief = 'Add brief title for content'
-            self.description = 'Add a description that defines the content in one chapter.'
-            self.groups = ('groups',)
-            self.tags = ('comma', 'separated', 'tags')
-            self.links = ('https://www.example.com/add-links-here.html',)
+        if self._is_empty():
+            if not self.brief:
+                self.brief = 'Add brief title for content'
+            if not self.description:
+                self.description = 'Add a description that defines the content in one chapter.'
+            if Const.DEFAULT_GROUPS == self.groups:
+                self.groups = ('groups',)
+            if not self.tags:
+                self.tags = ('comma', 'separated', 'tags')
+            if not self.links:
+                self.links = ('https://www.example.com/add-links-here.html',)
 
             # In order to match is_template before and after parsing, reference
             # data must be set to links. This is done automatically after the
@@ -356,13 +361,16 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
 
         return template
 
-    def seal(self):
+    def seal(self, validate=True):
         """Seal content by updating digest and run content specific tasks.
 
         In case of reference content, the links are treated as content data.
         The tool has been built to expect always the data part and it was
         considered that it is more maintanable to to it like this instead
         of adding extra logic around the code.
+
+        Args:
+           validate (bool): Defines if the content is validated.
 
         Returns:
             bool: If the resource sealing was successful.
@@ -388,11 +396,11 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self.digest = self._compute_digest()
 
         is_template = self._is_template()
-        if is_template:
+        if is_template and validate:
             Cause.push(Cause.HTTP_BAD_REQUEST, 'content was not stored because it was matching to an empty template')
 
         is_empty = self._is_empty()
-        if is_empty:
+        if is_empty and validate:
             if self.category in (Const.SNIPPET, Const.SOLUTION):
                 Cause.push(Cause.HTTP_BAD_REQUEST, 'content was not stored because mandatory content field data is empty')
             else:
@@ -417,7 +425,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
 
         return digest
 
-    def migrate(self, source):
+    def migrate(self, source, validate=True):
         """Migrate source into Resource.
 
         This always overrides fields that can be modified by user. Only the
@@ -436,9 +444,9 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self.versions = source.versions
         self.source = source.source
 
-        return self.seal()
+        return self.seal(validate)
 
-    def merge(self, source):
+    def merge(self, source, validate=True):
         """Merge two resources.
 
         This overrides original resource fields only if the merged source
@@ -471,7 +479,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         if source.source:
             self.source = source.source
 
-        return self.seal()
+        return self.seal(validate)
 
     def convert(self, row):
         """Convert database row into resource."""

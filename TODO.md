@@ -1,5 +1,4 @@
 ## WORKING
-   - [ ] Change markdown to use > in each row of lists. This is clearer.
    - [ ] Remove the column marks from cause code (the structured log data rule). The cause could strip these out from middle of the string. Keep at the end?
    - [ ] Add more tests for --(no)-editor options for all content classes and operations.
    - [ ] Why new mkdn log driver kafka solution does not have brief in quotations in defaults?

@@ -42,8 +42,8 @@ class TestUtContentParserMkdn(object):
             '> Remove all exited containers and dangling images. The command examples  ',
             'first remove all exited containers and the all dangling images.',
             '',
-            "> \\[1\\] https://docs.docker.com/engine/reference/commandline/images/  ",
-            "\\[2\\] https://docs.docker.com/engine/reference/commandline/rm/",
+            '> [1] https://docs.docker.com/engine/reference/commandline/images/  ',
+            '[2] https://docs.docker.com/engine/reference/commandline/rm/',
             '',
             '- Remove all exited containers',
             '',
@@ -118,8 +118,8 @@ class TestUtContentParserMkdn(object):
             '> Remove all exited containers and dangling images. The command examples  ',
             'first remove all exited containers and the all dangling images.',
             '',
-            "> \\[1\\] https://docs.docker.com/engine/reference/commandline/images/  ",
-            "\\[2\\] https://docs.docker.com/engine/reference/commandline/rm/",
+            '> [1] https://docs.docker.com/engine/reference/commandline/images/  ',
+            '[2] https://docs.docker.com/engine/reference/commandline/rm/',
             '',
             '- Remove all exited containers',
             '',
@@ -148,7 +148,7 @@ class TestUtContentParserMkdn(object):
             '',
             '> Fix docker problem that results \'has active endpoints\' error log.',
             '',
-            "> \\[1\\] https://github.com/moby/moby/issues/23302",
+            '> [1] https://github.com/moby/moby/issues/23302',
             '',
             '`$ docker network ls`',
             '`$ docker network inspect y0fdm2xoyuca`',
@@ -377,6 +377,82 @@ class TestUtContentParserMkdn(object):
         assert resource.updated == '2018-05-07T11:13:17.000001+00:00'
         assert resource.digest == digest
 
+    def test_parser_snippet_005(self):
+        """Test parsing snippet.
+
+        Test case verifies that link list can be parsed with blockquote >
+        delimiters before each link not just the first one. This helps user
+        to fill the template intuitively by just copy pasting the example
+        link with blockquote > delimiter.
+
+        The link numbers are not updated but the same first index is
+        copy pasted in each link.
+
+        The last link contains index which has two digit index.
+        """
+
+        text = Const.NEWLINE.join((
+            '# Remove all exited containers and dangling images @docker',
+            '',
+            '> Remove all exited containers and dangling images. The command examples  ',
+            'first remove all exited containers and the all dangling images.',
+            '',
+            '> [1] https://docs.docker.com/engine/reference/commandline/images/  ',
+            '> [1] https://docs.docker.com/engine/reference/commandline/rm/  ',
+            '> [11] https://docs.docker.com/engine/reference/commandline/test/',
+            '',
+            '`$ docker rm $(docker ps --all -q -f status=exited)`',
+            '`$ docker images -q --filter dangling=true | xargs docker rmi`',
+            '',
+            '## Meta',
+            '',
+            '> category : snippet  ',
+            'created  : 2017-10-12T11:52:11.000001+00:00  ',
+            'digest   : 0a8b31f0ab442991e56dcaef1fc65aa6bff479c567e04dd7990948f201187c69  ',
+            'filename :   ',
+            'name     :   ',
+            'source   :   ',
+            'tags     : cleanup, container, docker, docker-ce, moby  ',
+            'updated  : 2017-10-12T11:52:11.000001+00:00  ',
+            'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
+            'versions :',
+            '',
+        ))
+        data = (
+            'docker rm $(docker ps --all -q -f status=exited)',
+            'docker images -q --filter dangling=true | xargs docker rmi'
+        )
+        brief = 'Remove all exited containers and dangling images'
+        description = ('Remove all exited containers and dangling images. The command examples ' +
+                       'first remove all exited containers and the all dangling images.')
+        groups = ('docker',)
+        tags = ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
+        links = (
+            'https://docs.docker.com/engine/reference/commandline/images/',
+            'https://docs.docker.com/engine/reference/commandline/rm/',
+            'https://docs.docker.com/engine/reference/commandline/test/'
+        )
+        uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
+        digest = '38f478ac1f85234f7885960f72c27ec36049bea32007a46b032f18cbf86f3f08'
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
+        assert resource.category == Const.SNIPPET
+        assert resource.data == data
+        assert resource.brief == brief
+        assert resource.groups == groups
+        assert resource.description == description
+        assert resource.tags == tags
+        assert resource.links == links
+        assert resource.filename == Const.EMPTY
+        assert resource.name == Const.EMPTY
+        assert resource.versions == Const.EMPTY
+        assert resource.source == Const.EMPTY
+        assert resource.uuid == uuid
+        assert resource.created == '2017-10-12T11:52:11.000001+00:00'
+        assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
+        assert resource.digest == digest
+
     def test_parser_solution_001(self):
         """Test parsing solution.
 
@@ -475,8 +551,8 @@ class TestUtContentParserMkdn(object):
             '> Remove all exited containers and dangling images. The command examples  ',
             'first remove all exited containers and the all dangling images.',
             '',
-            "> \\[1\\] https://docs.docker.com/engine/reference/commandline/images/  ",
-            "\\[2\\] https://docs.docker.com/engine/reference/commandline/rm/",
+            '> [1] https://docs.docker.com/engine/reference/commandline/images/  ',
+            '[2] https://docs.docker.com/engine/reference/commandline/rm/',
             '',
             '## Solution',
             '',
@@ -573,8 +649,8 @@ class TestUtContentParserMkdn(object):
             '> Remove all exited containers and dangling images. The command examples  ',
             'first remove all exited containers and the all dangling images.',
             '',
-            "> \\[1\\] https://docs.docker.com/engine/reference/commandline/images/  ",
-            "\\[2\\] https://docs.docker.com/engine/reference/commandline/rm/",
+            '> [1] https://docs.docker.com/engine/reference/commandline/images/  ',
+            '[2] https://docs.docker.com/engine/reference/commandline/rm/',
             '',
             '## Solution',
             '',
@@ -834,9 +910,9 @@ class TestUtContentParserMkdn(object):
             '> Remove all exited containers and dangling images. The command examples  ',
             'first remove all exited containers and the all dangling images.',
             '',
-            "> \\[1\\] https://github.com/MickayG/moby-kafka-logdriver  ",
-            "\\[2\\] https://github.com/garo/logs2kafka",
-            "\\[3\\] https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ",
+            '> [1] https://github.com/MickayG/moby-kafka-logdriver  ',
+            '[2] https://github.com/garo/logs2kafka  ',
+            '[3] https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ',
             '',
             '```',
             '################################################################################',
@@ -1007,8 +1083,8 @@ class TestUtContentParserMkdn(object):
             '> Remove all exited containers and dangling images. The command examples  ',
             'first remove all exited containers and the all dangling images.',
             '',
-            "> \\[1\\] https://docs.docker.com/engine/reference/commandline/images/  ",
-            "\\[2\\] https://docs.docker.com/engine/reference/commandline/rm/",
+            '> [1] https://docs.docker.com/engine/reference/commandline/images/  ',
+            '[2] https://docs.docker.com/engine/reference/commandline/rm/',
             '',
             '## Meta',
             '',
@@ -1066,7 +1142,7 @@ class TestUtContentParserMkdn(object):
             '',
             '> ',
             '',
-            "> \\[1\\] https://docs.docker.com/engine/reference/commandline/images/  ",
+            '> [1] https://docs.docker.com/engine/reference/commandline/images/',
             '',
             '## Meta',
             '',

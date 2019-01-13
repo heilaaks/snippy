@@ -401,7 +401,7 @@ class Solution(object):  # pylint: disable=too-few-public-methods
     DEFAULT_SOLUTIONS = (BEATS, NGINX)
 
     TEMPLATE = Helper.read_template('solution.txt').split('\n')
-    TEMPLATE_DIGEST_TEXT = '79e4ae470cd135798d718a668c52dbca1e614187da8bb22eca63047681f8d146'
+    TEMPLATE_DIGEST_TEXT = 'e4157216f2f620421a90a57aa874a831a876b780a66f5311406129bdd6591ab3'
     TEMPLATE_DIGEST_MKDN = '3c1ddd75eeb6f32aab002a719638ab4849016a35dfe63b84da93a4c041426a8f'
 
     _OUTPUTS = [(

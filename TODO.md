@@ -1,10 +1,9 @@
 ## WORKING
-   - [ ] Make intermediate content data headers same in defaul text and mkdn template. Copy from mkdn.
    - [ ] Change markdown to use > in each row of lists. This is clearer.
    - [ ] Remove the column marks from cause code (the structured log data rule). The cause could strip these out from middle of the string. Keep at the end?
-   - [ ] Document and test that update now also supports --format option and the default is Markdown.
    - [ ] Add more tests for --(no)-editor options for all content classes and operations.
    - [ ] Why new mkdn log driver kafka solution does not have brief in quotations in defaults?
+   - [ ] Document and test that update now also supports --format option and the default is Markdown.
    - [ ] Convert all solutions to Markdown format and write proper history that summarieses the Markdown and link it to change history when two MD items below are cloded.
    - [ ] CLI interface does not update default template with provided parameters like tags, groups, etc from command line. This should be placed on top of default empty template if provided.
    - [ ] Add support to read storage and server options from env variables.

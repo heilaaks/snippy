@@ -629,7 +629,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         """
 
         template = Const.NEWLINE.join(Solution.TEMPLATE)
-        template = template.replace('## description', '## description changed')
+        template = template.replace('## Description', '## Description changed')
         content = {
             'data': [
                 Content.dump_dict(template)

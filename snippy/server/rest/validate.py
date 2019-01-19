@@ -27,7 +27,7 @@ from snippy.cause import Cause
 from snippy.logger import Logger
 
 
-class Validate(object):
+class Validate(object):  # pylint: disable=too-few-public-methods
     """Validate REST API input.
 
     Description
@@ -55,59 +55,62 @@ class Validate(object):
         """Validate JSON API v1.0 object.
 
         Args:
-           request (dict): JSON object received from client.
-           digest (str): Message digest or part of it.
+            request (dict): JSON object received from client.
+            digest (str): Message digest or part of it.
 
         Returns:
             tuple: List of validated resources received from client.
         """
 
         collection = []
-        if JsonSchema.is_collection(request.media):
-            collection = Validate.collection(request)
+        is_collection = JsonSchema.is_collection(request.media)
+        schema = cls._get_schema(request, is_collection)
+        if is_collection:
+            collection = Validate._collection(request, schema)
         else:
-            collection.append(Validate.resource(request, digest))
+            collection = Validate._resource(request, digest, schema)
+
+        return collection
+
+    @classmethod
+    def _resource(cls, request, digest, schema):
+        """Validate JSON API v1.0 resource.
+
+        Args:
+            request (dict): JSON object received from client.
+            digest (str): Message digest or part of it.
+            schema (str): JSON schema to validate the request.
+
+        Returns:
+            tuple: Validated resources in a list.
+        """
+
+        collection = []
+        if JsonSchema.validate(schema, request.media):
+            if cls._is_valid_data(request.media['data']):
+                resource_ = request.media['data']['attributes']
+                resource_['digest'] = digest
+                if request.method.lower() == 'patch' or request.get_header('x-http-method-override', default='post').lower() == 'patch':
+                    resource_['merge'] = True
+                collection.append(resource_)
+        else:
+            cls._logger.debug('invalid json media for resource', request.media)
 
         return tuple(collection)
 
     @classmethod
-    def resource(cls, request, digest):
-        """Validate JSON API v1.0 resource.
-
-        Args:
-           request (dict): JSON object received from client.
-           digest (str): Message digest or part of it.
-
-        Returns:
-            dict: Validated resource received from client.
-        """
-
-        resource_ = {}
-        if JsonSchema.validate(JsonSchema.RESOURCE, request.media):
-            if cls._is_valid_data(request.media['data']):
-                resource_ = request.media['data']['attributes']
-                resource_['digest'] = digest
-        else:
-            cls._logger.debug('invalid json media for resource', request.media)
-
-        if request.method.lower() == 'patch' or request.get_header('x-http-method-override', default='post').lower() == 'patch':
-            resource_['merge'] = True
-
-        return resource_
-
-    @classmethod
-    def collection(cls, request):
+    def _collection(cls, request, schema):
         """Validate JSON API v1.0 collection.
 
         Args:
-           request (dict): JSON object received from client.
+            request (dict): JSON object received from client.
 
         Returns:
             tuple: List of validated resources received from client.
         """
 
         collection = []
-        if JsonSchema.validate(JsonSchema.COLLECTION, request.media):
+        if JsonSchema.validate(schema, request.media):
             for data in request.media['data']:
                 if cls._is_valid_data(data):
                     collection.append(data['attributes'])
@@ -130,11 +133,42 @@ class Validate(object):
 
         return valid
 
+    @classmethod
+    def _get_schema(cls, request, is_collection):
+        """Get correct schema for the request.
+
+        Args:
+            request (dict): JSON object received from client.
+            is_collection (bool): Defines if the request is collection
+        """
+
+        create = False
+        if request.method.lower() == 'post' and request.get_header('x-http-method-override', default='post').lower() == 'post':
+            create = True
+
+        if is_collection:
+            if create:
+                schema = JsonSchema.COLLECTION_CREATE
+            else:
+                schema = JsonSchema.COLLECTION_UPDATE
+        else:
+            if create:
+                schema = JsonSchema.RESOURCE_CREATE
+            else:
+                schema = JsonSchema.RESOURCE_UPDATE
+
+        return schema
+
 
 class JsonSchema(object):  # pylint: disable=too-few-public-methods
-    """Validate JSON media against schema."""
+    """Validate JSON media against schema.
 
-    CONTENT = {
+    In case of creating content, the content data or links are mandatory. In
+    case of content updates, it is possible to leave data and links fields
+    out from REST API request.
+    """
+
+    CONTENT_CREATE = {
         "type": "object",
         "properties": {
             "type": {"enum": ["snippet", "solution", "reference"]},
@@ -155,20 +189,57 @@ class JsonSchema(object):  # pylint: disable=too-few-public-methods
         "required": ["type"]
     }
 
-    RESOURCE = {
+    CONTENT_UPDATE = {
         "type": "object",
         "properties": {
-            "data": CONTENT
+            "type": {"enum": ["snippet", "solution", "reference"]},
+            "attributes": {
+                "type": "object",
+                "properties": {
+                    "data": {"type": ["string", "array"]},
+                    "brief": {"type": "string"},
+                    "links": {"type": ["string", "array"]}
+                }
+            }
+        },
+        "required": ["type"]
+    }
+
+    RESOURCE_CREATE = {
+        "type": "object",
+        "properties": {
+            "data": CONTENT_CREATE
         },
         "required": ["data"]
     }
 
-    COLLECTION = {
+    RESOURCE_UPDATE = {
+        "type": "object",
+        "properties": {
+            "data": CONTENT_UPDATE
+        },
+        "required": ["data"]
+    }
+
+    COLLECTION_CREATE = {
         "type": "object",
         "properties": {
             "data": {
                 "type": "array",
-                "items": CONTENT,
+                "items": CONTENT_CREATE,
+                "minItems": 1,
+                "maxItems": 100
+            }
+        },
+        "required": ["data"]
+    }
+
+    COLLECTION_UPDATE = {
+        "type": "object",
+        "properties": {
+            "data": {
+                "type": "array",
+                "items": CONTENT_UPDATE,
                 "minItems": 1,
                 "maxItems": 100
             }

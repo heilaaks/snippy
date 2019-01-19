@@ -210,8 +210,8 @@ class TestApiUpdateReference(object):
             'tags': Const.DELIMITER_TAGS.join(Reference.REGEXP['tags']),
             'links': Const.DELIMITER_LINKS.join(Reference.REGEXP['links'])
         }
-        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '785'}
-        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '787'}
+        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '725'}
+        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '727'}
         expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
@@ -304,7 +304,7 @@ class TestApiUpdateReference(object):
         content['data'][0]['digest'] = '915d0aa75703093ccb347755bfb597a16c0774b9b70626948dd378bd01310dec'
         request_body = {
             'data': {
-                'type': 'snippet',
+                'type': 'reference',
                 'attributes': {
                     'links': Const.NEWLINE.join(Reference.REGEXP['links']),
                 }
@@ -387,6 +387,63 @@ class TestApiUpdateReference(object):
             path='/snippy/api/app/v1/references/5c2071094dbfaa33',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
+        assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(content)
+
+    @pytest.mark.skip(reason="no way of currently testing this")
+    @pytest.mark.usefixtures('import-gitlog', 'update-pytest-utc')
+    def test_api_update_reference_008(self, server):
+        """Update one reference with PATCH request.
+
+        Call PATCH /v1/references/<digest> to update existing snippet with
+        specified digest. The PATCH request contains only optional fields
+        like brief or descritpion which are all set to empty value.
+        """
+
+        content = {
+            'data': [
+                Content.deepcopy(Reference.GITLOG)
+            ]
+        }
+        content['data'][0]['brief'] = ''
+        content['data'][0]['description'] = ''
+        content['data'][0]['groups'] = ()
+        content['data'][0]['tags'] = ()
+        content['data'][0]['created'] = Content.GITLOG_TIME
+        content['data'][0]['updated'] = Content.PYTEST_TIME
+        content['data'][0]['digest'] = '915d0aa75703093ccb347755bfb597a16c0774b9b70626948dd378bd01310dec'
+        request_body = {
+            'data': {
+                'type': 'reference',
+                'attributes': {
+                    'brief': '',
+                    'description': '',
+                    'groups': (),
+                    'tags': ()
+                }
+            }
+        }
+        expect_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '756'
+        }
+        expect_body = {
+            'links': {
+                'self': 'http://falconframework.org/snippy/api/app/v1/references/915d0aa75703093c'
+            },
+            'data': {
+                'type': 'reference',
+                'id': content['data'][0]['digest'],
+                'attributes': content['data'][0]
+            }
+        }
+        result = testing.TestClient(server.server.api).simulate_patch(
+            path='/snippy/api/app/v1/references/5c2071094dbfaa33',
+            headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
+            body=json.dumps(request_body))
+        print(result.json)
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)

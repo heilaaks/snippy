@@ -267,6 +267,10 @@ class TestCliUpdateSolution(object):
         Markdown native content as is. Updated content must be identified as
         Markdown native content. Editor must be used by default when the
         --editor option is not used.
+
+        In this case the links must be empty when stored. The edited content
+        did not have any links in the content data so they must be updated
+        to stored content.
         """
 
         content = {

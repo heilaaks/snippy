@@ -199,8 +199,8 @@ class ApiContentDigestBase(object):
         """Update whole content based on digest."""
 
         self._logger.debug('run put %s', request.uri)
-        resource = Validate.resource(request, digest)
-        if resource:
+        collection = Validate.json_object(request, digest)
+        for resource in collection:
             api = Api(self._category, Api.UPDATE, resource)
             Config.load(api)
             self._content.run()

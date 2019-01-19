@@ -38,7 +38,8 @@ Bugfixes
 * Fix content update when parsing user input fails.
 * Fix content import from invalid source file.
 * Fix search from all categories with ``all`` option.
-* Fix resource validation in POST method.
+* Fix resource validation for POST method.
+* Fix resource validation for PUT and PATCH methods.
 * Fix REST API HTTP OPTIONS responses.
 * Fix reading timestamps without quotes from YAML.
 * All commits in `0.9.0`_.

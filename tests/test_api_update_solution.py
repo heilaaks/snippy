@@ -214,8 +214,8 @@ class TestApiUpdateSolution(object):
             'tags': Const.DELIMITER_TAGS.join(Solution.NGINX['tags']),
             'links': Const.DELIMITER_LINKS.join(Solution.NGINX['links'])
         }
-        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5300'}
-        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5113'}
+        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5360'}
+        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5173'}
         expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
@@ -230,7 +230,7 @@ class TestApiUpdateSolution(object):
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_400
-        assert result.headers == expect_headers_p2 or result.headers == expect_headers_p3
+        assert result.headers in (expect_headers_p2, expect_headers_p3)
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 

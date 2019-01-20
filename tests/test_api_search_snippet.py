@@ -450,7 +450,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         """Search snippet with digets.
 
         Try to call GET /v1/snippets/{digest} with digest that cannot be
-        found. In this case the JSON 'null' is converted to Python None.
+        found.
         """
 
         expect_headers = {

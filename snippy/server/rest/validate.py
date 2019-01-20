@@ -137,13 +137,24 @@ class Validate(object):  # pylint: disable=too-few-public-methods
     def _get_schema(cls, request, is_collection):
         """Get correct schema for the request.
 
+        If a new content is created with POST or the content is replaced
+        with PUT request, the mandatory fields must be present. Otherwise
+        the request is considered as update and the mandatory fields may
+        be missing.
+
         Args:
             request (dict): JSON object received from client.
             is_collection (bool): Defines if the request is collection
         """
 
         create = False
-        if request.method.lower() == 'post' and request.get_header('x-http-method-override', default='post').lower() == 'post':
+        if (
+            request.method.lower() == "post"
+            and request.get_header("x-http-method-override", default="post").lower() == "post"
+        ) or (
+            request.method.lower() == "put"
+            or request.get_header("x-http-method-override", default="put").lower() == "put"
+        ):
             create = True
 
         if is_collection:

@@ -1,5 +1,5 @@
 ## WORKING
-   - [ ] Fix patching content with empty values. Of optional data is changed to empty value, it is not used.
+   - [ ] Fix patching content with empty values. Or optional data is changed to empty value, it is not used.  008 test with put and patch since both fail differently.
    - [ ] Put merge true in cli so that get_config merge=true can be removed
    - [ ] add migrate, merge, combine for cli and create resource.combine that adds the value to list of existing values.
    - [ ] Make cli update adding parameter so that the give value is included into existing list? This is problem with data but nice with links, tags groups and this could use merge?

@@ -1,7 +1,7 @@
 ## WORKING
-   - [ ] Fix patching content with empty values. Or optional data is changed to empty value, it is not used.  008 test with put and patch since both fail differently.
+   - [ ] Fix patching content with empty values. Or optional data is changed to empty value, it is not used. test_api_update_reference_010. Add 011/12 to test patch/put mandatory data to empty.
    - [ ] Put merge true in cli so that get_config merge=true can be removed
-   - [ ] add migrate, merge, combine for cli and create resource.combine that adds the value to list of existing values.
+   - [ ] add (?) migrate, merge, combine for cli and create resource.combine that adds the value to list of existing values.
    - [ ] Make cli update adding parameter so that the give value is included into existing list? This is problem with data but nice with links, tags groups and this could use merge?
    - [ ] Add tests for adding fields from cli to updates/create. Does the CLI merge option work (seems to work like needed for API which is not logical for CLI - remove from CLI)? For CLI the merge would indicate likely that "add this new link to existing link list"
    - [ ] Add more tests for --(no)-editor options for all content classes and operations.

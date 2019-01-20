@@ -85,7 +85,7 @@ class Generate(object):
             data['meta']['total'] = collection.total
 
         if not data['data']:
-            data = json.loads('{"links": {"self": "' + uri + '"}, "data": null}')
+            data = json.loads('{"links": {"self": "' + request.uri + '"}, "data": null}')
 
         return cls._dumps(data)
 

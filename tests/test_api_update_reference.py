@@ -396,7 +396,7 @@ class TestApiUpdateReference(object):
     def test_api_update_reference_008(self, server):
         """Try to update reference with PUT request.
 
-        Try to call PUT /v1/references/<digest> to replace existing snippet
+        Try to call PUT /v1/references/<digest> to replace existing reference
         with specified digest. The PUT request does not contain the mandatory
         link field which is why the request must be rejected.
         """
@@ -437,14 +437,78 @@ class TestApiUpdateReference(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
-    @pytest.mark.skip(reason="no way of currently testing this")
     @pytest.mark.usefixtures('import-gitlog', 'update-pytest-utc')
     def test_api_update_reference_009(self, server):
-        """Try to update reference with PUT request.
+        """Update reference with PUT request.
 
-        Call PUT /v1/references/<digest> to update and replace existing
-        snippet with specified digest. The PUT request does not contain
-        the mandatory link field which is why the request must be rejected.
+        Call PUT /v1/references/<digest> to replace existing reference with
+        specified digest. The PUT sets all but the mandatory links field to
+        empty values.
+        """
+
+        content = {
+            'data': [
+                Content.deepcopy(Reference.GITLOG)
+            ]
+        }
+        content['data'][0]['brief'] = ''
+        content['data'][0]['description'] = ''
+        content['data'][0]['groups'] = ()
+        content['data'][0]['tags'] = ()
+        content['data'][0]['name'] = ''
+        content['data'][0]['filename'] = ''
+        content['data'][0]['versions'] = ''
+        content['data'][0]['source'] = ''
+        content['data'][0]['created'] = Content.GITLOG_TIME
+        content['data'][0]['updated'] = Content.PYTEST_TIME
+        content['data'][0]['digest'] = '54c493ade0f808e3d1b16bb606484a51bb0f7eb9c0592c46aea5196bd891881c'
+        request_body = {
+            'data': {
+                'type': 'reference',
+                'attributes': {
+                    'links': content['data'][0]['links'],
+                    'brief': '',
+                    'description': '',
+                    'groups': (),
+                    'tags': (),
+                    'name': '',
+                    'filename': '',
+                    'versions': '',
+                    'source': ''
+                }
+            }
+        }
+        expect_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '644'
+        }
+        expect_body = {
+            'links': {
+                'self': 'http://falconframework.org/snippy/api/app/v1/references/54c493ade0f808e3'
+            },
+            'data': {
+                'type': 'reference',
+                'id': content['data'][0]['digest'],
+                'attributes': content['data'][0]
+            }
+        }
+        result = testing.TestClient(server.server.api).simulate_put(
+            path='/snippy/api/app/v1/references/5c2071094dbfaa33',
+            headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
+            body=json.dumps(request_body))
+        assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(content)
+
+    @pytest.mark.skip(reason="no way of currently testing this")
+    @pytest.mark.usefixtures('import-gitlog', 'update-pytest-utc')
+    def test_api_update_reference_010(self, server):
+        """Update reference with PATCH request.
+
+        Call PATCH /v1/references/<digest> to update existing reference with
+        specified digest. The PATCH sets all but the mandatory field to empty
+        values.
         """
 
         content = {
@@ -484,7 +548,7 @@ class TestApiUpdateReference(object):
                 'attributes': content['data'][0]
             }
         }
-        result = testing.TestClient(server.server.api).simulate_put(
+        result = testing.TestClient(server.server.api).simulate_patch(
             path='/snippy/api/app/v1/references/5c2071094dbfaa33',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))

@@ -150,10 +150,10 @@ class Validate(object):  # pylint: disable=too-few-public-methods
         create = False
         if (
             request.method.lower() == "post"
-            and request.get_header("x-http-method-override", default="post").lower() == "post"
+            and request.get_header("x-http-method-override", default=request.method).lower() == "post"
         ) or (
             request.method.lower() == "put"
-            or request.get_header("x-http-method-override", default="put").lower() == "put"
+            or request.get_header("x-http-method-override", default=request.method).lower() == "put"
         ):
             create = True
 

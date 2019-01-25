@@ -1998,6 +1998,12 @@ git update-index --no-assume-unchanged FILE_NAME # change back
           1. Content does not define filename field: Not Allowed
           2. Content defines filename field: Not Allowed
 
+    REST API
+
+    1. REST API follows JSON Merge Patch - RFC 7386
+
+       The PATCH method works as defined in RFC 7386.
+
     JSON API
 
     1. The JSON API responses must follow JSON API v1.0 specifications
@@ -2300,7 +2306,6 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        In order to mitigate the drawbacks, there must be sufficient set of unit tests
        that verify the Collection() dump and load methods (text and Markdown format
        parsers).
-
 
     4. Order of asserted result must be deterministic
 

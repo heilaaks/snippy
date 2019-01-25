@@ -202,6 +202,7 @@ class Config(object):
         cls.search_limit = cls.source.search_limit
         cls.search_offset = cls.source.search_offset
         cls.remove_fields = cls.source.remove_fields
+        cls.reset_fields = cls.source.reset_fields
         cls.sort_fields = cls.source.sort_fields
 
         # migrate
@@ -329,6 +330,8 @@ class Config(object):
 
         if updates:
             if merge:
+                for field in Config.reset_fields:
+                    setattr(updates, field, None)
                 updates.merge(config, validate=False)
             else:
                 updates.migrate(config, validate=False)

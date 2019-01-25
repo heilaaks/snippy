@@ -275,8 +275,8 @@ class TestApiUpdateSnippet(object):
             'tags': Const.DELIMITER_TAGS.join(Snippet.REMOVE['tags']),
             'links': Const.DELIMITER_LINKS.join(Snippet.REMOVE['links'])
         }
-        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '877'}
-        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '879'}
+        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '895'}
+        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '897'}
         expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{

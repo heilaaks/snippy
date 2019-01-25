@@ -369,8 +369,8 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         """
 
         request_body = Snippet.REMOVE
-        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '889'}
-        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '891'}
+        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '907'}
+        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '909'}
         expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
@@ -490,8 +490,8 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                 'attributes': {'brief': ''}
             }]
         }
-        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '754'}
-        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '758'}
+        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '772'}
+        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '776'}
         expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{

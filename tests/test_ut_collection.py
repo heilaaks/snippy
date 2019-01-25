@@ -281,3 +281,47 @@ class TestUtCollection(object):
         # Try to migrate random type to collection.
         collection2.migrate('string')
         assert len(collection2) == 1
+
+    @pytest.mark.usefixtures('uuid')
+    def test_collection_operations_004(self):
+        """Test collection data class operations.
+
+        Verify values with None generate default values for resource. For
+        example a None for brief must generate empty string for resource
+        brief attribute.
+        """
+
+        collection = Collection()
+        collection.load_dict(Helper.EXPORT_TIME, {
+            'data': [{
+                'data': [
+                    'tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./',
+                    'tar xfO mytar.tar.gz manifest.json# Cat file in compressed tar.'],
+                'brief': None,
+                'description': None,
+                'groups': None,
+                'tags': None,
+                'links': None,
+                'category': Const.SNIPPET,
+                'name': None,
+                'filename': None,
+                'versions': None,
+                'source': None,
+            }]
+        })
+        resource = next(collection.resources())
+        assert resource.data == (
+            'tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./',
+            'tar xfO mytar.tar.gz manifest.json# Cat file in compressed tar.'
+        )
+        assert resource.brief == ''
+        assert resource.description == ''
+        assert resource.groups == ()
+        assert resource.tags == ()
+        assert resource.links == ()
+        assert resource.category == Const.SNIPPET
+        assert resource.name == ''
+        assert resource.filename == ''
+        assert resource.versions == ''
+        assert resource.source == ''
+        assert resource.digest == '6dae3799010719ca694b86514ec404cd6b6047a2979b3dbaf75fa51576ad269c'

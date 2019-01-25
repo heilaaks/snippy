@@ -304,7 +304,7 @@ class TestApiCreateSolution(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '804'
+            'content-length': '822'
         }
         expect_body = {
             'meta': Content.get_api_meta(),

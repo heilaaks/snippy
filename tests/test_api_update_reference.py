@@ -210,8 +210,8 @@ class TestApiUpdateReference(object):
             'tags': Const.DELIMITER_TAGS.join(Reference.REGEXP['tags']),
             'links': Const.DELIMITER_LINKS.join(Reference.REGEXP['links'])
         }
-        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '785'}
-        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '787'}
+        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '803'}
+        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '805'}
         expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
@@ -417,8 +417,8 @@ class TestApiUpdateReference(object):
                 }
             }
         }
-        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '832'}
-        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '844'}
+        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '850'}
+        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '862'}
         expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
@@ -501,7 +501,6 @@ class TestApiUpdateReference(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
-    @pytest.mark.skip(reason="no way of currently testing this")
     @pytest.mark.usefixtures('import-gitlog', 'update-pytest-utc')
     def test_api_update_reference_010(self, server):
         """Update reference with PATCH request.
@@ -520,27 +519,35 @@ class TestApiUpdateReference(object):
         content['data'][0]['description'] = ''
         content['data'][0]['groups'] = ()
         content['data'][0]['tags'] = ()
+        content['data'][0]['name'] = ''
+        content['data'][0]['filename'] = ''
+        content['data'][0]['versions'] = ''
+        content['data'][0]['source'] = ''
         content['data'][0]['created'] = Content.GITLOG_TIME
         content['data'][0]['updated'] = Content.PYTEST_TIME
-        content['data'][0]['digest'] = '915d0aa75703093ccb347755bfb597a16c0774b9b70626948dd378bd01310dec'
+        content['data'][0]['digest'] = '54c493ade0f808e3d1b16bb606484a51bb0f7eb9c0592c46aea5196bd891881c'
         request_body = {
             'data': {
                 'type': 'reference',
                 'attributes': {
-                    'brief': '',
-                    'description': '',
-                    'groups': (),
-                    'tags': ()
+                    'brief': None,
+                    'description': None,
+                    'groups': None,
+                    'tags': None,
+                    'name': None,
+                    'filename': None,
+                    'versions': None,
+                    'source': None
                 }
             }
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '756'
+            'content-length': '644'
         }
         expect_body = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/references/915d0aa75703093c'
+                'self': 'http://falconframework.org/snippy/api/app/v1/references/54c493ade0f808e3'
             },
             'data': {
                 'type': 'reference',
@@ -552,7 +559,6 @@ class TestApiUpdateReference(object):
             path='/snippy/api/app/v1/references/5c2071094dbfaa33',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
-        print(result.json)
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)

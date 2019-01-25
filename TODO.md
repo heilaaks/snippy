@@ -1,5 +1,6 @@
 ## WORKING
-   - [ ] Fix patching content with empty values. Or optional data is changed to empty value, it is not used. test_api_update_reference_010. Add 011/12 to test patch/put mandatory data to empty.
+   - [ ] Test setting reference.data to null. This does not like pass.
+   - [ ] Validating fails when reference sets 'data': None. This should be possible with referece but not possible with other content types.
    - [ ] Put merge true in cli so that get_config merge=true can be removed
    - [ ] add (?) migrate, merge, combine for cli and create resource.combine that adds the value to list of existing values.
    - [ ] Make cli update adding parameter so that the give value is included into existing list? This is problem with data but nice with links, tags groups and this could use merge?

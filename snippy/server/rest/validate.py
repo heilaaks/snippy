@@ -90,7 +90,8 @@ class Validate(object):  # pylint: disable=too-few-public-methods
             if cls._is_valid_data(request.media['data']):
                 resource_ = request.media['data']['attributes']
                 resource_['digest'] = digest
-                if request.method.lower() == 'patch' or request.get_header('x-http-method-override', default='post').lower() == 'patch':
+                if (request.method.lower() == 'patch' or
+                        request.get_header('x-http-method-override', default=request.method).lower() == 'patch'):
                     resource_['merge'] = True
                 collection.append(resource_)
         else:
@@ -183,8 +184,8 @@ class JsonSchema(object):  # pylint: disable=too-few-public-methods
                 "type": "object",
                 "properties": {
                     "data": {"type": ["string", "array"]},
-                    "brief": {"type": "string"},
-                    "links": {"type": ["string", "array"]}
+                    "brief": {"type": ["string", "null"]},
+                    "links": {"type": ["string", "array", "null"]}
                 },
                 "anyOf": [{
                     "required": ["data"]
@@ -204,8 +205,8 @@ class JsonSchema(object):  # pylint: disable=too-few-public-methods
                 "type": "object",
                 "properties": {
                     "data": {"type": ["string", "array"]},
-                    "brief": {"type": "string"},
-                    "links": {"type": ["string", "array"]}
+                    "brief": {"type": ["string", "null"]},
+                    "links": {"type": ["string", "array", "null"]}
                 }
             }
         },

@@ -58,6 +58,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self._logger = Logger.get_logger(__name__)
         self._logger.debug('config source: {}'.format(derived))
         self._derived = derived
+        self._reset_fields = {}
         self._repr = self._get_repr()
         self.set_conf(parameters)
 
@@ -97,6 +98,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         namespace.append('profiler={}'.format(self.profiler))
         namespace.append('quiet={}'.format(self.quiet))
         namespace.append('remove_fields={}'.format(self.remove_fields))
+        namespace.append('reset_fields={}'.format(self.reset_fields))
         namespace.append('sall={}'.format(self.sall))
         namespace.append('scat={}'.format(self.scat))
         namespace.append('search_filter={}'.format(self.search_filter))
@@ -245,6 +247,9 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     def brief(self, value):
         """Convert content brief to utf-8 encoded unicode string."""
 
+        if value is None:
+            self._reset_fields['brief'] = 'brief'
+
         self._brief = Parser.format_string(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
@@ -256,6 +261,9 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     @description.setter
     def description(self, value):
         """Convert content description to utf-8 encoded unicode string."""
+
+        if value is None:
+            self._reset_fields['description'] = 'description'
 
         self._description = Parser.format_string(value)  # pylint: disable=attribute-defined-outside-init
 
@@ -269,6 +277,9 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     def groups(self, value):
         """Convert content groups to tuple of utf-8 encoded unicode strings."""
 
+        if value is None:
+            self._reset_fields['groups'] = 'groups'
+
         self._groups = Parser.format_list(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
@@ -280,6 +291,9 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     @tags.setter
     def tags(self, value):
         """Convert content tags to tuple of utf-8 encoded unicode strings."""
+
+        if value is None:
+            self._reset_fields['tags'] = 'tags'
 
         self._tags = Parser.format_list(value)  # pylint: disable=attribute-defined-outside-init
 
@@ -293,6 +307,9 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     def links(self, value):
         """Convert content links to tuple of utf-8 encoded unicode strings."""
 
+        if value is None:
+            self._reset_fields['links'] = 'links'
+
         self._links = Parser.format_links(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
@@ -304,6 +321,9 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     @filename.setter
     def filename(self, value):
         """Convert content filename to utf-8 encoded unicode string."""
+
+        if value is None:
+            self._reset_fields['filename'] = 'filename'
 
         self._filename = Parser.format_string(value)  # pylint: disable=attribute-defined-outside-init
 
@@ -317,6 +337,9 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     def name(self, value):
         """Convert content name to utf-8 encoded unicode string."""
 
+        if value is None:
+            self._reset_fields['name'] = 'name'
+
         self._name = Parser.format_string(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
@@ -329,6 +352,9 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     def versions(self, value):
         """Convert content versions to utf-8 encoded unicode string."""
 
+        if value is None:
+            self._reset_fields['versions'] = 'versions'
+
         self._versions = Parser.format_string(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
@@ -340,6 +366,9 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     @source.setter
     def source(self, value):
         """Convert content source to utf-8 encoded unicode string."""
+
+        if value is None:
+            self._reset_fields['source'] = 'source'
 
         self._source = Parser.format_string(value)  # pylint: disable=attribute-defined-outside-init
 
@@ -417,7 +446,8 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     def sgrp(self, value):
         """Store 'search groups' keywords.
 
-        The keywords are stored in tuple with one keywords per element."""
+        The keywords are stored in tuple with one keywords per element.
+        """
 
         self._sgrp = Parser.format_search_keywords(value)  # pylint: disable=attribute-defined-outside-init
 
@@ -538,6 +568,12 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
             self._remove_fields = tuple(set(self.ATTRIBUTES) - set(requested_fields))  # pylint: disable=attribute-defined-outside-init
 
         self._logger.debug('{}: content attributes that are removed: {}'.format(self._derived, self._remove_fields))
+
+    @property
+    def reset_fields(self):
+        """Get reset fields."""
+
+        return tuple(self._reset_fields.keys())
 
     @property
     def server_app_base_path(self):

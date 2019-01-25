@@ -28,6 +28,7 @@ import uuid
 
 from snippy.cause import Cause
 from snippy.constants import Constants as Const
+from snippy.content.parser import Parser
 from snippy.logger import Logger
 
 
@@ -143,7 +144,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     def brief(self, value):
         """Resource brief."""
 
-        self._brief = value
+        self._brief = Parser.format_string(value)
 
     @property
     def description(self):
@@ -155,7 +156,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     def description(self, value):
         """Resource description."""
 
-        self._description = value
+        self._description = Parser.format_string(value)
 
     @property
     def groups(self):
@@ -167,7 +168,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     def groups(self, value):
         """Resource groups."""
 
-        self._groups = value
+        self._groups = Parser.format_list(value)
 
     @property
     def tags(self):
@@ -179,7 +180,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     def tags(self, value):
         """Resource tags."""
 
-        self._tags = value
+        self._tags = Parser.format_list(value)
 
     @property
     def links(self):
@@ -191,7 +192,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     def links(self, value):
         """Resource links."""
 
-        self._links = value
+        self._links = Parser.format_links(value)
 
     @property
     def category(self):
@@ -215,7 +216,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     def filename(self, value):
         """Resource filename."""
 
-        self._filename = value
+        self._filename = Parser.format_string(value)
 
     @property
     def name(self):
@@ -227,7 +228,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     def name(self, value):
         """Resource name."""
 
-        self._name = value
+        self._name = Parser.format_string(value)
 
     @property
     def versions(self):
@@ -239,7 +240,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     def versions(self, value):
         """Resource versions."""
 
-        self._versions = value
+        self._versions = Parser.format_string(value)
 
     @property
     def source(self):
@@ -251,7 +252,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     def source(self, value):
         """Resource source."""
 
-        self._source = value
+        self._source = Parser.format_string(value)
 
     @property
     def uuid(self):

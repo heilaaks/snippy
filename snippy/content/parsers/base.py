@@ -269,6 +269,8 @@ class ContentParserBase(object):
                 string_ = Const.NEWLINE.join([cls.to_unicode(line.strip()) for line in value])
             else:
                 string_ = Const.NEWLINE.join([cls.to_unicode(line) for line in value])
+        elif isinstance(value, type(None)):
+            string_ = Const.EMPTY
         else:
             cls._logger.debug('conversion to unicode string failed with unknown type %s : %s', type(value), value)
 
@@ -292,6 +294,8 @@ class ContentParserBase(object):
             list_.append(value.decode('utf-8'))
         elif isinstance(value, (list, tuple)):
             list_ = list([cls.to_unicode(i) for i in value])
+        elif isinstance(value, type(None)):
+            list_ = []
         else:
             cls._logger.debug('conversion to list of unicode unicode strings failed with unknown type %s : %s', type(value), value)
 

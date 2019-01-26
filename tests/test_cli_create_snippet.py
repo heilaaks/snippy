@@ -305,7 +305,7 @@ class TestCliCreateSnippet(object):
     def test_cli_create_snippet_010(self, snippy, editor_data):
         """Try to create snippet with editor.
 
-        Try to create new snippet by using the default Markdown template.  In
+        Try to create new snippet by using the default Markdown template. In
         this case there are no any changes to the template.
         """
 
@@ -348,6 +348,90 @@ class TestCliCreateSnippet(object):
         cause = snippy.run(['snippy', 'create', '--brief', 'Short brief', '--no-editor'])
         assert cause == 'NOK: content was not stored because mandatory content field data is empty'
         Content.assert_storage(None)
+
+    @pytest.mark.usefixtures('create-remove-utc')
+    def test_cli_create_snippet_012(self, snippy, editor_data):
+        """Create snippet with editor.
+
+        Create new snippet and define tags and brief already from command line.
+        Other fields must have the default template content that is normally
+        presented for the user when content is created with editor.
+
+        User adds the content data from editor.
+
+        Editor must be used by default.
+        """
+
+        content = {
+            'data': [{
+                'brief': 'Brief from cli',
+                'category': 'snippet',
+                'created': '2017-10-14T19:56:31.000001+00:00',
+                'data': ('docker rm --volumes $(docker ps --all --quiet)', ),
+                'description': 'Add a description that defines the content in one chapter.',
+                'digest': '7c6c1d7b742581d056508d67046e5852e738f2f90fa982b1bd3fa695b9e231eb',
+                'filename': '',
+                'groups': ('groups', ),
+                'links': ('https://www.example.com/add-links-here.html', ),
+                'name': '',
+                'source': '',
+                'tags': ('cli', 'from', 'tags'),
+                'updated': '2017-10-14T19:56:31.000001+00:00',
+                'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'versions': (),
+            }]
+        }
+        template = (
+            '# Brief from cli @groups',
+            '',
+            '> Add a description that defines the content in one chapter.',
+            '',
+            '> [1] https://www.example.com/add-links-here.html',
+            '',
+            '',
+            '',
+            '## Meta',
+            '',
+            '> category : snippet  ',
+            'created  : 2017-10-14T19:56:31.000001+00:00  ',
+            'digest   : 74fb382bd38b8c0a5db0394b4bd1c9335e4a534cb46586e3b199e92137c2c91c  ',
+            'filename :   ',
+            'name     :   ',
+            'source   :   ',
+            'tags     : cli,from,tags  ',
+            'updated  : 2017-10-14T19:56:31.000001+00:00  ',
+            'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+            'versions : ',
+            ''
+        )
+        edited = (
+            '# Brief from cli @groups',
+            '',
+            '> Add a description that defines the content in one chapter.',
+            '',
+            '> [1] https://www.example.com/add-links-here.html',
+            '',
+            '`$ docker rm --volumes $(docker ps --all --quiet)`',
+            '',
+            '## Meta',
+            '',
+            '> category : snippet  ',
+            'created  : 2017-10-14T19:56:31.000001+00:00  ',
+            'digest   : 74fb382bd38b8c0a5db0394b4bd1c9335e4a534cb46586e3b199e92137c2c91c  ',
+            'filename :   ',
+            'name     :   ',
+            'source   :   ',
+            'tags     : cli,from,tags  ',
+            'updated  : 2017-10-14T19:56:31.000001+00:00  ',
+            'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+            'versions : ',
+            ''
+        )
+        editor_data.return_value = '\n'.join(edited)
+        cause = snippy.run(['snippy', 'create', '-t', 'tags,from,cli', '-b', 'Brief from cli'])
+        assert cause == Cause.ALL_OK
+        editor_data.assert_called_with('\n'.join(template))
+        Content.assert_storage(content)
 
     @classmethod
     def teardown_class(cls):

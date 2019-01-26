@@ -1,13 +1,6 @@
 ## WORKING
-   - [ ] Put merge true in cli so that get_config merge=true can be removed
-   - [ ] add (?) migrate, merge, combine for cli and create resource.combine that adds the value to list of existing values.
-   - [ ] Make cli update adding parameter so that the give value is included into existing list? This is problem with data but nice with links, tags groups and this could use merge?
-   - [ ] Add tests for adding fields from cli to updates/create. Does the CLI merge option work (seems to work like needed for API which is not logical for CLI - remove from CLI)? For CLI the merge would indicate likely that "add this new link to existing link list"
-   - [ ] Add more tests for --(no)-editor options for all content classes and operations.
-   - [ ] Why new mkdn log driver kafka solution does not have description in quotations in defaults?  This is normal YAML behaviour?
    - [ ] Document and test that update now also supports --format option and the default is Markdown.
    - [ ] Convert all solutions to Markdown format and write proper history that summarieses the Markdown and link it to change history when two MD items below are cloded.
-   - [ ] CLI interface does not update default template with provided parameters like tags, groups, etc from command line. This should be placed on top of default empty template if provided.
    - [ ] Add support to read storage and server options from env variables.
    - [ ] Why starting server calls collection initialization 4 times?
    - [ ] Add description to cli and modify template settings to set it if provided.
@@ -47,7 +40,7 @@
    - [ ] Fix (optimize) the order of SQL columns. Fixed length columns first. This should ? allow database to optimize the length of data. Is this the case?
 
 ## FEATURES
-   - [ ] Fix reading data from cli that does not parse description and filename from CLI --content data test_cli_create_solution_001.
+   - [ ] Add combine on top of migrate and merge. The combine would allow adding for example a tag to an existing list of tags. This would be nice for CLI and could be used with RFC 6902 (JSON Patch) (if implemented).
    - [ ] Add support to search phrases like has 'active end'. This should return one result with default set but it returns two since each word is searched separately.
    - [ ] Add support to find dead links.
    - [ ] Add Travis CI for PyPy version v6.0 for Python 3 when it comes https://github.com/travis-ci/travis-ci/issues/9542
@@ -73,6 +66,8 @@
    - [ ] Remove server name and version from HTTP responses. This would require overriding Gunicorn https://stackoverflow.com/a/21294524.
 
 ## FIX
+   - [ ] Fix reading data from cli that does not parse description and filename from CLI --content data test_cli_create_solution_001.
+   - [ ] Fix why new mkdn log driver kafka solution does not have description in quotations in defaults?  This is normal YAML behaviour?
    - [ ] Fix timestamp usage to be Datetime native. Now the created and updated times are strings. It may be usefull in future (no use case now) to have Datetime objects instead of strings.
    - [ ] Fix the internal primary key UUID. It has MAC address which is same for multiple containers? //https://docs.docker.com/engine/reference/run/#network-settings
    - [ ] Fix long description in Markdown format does not support keeping paragraph. The description supports only one paragraph that is wrapped for Markdown. Fix or ok? Read only one paragrap. This is good for example for solution which may have longer Description chapter as own header.

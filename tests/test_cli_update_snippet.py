@@ -315,6 +315,30 @@ class TestCliUpdateSnippet(object):
         editor_data.assert_called_with('\n'.join(template))
         Content.assert_storage(content)
 
+    @pytest.mark.usefixtures('import-remove', 'update-forced-utc')
+    def test_cli_update_snippet_014(self, snippy, editor_data):
+        """Update existing reference from command line.
+
+        Update existing reference from directly from command line. In this
+        case the editor is not used because of '--no-editor' option which
+        forces direct updated of the content.
+        """
+
+        content = {
+            'data': [
+                Content.deepcopy(Snippet.REMOVE)
+            ]
+        }
+        content['data'][0]['brief'] = 'brief cli'
+        content['data'][0]['tags'] = ('cli-tag',)
+        content['data'][0]['links'] = ('https://cli-link',)
+        content['data'][0]['groups'] = ('cli-group',)
+        content['data'][0]['digest'] = '613e163028a17645a7dfabbe159f05d14db7588259229dd8d08e949cdc668373'
+        cause = snippy.run(['snippy', 'update', '-d', '54e41e9b52a02b63', '-t', 'cli-tag', '-b', 'brief cli', '-g', 'cli-group', '-l', 'https://cli-link', '--no-editor'])  # pylint: disable=line-too-long
+        assert cause == Cause.ALL_OK
+        editor_data.assert_not_called()
+        Content.assert_storage(content)
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

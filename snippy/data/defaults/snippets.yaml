@@ -725,14 +725,16 @@ data:
   category: snippet
   created: '2018-09-08T12:44:23.512780+00:00'
   data:
+  - docker image prune -a --filter "until=24h"
   - docker rm $(docker ps --all -q -f status=exited)
   - docker images -q --filter dangling=true | xargs docker rmi
   description: ''
-  digest: 49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73
+  digest: 7da5fde99d0264926a00d9fb3289b41eaf06ad57b84d139dde13dc23551af6ec
   filename: ''
   groups:
   - docker
   links:
+  - https://docs.docker.com/config/pruning/
   - https://docs.docker.com/engine/reference/commandline/images/
   - https://docs.docker.com/engine/reference/commandline/rm/
   - https://docs.docker.com/engine/reference/commandline/rmi/
@@ -745,7 +747,8 @@ data:
   - docker-ce
   - image
   - moby
-  updated: '2018-09-08T12:44:23.512780+00:00'
+  - prune
+  updated: '2019-01-26T16:13:54.279049+00:00'
   uuid: daa8bd77-540d-4af1-b064-c90c00070df0
   versions: []
 - brief: Test if specific port is open
@@ -773,5 +776,5 @@ data:
   versions: []
 meta:
   homepage: https://github.com/heilaaks/snippy
-  updated: '2019-01-26T14:01:33.906212+00:00'
+  updated: '2019-01-26T16:14:47.664563+00:00'
   version: 0.9.d

@@ -1,12 +1,15 @@
 ## WORKING
-   - [ ] Document and test that update now also supports --format option and the default is Markdown.
+   - [ ] FIx updating mkdn formatted snippet content data. Adding prune was not working.
+   - [ ] Fix help text to use import --all instead of content specific commands.
    - [ ] Convert all solutions to Markdown format and write proper history that summarieses the Markdown and link it to change history when two MD items below are cloded.
+   - [ ] Add changelog to README.
+   - [ ] Release 0.9.0.
+   - [ ] Document and test that update now also supports --format option and the default is Markdown.
    - [ ] Add support to read storage and server options from env variables.
    - [ ] Why starting server calls collection initialization 4 times?
    - [ ] Add description to cli and modify template settings to set it if provided.
    - [ ] Config get_resource could return empty Resource instead of None in failure. This is now related to new migrate refactoring that prevents migrating template resources.
    - [ ] Fix better logs if --logs-json (invalid option name) is used with -vv. Now there is not proper log what went wrong with -vv/--debug?
-   - [ ] Fix help text to use import --all instead of content specific commands.
    - [ ] Fix and test adding two same tags, links and categories. At least from text source two tags are duplicated. Verify others.
    - [ ] Fix '--filter 0' maps to None instead of 0?
    - [ ] Fix (remove) the LANG in Alpine based dockerfile? Is this useless as MUSL does not support locales? https://github.com/gliderlabs/docker-alpine/issues/144
@@ -17,7 +20,6 @@
    - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format.
    - [ ] Add delete for wheel build directory for automation. If the folder exist this is a problem (at least used to be) see how to fail python release/building/something.
    - [ ] Fix (?) updating JSON or YAML solution (only solution?) with mkdn or text data where data brief changes. This is not now updated in case of YAML/JSON solution because the dict is just read. The problem is to how to identify text or Markdown from YAML/JSON (dict)?
-   - [ ] Add changelog to README.
    - [ ] Fix does the Parser really return UTF-8 encoded strings always? For example (links/keywords) is not coverted and other use decode(utf-8) which is opposite?
    - [ ] Fix clarify how insert multiple - one failure behaves. Should have been fail all because of simplicity. Write test and fix. The code tries to insert all and returns inteserted content in REST API. What about CLI (same behaviour but should this change to fail immediately)?
    - [ ] Fix Parser which assumes always UTF-8. If CLI terminal has something else, this fails.

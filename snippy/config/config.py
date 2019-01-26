@@ -261,8 +261,8 @@ class Config(object):
 
         collection = Collection()
         timestamp = Config.utcnow()
+        update = cls._get_config(timestamp, collection, update, merge=Config.merge)
         if cls.editor:
-            update = cls._get_config(timestamp, collection, update, merge=True)
             template = update.get_template(
                 cls.content_category,
                 cls.template_format,
@@ -270,7 +270,6 @@ class Config(object):
             )
             Editor.read(timestamp, cls.template_format, template, collection)
         else:
-            update = cls._get_config(timestamp, collection, update, merge=Config.merge)
             collection.migrate(update)
 
         return collection

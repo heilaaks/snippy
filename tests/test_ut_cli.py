@@ -50,7 +50,7 @@ class TestUtCli(object):
         assert cli.links == ()
         assert not cli.log_json
         assert cli.log_msg_max == Cli.DEFAULT_LOG_MSG_MAX
-        assert not cli.merge
+        assert cli.merge
         assert cli.name == ''
         assert not cli.no_ansi
         assert cli.operation == 'create'

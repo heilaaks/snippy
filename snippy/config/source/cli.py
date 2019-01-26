@@ -146,6 +146,16 @@ class Cli(ConfigSourceBase):
         parameters = Cli._parse_args(args)
         Cli._set_editor(parameters)
         Cli._set_format(parameters)
+        # CLI always updates existing content if it exit exist (merge). This
+        # prevents updating empty values on top of existing content from the
+        # command line configuration. The below example allows defining only
+        # tags on top of existing content.
+        #
+        # The merge option has relevance in API where it allows different
+        # behaviour with PUT and PATCH.
+        #
+        # $ snippy update -d f3fd167c64b6f97e --tags new,tags,from,cli
+        parameters['merge'] = True
         self.set_conf(parameters)
 
     @staticmethod
@@ -182,7 +192,6 @@ class Cli(ConfigSourceBase):
         options.add_argument('--editor', action='store_true', default=False, help=argparse.SUPPRESS)
         options.add_argument('--no-editor', dest='no_editor', action='store_true', default=False, help=argparse.SUPPRESS)
         options.add_argument('--format', nargs='?', choices=(Const.CONTENT_FORMAT_MKDN, Const.CONTENT_FORMAT_TEXT), default=argparse.SUPPRESS, help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
-        options.add_argument('--merge', action='store_true', default=False, help=argparse.SUPPRESS)
 
         # search options
         search = parser.add_argument_group(title='search options', description=Const.NEWLINE.join(Cli.ARGS_SEARCH))

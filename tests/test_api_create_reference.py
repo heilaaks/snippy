@@ -499,6 +499,60 @@ class TestApiCreateReference(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @pytest.mark.usefixtures('create-regexp-utc')
+    def test_api_create_reference_011(self, server):
+        """Create one reference from API.
+
+        Call POST /v1/references to create new content. In this case only the
+        links field is defined
+        """
+
+        content = {
+            'data': [{
+                'data': (),
+                'brief': '',
+                'description': '',
+                'groups': ('default', ),
+                'tags': (),
+                'links': ('link1', 'link2'),
+                'category': 'reference',
+                'name': '',
+                'filename': '',
+                'versions': '',
+                'source': '',
+                'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'created': Content.REGEXP_TIME,
+                'updated': Content.REGEXP_TIME,
+                'digest': 'b978df98e539644f9861a13803c19345d286544302ccedfd98c36cf16724eb80'
+            }]
+        }
+        request_body = {
+            'data': [{
+                'type': 'reference',
+                'attributes': {
+                    'links': ['link1', 'link2'],
+                }
+            }]
+        }
+        expect_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '534'}
+        expect_body = {
+            'data': [{
+                'type': 'reference',
+                'id': content['data'][0]['digest'],
+                'attributes': content['data'][0]
+            }]
+        }
+        result = testing.TestClient(server.server.api).simulate_post(
+            path='/snippy/api/app/v1/references',
+            headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
+            body=json.dumps(request_body))
+        assert result.status == falcon.HTTP_201
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(content)
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

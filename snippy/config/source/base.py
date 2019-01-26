@@ -210,7 +210,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self.template = parameters.get('template', False)
         self.uuid = parameters.get('uuid', None)
         self.version = parameters.get('version', __version__)
-        self.versions = parameters.get('versions', Const.EMPTY)
+        self.versions = parameters.get('versions', ())
         self.very_verbose = parameters.get('very_verbose', False)
         self._repr = self._get_repr()
 
@@ -350,12 +350,12 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
 
     @versions.setter
     def versions(self, value):
-        """Convert content versions to utf-8 encoded unicode string."""
+        """Convert content versions to tuple of utf-8 encoded unicode strings."""
 
         if value is None:
             self._reset_fields['versions'] = 'versions'
 
-        self._versions = Parser.format_string(value)  # pylint: disable=attribute-defined-outside-init
+        self._versions = Parser.format_list(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
     def source(self):

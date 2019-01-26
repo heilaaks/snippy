@@ -108,7 +108,7 @@ class TestApiUpdateReference(object):
                 'category': 'reference',
                 'name': '',
                 'filename': '',
-                'versions': '',
+                'versions': (),
                 'source': '',
                 'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
                 'created': Content.GITLOG_TIME,
@@ -352,7 +352,7 @@ class TestApiUpdateReference(object):
                 'category': 'reference',
                 'name': '',
                 'filename': '',
-                'versions': '',
+                'versions': (),
                 'source': '',
                 'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
                 'created': Content.GITLOG_TIME,
@@ -457,7 +457,7 @@ class TestApiUpdateReference(object):
         content['data'][0]['tags'] = ()
         content['data'][0]['name'] = ''
         content['data'][0]['filename'] = ''
-        content['data'][0]['versions'] = ''
+        content['data'][0]['versions'] = ()
         content['data'][0]['source'] = ''
         content['data'][0]['created'] = Content.GITLOG_TIME
         content['data'][0]['updated'] = Content.PYTEST_TIME
@@ -473,7 +473,7 @@ class TestApiUpdateReference(object):
                     'tags': (),
                     'name': '',
                     'filename': '',
-                    'versions': '',
+                    'versions': (),
                     'source': ''
                 }
             }
@@ -521,7 +521,7 @@ class TestApiUpdateReference(object):
         content['data'][0]['tags'] = ()
         content['data'][0]['name'] = ''
         content['data'][0]['filename'] = ''
-        content['data'][0]['versions'] = ''
+        content['data'][0]['versions'] = ()
         content['data'][0]['source'] = ''
         content['data'][0]['created'] = Content.GITLOG_TIME
         content['data'][0]['updated'] = Content.PYTEST_TIME

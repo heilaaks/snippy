@@ -80,7 +80,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self._category = category
         self._name = ''
         self._filename = ''
-        self._versions = ''
+        self._versions = ()
         self._source = ''
         self._uuid = self._get_external_uuid()
         self._created = timestamp
@@ -240,7 +240,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     def versions(self, value):
         """Resource versions."""
 
-        self._versions = Parser.format_string(value)
+        self._versions = Parser.format_list(value)
 
     @property
     def source(self):
@@ -421,7 +421,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         resource_str = resource_str + self.category
         resource_str = resource_str + self.name
         resource_str = resource_str + self.filename
-        resource_str = resource_str + self.versions
+        resource_str = resource_str + Const.DELIMITER_VERSIONS.join(map(Const.TEXT_TYPE, sorted(self.versions)))
         digest = hashlib.sha256(resource_str.encode('UTF-8')).hexdigest()
 
         return digest
@@ -495,7 +495,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self.category = row[Resource.CATEGORY]
         self.name = row[Resource.NAME]
         self.filename = row[Resource.FILENAME]
-        self.versions = row[Resource.VERSIONS]
+        self.versions = tuple(row[Resource.VERSIONS].split(Const.DELIMITER_VERSIONS) if row[Resource.VERSIONS] else [])
         self.source = row[Resource.SOURCE]
         self.uuid = row[Resource.UUID]
         self.created = row[Resource.CREATED]
@@ -577,7 +577,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             self.category,
             self.name,
             self.filename,
-            self.versions,
+            Const.DELIMITER_VERSIONS.join(map(Const.TEXT_TYPE, sorted(self.versions))),
             self.source,
             self.uuid,
             self.created,
@@ -672,7 +672,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         mkdn = mkdn.replace('<category>', self.category)
         mkdn = mkdn.replace('<name>', self.name)
         mkdn = mkdn.replace('<filename>', self.filename)
-        mkdn = mkdn.replace('<versions>', self.versions)
+        mkdn = mkdn.replace('<versions>', Const.DELIMITER_VERSIONS.join(self.versions))
         mkdn = mkdn.replace('<source>', self.source)
         mkdn = mkdn.replace('<uuid>', self.uuid)
         mkdn = mkdn.replace('<created>', self.created)
@@ -791,7 +791,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             text = text + meta.format(indent=indent, key='source', align=' ' * 6, value=self.source)
             text = text + meta.format(indent=indent, key='updated', align=' ' * 5, value=self.updated)
             text = text + meta.format(indent=indent, key='uuid', align=' ' * 8, value=self.uuid)
-            text = text + meta.format(indent=indent, key='versions', align=' ' * 4, value=self.versions)
+            text = text + meta.format(indent=indent, key='versions', align=' ' * 4, value=Const.DELIMITER_VERSIONS.join(self.versions))
             text = text + Const.NEWLINE
 
         # Unicode character string must be encoded for Python 2 in order

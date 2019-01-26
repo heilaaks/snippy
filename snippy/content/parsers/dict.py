@@ -57,7 +57,7 @@ class ContentParserDict(ContentParserBase):
                     resource.category = content.get('category')
                     resource.filename = self.format_string(content.get('filename', resource.filename))
                     resource.name = self.format_string(content.get('name', resource.name))
-                    resource.versions = self.format_string(content.get('versions', resource.versions))
+                    resource.versions = self.format_list(content.get('versions', resource.versions))
                     resource.source = self.format_string(content.get('source', resource.source))
                     resource.uuid = content.get('uuid', resource.uuid)
                     resource.created = content.get('created', resource.created)

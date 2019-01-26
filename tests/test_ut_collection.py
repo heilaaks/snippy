@@ -322,6 +322,6 @@ class TestUtCollection(object):
         assert resource.category == Const.SNIPPET
         assert resource.name == ''
         assert resource.filename == ''
-        assert resource.versions == ''
+        assert resource.versions == ()
         assert resource.source == ''
         assert resource.digest == '6dae3799010719ca694b86514ec404cd6b6047a2979b3dbaf75fa51576ad269c'

@@ -52,8 +52,9 @@ class Constants(object):  # pylint: disable=too-few-public-methods
     # Content delimiters to convert between string and tuple presentations.
     DELIMITER_DATA = NEWLINE
     DELIMITER_GROUPS = ','
-    DELIMITER_TAGS = ','
     DELIMITER_LINKS = NEWLINE
+    DELIMITER_TAGS = ','
+    DELIMITER_VERSIONS = ','
 
     # Separate snippet data from optional comment.
     SNIPPET_COMMENT = '  #  '

@@ -94,7 +94,7 @@ class TestUtContentParserMkdn(object):
         assert resource.links == links
         assert resource.filename == Const.EMPTY
         assert resource.name == Const.EMPTY
-        assert resource.versions == Const.EMPTY
+        assert resource.versions == ()
         assert resource.source == Const.EMPTY
         assert resource.uuid == uuid
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
@@ -197,7 +197,7 @@ class TestUtContentParserMkdn(object):
         assert resource.links == links
         assert resource.filename == Const.EMPTY
         assert resource.name == Const.EMPTY
-        assert resource.versions == Const.EMPTY
+        assert resource.versions == ()
         assert resource.source == Const.EMPTY
         assert resource.uuid == uuid
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
@@ -229,7 +229,7 @@ class TestUtContentParserMkdn(object):
         assert resource.links == links
         assert resource.filename == Const.EMPTY
         assert resource.name == Const.EMPTY
-        assert resource.versions == Const.EMPTY
+        assert resource.versions == ()
         assert resource.source == Const.EMPTY
         assert resource.uuid == uuid
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
@@ -292,7 +292,7 @@ class TestUtContentParserMkdn(object):
         assert resource.links == ()
         assert resource.filename == Const.EMPTY
         assert resource.name == Const.EMPTY
-        assert resource.versions == Const.EMPTY
+        assert resource.versions == ()
         assert resource.source == Const.EMPTY
         assert resource.uuid == uuid
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
@@ -370,7 +370,7 @@ class TestUtContentParserMkdn(object):
         assert resource.links == ()
         assert resource.filename == Const.EMPTY
         assert resource.name == Const.EMPTY
-        assert resource.versions == Const.EMPTY
+        assert resource.versions == ()
         assert resource.source == Const.EMPTY
         assert resource.uuid == uuid
         assert resource.created == '2018-05-07T11:13:17.000001+00:00'
@@ -446,7 +446,7 @@ class TestUtContentParserMkdn(object):
         assert resource.links == links
         assert resource.filename == Const.EMPTY
         assert resource.name == Const.EMPTY
-        assert resource.versions == Const.EMPTY
+        assert resource.versions == ()
         assert resource.source == Const.EMPTY
         assert resource.uuid == uuid
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
@@ -530,7 +530,7 @@ class TestUtContentParserMkdn(object):
         assert resource.links == ()
         assert resource.filename == Const.EMPTY
         assert resource.name == Const.EMPTY
-        assert resource.versions == Const.EMPTY
+        assert resource.versions == ()
         assert resource.source == Const.EMPTY
         assert resource.uuid == uuid
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
@@ -628,7 +628,7 @@ class TestUtContentParserMkdn(object):
         assert resource.links == links
         assert resource.filename == Const.EMPTY
         assert resource.name == Const.EMPTY
-        assert resource.versions == Const.EMPTY
+        assert resource.versions == ()
         assert resource.source == Const.EMPTY
         assert resource.uuid == uuid
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
@@ -725,7 +725,7 @@ class TestUtContentParserMkdn(object):
         assert resource.links == links
         assert resource.filename == Const.EMPTY
         assert resource.name == Const.EMPTY
-        assert resource.versions == Const.EMPTY
+        assert resource.versions == ()
         assert resource.source == Const.EMPTY
         assert resource.uuid == uuid
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
@@ -803,7 +803,7 @@ class TestUtContentParserMkdn(object):
         assert resource.links == ()
         assert resource.filename == Const.EMPTY
         assert resource.name == Const.EMPTY
-        assert resource.versions == Const.EMPTY
+        assert resource.versions == ()
         assert resource.source == Const.EMPTY
         assert resource.uuid == uuid
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
@@ -889,7 +889,7 @@ class TestUtContentParserMkdn(object):
         assert resource.links == ()
         assert resource.filename == Const.EMPTY
         assert resource.name == Const.EMPTY
-        assert resource.versions == Const.EMPTY
+        assert resource.versions == ()
         assert resource.source == Const.EMPTY
         assert resource.uuid == uuid
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
@@ -990,7 +990,7 @@ class TestUtContentParserMkdn(object):
         assert resource.links == links
         assert resource.filename == 'docker-example.txt'
         assert resource.name == Const.EMPTY
-        assert resource.versions == Const.EMPTY
+        assert resource.versions == ()
         assert resource.source == Const.EMPTY
         assert resource.uuid == uuid
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
@@ -1065,7 +1065,7 @@ class TestUtContentParserMkdn(object):
         assert resource.links == links
         assert resource.filename == 'kubernetes-docker-log-driver-kafka.mkdn'
         assert resource.name == Const.EMPTY
-        assert resource.versions == Const.EMPTY
+        assert resource.versions == ()
         assert resource.source == Const.EMPTY
         assert resource.uuid == uuid
         assert resource.created == '2019-01-04T10:54:49.265512+00:00'
@@ -1123,7 +1123,7 @@ class TestUtContentParserMkdn(object):
         assert resource.links == links
         assert resource.filename == Const.EMPTY
         assert resource.name == Const.EMPTY
-        assert resource.versions == Const.EMPTY
+        assert resource.versions == ()
         assert resource.source == Const.EMPTY
         assert resource.uuid == uuid
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
@@ -1175,7 +1175,7 @@ class TestUtContentParserMkdn(object):
         assert resource.links == links
         assert resource.filename == Const.EMPTY
         assert resource.name == Const.EMPTY
-        assert resource.versions == Const.EMPTY
+        assert resource.versions == ()
         assert resource.source == Const.EMPTY
         assert resource.uuid == uuid
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'

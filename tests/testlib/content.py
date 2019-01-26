@@ -483,6 +483,8 @@ class Content(object):  # pylint: disable=too-many-public-methods
                 content['tags'] = list(content['tags'])
             if 'links' in content:
                 content['links'] = list(content['links'])
+            if 'versions' in content:
+                content['versions'] = list(content['versions'])
             if 'uuid' in content:
                 content['uuid'] = Database.VALID_UUID
 

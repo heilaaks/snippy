@@ -449,18 +449,18 @@ class TestApiCreateReference(object):
                 'data': (),
                 'brief': 'short brief',
                 'description': 'longer description',
-                'groups': ('python', ),
+                'groups': ('python',),
                 'tags': ('spaces', 'tabs'),
                 'links': ('link1', 'link2'),
                 'category': 'reference',
                 'name': 'short name',
                 'filename': 'shortfilename.yaml',
-                'versions': 'short versions',
+                'versions': ('kafka=1.0.0',),
                 'source': 'short source link',
                 'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
                 'created': Content.REGEXP_TIME,
                 'updated': Content.REGEXP_TIME,
-                'digest': '8d9f1e1e92e358325fce7bea07ab2b77e2ad82cd960a9bc3146d1e3f10d21bc8'
+                'digest': '08083cf156f5f0e69cd8a1081634021141bc42aeb395d0d150fe3eb049e7f643'
             }]
         }
         request_body = {
@@ -475,14 +475,14 @@ class TestApiCreateReference(object):
                     'links': ['  link1  ', '    link2   '],
                     'name': '  short name   ',
                     'filename': '  shortfilename.yaml   ',
-                    'versions': '  short versions   ',
+                    'versions': ['  kafka=1.0.0   '],
                     'source': '  short source link   '
                 }
             }]
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '637'}
+            'content-length': '636'}
         expect_body = {
             'data': [{
                 'type': 'reference',
@@ -490,6 +490,7 @@ class TestApiCreateReference(object):
                 'attributes': content['data'][0]
             }]
         }
+        #expect_body['data'][0]['attributes']['versions'] = ['kafka=1.0.0']
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/references',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
@@ -518,7 +519,7 @@ class TestApiCreateReference(object):
                 'category': 'reference',
                 'name': '',
                 'filename': '',
-                'versions': '',
+                'versions': (),
                 'source': '',
                 'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
                 'created': Content.REGEXP_TIME,

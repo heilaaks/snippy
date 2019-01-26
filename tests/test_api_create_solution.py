@@ -391,12 +391,12 @@ class TestApiCreateSolution(object):
                 'category': 'solution',
                 'name': 'short name',
                 'filename': 'shortfilename.yaml',
-                'versions': 'short versions',
+                'versions': ('versions=1.1-alpha',),
                 'source': 'short source link',
                 'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
                 'created': Content.REGEXP_TIME,
                 'updated': Content.REGEXP_TIME,
-                'digest': '13c08502972d72e0e9b355313bc3b14eddac5c7a80b34ca2b7f401ad57048c61'
+                'digest': 'f797b9a49e526e32b728ab5f94dc62762d50bf04ceea8919591a5bce3422d73b'
             }]
         }
         request_body = {
@@ -411,14 +411,14 @@ class TestApiCreateSolution(object):
                     'links': ['  blink1  ', '    alink2   '],
                     'name': '  short name   ',
                     'filename': '  shortfilename.yaml   ',
-                    'versions': '  short versions   ',
+                    'versions': ['  versions=1.1-alpha   '],
                     'source': '  short source link   '
                 }
             }]
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '679'}
+            'content-length': '685'}
         expect_body = {
             'data': [{
                 'type': 'solution',

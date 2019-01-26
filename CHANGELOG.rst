@@ -11,16 +11,17 @@ Breaking changes
 
 * Change Markdown as default format `[1]`_.
 * Change content field ``group`` to ``groups`` `[2]`_.
-* Change UTC offset format from +0000 to +00:00 `[3]`_.
-* Change server command line options `[4]`_.
-* Change ``filter`` option behaviour `[5]`_.
-* Change ``editor`` option and add ``no-editor`` option `[6]`_.
-* Add new content field ``description`` `[7]`_.
+* Change content field ``versions`` from string to array `[3]`_.
+* Change UTC offset format from +0000 to +00:00 `[4]`_.
+* Change server command line options `[5]`_.
+* Change ``filter`` option behaviour `[6]`_.
+* Change ``editor`` option and add ``no-editor`` option `[7]`_.
+* Add new content field ``description`` `[8]`_.
 
 New features
 ~~~~~~~~~~~~
 
-* Add REST API routes for: keywords, groups, tags, uuid and digest `[8]`_.
+* Add REST API routes for: keywords, groups, tags, uuid and digest `[9]`_.
 * Add support for PostgreSQL database.
 * Add support for Markdown formatted content.
 * Add support to output search results also in Markdown format.
@@ -89,9 +90,10 @@ Security
 .. _0.1.0: https://github.com/heilaaks/snippy/compare/ce6395137b...heilaaks:v0.1.0
 .. _`[1]`: https://github.com/heilaaks/snippy/commit/f43fb510172f2dbcb86cd2cae602215f4180bdf4
 .. _`[2]`: https://github.com/heilaaks/snippy/commit/08394b6acaf8d1e0c7971e5fe4de95c04c54790b
-.. _`[3]`: https://github.com/heilaaks/snippy/commit/1b00a4d9179bf67ada56f7ee624e851e884c7f6a
-.. _`[4]`: https://github.com/heilaaks/snippy/commit/6f878407320fa1eb8834df5402db977943c55c87
-.. _`[5]`: https://github.com/heilaaks/snippy/commit/4be86cff53ea4d9cdb358ed487420a67d9f5bcbe
-.. _`[6]`: https://github.com/heilaaks/snippy/commit/6a289657e22952ad8276b0bb6062ca8e909ded77
-.. _`[7]`: https://github.com/heilaaks/snippy/commit/8d9b0558809e56ce40798f61c8636e04307743ed
-.. _`[8]`: https://app.swaggerhub.com/apis/heilaaks/snippy/1.0
+.. _`[3]`: https://github.com/heilaaks/snippy/commit/08394b6acaf8d1e0c7971e5fe4de95c04c54790b
+.. _`[4]`: https://github.com/heilaaks/snippy/commit/1b00a4d9179bf67ada56f7ee624e851e884c7f6a
+.. _`[5]`: https://github.com/heilaaks/snippy/commit/6f878407320fa1eb8834df5402db977943c55c87
+.. _`[6]`: https://github.com/heilaaks/snippy/commit/4be86cff53ea4d9cdb358ed487420a67d9f5bcbe
+.. _`[7]`: https://github.com/heilaaks/snippy/commit/6a289657e22952ad8276b0bb6062ca8e909ded77
+.. _`[8]`: https://github.com/heilaaks/snippy/commit/8d9b0558809e56ce40798f61c8636e04307743ed
+.. _`[9]`: https://app.swaggerhub.com/apis/heilaaks/snippy/1.0

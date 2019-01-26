@@ -1,5 +1,4 @@
 ## WORKING
-   - [ ] Make versions list.
    - [ ] Put merge true in cli so that get_config merge=true can be removed
    - [ ] add (?) migrate, merge, combine for cli and create resource.combine that adds the value to list of existing values.
    - [ ] Make cli update adding parameter so that the give value is included into existing list? This is problem with data but nice with links, tags groups and this could use merge?
@@ -185,7 +184,8 @@
    - [ ] Python module jsonschema has open fault that prevent splitting schema to multiple files. // https://github.com/Julian/jsonschema/issues/313
 
 ## DONE
-   - [x] Change --editor implicitly setting and added --no-editor option.
+   - [x] Changed version field from string to list.
+   - [x] Changed --editor implicitly setting and added --no-editor option.
    - [x] Changed server command line options to align with storage options.
    - [x] Removed sensitive log message that may reveal secrets.
    - [x] Changed OK cause to NOK when there we no content to be exported.

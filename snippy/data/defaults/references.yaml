@@ -21,8 +21,8 @@ data:
   - scm
   updated: '2018-06-27T10:10:16.553052+00:00'
   uuid: 33da9768-1257-4419-b6df-881e19f07bbc
-  versions: ''
+  versions: []
 meta:
   homepage: https://github.com/heilaaks/snippy
-  updated: '2019-01-03T16:59:07.296555+00:00'
+  updated: '2019-01-26T14:01:33.981872+00:00'
   version: 0.9.d

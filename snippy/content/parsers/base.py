@@ -132,11 +132,12 @@ class ContentParserBase(object):
         #           4. -t 'docker, container, cleanup'
         #           5. -t docker–testing', container-managemenet', cleanup_testing
         #           6. --sall '.'
+        #           6. kafka=1.0.0 '.'
         list_ = []
         keywords = cls._to_list(keywords)
         for tag in keywords:
             list_ = list_ + re.findall(u'''
-                [\\w–\\-\\.]+   # Python 2 and 3 compatible unicode regexp.
+                [\\w–\\-\\.\\=]+   # Python 2 and 3 compatible unicode regexp.
                 ''', tag, re.UNICODE | re.VERBOSE)
 
         if sort_:

@@ -51,7 +51,7 @@ class TestUtConfig(object):  # pylint: disable=too-many-public-methods
         assert isinstance(Config.content_links, tuple)
         assert isinstance(Config.content_name, Const.TEXT_TYPE)
         assert isinstance(Config.content_filename, Const.TEXT_TYPE)
-        assert isinstance(Config.content_versions, Const.TEXT_TYPE)
+        assert isinstance(Config.content_versions, tuple)
         assert isinstance(Config.content_source, Const.TEXT_TYPE)
         assert isinstance(Config.operation_digest, type(None))
         assert isinstance(Config.search_cat_kws, tuple)

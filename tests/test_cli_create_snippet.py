@@ -160,7 +160,7 @@ class TestCliCreateSnippet(object):
                 'category': 'snippet',
                 'name': '',
                 'filename': '',
-                'versions': '',
+                'versions': (),
                 'source': '',
                 'created': Content.REMOVE_TIME,
                 'updated': Content.REMOVE_TIME,

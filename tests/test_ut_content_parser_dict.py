@@ -51,7 +51,7 @@ class TestUtContentParserDict(object):
             'category': 'snippet',
             'name': '',
             'filename': '',
-            'versions': '',
+            'versions': [],
             'source': '',
             'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
             'created': '2015-10-14T19:56:31.000001+00:00',
@@ -70,7 +70,7 @@ class TestUtContentParserDict(object):
         assert resource.links == ()
         assert resource.filename == ''
         assert resource.name == ''
-        assert resource.versions == ''
+        assert resource.versions == ()
         assert resource.source == ''
         assert resource.uuid == '11cd5827-b6ef-4067-b5ac-3ceac07dde9f'
         assert resource.created == '2015-10-14T19:56:31.000001+00:00'
@@ -93,7 +93,7 @@ class TestUtContentParserDict(object):
             'category': 'failure',
             'name': '',
             'filename': '',
-            'versions': '',
+            'versions': (),
             'source': '',
             'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
             'created': '2015-10-14T19:56:31.000001+00:00',
@@ -120,7 +120,7 @@ class TestUtContentParserDict(object):
             'category': 'failure',
             'name': '',
             'filename': '',
-            'versions': '',
+            'versions': (),
             'source': '',
             'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
             'created': '2015-10-14T19:56:31.000001+00:00',

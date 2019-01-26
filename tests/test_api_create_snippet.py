@@ -278,7 +278,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                 'category': 'snippet',
                 'name': '',
                 'filename': '',
-                'versions': '',
+                'versions': (),
                 'source': '',
                 'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
                 'created': '2017-10-14T19:56:31.000001+00:00',
@@ -411,7 +411,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                     'category': 'snippet',
                     'name': '',
                     'filename': '',
-                    'versions': '',
+                    'versions': (),
                     'utc': '2017-10-14T19:56:31.000001+00:00',
                     'digest': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd'}}]}
         expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '582'}
@@ -663,12 +663,12 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                 'category': 'snippet',
                 'name': 'runme',
                 'filename': 'filename.txt',
-                'versions': 'versions 1.1',
+                'versions': ('version=1.1',),
                 'source': 'http://testing/snippets.html',
                 'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
                 'created': Content.FORCED_TIME,
                 'updated': Content.EXITED_TIME,
-                'digest': 'ea89da812a61078069c34bd7c45bcaca55b84e14c11b2565402bb37075d243c4'
+                'digest': 'a488856d2c0156328afa398458a4f991b2ee3c5bb4dd010f7b740777c015ae83'
             }]
         }
         request_body = {
@@ -684,7 +684,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                     'categeory': 'solution',
                     'name': 'runme',
                     'filename': 'filename.txt',
-                    'versions': 'versions 1.1',
+                    'versions': 'version=1.1',
                     'source': 'http://testing/snippets.html',
                     'created': 'invalid time',
                     'updated': 'invalid time',
@@ -694,15 +694,15 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '750'
+            'content-length': '751'
         }
         expect_body = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/ea89da812a610780'
+                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/a488856d2c015632'
             },
             'data': {
                 'type': 'snippet',
-                'id': 'ea89da812a61078069c34bd7c45bcaca55b84e14c11b2565402bb37075d243c4',
+                'id': 'a488856d2c0156328afa398458a4f991b2ee3c5bb4dd010f7b740777c015ae83',
                 'attributes': content['data'][0]
             }
         }
@@ -843,7 +843,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                 'category': 'snippet',
                 'name': '',
                 'filename': '',
-                'versions': '',
+                'versions': (),
                 'source': '',
                 'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
                 'created': '2017-10-14T19:56:31.000001+00:00',
@@ -929,12 +929,12 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                 'category': 'snippet',
                 'name': 'short name',
                 'filename': 'shortfilename.yaml',
-                'versions': 'short versions',
+                'versions': ('version=1.1.1',),
                 'source': 'short source link',
                 'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
                 'created': Content.REGEXP_TIME,
                 'updated': Content.REGEXP_TIME,
-                'digest': 'a861de558c95d7d371a5f3664a062444fd905e225c9e7ec69ae54a5b3b4197f5'
+                'digest': '9551cc17fe962ceee85cca9d22b2c2d0694970898c3e7c7a8a6ec162a5b438e7'
             }]
         }
         request_body = {
@@ -949,14 +949,14 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                     'links': ['  link2  ', '    link1   '],
                     'name': '  short name   ',
                     'filename': '  shortfilename.yaml   ',
-                    'versions': '  short versions   ',
+                    'versions': ['  version=1.1.1   '],
                     'source': '  short source link   '
                 }
             }]
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '656'}
+            'content-length': '657'}
         expect_body = {
             'data': [{
                 'type': 'snippet',
@@ -993,7 +993,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                 'category': 'snippet',
                 'name': '',
                 'filename': '',
-                'versions': '',
+                'versions': (),
                 'source': '',
                 'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
                 'created': '2017-10-14T19:56:31.000001+00:00',

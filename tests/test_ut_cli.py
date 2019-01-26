@@ -77,7 +77,7 @@ class TestUtCli(object):
         assert not cli.template
         assert cli.uuid is None
         assert cli.version is None  # Tool version
-        assert cli.versions == ''   # Content versions
+        assert cli.versions == ()   # Content versions
         assert not cli.very_verbose
 
     def test_cli_create_002(self):

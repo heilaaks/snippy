@@ -19,13 +19,13 @@ logging-tree = "==1.8"
 pytest-xdist = "==1.26.0"
 sphinx-rtd-theme = "==0.4.2"
 sphinx = "==1.8.3"
-pytest = "==4.1.0"
+pytest = "==4.1.1"
 
 [packages]
 PyYAML = ">=3.12"
 falcon = "==1.4.1"
 gunicorn = "==19.9.0"
 jsonschema = "==2.6.0"
-psycopg2-binary = "==2.7.6.1"
+psycopg2-binary = "==2.7.7"
 
 [requires]

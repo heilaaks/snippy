@@ -4,7 +4,7 @@
    - [ ] Make cli update adding parameter so that the give value is included into existing list? This is problem with data but nice with links, tags groups and this could use merge?
    - [ ] Add tests for adding fields from cli to updates/create. Does the CLI merge option work (seems to work like needed for API which is not logical for CLI - remove from CLI)? For CLI the merge would indicate likely that "add this new link to existing link list"
    - [ ] Add more tests for --(no)-editor options for all content classes and operations.
-   - [ ] Why new mkdn log driver kafka solution does not have brief in quotations in defaults?
+   - [ ] Why new mkdn log driver kafka solution does not have description in quotations in defaults?  This is normal YAML behaviour?
    - [ ] Document and test that update now also supports --format option and the default is Markdown.
    - [ ] Convert all solutions to Markdown format and write proper history that summarieses the Markdown and link it to change history when two MD items below are cloded.
    - [ ] CLI interface does not update default template with provided parameters like tags, groups, etc from command line. This should be placed on top of default empty template if provided.

@@ -42,7 +42,7 @@ extras_server = (
     'falcon==1.4.1',
     'gunicorn==19.9.0',
     'jsonschema==2.6.0',
-    'psycopg2-binary==2.7.6.1'
+    'psycopg2-binary==2.7.7'
 )
 extras_tests = (
     'codecov==2.0.15',
@@ -53,7 +53,7 @@ extras_tests = (
     'pyflakes==1.6.0',
     'pylint==1.9.3 ; python_version=="2.7.*"',
     'pylint==2.2.2 ; python_version>"2.7"',
-    'pytest==4.1.0',
+    'pytest==4.1.1',
     'pytest-cov==2.6.1',
     'pytest-mock==1.10.0',
     'pytest-xdist==1.26.0',

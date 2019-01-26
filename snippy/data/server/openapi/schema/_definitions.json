@@ -249,7 +249,10 @@
           "description": "Optional filename that that defines automatically used filename when content is exported."
         },
         "versions": {
-          "type": "string",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
           "description": "Optional list of services and versions related to the content."
         },
         "source": {

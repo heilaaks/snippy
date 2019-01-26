@@ -564,6 +564,55 @@ class TestApiUpdateReference(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @pytest.mark.usefixtures('import-gitlog', 'update-pytest-utc')
+    def test_api_update_reference_011(self, server):
+        """Update reference with PATCH request.
+
+        Call PATCH /v1/references/<digest> to update existing reference with
+        specified digest. The PATCH sets the data field empty. This should
+        result OK. The data field is not used with references and it cannot
+        contain any additional information for the client. From the client
+        point of view, the data is always empty.
+        """
+
+        content = {
+            'data': [
+                Content.deepcopy(Reference.GITLOG)
+            ]
+        }
+        content['data'][0]['created'] = Content.GITLOG_TIME
+        content['data'][0]['updated'] = Content.PYTEST_TIME
+        request_body = {
+            'data': {
+                'type': 'reference',
+                'attributes': {
+                    'data': None
+                }
+            }
+        }
+        expect_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '701'
+        }
+        expect_body = {
+            'links': {
+                'self': 'http://falconframework.org/snippy/api/app/v1/references/5c2071094dbfaa33'
+            },
+            'data': {
+                'type': 'reference',
+                'id': content['data'][0]['digest'],
+                'attributes': content['data'][0]
+            }
+        }
+        result = testing.TestClient(server.server.api).simulate_patch(
+            path='/snippy/api/app/v1/references/5c2071094dbfaa33',
+            headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
+            body=json.dumps(request_body))
+        assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(content)
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

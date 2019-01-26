@@ -174,6 +174,10 @@ class JsonSchema(object):  # pylint: disable=too-few-public-methods
     In case of creating content, the content data or links are mandatory. In
     case of content updates, it is possible to leave data and links fields
     out from REST API request.
+
+    In case of content update, it is possible to set the data field empty
+    from schema validation point of view. The reason is that the reference
+    content does not mandate a value in data field.
     """
 
     CONTENT_CREATE = {
@@ -204,7 +208,7 @@ class JsonSchema(object):  # pylint: disable=too-few-public-methods
             "attributes": {
                 "type": "object",
                 "properties": {
-                    "data": {"type": ["string", "array"]},
+                    "data": {"type": ["string", "array", "null"]},
                     "brief": {"type": ["string", "null"]},
                     "links": {"type": ["string", "array", "null"]}
                 }

@@ -774,7 +774,28 @@ data:
   updated: '2018-09-08T12:44:23.520766+00:00'
   uuid: 2a9354d7-b111-4163-a6e5-492c6fada5f2
   versions: []
+- brief: Search git commit logs
+  category: snippet
+  created: '2019-01-26T16:21:01.001938+00:00'
+  data:
+  - git log --grep=word
+  - git log --grep="foo" --grep="bar" --all-match
+  description: ''
+  digest: 4458209d68f34102241df71673bb08b885aaa57653cca8a9b279d84da19ed9e0
+  filename: ''
+  groups:
+  - git
+  links:
+  - https://stackoverflow.com/a/1340245
+  - https://stackoverflow.com/a/52065732
+  name: ''
+  source: ''
+  tags:
+  - git
+  updated: '2019-01-26T16:21:01.001938+00:00'
+  uuid: acd90500-2cfc-4c95-9aa4-d3d414474473
+  versions: []
 meta:
   homepage: https://github.com/heilaaks/snippy
-  updated: '2019-01-26T16:14:47.664563+00:00'
+  updated: '2019-01-26T16:24:28.114549+00:00'
   version: 0.9.d

@@ -1,9 +1,10 @@
 ## WORKING
-   - [ ] FIx updating mkdn formatted snippet content data. Adding prune was not working.
+   - [ ] Fix updating mkdn formatted snippet content data. Adding prune was not working.
    - [ ] Fix help text to use import --all instead of content specific commands.
    - [ ] Convert all solutions to Markdown format and write proper history that summarieses the Markdown and link it to change history when two MD items below are cloded.
    - [ ] Add changelog to README.
    - [ ] Release 0.9.0.
+   - [ ] Why there is operation: on_get :duration log after the first get with incorrect OID? This happens only once for the very first GET after server startup.
    - [ ] Document and test that update now also supports --format option and the default is Markdown.
    - [ ] Add support to read storage and server options from env variables.
    - [ ] Why starting server calls collection initialization 4 times?

@@ -32,7 +32,7 @@ from snippy.meta import __version__
 
 
 class Cli(ConfigSourceBase):
-    """CLI argument management."""
+    """CLI argument parsing."""
 
     ARGS_COPYRIGHT = (
         'Snippy version ' + __version__ + ' - license GNU AGPLv3 or later',
@@ -146,13 +146,13 @@ class Cli(ConfigSourceBase):
         parameters = Cli._parse_args(args)
         Cli._set_editor(parameters)
         Cli._set_format(parameters)
-        # CLI always updates existing content if it exit exist (merge). This
-        # prevents updating empty values on top of existing content from the
-        # command line configuration. The below example allows defining only
-        # tags on top of existing content.
+        # CLI always updates existing content if it exit exists (merge). This
+        # prevents updating empty values on top of already defined content 
+        # attributes from the command line. The example below allows defining
+        # only tags on top of existing content tag attribute.
         #
         # The merge option has relevance in API where it allows different
-        # behaviour with PUT and PATCH.
+        # behaviour between PUT and PATCH methods.
         #
         # $ snippy update -d f3fd167c64b6f97e --tags new,tags,from,cli
         parameters['merge'] = True
@@ -244,7 +244,8 @@ class Cli(ConfigSourceBase):
         # The argparse module will exit with support options help or version
         # and when argument parsing fails. The --no-ansi flag is needed before
         # custom help action. Because of this, help and positional arguments
-        # are not included when the first set of options is parsed.
+        # are not included when the first set of options is parsed to read the
+        # needed flags for help commads.
         #
         # Positional arguments are not included into the first parsing in
         # order to get the --help <option> combination to work. The <option>
@@ -278,11 +279,12 @@ class Cli(ConfigSourceBase):
         """Enforce editor implicitly.
 
         The no-editor option always prevents implicit usage of editor.
-        In other cases editor is used by default for create and update
+        In other cases, editor is used by default for create and update
         operations.
 
         Only if user provided mandatory links for reference or data for
-        other content types in create operation, editor is not used.
+        other content types in create operation, editor is not used by
+        default.
         """
 
         if parameters['failure'] or parameters['no_editor']:

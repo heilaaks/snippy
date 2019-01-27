@@ -21,8 +21,8 @@ data:
   - '   ```'
   - ''
   - '## Commands'
-  - '    '
-  - '   ```    '
+  - ''
+  - '   ```'
   - '   # Install on Fedora 38'
   - '   > https://www.cyberciti.biz/faq/how-to-install-and-setup-lxc-linux-container-on-fedora-linux-26/'
   - '   $ yum install lxc lxc-templates lxc-extra debootstrap libvirt perl gpg # Fedora

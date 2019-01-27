@@ -147,7 +147,7 @@ class Cli(ConfigSourceBase):
         Cli._set_editor(parameters)
         Cli._set_format(parameters)
         # CLI always updates existing content if it exit exists (merge). This
-        # prevents updating empty values on top of already defined content 
+        # prevents updating empty values on top of already defined content
         # attributes from the command line. The example below allows defining
         # only tags on top of existing content tag attribute.
         #

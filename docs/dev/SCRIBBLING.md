@@ -1138,26 +1138,42 @@ python runner import --defaults --reference
 ## Releasing
 #######################################
 
-    # Check long description
-    $ python setup.py check --restructuredtext
+    # Update setuptools
+    $ pip install pip setuptools wheel twine --upgrade
+
+    # Change version in meta.py
+    > 0.9.0
+    $ grep -rn ./ -e "0\.9\.d"
+
+    # Change version in default content yaml files
+    $ make clean
+    $ make clean-db
+    $ python runner import --defaults --all
+    $ python runner export --defaults --all
+    
+    # Test all
+    $ make test-all
+
+    # Genrate wheels and test distribution.
+    > https://github.com/pypa/readme_renderer/issues/133
+    $ pip install cmarkgfm  # This provides the readme_render.
+    $ python setup.py sdist bdist_wheel
+    $ twine check dist/*
     $ pip install collective.checkdocs
     $ python setup.py checkdocs
-    $ st2html.py README.rst  > /tmp/test.html
-    $ python setup.py check --restructuredtext
 
     # Test PyPI
     > https://testpypi.python.org/pypi
     > https://pypi.python.org/pypi/snippy
-    > https://pypi.python.org/pypi/html2text
     $ python setup.py sdist bdist_wheel
-    $ python setup.py sdist upload -r testpypi
+    $ twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 
     # Testing in test PyPI.
     $ make clean
     $ make clean-db
     $ python setup.py sdist # Build source distribution
     $ python setup.py sdist bdist_wheel
-    $ python setup.py sdist upload -r testpypi
+    $ twine upload --repository-url https://test.pypi.org/legacy/ dist/*
     $ sudo pip uninstall snippy -y
     $ sudo pip3 uninstall snippy -y
     $ sudo pip install --index-url https://test.pypi.org/simple/ snippy
@@ -1183,6 +1199,13 @@ python runner import --defaults --reference
     # Push docker hub with Fedora
     $ su
     $ make docker
+    $ docker run -d --name postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres --storage-type
+    $ docker run heilaaks/snippy search --sall .
+    $ docker run -d --net="host" --name snippy heilaaks/snippy --server-host 127.0.0.1:8080 --log-json -vv
+    $ docker run -d --net="host" --name snippy heilaaks/snippy --server-host 127.0.0.1:8080 --storage-type postgresql --storage-host localhost:5432 --storage-database postgres --storage-user postgres --storage-password postgres --log-json -vv
+    $ curl -X POST "http://127.0.0.1:8080/snippy/api/app/v1/snippets" -H "accept: application/vnd.api+json; charset=UTF-8" -H "Content-Type: application/vnd.api+json; charset=UTF-8" -d '{"data":[{"type": "snippet", "attributes": {"data": ["row1", "row2"]}}]}'
+    $ curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets" -H "accept: application/vnd.api+json"
+    $ docker logs snippy
     $ docker rm $(docker ps --all -q -f status=exited)
     $ docker images -q --filter dangling=true | xargs docker rmi
     $ docker images

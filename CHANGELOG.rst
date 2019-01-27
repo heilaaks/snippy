@@ -88,7 +88,7 @@ Security
 .. _0.6.0: https://github.com/heilaaks/snippy/compare/v0.5.0...heilaaks:v0.6.0
 .. _0.5.0: https://github.com/heilaaks/snippy/compare/v0.1.0...heilaaks:v0.5.0
 .. _0.1.0: https://github.com/heilaaks/snippy/compare/ce6395137b...heilaaks:v0.1.0
-.. _`[1]`: https://github.com/heilaaks/snippy/commit/f43fb510172f2dbcb86cd2cae602215f4180bdf4
+.. _`[1]`: https://github.com/heilaaks/snippy/commit/83aa4bb3072fe0fbb5a1c0477ba99c477fc0a3a2
 .. _`[2]`: https://github.com/heilaaks/snippy/commit/08394b6acaf8d1e0c7971e5fe4de95c04c54790b
 .. _`[3]`: https://github.com/heilaaks/snippy/commit/f9fadb04d26d3fbc75d12c198d9b1fff1d10cf90
 .. _`[4]`: https://github.com/heilaaks/snippy/commit/1b00a4d9179bf67ada56f7ee624e851e884c7f6a

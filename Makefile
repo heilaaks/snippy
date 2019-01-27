@@ -67,12 +67,13 @@ clean:
 	find . \( -name \*.pyc -o -name \*.pyo -o -name __pycache__ \) -prune -exec rm -rf {} +
 	rm -drf .cache
 	rm -drf .coverage
+	rm -drf .pytest_cache
 	rm -drf .tox
 	rm -dfr build
 	rm -dfr dist
 	rm -drf docs/build/*
 	rm -drf htmlcov
-	rm -drf .pytest_cache
+	rm -drf pip-wheel-metadata
 	rm -drf snippy.egg-info
 	rm -f .coverage.*
 	rm -f coverage.xml

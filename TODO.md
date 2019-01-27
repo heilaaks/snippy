@@ -1,7 +1,7 @@
 ## WORKING
    - [ ] Fix help text to use import --all instead of content specific commands.
-   - [ ] Convert all solutions to Markdown format and write proper history that summarieses the Markdown and link it to change history when two MD items below are cloded.
    - [ ] Release 0.9.0.
+   - [ ] Why there is : e-- in some outputs for solutions?
    - [ ] Why there is operation: on_get :duration log after the first get with incorrect OID? This happens only once for the very first GET after server startup.
    - [ ] Document and test that update now also supports --format option and the default is Markdown.
    - [ ] Add support to read storage and server options from env variables.
@@ -180,6 +180,7 @@
    - [ ] Python module jsonschema has open fault that prevent splitting schema to multiple files. // https://github.com/Julian/jsonschema/issues/313
 
 ## DONE
+   - [x] Changed all solutions to Markdown format by default.
    - [x] Changed version field from string to list.
    - [x] Changed --editor implicitly setting and added --no-editor option.
    - [x] Changed server command line options to align with storage options.

@@ -450,13 +450,21 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     def merge(self, source, validate=True):
         """Merge two resources.
 
-        This overrides original resource fields only if the merged source
-        fields exists. Only the fields that can be modified by end user are
-        updated.
+        Override resource attributes only if the merged source attributes
+        have values. Only the attributes that can be modified by a client
+        are updated.
+
+        The validate flag defines if the merged resource is validated.
+
+        Args:
+           validate (bool): Defines if the content is validated.
+
+        Returns:
+            bool: If the source was merged successfully.
         """
 
         if not source:
-            return None
+            return False
 
         self._logger.debug('merge to resouce: %.16s', self.digest)
         if source.data:

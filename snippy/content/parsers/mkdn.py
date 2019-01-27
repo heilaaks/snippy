@@ -40,6 +40,8 @@ class ContentParserMkdn(ContentParserBase):
         (
             (?:-\s+.*$\n\s*\n)?     # Catch one line optional comment followed by one empty line.
             \s.*`\$.*`              # Catch one line mandatory command indicated by dollar sign between grave accents (`).
+                                    # It is not possible to loosen this because the command may contain quotation marks or
+                                    # backtics (grave accents). The `$ ` combination is needed to reliably identiy command.
         ){1}                        # Catch only one optional command and mandatory command.
         ''', re.MULTILINE | re.VERBOSE)
     REGEXP['data'][Const.SOLUTION] = re.compile(r'''
@@ -188,9 +190,16 @@ class ContentParserMkdn(ContentParserBase):
         return self.format_data(category, data)
 
     def _snippet_data(self, text):
-        """Parse snippet data from Markdown formatted string."""
+        """Parse snippet data from Markdown formatted string.
 
-        data = ''
+        Args:
+            text (str): Whole snippet data section as a string.
+
+        Returns:
+            tuple: List of commands with optional comments.
+        """
+
+        data = []
         for command in text:
             match = re.compile(r'''
                 (?:                             # Match optional comment inside non-capturing set.
@@ -203,14 +212,14 @@ class ContentParserMkdn(ContentParserBase):
                 ''', re.MULTILINE | re.VERBOSE).search(command)
             if match:
                 if match.group('comment'):
-                    data = data + match.group('command') + Const.SNIPPET_COMMENT + match.group('comment') + Const.NEWLINE
+                    data.append(match.group('command') + Const.SNIPPET_COMMENT + match.group('comment'))
                 else:
-                    data = data + match.group('command') + Const.NEWLINE
+                    data.append(match.group('command'))
                 self._logger.debug('parsed snippet data: %s', data)
             else:
                 self._logger.debug('parser did not find snippet data data: %s', command)
 
-        return data
+        return tuple(data)
 
     def _read_brief(self, category, text):
         """Read content brief from text string.

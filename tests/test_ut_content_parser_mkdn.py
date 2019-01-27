@@ -453,6 +453,79 @@ class TestUtContentParserMkdn(object):
         assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
         assert resource.digest == digest
 
+    def test_parser_snippet_006(self):
+        """Test parsing snippet.
+
+        Try parsing snippet data with incorrectly formatted snippets. It is
+        not possible to loosen the parsin conditions because the commands may
+        contain almost any characters. Because of this, the format of the
+        command with leading dollar sign and surrounded by backtics (`) must
+        be followed. Because of this, only one command from this case must
+        be parsed.
+        """
+
+        text = Const.NEWLINE.join((
+            '# Remove all exited containers and dangling images @docker',
+            '',
+            '> Remove all exited containers and dangling images. The command examples  ',
+            'first remove all exited containers and the all dangling images.',
+            '',
+            '> [1] https://docs.docker.com/engine/reference/commandline/images/  ',
+            '> [1] https://docs.docker.com/engine/reference/commandline/rm/  ',
+            '> [11] https://docs.docker.com/engine/reference/commandline/test/',
+            '',
+            'docker rm $(docker ps --all -q -f status=exited)',
+            'docker ps -a',
+            '`$ docker rm $(docker ps --all -q -f status=exited)`',
+            '$ docker images -q --filter dangling=true | xargs docker rmi',
+            'docker exec -it $(docker ps | egrep -m 1 \'kibana:latest\' | awk \'{print $1}\') /bin/bash',
+            '',
+            '## Meta',
+            '',
+            '> category : snippet  ',
+            'created  : 2017-10-12T11:52:11.000001+00:00  ',
+            'digest   : 0a8b31f0ab442991e56dcaef1fc65aa6bff479c567e04dd7990948f201187c69  ',
+            'filename :   ',
+            'name     :   ',
+            'source   :   ',
+            'tags     : cleanup, container, docker, docker-ce, moby  ',
+            'updated  : 2017-10-12T11:52:11.000001+00:00  ',
+            'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
+            'versions :',
+            '',
+        ))
+        data = ('docker rm $(docker ps --all -q -f status=exited)',)
+        brief = 'Remove all exited containers and dangling images'
+        description = ('Remove all exited containers and dangling images. The command examples ' +
+                       'first remove all exited containers and the all dangling images.')
+        groups = ('docker',)
+        tags = ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
+        links = (
+            'https://docs.docker.com/engine/reference/commandline/images/',
+            'https://docs.docker.com/engine/reference/commandline/rm/',
+            'https://docs.docker.com/engine/reference/commandline/test/'
+        )
+        uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
+        digest = 'b1ddb8f29d857a9f654c99a5c1c46cb1fd6d71aa321d4ba4063e9ae549a2b63d'
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
+        assert resource.category == Const.SNIPPET
+        assert resource.data == data
+        assert resource.brief == brief
+        assert resource.groups == groups
+        assert resource.description == description
+        assert resource.tags == tags
+        assert resource.links == links
+        assert resource.filename == Const.EMPTY
+        assert resource.name == Const.EMPTY
+        assert resource.versions == ()
+        assert resource.source == Const.EMPTY
+        assert resource.uuid == uuid
+        assert resource.created == '2017-10-12T11:52:11.000001+00:00'
+        assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
+        assert resource.digest == digest
+
     def test_parser_solution_001(self):
         """Test parsing solution.
 

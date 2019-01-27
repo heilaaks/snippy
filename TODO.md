@@ -1,5 +1,4 @@
 ## WORKING
-   - [ ] Fix updating mkdn formatted snippet content data. Adding prune was not working.
    - [ ] Fix help text to use import --all instead of content specific commands.
    - [ ] Convert all solutions to Markdown format and write proper history that summarieses the Markdown and link it to change history when two MD items below are cloded.
    - [ ] Release 0.9.0.

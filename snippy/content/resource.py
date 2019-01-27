@@ -54,7 +54,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     DIGEST = 15
 
     SNIPPET_TEMPLATE_TEXT = 'b4bedc2603e3b9ea95bcf53cb7b8aa6efa31eabb788eed60fccf3d8029a6a6cc'
-    SNIPPET_TEMPLATE_MKDN = 'd3d97da5397794cce15ed9a2778eb1350ac2c8aa07599e21955619145ed977ce'
+    SNIPPET_TEMPLATE_MKDN = 'c6744ff5c433d48cb3a54044722e808ee0d73776ceccaab975b5005bc449cd92'
     SOLUTION_TEMPLATE_TEXT = 'e4157216f2f620421a90a57aa874a831a876b780a66f5311406129bdd6591ab3'
     SOLUTION_TEMPLATE_MKDN = '3c1ddd75eeb6f32aab002a719638ab4849016a35dfe63b84da93a4c041426a8f'
     REFERENCE_TEMPLATE_TEXT = 'e0cd55c650ef936a66633ee29500e47ee60cc497c342212381c40032ea2850d9'
@@ -321,6 +321,8 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         """
 
         if self._is_empty():
+            if template_format == Const.CONTENT_FORMAT_MKDN and category == Const.SNIPPET:
+                self.data = ('commands between backtics and prefixed by dollar sign',)
             if not self.brief:
                 self.brief = 'Add brief title for content'
             if not self.description:
@@ -663,15 +665,8 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         the metadata in the Markdown template.
         """
 
-        # This removes two unnecessary newlines from empty Markdown template
-        # for snippet content. There was no other way found to make this nice
-        # for end user.
-        data = '<data>'
-        if self._is_template() and self.is_snippet():
-            data = '<data>\n\n'
-
         mkdn = templates['mkdn'][self.category]
-        mkdn = mkdn.replace(data, self._dump_mkdn_data())
+        mkdn = mkdn.replace('<data>', self._dump_mkdn_data())
         mkdn = mkdn.replace('<brief>', self.brief)
         mkdn = mkdn.replace('<description>', textwrap.fill(self.description, 88).replace('\n', '  \n'))
         mkdn = mkdn.replace('<groups>', Const.DELIMITER_GROUPS.join(self.groups))

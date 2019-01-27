@@ -9,8 +9,8 @@ troubleshooting workflows by collecting command examples, troubleshooting
 solutions and links into one content manager. The tool may be helpful for
 example when working with different open source components that all have
 different configuration settings and troubleshooting methods. You can share
-the best examples through common data serialization languages YAML or JSON
-or from a REST API server.
+the best examples in Markdown format or through common data serialization
+languages YAML or JSON or from a REST API server.
 
 Content is divided into three categories called snippets, solutions and
 references. Snippets are short command examples. Solutions are longer
@@ -118,6 +118,12 @@ default content for snippets and solutions.
    snippy import --snippets --defaults
    snippy import --solutions --defaults
    snippy import --references --defaults
+
+It is possible to import the default content also with one command.
+
+.. code-block:: text
+
+   snippy import --defaults --all
 
 Using docker container
 ----------------------

@@ -85,7 +85,7 @@ data:
   - '## Whiteboard'
   - ''
   description: Instructions how to debug LXC containers.
-  digest: 91985a856c5fbe7f33d7b86bb021f29b0cd04e45fc968c9007ead9b0bde778ff
+  digest: b5223da1f268d62cd5104f87693c0429a33a5f00769317a6f20bad32a2dbe6c9
   filename: howto-debug-lxc-containers.mkdn
   groups:
   - containers
@@ -1058,5 +1058,5 @@ data:
   versions: []
 meta:
   homepage: https://github.com/heilaaks/snippy
-  updated: '2019-01-27T13:20:22.023736+00:00'
-  version: 0.9.d
+  updated: '2019-01-27T13:55:04.552002+00:00'
+  version: 0.9.0

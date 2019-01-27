@@ -160,10 +160,11 @@ class Collection(object):  # pylint: disable=too-many-public-methods
     def merge(self, source):
         """Merge a resource to collection.
 
-        Merge content into existing resource and return new message digest
-        from the content merger. If the content source does not exist it
-        causes a migrage operation. In case of migrate, the source digest
-        is always correct and it can be directy returned.
+        Merge content into existing resource or create new content. Returns
+        the message digest after merging the content.
+
+        If content source does not exist in the collection it causes migrage
+        operation.
 
         This method cannot merge a collection because so far there has been
         no need for it.
@@ -172,7 +173,7 @@ class Collection(object):  # pylint: disable=too-many-public-methods
             source (Resource): Resource to be merged to collection.
 
         Returns:
-            str: The new message digest after merging the resource.
+            str: None or message digest after merging the source.
         """
 
         digest = None
@@ -185,17 +186,29 @@ class Collection(object):  # pylint: disable=too-many-public-methods
             if self[source.digest].merge(source):
                 digest = self[source.digest].digest
             else:
-                del self[source.digest]
+                self._logger.debug('merging content to existing resource failed: {}'.format(Logger.remove_ansi(str(source))))
+                try:
+                    del self[source.digest]
+                except KeyError:
+                    self._logger.info('unexpected failure to delete existing content: {}'.format(Logger.remove_ansi(str(source))))
         else:
             if self.migrate(source):
                 digest = source.digest
             else:
-                del self[source.digest]
+                self._logger.debug('migrating new content to collection failed: {}'.format(Logger.remove_ansi(str(source))))
+                try:
+                    del self[source.digest]  # This should never be executed. But just in case of an error in above migrate method.
+                except KeyError:
+                    pass
 
         return digest
 
     def convert(self, rows):
-        """Convert database rows into collection."""
+        """Convert database rows into collection.
+
+        Args:
+            rows (tuple): List of database rows to me migrated to collection.
+        """
 
         for row in rows:
             resource = Resource()

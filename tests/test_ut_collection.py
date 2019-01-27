@@ -95,8 +95,17 @@ class TestUtCollection(object):
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+        # Access non existent resource from collection.
         with pytest.raises(KeyError):
             resource = collection[0]
+
+        # Delete non existent resource from collection with string.
+        with pytest.raises(KeyError):
+            del collection['012123']
+
+        # Delete non existent resource from collection with number.
+        with pytest.raises(KeyError):
+            del collection[0]
 
     @pytest.mark.usefixtures('uuid')
     def test_collection_operations_002(self, capsys):  # pylint: disable=too-many-branches

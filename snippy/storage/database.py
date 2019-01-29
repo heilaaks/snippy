@@ -19,13 +19,17 @@
 
 """database: Database management."""
 
-import re
 import os.path
+import re
 import sqlite3
+import sys
 import traceback
+import warnings
 from contextlib import closing
 
 try:
+    if not sys.warnoptions:
+        warnings.filterwarnings("ignore", category=UserWarning, module='psycopg2')
     import psycopg2
 except ImportError:
     class psycopg2(object):  # noqa pylint: disable=C,R

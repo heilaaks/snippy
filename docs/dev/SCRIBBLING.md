@@ -68,7 +68,7 @@ Random notes and scribling during development.
 
    ```
    # Install PyPy and run tests.
-   $ sudo dnf install pypu
+   $ sudo dnf install pypy
    $ export PYTHONPATH=/usr/lib64/python2.7/site-packages/
    $ wget https://bootstrap.pypa.io/get-pip.py
    $ sudo pypy get-pip.py
@@ -1167,7 +1167,7 @@ python runner import --defaults --reference
     > https://pypi.python.org/pypi/snippy
     $ python setup.py sdist bdist_wheel
     $ twine upload --repository-url https://test.pypi.org/legacy/ dist/*
-
+.
     # Testing in test PyPI.
     $ make clean
     $ make clean-db

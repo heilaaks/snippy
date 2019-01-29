@@ -2,11 +2,14 @@
    - [ ] Release 0.9.0.
    - [ ] Why there is : e-- in some outputs for solutions?
    - [ ] Cleand dockerfile. Python version in commands. Try to get 3.7. Make COPY psycopg2 version agnostic. Try to use psy-binary? Hack to rename psy to spy_binary.
-   - [ ] When installing psycopg2 (not binary), there is AttributeError: type object 'psycopg2' has no attribute 'connect
+   - [ ] When installing psycopg2 (not binary), there is AttributeError: type object 'psycopg2' has no attribute 'connect
+   - [ ] How to compile psycopg2 for PyPY?
+   - [ ] How to compile psycopg2 for Alpine MUSL container?
+   - [ ] Errors do no print returning JSON in beautified format.
    - [ ] Snippy does not tolerate second connect? If there are two servers to one Postgre, there is an error coming from Snippy?
    - [ ] How to import defaults with Postgre with container? Command line in container imports to sqlite? The container CLI reads from local sqlite files but the REST correctly from postgreSQL. (doh, the CLI is another instance from snippy container)
    - [ ] Fix help text to use import --all instead of content specific commands. Or keep?
-   - [ ] Exporting template with --template still uses text format.
+   - [ ] Exporting template with --template still uses text format.
    - [ ] Why there is operation: on_get :duration log after the first get with incorrect OID? This happens only once for the very first GET after server startup.
    - [ ] Document and test that update now also supports --format option and the default is Markdown.
    - [ ] Add support to read storage and server options from env variables.

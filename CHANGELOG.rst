@@ -97,4 +97,4 @@ Security
 .. _`[7]`: https://github.com/heilaaks/snippy/commit/6a289657e22952ad8276b0bb6062ca8e909ded77
 .. _`[8]`: https://github.com/heilaaks/snippy/commit/8d9b0558809e56ce40798f61c8636e04307743ed
 .. _`[9]`: https://app.swaggerhub.com/apis/heilaaks/snippy/1.0
-.. _`[10]`: https://github.com/heilaaks/snippy/commit/83aa4bb3072fe0fbb5a1c0477ba99c477fc0a3a2
+.. _`[10]`: https://github.com/heilaaks/snippy/commit/6e60886d5f78d49952cd6b977db3a9b6f803f092

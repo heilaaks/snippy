@@ -22,7 +22,7 @@ New features
 ~~~~~~~~~~~~
 
 * Add REST API routes for: keywords, groups, tags, uuid and digest `[9]`_.
-* Add support for PostgreSQL database.
+* Add experimental support for PostgreSQL database `[10]`_.
 * Add support for Markdown formatted content.
 * Add support to output search results also in Markdown format.
 * Add one command to export and import all default content.
@@ -97,3 +97,4 @@ Security
 .. _`[7]`: https://github.com/heilaaks/snippy/commit/6a289657e22952ad8276b0bb6062ca8e909ded77
 .. _`[8]`: https://github.com/heilaaks/snippy/commit/8d9b0558809e56ce40798f61c8636e04307743ed
 .. _`[9]`: https://app.swaggerhub.com/apis/heilaaks/snippy/1.0
+.. _`[10]`: https://github.com/heilaaks/snippy/commit/83aa4bb3072fe0fbb5a1c0477ba99c477fc0a3a2

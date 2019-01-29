@@ -1,29 +1,84 @@
 Releasing
 ---------
 
-#. Preparations
+Preparations
+~~~~~~~~~~~~
 
-   1. Update version number in meta.py.
-   1. Update the CHANGELOG.rst.
-   1. Updated README.rst and documentation.
-
-#. Run tests
+   #. Update Python setuptools, wheels and Twine.
+   #. Update version number in meta.py.
+   #. Update version numbers in default content.
+   #. Update the CHANGELOG.rst.
+   #. Updated README.rst and documentation.
 
    .. code-block:: text
 
+      export DEVEL_VERSION="0\.9\.d"
+      export RELEASE_VERSION="0\.9\.0"
+
+      # Update Python setuptools, wheels and Twine.
+      pip install pip setuptools wheel twine --upgrade
+
+      # Update version numbers in default content.
+      make clean
+      make clean-db
+      python runner import --defaults --all
+      python runner export --defaults --all
+
+      # Test that version numbers were updated.
+      grep -rn ./ -e ${DEVEL_VERSION}
+
+Run tests with CPython
+~~~~~~~~~~~~~~~~~~~~~~
+
+   .. code-block:: text
+
+      make clean
+      make clean-db
       make test
       make lint
       make docs
       tox
       python setup.py check --restructuredtext
 
-#. Test installation
+Run tests with PyPy
+~~~~~~~~~~~~~~~~~~~
+
+   .. code-block:: text
+
+      # Example installation for Fedora 28. Comment psycopg2 out from setup.py because
+      # psycopg2 replacement psycopg2cffi has not been so far to get installed with PyPy.
+      make clean
+      make clean-db
+      dnf install pypy
+      pypy -m ensurepip
+      pypy -m pip install --upgrade pip wheel
+      pypy -m pip install --editable .[dev]
+      pypy -m pytest -x ./tests/test_*.py --cov snippy -m "not serial"
+      pypy runner --help
+      pypy runner import --defaults --all
+      pypy runner --server-host 127.0.0.1:8080 -vv
+      curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=4" -H "accept: application/vnd.api+json"
+
+Run tests with PostgreSQL
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   .. code-block:: text
+
+      # The test-all target runs test with Sqlite and PostgreSQL.
+      docker run -d --name postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres
+      make clean
+      make clean-db
+      make test-all
+      make test-postgresql
+
+Test local installation
+~~~~~~~~~~~~~~~~~~~~~~~
 
    .. code-block:: text
 
       make clean
       make clean-db
-      pip uninstall snippy
+      pip uninstall snippy -y
       pip install . --user
       snippy --help
       snippy import --defaults
@@ -35,80 +90,71 @@ Releasing
       snippy import --defaults --solutions --storage-path ${HOME}/devel/temp
       snippy import --defaults --references --storage-path ${HOME}/devel/temp
       snippy --server-host 127.0.0.1:8080 --storage-path ${HOME}/devel/temp &
-      curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json" | python -m json.tool
+      curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=4" -H "accept: application/vnd.api+json"
       pkill snippy
 
-#. Test with PyPI
+Test docker installation
+~~~~~~~~~~~~~~~~~~~~~~~~
 
    .. code-block:: text
 
-      # Install the tool into test PyPI.
+      # Compile docker image.
+      su
       make clean
       make clean-db
-      python setup.py sdist bdist_wheel upload -r testpypi # repository: https://test.pypi.org/legacy/ in ~/.pypirc
-      sudo pip uninstall snippy -y
-      pip uninstall snippy -y
-
-      # Set path to local user bin and install the tool from test PyPI.
-      PATH=$HOME/.local/bin:$PATH
-      pip install --user --index-url https://test.pypi.org/simple/ snippy
-      snippy --help
-      snippy import --defaults
-      snippy import --defaults --solutions
-      snippy search --sall docker
-      
-      # Run all example commands from top down from:
-      snippy --help
-      snippy --help examples
-      
-      # Uninstall
-      pip uninstall snippy -y
-
-#. Test with Docker
-
-   .. code-block:: text
-
-      su
       make docker
       docker rm $(docker ps --all -q -f status=exited)
       docker images -q --filter dangling=true | xargs docker rmi
       docker images
-      docker rmi heilaaks/snippy:v0.7.0
+      docker rmi heilaaks/snippy:v0.8.0
       docker rmi docker.io/heilaaks/snippy:latest
-      docker rmi docker.io/heilaaks/snippy:v0.7.0
+      docker rmi docker.io/heilaaks/snippy:v0.8.0
+
+      # Run CLI commands with docker image.
       docker run heilaaks/snippy --help
       docker run heilaaks/snippy search --sall docker
+
+      # Run server with Sqlite database.
       docker run -d --net="host" --name snippy heilaaks/snippy --server-host 127.0.0.1:8080 -vv
       curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json"
-      docker logs 632e97aa83fe
-      docker stop 632e97aa83fe
-      docker rm $(docker ps --all -q -f status=exited)
-      docker run -d --net="host" --name snippy heilaaks/snippy --server-host 127.0.0.1:8080 --log-json -vv &
+      docker logs snippy
+      docker stop snippy
+      docker rm snippy
+      docker run -d --net="host" --name snippy heilaaks/snippy --server-host 127.0.0.1:8080 --log-json -vv
       curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json"
-      docker logs f72b3902dd4b
+      docker logs snippy
+      docker stop snippy
+      docker rm snippy
 
-#. Test with PyPy
+      # Login into Docker image.
+      docker exec -it snippy /bin/sh
+      cd /
+      du -ah | sort -n -r | head -n 50
+      find / -name '*pycache*'
+
+      # Run server with PostgreSQL database.
+      docker run -d --net="host" --name snippy heilaaks/snippy --server-host 127.0.0.1:8080 --storage-type postgresql --storage-host localhost:5432 --storage-database postgres --storage-user postgres --storage-password postgres --log-json -vv
+      curl -s -X POST "http://127.0.0.1:8080/snippy/api/app/v1/snippets" -H "accept: application/vnd.api+json; charset=UTF-8" -H "Content-Type: application/vnd.api+json; charset=UTF-8" -d '{"data":[{"type": "snippet", "attributes": {"data": ["docker ps"]}}]}'
+      curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json"
+
+Test PyPI installation
+~~~~~~~~~~~~~~~~~~~~~~
 
    .. code-block:: text
 
-      # Default test box install PyPy 2.7 from dnf.
-      sudo dnf install pypy
-      export PYTHONPATH=/usr/lib64/python2.7/site-packages/
-      wget https://bootstrap.pypa.io/get-pip.py
-      sudo pypy get-pip.py
-      sudo pypy -m pip install codecov
-      sudo pypy -m pip install logging_tree
-      sudo pypy -m pip install mock
-      sudo pypy -m pip install pytest
-      sudo pypy -m pip install pytest-cov
-      sudo pypy -m pip install pytest-mock
-      sudo pypy -m pip install falcon
-      sudo pypy -m pip install gunicorn
-      sudo pypy -m pip install jsonschema
-      pypy runner --help
-      pypy runner --server-host 127.0.0.1:8080 -vv
-      pypy -m pytest -x ./tests/test_*.py --cov snipp
-      unset PYTHONPATH
+    # Test PyPI installation before official release into PyPI.
+    > https://testpypi.python.org/pypi
+    python setup.py sdist bdist_wheel
+    twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+    pip uninstall snippy -y
+    pip3 uninstall snippy -y
+    pip install --index-url https://test.pypi.org/simple/ snippy
+    pip3 install --index-url https://test.pypi.org/simple/ snippy
+    pip3 install --user --index-url https://test.pypi.org/simple/ snippy
+    pip3 uninstall snippy -y
+
+Release
+~~~~~~~
 
 #. Verify data in CHANGELOG.rst
 
@@ -118,10 +164,10 @@ Releasing
 
    .. code-block:: text
 
-      git tag -a v0.8.0 -m "Add new content category references"
-      git push -u origin v0.8.0
+      git tag -a v0.9.0 -m "Add new release 0.9.0"
+      git push -u origin v0.9.0
 
-#. Releas in PyPI
+#. Release in PyPI
 
    .. code-block:: text
 
@@ -146,9 +192,9 @@ Releasing
       su
       docker login docker.io
       docker images
-      sudo docker tag 57cad43b2095 docker.io/heilaaks/snippy:v0.8.0
+      sudo docker tag 57cad43b2095 docker.io/heilaaks/snippy:v0.9.0
       sudo docker tag 57cad43b2095 docker.io/heilaaks/snippy:latest
-      sudo docker push docker.io/heilaaks/snippy:v0.8.0
+      sudo docker push docker.io/heilaaks/snippy:v0.9.0
       sudo docker push docker.io/heilaaks/snippy:latest
 
 #. Test Docker release
@@ -159,18 +205,19 @@ Releasing
       docker rm $(docker ps --all -q -f status=exited)
       docker images -q --filter dangling=true | xargs docker rmi
       docker images
-      docker rmi heilaaks/snippy:v0.8.0
+      docker rmi heilaaks/snippy:v0.9.0
       docker rmi heilaaks/snippy:latest
       docker rmi docker.io/heilaaks/snippy:latest
-      docker rmi docker.io/heilaaks/snippy:v0.8.0
-      docker pull snippy
-      docker run docker.io/heilaaks/snippy:latest --help
-      docker run docker.io/heilaaks/snippy:latest search --sall docker
-      docker run -d --net="host" --name snippy docker.io/heilaaks/snippy:latest --server-host 127.0.0.1:8080 -vv
+      docker rmi docker.io/heilaaks/snippy:v0.9.0
+      docker pull heilaaks/snippy
+      docker run heilaaks/snippy:latest --help
+      docker run heilaaks/snippy:latest search --sall docker
+      docker run -d --net="host" --name snippy heilaaks/snippy:latest --server-host 127.0.0.1:8080 -vv
       curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json"
-      docker run -d --net="host" --name snippy docker.io/heilaaks/snippy:latest --server-host 127.0.0.1:8080 --log-json -vv
+      docker run -d --net="host" --name snippy heilaaks/snippy:latest --server-host 127.0.0.1:8080 --log-json -vv
       curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json"
 
 #. Release news
 
    1. Make new release in Github.
+

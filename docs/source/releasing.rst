@@ -142,16 +142,48 @@ Test PyPI installation
 
    .. code-block:: text
 
-    # Test PyPI installation before official release into PyPI.
-    > https://testpypi.python.org/pypi
-    python setup.py sdist bdist_wheel
-    twine upload --repository-url https://test.pypi.org/legacy/ dist/*
-    pip uninstall snippy -y
-    pip3 uninstall snippy -y
-    pip install --index-url https://test.pypi.org/simple/ snippy
-    pip3 install --index-url https://test.pypi.org/simple/ snippy
-    pip3 install --user --index-url https://test.pypi.org/simple/ snippy
-    pip3 uninstall snippy -y
+      # Test PyPI installation before official release into PyPI.
+      > https://testpypi.python.org/pypi
+      python setup.py sdist bdist_wheel
+      twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+      pip uninstall snippy -y
+      pip3 uninstall snippy -y
+      pip install --index-url https://test.pypi.org/simple/ snippy
+      pip3 install --index-url https://test.pypi.org/simple/ snippy
+      pip3 install --user --index-url https://test.pypi.org/simple/ snippy
+      pip3 uninstall snippy -y
+
+Create new asciinema
+~~~~~~~~~~~~~~~~~~~~
+
+   .. code-block:: text
+
+      # pip uninstall snippy --yes
+      make clean-db
+      pip install . --user
+
+      # Clear existing resources.
+      cd ~/snippy
+      cp ~/devel/snippy/docs/release/record-asciinema.sh ../
+      chmod 755 ../record-asciinema.sh
+      rm -f ../snippy.cast
+      sudo docker stop snippy
+      sudo docker rm snippy
+      rm ./*
+      clear
+
+      # Disable and enable terminal linewrap
+      printf '\033[?7l'
+      printf '\033[?7h'
+
+      # Start recording.
+      asciinema rec ../snippy.cast -c ../record-asciinema.sh
+
+      # Play recording.
+      asciinema play ../snippy.cast
+
+      # Upload recording
+      asciinema upload ../snippy.cast
 
 Release
 ~~~~~~~

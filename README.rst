@@ -29,8 +29,8 @@ from Docker Hub or from the github repository if server functionality is
 required. The server functionality is not currently available when installed
 directly from PyPI.
 
-.. image:: https://asciinema.org/a/MEpDOPZLqDMySq7hwXGhCOliV.png
-    :target: https://asciinema.org/a/MEpDOPZLqDMySq7hwXGhCOliV
+.. image:: https://asciinema.org/a/Mcg6d2d6R9V5cScoW6nsGtzZ7.png
+    :target: https://asciinema.org/a/Mcg6d2d6R9V5cScoW6nsGtzZ7
     :alt: Snippy in action!
 
 Installation

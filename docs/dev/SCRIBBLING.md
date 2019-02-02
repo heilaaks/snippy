@@ -749,21 +749,25 @@ http://tjelvarolsson.com/blog/five-steps-to-add-the-bling-factor-to-your-python-
     $ pip install . --user
 
     clear
+    
+    
+asciinema rec ../snippy.cast -c ../commands.sh
+sciinema rec ../snippy.cast -c ../commands.sh
 asciinema rec ../snippy.cast
 snippy --help
 snippy search --sall .
-snippy import --snippet --defaults
-snippy import --solution --defaults
-snippy import --reference --defaults
+snippy import --defaults --all
 snippy search --sall security
+snippy search --sall compress
+snippy export -d 61014e2d1ec56a9a
+ll
+cat snippets.mkdn
 snippy search --solution --sall kafka | grep -Ev '[^\s]+:'
 ll
-snippy export -d fd4c0adffa232083
+snippy export -d 1abc5d4fe9022429
 ll
-snippy import -d fd4c0adffa232083 -f kubernetes-docker-log-driver-kafka.txt
+snippy import -d 1abc5d4fe9022429 -f kubernetes-docker-log-driver-kafka.mkdn
 snippy search --solution --sall docker | grep -Ev '[^\s]+:'
-sudo docker run -d --net="host" --name snippy heilaaks/snippy --server-host 127.0.0.1:8080 --log-json -vv
-snippy search --sall prune
 sudo docker run -d --net="host" --name snippy heilaaks/snippy --server-host 127.0.0.1:8080 --log-json -vv
 curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/" | python -m json.tool
 curl -s -X GET "http://127.0.0.1:8080//snippy/api/app/v1/uuid/1/brief"
@@ -772,12 +776,14 @@ curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=0" -H "ac
 curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=security&limit=1" -H "accept: application/vnd.api+json"
 docker logs snippy
 docker stop snippy
+docker rm snippy
 ctrl-d
 ```
 
    # server
 
    ```
+   asciinema upload snippy.cast
    https://asciinema.org/a/wc6jSncHMWpD5RbODxQHtqElO
    ```
 

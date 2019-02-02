@@ -59,7 +59,8 @@ class TestApiCreateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '608'}
+            'content-length': '608'
+        }
         expect_body = {
             'data': [{
                 'type': 'reference',
@@ -99,7 +100,8 @@ class TestApiCreateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '608'}
+            'content-length': '608'
+        }
         expect_body = {
             'data': [{
                 'type': 'reference',
@@ -300,7 +302,7 @@ class TestApiCreateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '687'
+            'content-length': '689'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -354,7 +356,7 @@ class TestApiCreateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '578'}
+            'content-length': '580'}
         expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
@@ -490,7 +492,6 @@ class TestApiCreateReference(object):
                 'attributes': content['data'][0]
             }]
         }
-        #expect_body['data'][0]['attributes']['versions'] = ['kafka=1.0.0']
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/references',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},

@@ -369,8 +369,8 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         """
 
         request_body = Snippet.REMOVE
-        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '907'}
-        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '909'}
+        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '909'}
+        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '911'}
         expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
@@ -414,8 +414,8 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                     'versions': (),
                     'utc': '2017-10-14T19:56:31.000001+00:00',
                     'digest': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd'}}]}
-        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '582'}
-        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '584'}
+        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '584'}
+        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '586'}
         expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
@@ -451,7 +451,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '382'
+            'content-length': '384'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -490,8 +490,8 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                 'attributes': {'brief': ''}
             }]
         }
-        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '772'}
-        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '776'}
+        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '774'}
+        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '778'}
         expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
@@ -535,7 +535,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '382'
+            'content-length': '384'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -755,7 +755,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '398'
+            'content-length': '400'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -793,7 +793,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '686'
+            'content-length': '688'
         }
         expect_body = {
             'meta': Content.get_api_meta(),

@@ -3,6 +3,23 @@
 Release history
 ===============
 
+0.10.0 (development)
+--------------------
+
+Breaking changes
+~~~~~~~~~~~~~~~~
+
+New features
+~~~~~~~~~~~~
+
+Bugfixes
+~~~~~~~~
+
+* All commits in `0.10.0`_.
+
+Security
+~~~~~~~~
+
 0.9.0 (2019-02-02)
 ------------------
 
@@ -82,7 +99,8 @@ Security
 * Experimental alpha release.
 * All commits in `0.1.0`_.
 
-.. _0.9.0: https://github.com/heilaaks/snippy/compare/v0.8.0...master
+.. _0.10.0: https://github.com/heilaaks/snippy/compare/v0.9.0...master
+.. _0.9.0: https://github.com/heilaaks/snippy/compare/v0.8.0...heilaaks:v0.9.0
 .. _0.8.0: https://github.com/heilaaks/snippy/compare/v0.7.0...heilaaks:v0.8.0
 .. _0.7.0: https://github.com/heilaaks/snippy/compare/v0.6.0...heilaaks:v0.7.0
 .. _0.6.0: https://github.com/heilaaks/snippy/compare/v0.5.0...heilaaks:v0.6.0

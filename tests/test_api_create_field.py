@@ -54,7 +54,7 @@ class TestApiCreateField(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '363'
+            'content-length': '365'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -85,7 +85,7 @@ class TestApiCreateField(object):
         request_body = {}
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '363'
+            'content-length': '365'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -116,7 +116,7 @@ class TestApiCreateField(object):
         request_body = {}
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '363'
+            'content-length': '365'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -147,7 +147,7 @@ class TestApiCreateField(object):
         request_body = {}
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '363'
+            'content-length': '365'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -187,7 +187,7 @@ class TestApiCreateField(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '363'
+            'content-length': '365'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -227,7 +227,7 @@ class TestApiCreateField(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '363'
+            'content-length': '365'
         }
         expect_body = {
             'meta': Content.get_api_meta(),

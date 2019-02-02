@@ -219,6 +219,8 @@ Release
 
    .. code-block:: text
 
+      make clean
+      make clean-db
       python setup.py sdist bdist_wheel
       twine upload dist/*
 
@@ -238,32 +240,38 @@ Release
    .. code-block:: text
 
       su
-      docker login docker.io
+      docker rmi --force $(docker images --filter=reference="*/snippy*:*" -q)
+      docker rm $(docker ps --all -q -f status=exited)
+      docker images -q --filter dangling=true | xargs docker rmi
       docker images
-      sudo docker tag 57cad43b2095 docker.io/heilaaks/snippy:v0.9.0
-      sudo docker tag 57cad43b2095 docker.io/heilaaks/snippy:latest
-      sudo docker push docker.io/heilaaks/snippy:v0.9.0
-      sudo docker push docker.io/heilaaks/snippy:latest
+      make docker
+      docker login docker.io
+      docker tag 86961c480391 docker.io/heilaaks/snippy:v0.9.0
+      docker tag 86961c480391 docker.io/heilaaks/snippy:latest
+      docker images
+      docker push docker.io/heilaaks/snippy:v0.9.0
+      docker push docker.io/heilaaks/snippy:latest
 
 #. Test Docker release
 
    .. code-block:: text
 
       su
+      docker rmi --force $(docker images --filter=reference="*/snippy*:*" -q)
       docker rm $(docker ps --all -q -f status=exited)
       docker images -q --filter dangling=true | xargs docker rmi
       docker images
-      docker rmi heilaaks/snippy:v0.9.0
-      docker rmi heilaaks/snippy:latest
-      docker rmi docker.io/heilaaks/snippy:latest
-      docker rmi docker.io/heilaaks/snippy:v0.9.0
       docker pull heilaaks/snippy
       docker run heilaaks/snippy:latest --help
       docker run heilaaks/snippy:latest search --sall docker
       docker run -d --net="host" --name snippy heilaaks/snippy:latest --server-host 127.0.0.1:8080 -vv
       curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json"
+      docker stop snippy
+      docker rm snippy
       docker run -d --net="host" --name snippy heilaaks/snippy:latest --server-host 127.0.0.1:8080 --log-json -vv
       curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json"
+      docker stop snippy
+      docker rm snippy
 
 #. Release news
 

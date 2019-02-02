@@ -270,7 +270,7 @@ class TestApiCreateSolution(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '398'
+            'content-length': '400'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -304,7 +304,7 @@ class TestApiCreateSolution(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '822'
+            'content-length': '824'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -342,7 +342,7 @@ class TestApiCreateSolution(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '512'
+            'content-length': '514'
         }
         expect_body = {
             'meta': Content.get_api_meta(),

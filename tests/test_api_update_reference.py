@@ -170,7 +170,7 @@ class TestApiUpdateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '370'
+            'content-length': '372'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -210,8 +210,8 @@ class TestApiUpdateReference(object):
             'tags': Const.DELIMITER_TAGS.join(Reference.REGEXP['tags']),
             'links': Const.DELIMITER_LINKS.join(Reference.REGEXP['links'])
         }
-        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '803'}
-        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '805'}
+        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '805'}
+        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '807'}
         expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
@@ -259,7 +259,7 @@ class TestApiUpdateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '382'
+            'content-length': '384'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -417,8 +417,8 @@ class TestApiUpdateReference(object):
                 }
             }
         }
-        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '850'}
-        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '862'}
+        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '852'}
+        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '864'}
         expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{

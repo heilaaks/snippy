@@ -40,7 +40,7 @@ class TestApiHello(object):
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '197'
+            'content-length': '199'
         }
         expect_body = {'meta': Content.get_api_meta()}
         result = testing.TestClient(server.server.api).simulate_get('/snippy/api/app/v1/')
@@ -56,7 +56,7 @@ class TestApiHello(object):
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '197'
+            'content-length': '199'
         }
         expect_body = {'meta': Content.get_api_meta()}
         result = testing.TestClient(server.server.api).simulate_get('/snippy/api/app/v1/hello')
@@ -74,7 +74,7 @@ class TestApiHello(object):
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '197'
+            'content-length': '199'
         }
         expect_body = {'meta': Content.get_api_meta()}
         server = Snippy(['snippy', '--server-host', 'localhost:8080', '--server-app-base-path', '/snippy/api/'])
@@ -98,7 +98,7 @@ class TestApiHello(object):
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '197'
+            'content-length': '199'
         }
         expect_body = {'meta': Content.get_api_meta()}
         server = Snippy(['snippy', '--server-host', 'localhost:8080', '--server-app-base-path', '/snippy/api'])
@@ -122,7 +122,7 @@ class TestApiHello(object):
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '197'
+            'content-length': '199'
         }
         expect_body = {'meta': Content.get_api_meta()}
         server = Snippy(['snippy', '--server-host', 'localhost:8080', '--server-app-base-path', 'snippy/api/'])
@@ -146,7 +146,7 @@ class TestApiHello(object):
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '197'
+            'content-length': '199'
         }
         expect_body = {'meta': Content.get_api_meta()}
         server = Snippy(['snippy', '--server-host', 'localhost:8080', '--server-app-base-path', 'snippy/api'])
@@ -169,7 +169,7 @@ class TestApiHello(object):
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '197'
+            'content-length': '199'
         }
         expect_body = {'meta': Content.get_api_meta()}
         server = Snippy(['snippy', '--server-host', 'localhost:8080', '--server-app-base-path', '/snippy//api'])
@@ -191,7 +191,7 @@ class TestApiHello(object):
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '197'
+            'content-length': '199'
         }
         expect_body = {'meta': Content.get_api_meta()}
         server = Snippy(['snippy', '--server-host', 'localhost:8081', '--debug'])

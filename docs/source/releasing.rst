@@ -23,6 +23,7 @@ Preparations
       make clean-db
       python runner import --defaults --all
       python runner export --defaults --all
+      git checkout .
 
       # Test that version numbers were updated.
       grep -rn ./ -e ${DEVEL_VERSION}
@@ -81,6 +82,7 @@ Test local installation
       pip uninstall snippy -y
       pip install . --user
       snippy --help
+      snippy search --sall .
       snippy import --defaults
       snippy import --defaults --solutions
       snippy import --defaults --references
@@ -102,13 +104,11 @@ Test docker installation
       su
       make clean
       make clean-db
-      make docker
+      docker rmi --force $(docker images --filter=reference="*/snippy*:*" -q)
       docker rm $(docker ps --all -q -f status=exited)
       docker images -q --filter dangling=true | xargs docker rmi
       docker images
-      docker rmi heilaaks/snippy:v0.8.0
-      docker rmi docker.io/heilaaks/snippy:latest
-      docker rmi docker.io/heilaaks/snippy:v0.8.0
+      make docker
 
       # Run CLI commands with docker image.
       docker run heilaaks/snippy --help
@@ -126,8 +126,8 @@ Test docker installation
       docker stop snippy
       docker rm snippy
 
-      # Login into Docker image.
-      docker exec -it snippy /bin/sh
+      # Login into Docker image (requires change to Dockerfile).
+      docker exec -it heilaaks/snippy /bin/sh
       cd /
       du -ah | sort -n -r | head -n 50
       find / -name '*pycache*'
@@ -136,6 +136,9 @@ Test docker installation
       docker run -d --net="host" --name snippy heilaaks/snippy --server-host 127.0.0.1:8080 --storage-type postgresql --storage-host localhost:5432 --storage-database postgres --storage-user postgres --storage-password postgres --log-json -vv
       curl -s -X POST "http://127.0.0.1:8080/snippy/api/app/v1/snippets" -H "accept: application/vnd.api+json; charset=UTF-8" -H "Content-Type: application/vnd.api+json; charset=UTF-8" -d '{"data":[{"type": "snippet", "attributes": {"data": ["docker ps"]}}]}'
       curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json"
+      docker logs snippy
+      docker stop snippy
+      docker rm snippy
 
 Test PyPI installation
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -144,13 +147,26 @@ Test PyPI installation
 
       # Test PyPI installation before official release into PyPI.
       > https://testpypi.python.org/pypi
+      make clean
+      make clean-db
       python setup.py sdist bdist_wheel
       twine upload --repository-url https://test.pypi.org/legacy/ dist/*
       pip uninstall snippy -y
       pip3 uninstall snippy -y
       pip install --index-url https://test.pypi.org/simple/ snippy
+      snippy --help
+      snippy import --defaults --all
+      snippy search --sall docker
+      pip uninstall snippy -y
       pip3 install --index-url https://test.pypi.org/simple/ snippy
+      snippy --help
+      snippy import --defaults --all
+      snippy search --sall docker
+      pip3 uninstall snippy -y
       pip3 install --user --index-url https://test.pypi.org/simple/ snippy
+      snippy --help
+      snippy import --defaults --all
+      snippy search --sall docker
       pip3 uninstall snippy -y
 
 Create new asciinema

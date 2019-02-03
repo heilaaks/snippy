@@ -43,7 +43,7 @@ COMMANS=(
         'ls -al'
         'snippy import -d 1abc5d4fe9022429 -f kubernetes-docker-log-driver-kafka.mkdn'
         'sudo docker run -d --net="host" --name snippy heilaaks/snippy --server-host 127.0.0.1:8080 --log-json -vv'
-        'curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/" | python -m json.tool'
+        'curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/"'
         'curl -s -X GET "http://127.0.0.1:8080//snippy/api/app/v1/uuid/1/brief"'
         'curl -v -X OPTIONS "http://127.0.0.1:8080/snippy/api/app/v1/snippets"'
         'curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=0" -H "accept: application/vnd.api+json"'

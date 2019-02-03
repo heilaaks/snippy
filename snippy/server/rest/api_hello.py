@@ -17,14 +17,13 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""api_hello: JSON REST API hello."""
-
-import json
+"""api_hello: JSON REST API for hello endpoint."""
 
 import falcon
 
 from snippy.logger import Logger
 from snippy.server.rest.base import ApiContentBase
+from snippy.server.rest.generate import Generate
 from snippy.meta import __docs__
 from snippy.meta import __homepage__
 from snippy.meta import __openapi__
@@ -48,7 +47,7 @@ class ApiHello(ApiContentBase):  # pylint: disable=too-few-public-methods
             }
         }
         response.content_type = ApiContentBase.MEDIA_JSON_API
-        response.body = json.dumps(hello)
+        response.body = Generate.dumps(hello)
         response.status = falcon.HTTP_200
 
     @staticmethod

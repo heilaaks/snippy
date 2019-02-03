@@ -87,7 +87,7 @@ class Generate(object):
         if not data['data']:
             data = json.loads('{"links": {"self": "' + request.uri + '"}, "data": null}')
 
-        return cls._dumps(data)
+        return cls.dumps(data)
 
     @classmethod
     def collection(cls, collection, request, pagination=False):  # pylint: disable=too-many-locals,too-many-branches
@@ -172,7 +172,7 @@ class Generate(object):
                 data['links']['first'] = first_link
                 data['links']['last'] = last_link
 
-        return cls._dumps(data)
+        return cls.dumps(data)
 
     @classmethod
     def error(cls, causes):
@@ -202,10 +202,10 @@ class Generate(object):
             }
         data['meta'] = causes['meta']
 
-        return cls._dumps(data)
+        return cls.dumps(data)
 
-    @staticmethod
-    def _dumps(response):
+    @classmethod
+    def dumps(cls, response):
         """Create string from json structure."""
 
         # Python 2 and Python 3 have different defaults for separators and

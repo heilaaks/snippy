@@ -284,10 +284,9 @@ def server_db(mocker, request):
 
 @pytest.fixture(scope='function', name='mock-server')
 def server_mock(mocker):
-    """Mock Snippy server for testing purposes."""
+    """Mock Snippy server for testing."""
 
     mocker.patch('snippy.server.server.SnippyServer')
-
 
 @pytest.fixture(scope='function', name='used_database')
 def used_database(request):

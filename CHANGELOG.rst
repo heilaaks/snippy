@@ -15,6 +15,8 @@ New features
 Bugfixes
 ~~~~~~~~
 
+* Fix exporting and importing content template.
+* Fix error when content matching to a text template is saved.
 * All commits in `0.10.0`_.
 
 Security

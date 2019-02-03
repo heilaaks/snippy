@@ -333,16 +333,17 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
     def test_cli_export_reference_017(self, snippy):
         """Export reference template.
 
-        Export reference template by explicitly defining content category. This
-        should result file name and format based on tool internal settings.
+        Export reference template by explicitly defining content category.
+        This must result file name and format based on the tool internal
+        default settings.
         """
 
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--reference', '--template'])
             assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('./reference-template.txt', 'w')
+            mock_file.assert_called_once_with('./reference-template.mkdn', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_called_with(Const.NEWLINE.join(Reference.TEMPLATE))
+            file_handle.write.assert_called_with(Const.NEWLINE.join(Reference.TEMPLATE_MKDN))
 
     @pytest.mark.usefixtures('yaml', 'default-references', 'export-time')
     def test_cli_export_reference_018(self, snippy):
@@ -575,6 +576,36 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             cause = snippy.run(['snippy', 'export', '--references', '--file', 'references.mkdn'])
             assert cause == Cause.ALL_OK
             Content.assert_mkdn(mock_file, 'references.mkdn', content)
+
+    @pytest.mark.usefixtures('default-references', 'export-time')
+    def test_cli_export_reference_030(self, snippy):
+        """Export reference template.
+
+        Export reference template by explicitly defining content category
+        and the template text format.
+        """
+
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '--reference', '--template', '--format', 'text'])
+            assert cause == Cause.ALL_OK
+            mock_file.assert_called_once_with('./reference-template.text', 'w')
+            file_handle = mock_file.return_value.__enter__.return_value
+            file_handle.write.assert_called_with(Const.NEWLINE.join(Reference.TEMPLATE_TEXT))
+
+    @pytest.mark.usefixtures('default-references', 'export-time')
+    def test_cli_export_reference_031(self, snippy):
+        """Export reference template.
+
+        Export reference template by explicitly defining content category
+        and the template Markdown format.
+        """
+
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '--reference', '--template', '--format', 'mkdn'])
+            assert cause == Cause.ALL_OK
+            mock_file.assert_called_once_with('./reference-template.mkdn', 'w')
+            file_handle = mock_file.return_value.__enter__.return_value
+            file_handle.write.assert_called_with(Const.NEWLINE.join(Reference.TEMPLATE_MKDN))
 
     @classmethod
     def teardown_class(cls):

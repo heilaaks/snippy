@@ -597,16 +597,17 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
     def test_cli_export_solution_028(self, snippy):
         """Export solution template.
 
-        Export solution template. This should result filename and format
-        based on tool internal settings.
+        Export solution template by explicitly defining content category.
+        This must result file name and format based on the tool internal
+        default settings.
         """
 
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--solution', '--template'])
             assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('./solution-template.txt', 'w')
+            mock_file.assert_called_once_with('./solution-template.mkdn', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_called_with(Const.NEWLINE.join(Solution.TEMPLATE))
+            file_handle.write.assert_called_with(Const.NEWLINE.join(Solution.TEMPLATE_MKDN))
 
     @pytest.mark.usefixtures('yaml', 'default-solutions', 'export-time')
     def test_cli_export_solution_029(self, snippy):
@@ -803,6 +804,36 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             cause = snippy.run(['snippy', 'export', '-d', '18473ec207798670'])
             assert cause == Cause.ALL_OK
             Content.assert_mkdn(mock_file, 'kubernetes-docker-log-driver-kafka.mkdn', content)
+
+    @pytest.mark.usefixtures('template-utc')
+    def test_cli_export_solution_039(self, snippy):
+        """Export solution template.
+
+        Export solution template by explicitly defining content category
+        and the template text format.
+        """
+
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '--solution', '--template', '--format', 'text'])
+            assert cause == Cause.ALL_OK
+            mock_file.assert_called_once_with('./solution-template.text', 'w')
+            file_handle = mock_file.return_value.__enter__.return_value
+            file_handle.write.assert_called_with(Const.NEWLINE.join(Solution.TEMPLATE_TEXT))
+
+    @pytest.mark.usefixtures('template-utc')
+    def test_cli_export_solution_040(self, snippy):
+        """Export solution template.
+
+        Export solution template by explicitly defining content category
+        and the template text format.
+        """
+
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '--solution', '--template', '--format', 'mkdn'])
+            assert cause == Cause.ALL_OK
+            mock_file.assert_called_once_with('./solution-template.mkdn', 'w')
+            file_handle = mock_file.return_value.__enter__.return_value
+            file_handle.write.assert_called_with(Const.NEWLINE.join(Solution.TEMPLATE_MKDN))
 
     @classmethod
     def teardown_class(cls):

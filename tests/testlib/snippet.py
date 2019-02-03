@@ -178,5 +178,51 @@ class Snippet(object):  # pylint: disable=too-few-public-methods
     DEFAULT_SNIPPETS = (REMOVE, FORCED)
 
     TEMPLATE = Helper.read_template('snippet.txt').split('\n')
-    TEMPLATE_DIGEST_TEXT = 'b4bedc2603e3b9ea95bcf53cb7b8aa6efa31eabb788eed60fccf3d8029a6a6cc'
-    TEMPLATE_DIGEST_MKDN = 'c6744ff5c433d48cb3a54044722e808ee0d73776ceccaab975b5005bc449cd92'
+    TEMPLATE_DIGEST_TEXT_EMPTY = 'b4bedc2603e3b9ea95bcf53cb7b8aa6efa31eabb788eed60fccf3d8029a6a6cc'
+    TEMPLATE_DIGEST_TEXT_MODEL = 'd3d97da5397794cce15ed9a2778eb1350ac2c8aa07599e21955619145ed977ce'
+    TEMPLATE_DIGEST_MKDN_MODEL = 'c6744ff5c433d48cb3a54044722e808ee0d73776ceccaab975b5005bc449cd92'
+    TEMPLATE_TEXT = (
+        '# Commented lines will be ignored.',
+        '#',
+        '# Add mandatory snippet below.',
+        '',
+        '',
+        '# Add optional brief description below.',
+        'Add brief title for content',
+        '',
+        '# Add optional description below.',
+        'Add a description that defines the content in one chapter.',
+        '',
+        '# Add optional comma separated list of groups below.',
+        'groups',
+        '',
+        '# Add optional comma separated list of tags below.',
+        'comma,separated,tags',
+        '',
+        '# Add optional links below one link per line.',
+        'https://www.example.com/add-links-here.html',
+        ''
+    )
+    TEMPLATE_MKDN = (
+        '# Add brief title for content @groups',
+        '',
+        '> Add a description that defines the content in one chapter.',
+        '',
+        '> [1] https://www.example.com/add-links-here.html',
+        '',
+        '`$ commands between backtics and prefixed by dollar sign`',
+        '',
+        '## Meta',
+        '',
+        '> category : snippet  ',
+        'created  : 2018-02-02T02:02:02.000001+00:00  ',
+        'digest   : c6744ff5c433d48cb3a54044722e808ee0d73776ceccaab975b5005bc449cd92  ',
+        'filename :   ',
+        'name     :   ',
+        'source   :   ',
+        'tags     : comma,separated,tags  ',
+        'updated  : 2018-02-02T02:02:02.000001+00:00  ',
+        'uuid     : 1acd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+        'versions : ',
+        ''
+    )

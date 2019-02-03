@@ -236,6 +236,7 @@ Random notes and scribling during development.
    $ docker run --name postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres
    $ docker run --name postgres -e POSTGRES_PASSWORD=postgres -v postgres_data:/var/lib/postgresql/data -p 5432:5432 -d postgres
    $ docker exec -it $(docker ps | egrep -m 1 'postgres' | awk '{print $1}') /bin/bash
+   $ docker rm $(docker ps -a | egrep -m 1 'postgre' | awk '{print $1}')
 
    # Operate postgres
    psql -d postgres -U postgres

@@ -531,7 +531,7 @@ class Config(object):
             filename = cls.default_content_file(cls.content_category)
 
         if cls.template:
-            filename = os.path.join('./', cls.content_category + '-template.txt')
+            filename = os.path.join('./', cls.content_category + '-template.' + cls.template_format.lower())
 
         if not filename:
             if len(categories) == 1:

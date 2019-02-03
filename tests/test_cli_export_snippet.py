@@ -438,9 +438,9 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--template'])
             assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('./snippet-template.txt', 'w')
+            mock_file.assert_called_once_with('./snippet-template.mkdn', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_called_with(Const.NEWLINE.join(Snippet.TEMPLATE))
+            file_handle.write.assert_called_with(Const.NEWLINE.join(Snippet.TEMPLATE_MKDN))
 
     @pytest.mark.usefixtures('default-snippets', 'export-time')
     def test_cli_export_snippet_023(self, snippy):
@@ -453,9 +453,9 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--snippet', '--template'])
             assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('./snippet-template.txt', 'w')
+            mock_file.assert_called_once_with('./snippet-template.mkdn', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_called_with(Const.NEWLINE.join(Snippet.TEMPLATE))
+            file_handle.write.assert_called_with(Const.NEWLINE.join(Snippet.TEMPLATE_MKDN))
 
     @pytest.mark.usefixtures('yaml', 'default-snippets', 'export-time')
     def test_cli_export_snippet_024(self, snippy):
@@ -602,6 +602,36 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             assert cause == Cause.ALL_OK
             assert mock_file.return_value.__enter__.return_value.write.mock_calls[0][1][0] == '\n'.join(markdown)
             Content.assert_mkdn(mock_file, './snippets.mkdn', content)
+
+    @pytest.mark.usefixtures('default-snippets', 'export-time')
+    def test_cli_export_snippet_030(self, snippy):
+        """Export snippet template.
+
+        Export reference template by explicitly defining content category
+        and the template text format.
+        """
+
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '--template', '--format', 'text'])
+            assert cause == Cause.ALL_OK
+            mock_file.assert_called_once_with('./snippet-template.text', 'w')
+            file_handle = mock_file.return_value.__enter__.return_value
+            file_handle.write.assert_called_with(Const.NEWLINE.join(Snippet.TEMPLATE_TEXT))
+
+    @pytest.mark.usefixtures('default-snippets', 'export-time')
+    def test_cli_export_snippet_031(self, snippy):
+        """Export snippet template.
+
+        Export reference template by explicitly defining content category
+        and the template Markdown format.
+        """
+
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '--template', '--format', 'mkdn'])
+            assert cause == Cause.ALL_OK
+            mock_file.assert_called_once_with('./snippet-template.mkdn', 'w')
+            file_handle = mock_file.return_value.__enter__.return_value
+            file_handle.write.assert_called_with(Const.NEWLINE.join(Snippet.TEMPLATE_MKDN))
 
     @classmethod
     def teardown_class(cls):

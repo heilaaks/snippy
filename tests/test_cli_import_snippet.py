@@ -380,19 +380,19 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_snippet_017(self, snippy):
-        """Import defined snippet.
+        """Import snippet from text template.
 
         Try to import snippet template without any changes. This should result
         error text for end user and no files should be read. The error text
         must be the same for all content types.
         """
 
-        file_content = mock.mock_open(read_data=Const.NEWLINE.join(Snippet.TEMPLATE))
+        file_content = mock.mock_open(read_data=Const.NEWLINE.join(Snippet.TEMPLATE_TEXT))
         with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
-            cause = snippy.run(['snippy', 'import', '--template'])
+            cause = snippy.run(['snippy', 'import', '--template', '--format', 'text'])
             assert cause == 'NOK: content was not stored because it was matching to an empty template'
             Content.assert_storage(None)
-            mock_file.assert_called_once_with('./snippet-template.txt', 'r')
+            mock_file.assert_called_once_with('./snippet-template.text', 'r')
 
     @pytest.mark.usefixtures('isfile_true', 'yaml', 'default-snippets', 'import-netcat-utc')
     def test_cli_import_snippet_018(self, snippy):
@@ -465,6 +465,22 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
             assert cause == Cause.ALL_OK
             Content.assert_storage(content)
             mock_file.assert_called_once_with('./all-snippets.md', 'r')
+
+    @pytest.mark.usefixtures('isfile_true')
+    def test_cli_import_snippet_021(self, snippy):
+        """Import snippet from Markdown template.
+
+        Try to import snippet template without any changes. This should result
+        error text for end user and no files should be read. The error text
+        must be the same for all content types.
+        """
+
+        file_content = mock.mock_open(read_data=Const.NEWLINE.join(Snippet.TEMPLATE_MKDN))
+        with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
+            cause = snippy.run(['snippy', 'import', '--template'])
+            assert cause == 'NOK: content was not stored because it was matching to an empty template'
+            Content.assert_storage(None)
+            mock_file.assert_called_once_with('./snippet-template.mkdn', 'r')
 
     @classmethod
     def teardown_class(cls):

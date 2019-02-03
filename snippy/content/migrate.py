@@ -82,7 +82,11 @@ class Migrate(object):
 
         filename = Config.get_operation_file()
         resource = Collection.get_resource(category, Config.utcnow())
-        template = resource.dump_text(Config.templates)
+        template = resource.get_template(
+            category,
+            Config.template_format,
+            Config.templates
+        )
         cls._logger.debug('exporting content template %s', filename)
         with open(filename, 'w') as outfile:
             try:

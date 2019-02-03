@@ -83,16 +83,17 @@ clean:
 	rm -f snippets.yaml
 	rm -f snippet*.text
 	rm -f snippets.txt
-	rm -f snippet-template.txt
+	rm -f snippet-template.*
 	rm -f solutions.json
 	rm -f solutions.yaml
 	rm -f solution*.text
 	rm -f solutions.txt
-	rm -f solution-template.txt
+	rm -f solution-template.*
 	rm -f references.json
 	rm -f references.yaml
 	rm -f references.text
 	rm -f references.txt
+	rm -f reference-template.*
 	rm -f content.yaml
 	rm -f content.text
 

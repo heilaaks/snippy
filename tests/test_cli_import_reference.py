@@ -195,15 +195,16 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
         """Import all references.
 
         Try to import empty reference template. The operation will fail because
-        content templates without any modifications cannot be imported.
+        content templates without help texts and without any modifications cannot
+        be imported.
         """
 
         file_content = mock.mock_open(read_data=Const.NEWLINE.join(Reference.TEMPLATE))
         with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
-            cause = snippy.run(['snippy', 'import', '--reference', '-f', './reference-template.txt'])
+            cause = snippy.run(['snippy', 'import', '--reference', '-f', './reference-template.text'])
             assert cause == 'NOK: content was not stored because it was matching to an empty template'
             Content.assert_storage(None)
-            mock_file.assert_called_once_with('./reference-template.txt', 'r')
+            mock_file.assert_called_once_with('./reference-template.text', 'r')
 
     def test_cli_import_reference_009(self, snippy):
         """Import all references.
@@ -417,19 +418,19 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_reference_018(self, snippy):
-        """Import references from text template.
+        """Import reference from text template.
 
         Try to import reference template without any changes. This should result
         error text for end user and no files should be read. The error text must
         be the same for all content types.
         """
 
-        file_content = mock.mock_open(read_data=Const.NEWLINE.join(Reference.TEMPLATE))
+        file_content = mock.mock_open(read_data=Const.NEWLINE.join(Reference.TEMPLATE_TEXT))
         with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
-            cause = snippy.run(['snippy', 'import', '--reference', '--template'])
+            cause = snippy.run(['snippy', 'import', '--reference', '--template', '--format', 'text'])
             assert cause == 'NOK: content was not stored because it was matching to an empty template'
             Content.assert_storage(None)
-            mock_file.assert_called_once_with('./reference-template.txt', 'r')
+            mock_file.assert_called_once_with('./reference-template.text', 'r')
 
     @pytest.mark.usefixtures('isfile_true', 'update-gitlog-utc')
     def test_cli_import_reference_019(self, snippy):
@@ -525,6 +526,22 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             assert cause == Cause.ALL_OK
             Content.assert_storage(content)
             mock_file.assert_called_once_with('./references.mkdn', 'r')
+
+    @pytest.mark.usefixtures('isfile_true')
+    def test_cli_import_reference_023(self, snippy):
+        """Import reference from Markdown template.
+
+        Try to import reference template without any changes. This should result
+        error text for end user and no files should be read. The error text must
+        be the same for all content types.
+        """
+
+        file_content = mock.mock_open(read_data=Const.NEWLINE.join(Reference.TEMPLATE_MKDN))
+        with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
+            cause = snippy.run(['snippy', 'import', '--reference', '--template'])
+            assert cause == 'NOK: content was not stored because it was matching to an empty template'
+            Content.assert_storage(None)
+            mock_file.assert_called_once_with('./reference-template.mkdn', 'r')
 
     @classmethod
     def teardown_class(cls):

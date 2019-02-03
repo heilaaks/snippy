@@ -48,7 +48,7 @@ extras_docker = (
     'falcon==1.4.1',
     'gunicorn==19.9.0',
     'jsonschema==2.6.0',
-    'psycopg2>=2.7.5'
+    'psycopg2>=2.7.5,<=2.7.7'
 )
 extras_tests = (
     'codecov==2.0.15',

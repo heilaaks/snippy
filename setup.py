@@ -34,7 +34,7 @@ extras_dev = (
 )
 extras_docs = (
     'sphinx==1.8.3',
-    'sphinxcontrib-openapi==0.3.2',
+    'sphinxcontrib-openapi==0.4.0',
     'sphinx_rtd_theme==0.4.2',
     'sphinx-autobuild==0.7.1'
 )
@@ -53,10 +53,10 @@ extras_tests = (
     'pyflakes==1.6.0',
     'pylint==1.9.3 ; python_version=="2.7.*"',
     'pylint==2.2.2 ; python_version>"2.7"',
-    'pytest==4.1.1',
+    'pytest==4.2.0',
     'pytest-cov==2.6.1',
     'pytest-mock==1.10.0',
-    'pytest-xdist==1.26.0',
+    'pytest-xdist==1.26.1',
     'tox==3.5.3'
 )
 

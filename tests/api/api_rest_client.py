@@ -24,7 +24,7 @@ from __future__ import print_function
 import json
 import time
 
-from tests.testlib.snippet_helper import SnippetHelper as Snippet
+from tests.testlib.snippet import Snippet
 
 try:
     import http.client as httplib
@@ -50,10 +50,10 @@ class RestApiPerformance(object):
         Reference PC: N/A loop : N/A
         """
 
-        snippets = {'data': [{'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]},
-                             {'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.FORCED]},
-                             {'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.EXITED]},
-                             {'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.NETCAT]}]}
+        snippets = {'data': [{'type': 'snippet', 'attributes': Snippet.REMOVE},
+                             {'type': 'snippet', 'attributes': Snippet.FORCED},
+                             {'type': 'snippet', 'attributes': Snippet.EXITED},
+                             {'type': 'snippet', 'attributes': Snippet.NETCAT}]}
 
         conn = httplib.HTTPConnection('localhost', port=8080)
         start = time.time()

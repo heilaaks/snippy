@@ -251,6 +251,11 @@ Random notes and scribling during development.
 
    python runner --server-host 127.0.0.1:8080 -vv --storage-type postgresql --storage-host localhost:5432 --storage-database postgres --storage-user postgres --storage-password postgres
 
+    # Docker failure
+    --server-host 127.0.0.1:8080 -vv
+    docker run -d -it --net="host" --name snippy heilaaks/snippy:latest
+
+
    # Changes round 2:
 
    A) change the VIOLATED const to SQLITE and POSTGRE

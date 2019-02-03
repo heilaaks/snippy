@@ -1,23 +1,5 @@
-FROM alpine:3.8 as base
+FROM alpine:3.9 as base
 LABEL maintainer "laaksonen.heikki.j@gmail.com"
-
-FROM base as builder
-
-RUN apk add --no-cache --virtual .build-deps \
-    gcc \
-    musl-dev \
-    postgresql-dev \
-    python3-dev && \
-    pip3 install pip wheel --upgrade && \
-    pip3 install --no-cache-dir psycopg2 && \
-    find /usr/lib/python* -type d -name __pycache__ -exec rm -r {} \+ &&  \
-    rm -Rf /usr/lib/python3.6/site-packages/psycopg2/tests/ && \
-    apk del --no-cache .build-deps
-
-FROM base
-WORKDIR /usr/lib/python3.6/site-packages/
-COPY --from=builder /usr/lib/python3.6/site-packages/psycopg2 ./psycopg2
-COPY --from=builder /usr/lib/python3.6/site-packages/psycopg2-2.7.7-py3.6.egg-info ./psycopg2_binary-2.7.7-py3.6.egg-info
 
 ENV LANG C.UTF-8
 
@@ -30,12 +12,11 @@ COPY README.rst .
 RUN addgroup -g 1000 snippy && adduser -G snippy -D -H snippy
 
 RUN apk add python3 && \
-    apk add libpq && \
+    apk add py3-psycopg2 && \
     python3 -m ensurepip && \
     rm -r /usr/lib/python*/ensurepip && \
     pip3 install --upgrade pip setuptools && \
-    pip3 install . && \
-    pip3 install -e .[server] && \
+    pip3 install -e .[docker] && \
     find /usr/lib/python* -type d -name __pycache__ -exec rm -r {} \+ && \
     snippy import --snippet --defaults -q && \
     snippy import --solution --defaults -q && \

@@ -1,9 +1,9 @@
 ## WORKING
    - [ ] Why there is : e-- in some outputs for solutions?
-   - [ ] Errors do no print returning JSON in beautified format.
    - [ ] Clean dockerfile. Python version in commands. Try to get 3.7. Make COPY psycopg2 version agnostic. Try to use psy-binary? Hack to rename psy to spy_binary.
    - [ ] Snippet template help text has typo with missing dot 'Add brief title for content'. Do not fix this since this is in template brief in MKDN format that does not need dot. Document this.,
    - [ ] When installing psycopg2 (not binary), there is AttributeError: type object 'psycopg2' has no attribute 'connect
+   - [ ] Environment markers do not work in setup.py for yaml? https://github.com/inveniosoftware/troubleshooting/issues/1
    - [ ] How to compile psycopg2 for PyPY?
    - [ ] How to compile psycopg2 for Alpine MUSL container without defining Python version?
    - [ ] Snippy does not tolerate second connect? If there are two servers to one Postgre, there is an error coming from Snippy?

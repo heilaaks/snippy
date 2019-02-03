@@ -44,6 +44,12 @@ extras_server = (
     'jsonschema==2.6.0',
     'psycopg2-binary==2.7.7'
 )
+extras_docker = (
+    'falcon==1.4.1',
+    'gunicorn==19.9.0',
+    'jsonschema==2.6.0',
+    'psycopg2>=2.7.5'
+)
 extras_tests = (
     'codecov==2.0.15',
     'flake8==3.5.0',
@@ -119,6 +125,7 @@ setup(
     ],
     extras_require={
         'dev': extras_dev + extras_docs + extras_server + extras_tests,
+        'docker': extras_docker,
         'docs': extras_docs,
         'server': extras_server,
         'test': extras_server + extras_tests,

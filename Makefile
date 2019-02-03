@@ -11,7 +11,6 @@ uninstall:
 	pip uninstall --yes snippy
 
 server:
-	pip install -e .
 	pip install -e .[server]
 
 dev:

@@ -755,8 +755,8 @@ http://tjelvarolsson.com/blog/five-steps-to-add-the-bling-factor-to-your-python-
     $ pip install . --user
 
     clear
-    
-    
+
+
 asciinema rec ../snippy.cast -c ../commands.sh
 sciinema rec ../snippy.cast -c ../commands.sh
 asciinema rec ../snippy.cast
@@ -1162,7 +1162,7 @@ python runner import --defaults --reference
     $ make clean-db
     $ python runner import --defaults --all
     $ python runner export --defaults --all
-    
+
     # Test all
     $ make test-all
 
@@ -2641,6 +2641,27 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        algorithms and their parameters. But here the intention is that the method
        description explains the complicated parts and the method argument is a
        short explanation of the pararameters.
+
+    USING IN LINUX
+
+    1. Linux more command with ANSI colors
+
+       Command example below pipes the output to more command.
+
+       ``python runner search --sall elastic --solutions | more``
+
+       This leaves `e--` from `--More--` when ANSI colors are used and the printed
+       line length is shorter than the `--More--`.
+
+       This can be circumvented by using more command options -c or -p.
+
+       ``python runner search --sall elastic --solutions | more -c``
+       ``python runner search --sall elastic --solutions | more -p``
+
+       This is visible at least with Fedora 26 with 'more from util-linux 2.29.1'.
+       The reason for this behaviour is unknown. It may be related to color codes
+       that are somehow not the "lenght" of normal characters and cleaning the
+       --More-- text fails.
 
     === WHITEBOARD ===
     # SECURITY

@@ -1,5 +1,6 @@
 ## WORKING
-   - [ ] Why there is : e-- in some outputs for solutions?
+   - [ ] Fix python runner search --sall 'test' --filter test -vv | grep --all
+   - [ ] Make sure that Mkdn has only two spaces at the end of meta lines. Now empty lines have 3 spaces.
    - [ ] Snippet template help text has typo with missing dot 'Add brief title for content'. Do not fix this since this is in template brief in MKDN format that does not need dot. Document this.,
    - [ ] Environment markers do not work in setup.py for yaml? https://github.com/inveniosoftware/troubleshooting/issues/1
    - [ ] How to compile psycopg2 for PyPY?
@@ -174,6 +175,7 @@
    - [ ] How to better prevent commits to snippy.db than git hooks or git --assume-unchanged?
 
 ## FOLLOW EXTERNAL BUGS/ISSUES
+   - [ ] Is there an external bug with more and ANSI color codes? // 'Linux more command with ANSI colors'
    - [ ] Pytest support for PEP-518 pyproject.toml is missing // https://github.com/pytest-dev/pytest/issues/1556
    - [ ] OpenAPI does not support OPTIONS HTTP method and it cannot be defined. // https://github.com/OAI/OpenAPI-Specification/issues/325
    - [x] The openapi2jsonschema does not work with Python 3. // https://github.com/garethr/openapi2jsonschema/issues/6.

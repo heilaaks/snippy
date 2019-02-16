@@ -21,9 +21,7 @@
 
 from __future__ import print_function
 
-import sys
 from collections import OrderedDict
-from signal import signal, getsignal, SIGPIPE, SIG_DFL
 
 from snippy.cause import Cause
 from snippy.constants import Constants as Const
@@ -341,7 +339,7 @@ class Collection(object):  # pylint: disable=too-many-public-methods
             text = text + Const.NEWLINE
 
         self._logger.debug('printing content to terminal stdout')
-        self._print_stdout(text)
+        Logger.print_stdout(text)
 
     @property
     def total(self):
@@ -367,24 +365,3 @@ class Collection(object):  # pylint: disable=too-many-public-methods
         }
 
         return meta_content
-
-    @classmethod
-    def _print_stdout(cls, text):
-        """Print tool output to stdout."""
-
-        # The signal handler manipulation and flush setting below prevents 'broken
-        # pipe' errors with grep. For example incorrect parameter usage in grep may
-        # cause this. See below listed references /1,2/ and examples that fail
-        # without this correction.
-        #
-        # /1/ https://stackoverflow.com/a/16865106
-        # /2/ https://stackoverflow.com/a/26738736
-        #
-        # $ snippy search --sall '--all' --filter crap | grep --all
-        # $ snippy search --sall 'test' --filter test -vv | grep --all
-        if text:
-            signal_sigpipe = getsignal(SIGPIPE)
-            signal(SIGPIPE, SIG_DFL)
-            print(text)
-            sys.stdout.flush()
-            signal(SIGPIPE, signal_sigpipe)

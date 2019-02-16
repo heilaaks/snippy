@@ -1,5 +1,4 @@
 ## WORKING
-   - [ ] Fix python runner search --sall 'test' --filter test -vv | grep --all
    - [ ] Make sure that Mkdn has only two spaces at the end of meta lines. Now empty lines have 3 spaces.
    - [ ] Snippet template help text has typo with missing dot 'Add brief title for content'. Do not fix this since this is in template brief in MKDN format that does not need dot. Document this.,
    - [ ] Environment markers do not work in setup.py for yaml? https://github.com/inveniosoftware/troubleshooting/issues/1

@@ -81,6 +81,16 @@ class Logger(object):
     logging.addLevelName(logging.INFO, 'info')
     logging.addLevelName(logging.DEBUG, 'debug')
 
+    # Ignore exceptions from logger to prevent them to be shown to end user.
+    # For example 'broken pipe' errors with grep can cause these when logs
+    # are enabled.
+    #
+    # There was an effort to implement custom StreamHandler to write log
+    # messages to stderr instead of stdout if there is a broken pipe error.
+    # The problem was the 'broken pipe' exception does not exist in Python 2
+    # and thus making generic code is difficult.
+    logging.raiseExceptions = False
+
     @classmethod
     def get_logger(cls, name=__name__):
         """Get logger.
@@ -186,6 +196,39 @@ class Logger(object):
         cls.SERVER_OID = format(getrandbits(32), "08x")
 
     @classmethod
+    def print_stdout(cls, text):
+        """Print output to stdout."""
+
+        # The signal handler manipulation and flush setting below prevents
+        # 'broken pipe' errors with grep. For example incorrect parameter
+        # usage in grep may cause this. See below listed references [1] and
+        # [2] with examples that can be used in manual testing testing.
+        #
+        # NOTE! Catching broken pipe signal can be dangerous [3]. This is
+        #       not changed because the alternative is problematic with
+        #       Python 2 [3].
+        #
+        # [1] https://stackoverflow.com/a/16865106
+        # [2] https://stackoverflow.com/a/26738736
+        # [3] https://stackoverflow.com/a/35761190
+        #
+        # $ snippy search --sall '--all' --filter crap | grep --all
+        # $ snippy search --sall 'test' --filter test -vv | grep --all
+        # $ snippy --server-host 127.0.0.1:8080 -vv | grep get
+        # $ snippy --help | head -n 20
+        # $ snippy --help | tail -n 20
+        # $ snippy search --sall . | head -n 20
+        # $ snippy search --sall . | tail -n 20
+        # $ snippy search --sall . -vv | head -n 20
+        # $ snippy search --sall . -vv | tail -n 20
+        if text:
+            signal_sigpipe = getsignal(SIGPIPE)
+            signal(SIGPIPE, SIG_DFL)
+            print(text)
+            sys.stdout.flush()
+            signal(SIGPIPE, signal_sigpipe)
+
+    @classmethod
     def print_status(cls, status):
         """Print status information like exit cause or server running.
 
@@ -193,22 +236,12 @@ class Logger(object):
             status (str): Status to be printed on stdout.
         """
 
-        # The signal handler manipulation and the flush below prevent the
-        # 'broken pipe' errors with grep. For example incorrect parameter
-        # usage in grep may cause this. /1,2/
-        #
-        # /1/ https://stackoverflow.com/a/16865106
-        # /2/ https://stackoverflow.com/a/26738736
         if logging.getLogger('snippy').getEffectiveLevel() == logging.DEBUG:
             if cls.CONFIG['very_verbose']:
                 status.lower()
             Logger.get_logger().debug('%s', status)
         elif not cls.CONFIG['quiet']:
-            signal_sigpipe = getsignal(SIGPIPE)
-            signal(SIGPIPE, SIG_DFL)
-            print(status)
-            sys.stdout.flush()
-            signal(SIGPIPE, signal_sigpipe)
+            cls.print_stdout(status)
 
     @staticmethod
     def timeit(method=None, refresh_oid=False):

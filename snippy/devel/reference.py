@@ -22,9 +22,7 @@
 from __future__ import print_function
 
 import re
-import sys
 import textwrap
-from signal import signal, getsignal, SIGPIPE, SIG_DFL
 
 import pkg_resources
 
@@ -47,7 +45,7 @@ class Reference(object):
 
         self.create_test_document()
         text = self.format_test_document(ansi)
-        Reference.output_test_document(text)
+        Logger.print_stdout(text)
 
     def create_test_document(self):
         """Create test documentation from test files."""
@@ -96,24 +94,11 @@ class Reference(object):
 
         # Set only one empty line at the end of string for beautified output.
         if text:
+            text = 'test case reference list:\n\n' + text
             text = text.rstrip()
             text = text + Const.NEWLINE
 
         return text
-
-    @staticmethod
-    def output_test_document(text):
-        """Print test document to console."""
-
-        # See comment from Migrate.print_stdout. This is not used
-        # from Migrate() because of circular dependencies.
-        if text:
-            text = 'test case reference list:\n\n' + text
-            signal_sigpipe = getsignal(SIGPIPE)
-            signal(SIGPIPE, SIG_DFL)
-            print(text)
-            sys.stdout.flush()
-            signal(SIGPIPE, signal_sigpipe)
 
     @staticmethod
     def _terminal_command(ansi=False):

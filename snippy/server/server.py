@@ -112,13 +112,10 @@ class Server(object):  # pylint: disable=too-few-public-methods
         self.api.add_route(urljoin(Config.server_app_base_path, '{sall}'), ApiKeywords(fields))
 
         # The signal handler manipulation and the flush below prevent the
-        # 'broken pipe' errors with grep /1,2/. The code allows clean exit
-        # from server with ctrl-c when grepping logs like with the example:
+        # 'broken pipe' error with grep. See more information from Logger
+        # print_stdout method. Example command below works because of this.
         #
-        #   $ snippy --server-host localhost:8080 -vv | grep -A2 -B2 'operation: run :'
-        #
-        # /1/ https://stackoverflow.com/a/16865106
-        # /2/ https://stackoverflow.com/a/26738736
+        # $ snippy --server-host localhost:8080 -vv | grep -A2 -B2 'operation: run :'
         signal_sigpipe = getsignal(SIGPIPE)
         signal(SIGPIPE, SIG_DFL)
         SnippyServer(self.api, options).run()

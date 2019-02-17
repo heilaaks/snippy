@@ -271,10 +271,11 @@ class Collection(object):  # pylint: disable=too-many-public-methods
             string: Collection in text format.
         """
 
+        text = Const.EMPTY
         if not self:
             Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find content with given search criteria')
+            return text
 
-        text = Const.EMPTY
         for resource in self.resources():
             text = text + resource.dump_text(templates)
             text = text + Const.NEWLINE
@@ -302,10 +303,11 @@ class Collection(object):  # pylint: disable=too-many-public-methods
             string: Collection in Markdown format.
         """
 
+        text = Const.EMPTY
         if not self:
             Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find content with given search criteria')
+            return text
 
-        text = Const.EMPTY
         for resource in self.resources():
             text = text + resource.dump_mkdn(templates)
             text = text + '\n---\n\n'
@@ -323,23 +325,40 @@ class Collection(object):  # pylint: disable=too-many-public-methods
            debug_logs (bool): Define if debut information is included.
         """
 
-        if not self:
-            Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find content with given search criteria')
-
         text = Const.EMPTY
         if template_format == Const.CONTENT_FORMAT_MKDN:
             text = self.dump_mkdn(templates)
         else:
-            for i, resource in enumerate(self.resources(), start=1):
-                text = text + resource.dump_term(index=i, use_ansi=use_ansi, debug_logs=debug_logs)
+            text = self._dump_term(use_ansi, debug_logs)
+
+        self._logger.debug('printing content to terminal stdout')
+        Logger.print_stdout(text)
+
+    def _dump_term(self, use_ansi, debug_logs):
+        """Convert collection into terminal format.
+
+        Args:
+           use_ansi (bool): Define if ANSI characters are used.
+           debug_logs (bool): Define if debut information is included.
+
+        Returns:
+            string: Collection in text format.
+        """
+
+        text = Const.EMPTY
+        if not self:
+            Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find content with given search criteria')
+            return text
+
+        for i, resource in enumerate(self.resources(), start=1):
+            text = text + resource.dump_term(index=i, use_ansi=use_ansi, debug_logs=debug_logs)
 
         # Set one empty line at the end of string for beautified output.
         if self:
             text = text.rstrip()
             text = text + Const.NEWLINE
 
-        self._logger.debug('printing content to terminal stdout')
-        Logger.print_stdout(text)
+        return text
 
     @property
     def total(self):

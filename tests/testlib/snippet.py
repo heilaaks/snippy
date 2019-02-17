@@ -217,12 +217,12 @@ class Snippet(object):  # pylint: disable=too-few-public-methods
         '> category : snippet  ',
         'created  : 2018-02-02T02:02:02.000001+00:00  ',
         'digest   : c6744ff5c433d48cb3a54044722e808ee0d73776ceccaab975b5005bc449cd92  ',
-        'filename :   ',
-        'name     :   ',
-        'source   :   ',
+        'filename :  ',
+        'name     :  ',
+        'source   :  ',
         'tags     : comma,separated,tags  ',
         'updated  : 2018-02-02T02:02:02.000001+00:00  ',
         'uuid     : 1acd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
-        'versions : ',
+        'versions :  ',
         ''
     )

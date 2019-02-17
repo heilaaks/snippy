@@ -266,13 +266,13 @@ class TestCliCreateSnippet(object):
             '> category : snippet  ',
             'created  : 2017-10-14T19:56:31.000001+00:00  ',
             'digest   : ' + Snippet.TEMPLATE_DIGEST_MKDN_MODEL + '  ',
-            'filename :   ',
-            'name     :   ',
-            'source   :   ',
+            'filename :  ',
+            'name     :  ',
+            'source   :  ',
             'tags     : comma,separated,tags  ',
             'updated  : 2017-10-14T19:56:31.000001+00:00  ',
             'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
-            'versions : ',
+            'versions :  ',
             ''
         )
         edited = (
@@ -289,13 +289,13 @@ class TestCliCreateSnippet(object):
             '> category : snippet  ',
             'created  : 2017-10-14T19:56:31.000001+00:00  ',
             'digest   : 18473ec207798670c302fb711a40df6555e8973e26481e4cd6b2ed205f5e633c  ',
-            'filename :   ',
-            'name     :   ',
-            'source   :   ',
+            'filename :  ',
+            'name     :  ',
+            'source   :  ',
             'tags     : cleanup,container,docker,docker-ce,moby  ',
             'updated  : 2017-10-14T19:56:31.000001+00:00  ',
             'uuid     : 24cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
-            'versions : ',
+            'versions :  ',
             '')
         editor_data.return_value = '\n'.join(edited)
         cause = snippy.run(['snippy', 'create', '--editor'])
@@ -325,13 +325,13 @@ class TestCliCreateSnippet(object):
             '> category : snippet  ',
             'created  : 2017-10-14T19:56:31.000001+00:00  ',
             'digest   : ' + Snippet.TEMPLATE_DIGEST_MKDN_MODEL + '  ',
-            'filename :   ',
-            'name     :   ',
-            'source   :   ',
+            'filename :  ',
+            'name     :  ',
+            'source   :  ',
             'tags     : comma,separated,tags  ',
             'updated  : 2017-10-14T19:56:31.000001+00:00  ',
             'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
-            'versions : ',
+            'versions :  ',
             ''
         )
         edited = template
@@ -399,13 +399,13 @@ class TestCliCreateSnippet(object):
             '> category : snippet  ',
             'created  : 2017-10-14T19:56:31.000001+00:00  ',
             'digest   : fdbf285d091a8c46cf491da675ecfeda38f7796ef034124b357f49737963cd19  ',
-            'filename :   ',
-            'name     :   ',
-            'source   :   ',
+            'filename :  ',
+            'name     :  ',
+            'source   :  ',
             'tags     : cli,from,tags  ',
             'updated  : 2017-10-14T19:56:31.000001+00:00  ',
             'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
-            'versions : ',
+            'versions :  ',
             ''
         )
         edited = (
@@ -422,13 +422,13 @@ class TestCliCreateSnippet(object):
             '> category : snippet  ',
             'created  : 2017-10-14T19:56:31.000001+00:00  ',
             'digest   : fdbf285d091a8c46cf491da675ecfeda38f7796ef034124b357f49737963cd19  ',
-            'filename :   ',
-            'name     :   ',
-            'source   :   ',
+            'filename :  ',
+            'name     :  ',
+            'source   :  ',
             'tags     : cli,from,tags  ',
             'updated  : 2017-10-14T19:56:31.000001+00:00  ',
             'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
-            'versions : ',
+            'versions :  ',
             ''
         )
         editor_data.return_value = '\n'.join(edited)

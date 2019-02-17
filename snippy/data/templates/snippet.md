@@ -17,4 +17,4 @@ source   : <source>
 tags     : <tags>  
 updated  : <updated>  
 uuid     : <uuid>  
-versions : <versions>
+versions : <versions>  

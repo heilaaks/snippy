@@ -122,13 +122,13 @@ class TestCliCreateReferece(object):
             '> category : reference  ',
             'created  : 2018-06-22T13:11:13.678729+00:00  ',
             'digest   : ' + Reference.TEMPLATE_DIGEST_MKDN_MODEL + '  ',
-            'filename :   ',
-            'name     :   ',
-            'source   :   ',
+            'filename :  ',
+            'name     :  ',
+            'source   :  ',
             'tags     : comma,separated,tags  ',
             'updated  : 2018-06-22T13:11:13.678729+00:00  ',
             'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
-            'versions : ',
+            'versions :  ',
             ''
         )
         edited = (
@@ -145,13 +145,13 @@ class TestCliCreateReferece(object):
             '> category : reference  ',
             'created  : 2018-06-22T13:11:13.678729+00:00  ',
             'digest   : ' + Reference.TEMPLATE_DIGEST_MKDN_MODEL + '  ',
-            'filename :   ',
-            'name     :   ',
-            'source   :   ',
+            'filename :  ',
+            'name     :  ',
+            'source   :  ',
             'tags     : commit,git,howto  ',
             'updated  : 2018-06-22T13:11:13.678729+00:00  ',
             'uuid     : 24cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
-            'versions : ',
+            'versions :  ',
             '')
         editor_data.return_value = '\n'.join(edited)
         cause = snippy.run(['snippy', 'create', '--reference', '--editor'])
@@ -179,13 +179,13 @@ class TestCliCreateReferece(object):
             '> category : reference  ',
             'created  : 2018-06-22T13:11:13.678729+00:00  ',
             'digest   : ' + Reference.TEMPLATE_DIGEST_MKDN_MODEL + '  ',
-            'filename :   ',
-            'name     :   ',
-            'source   :   ',
+            'filename :  ',
+            'name     :  ',
+            'source   :  ',
             'tags     : comma,separated,tags  ',
             'updated  : 2018-06-22T13:11:13.678729+00:00  ',
             'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
-            'versions : ',
+            'versions :  ',
             ''
         )
         edited = template

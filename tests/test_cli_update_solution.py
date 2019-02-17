@@ -301,12 +301,12 @@ class TestCliUpdateSolution(object):
             'created  : 2019-01-04T10:54:49.265512+00:00  ',
             'digest   : 18473ec207798670c302fb711a40df6555e8973e26481e4cd6b2ed205f5e633c  ',
             'filename : kubernetes-docker-log-driver-kafka.mkdn  ',
-            'name     :   ',
-            'source   :   ',
+            'name     :  ',
+            'source   :  ',
             'tags     : docker,driver,kafka,kubernetes,logging,logs2kafka,moby,plugin  ',
             'updated  : 2019-01-05T10:54:49.265512+00:00  ',
             'uuid     : 24cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
-            'versions : ',
+            'versions :  ',
             '')
         updates = content
         updates['data'][0]['data'] = (

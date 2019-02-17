@@ -686,6 +686,13 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         mkdn = mkdn.replace('<updated>', self.updated)
         mkdn = mkdn.replace('<digest>', self.digest)
 
+        # Beautify metadata line ends with three spaces to include always two
+        # spaces. If a metadata field is empty, adding it to template creates
+        # three spaces. Two spaces are required by Markdown to have a newline.
+        mkdn = re.sub(r'''
+            \s{1}:\s{3}$      # Match empty metadata with three spaces.
+            ''', ' :  ', mkdn, flags=re.MULTILINE | re.VERBOSE)
+
         return mkdn
 
     def _dump_mkdn_data(self):

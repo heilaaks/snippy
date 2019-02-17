@@ -464,13 +464,13 @@ class Solution(object):  # pylint: disable=too-few-public-methods
         '> category : solution  ',
         'created  : 2017-10-14T19:56:31.000001+00:00  ',
         'digest   : 1e7722f1821550a07782c4e9f3e198d5a561f97c567161c3040324d61a168976  ',
-        'filename :   ',
-        'name     :   ',
-        'source   :   ',
+        'filename :  ',
+        'name     :  ',
+        'source   :  ',
         'tags     : comma,separated,tags  ',
         'updated  : 2017-10-14T19:56:31.000001+00:00  ',
         'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
-        'versions : ',
+        'versions :  ',
         ''
     )
 

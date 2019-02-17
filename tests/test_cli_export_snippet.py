@@ -588,13 +588,13 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             '> category : snippet  ',
             'created  : 2017-10-20T07:08:45.000001+00:00  ',
             'digest   : 49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73  ',
-            'filename :   ',
-            'name     :   ',
-            'source   :   ',
+            'filename :  ',
+            'name     :  ',
+            'source   :  ',
             'tags     : cleanup,container,docker,docker-ce,image,moby  ',
             'updated  : 2017-10-20T07:08:45.000001+00:00  ',
             'uuid     : 12cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
-            'versions : ',
+            'versions :  ',
             ''
         )
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:

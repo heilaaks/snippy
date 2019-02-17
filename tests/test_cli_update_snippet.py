@@ -300,13 +300,13 @@ class TestCliUpdateSnippet(object):
             '> category : snippet  ',
             'created  : 2017-10-14T19:56:31.000001+00:00  ',
             'digest   : 613e163028a17645a7dfabbe159f05d14db7588259229dd8d08e949cdc668373  ',
-            'filename :   ',
-            'name     :   ',
-            'source   :   ',
+            'filename :  ',
+            'name     :  ',
+            'source   :  ',
             'tags     : cli-tag  ',
             'updated  : 2017-10-14T19:56:31.000001+00:00  ',
             'uuid     : 12cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
-            'versions : ',
+            'versions :  ',
             ''
         )
         editor_data.return_value = '\n'.join(template)

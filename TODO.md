@@ -1,6 +1,4 @@
 ## WORKING
-   - [ ] Make sure that Mkdn has only two spaces at the end of meta lines. Now empty lines have 3 spaces.
-   - [ ] Snippet template help text has typo with missing dot 'Add brief title for content'. Do not fix this since this is in template brief in MKDN format that does not need dot. Document this.,
    - [ ] Environment markers do not work in setup.py for yaml? https://github.com/inveniosoftware/troubleshooting/issues/1
    - [ ] How to compile psycopg2 for PyPY?
    - [ ] Snippy does not tolerate second connect? If there are two servers to one Postgre, there is an error coming from Snippy?

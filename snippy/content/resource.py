@@ -328,6 +328,10 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             if template_format == Const.CONTENT_FORMAT_MKDN and category == Const.SNIPPET:
                 self.data = ('commands between backtics and prefixed by dollar sign',)
             if not self.brief:
+                # Do not add dot at end of the template brief below. This is
+                # used for Markdown format template and using a dot with the
+                # brief line, which also has the group field, does not look
+                # good.
                 self.brief = 'Add brief title for content'
             if not self.description:
                 self.description = 'Add a description that defines the content in one chapter.'

@@ -19,6 +19,8 @@
 
 """test_ut_collection: Test Collection() class."""
 
+from __future__ import print_function
+
 import pytest
 
 from snippy.constants import Constants as Const

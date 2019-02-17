@@ -19,6 +19,8 @@
 
 """content: Content helpers for testing."""
 
+from __future__ import print_function
+
 import copy
 import datetime
 import re

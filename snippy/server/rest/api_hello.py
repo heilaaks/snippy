@@ -30,7 +30,7 @@ from snippy.meta import __openapi__
 from snippy.meta import __version__
 
 
-class ApiHello(ApiContentBase):  # pylint: disable=too-few-public-methods
+class ApiHello(ApiContentBase):
     """Hello API."""
 
     @Logger.timeit(refresh_oid=True)

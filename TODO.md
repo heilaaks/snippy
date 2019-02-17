@@ -1,5 +1,4 @@
 ## WORKING
-   - [ ] Environment markers do not work in setup.py for yaml? https://github.com/inveniosoftware/troubleshooting/issues/1
    - [ ] How to compile psycopg2 for PyPY?
    - [ ] Snippy does not tolerate second connect? If there are two servers to one Postgre, there is an error coming from Snippy?
    - [ ] Fix help text to use import --all instead of content specific commands. Or keep?

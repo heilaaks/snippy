@@ -1,14 +1,18 @@
 ## WORKING
-   - [ ] How to compile psycopg2 for PyPY?
-   - [ ] Fix help text to use import --all instead of content specific commands. Or keep?
-   - [ ] Document and test that update now also supports --format option and the default is Markdown.
    - [ ] Add support to read storage and server options from env variables.
-   - [ ] Why starting server calls collection initialization 4 times?
-   - [ ] Add description to cli and modify template settings to set it if provided.
-   - [ ] Config get_resource could return empty Resource instead of None in failure. This is now related to new migrate refactoring that prevents migrating template resources.
+   - [ ] Document and test that update now also supports --format option and the default is Markdown.
    - [ ] Fix better logs if --logs-json (invalid option name) is used with -vv. Now there is not proper log what went wrong with -vv/--debug?
    - [ ] Fix and test adding two same tags, links and categories. At least from text source two tags are duplicated. Verify others.
    - [ ] Fix '--filter 0' maps to None instead of 0?
+   - [ ] Add compression for the response. Default is pretty print, the --server-minify-json is applied if request header does not request compression.
+   - [ ] How to compile psycopg2 for PyPY?
+   - [ ] Fix help text to use import --all instead of content specific commands. Or keep?
+   - [ ] Why starting server calls collection initialization 4 times?
+   - [ ] Starting the server again and import the default content again with --defaults causes server internal erro 500 because of UUID. The 500 should not be here because this is not internal error. Fix?
+   - [ ] Add description to cli and modify template settings to set it if provided.
+   - [ ] Add logic to name. This can be updated from REST. This should not do anything because of security?
+   - [ ] Add logic versions. Change version to content_versions in base? Same all content? Requires long lines for cli.py. How describe versions?
+   - [ ] Config get_resource could return empty Resource instead of None in failure. This is now related to new migrate refactoring that prevents migrating template resources.
    - [ ] Fix (remove) the LANG in Alpine based dockerfile? Is this useless as MUSL does not support locales? https://github.com/gliderlabs/docker-alpine/issues/144
    - [ ] Fix server silent startup failure if for example the port is reserved. How to get proper error cause for user?
    - [ ] Test postgreSQL SSL connection manually.
@@ -46,15 +50,12 @@
    - [ ] Add support to find dead links.
    - [ ] Add Travis CI for PyPy version v6.0 for Python 3 when it comes https://github.com/travis-ci/travis-ci/issues/9542
    - [ ] Add test client to measure performance of the server. The PyPy does not seem to work with api_performance test.
-   - [ ] Add compression for the response. Default is pretty print, the --server-minify-json is applied if request header does not request compression.
    - [ ] Add user management with a new user table that lins to contents table.
    - [ ] Add user authentication. Which one: sessionID, OAuth2, JWS? Maybe OAuth2 (corporate integration) or JWS (embedded, no server?).
    - [ ] Add CORS https://stackoverflow.com/a/45183343
    - [ ] Add /snippy/api/admin/v1/settings for log config. Same base /snippy/api/ for all routes.
    - [ ] Add limit to multilevel sort fields to two fields to avoid complex scenarios.
    - [ ] Add limits to all parameters: column array size, sort array size, etc.
-   - [ ] Add logic to name. This can be updated from REST. This should not do anything because of security?
-   - [ ] Add logic versions. Change version to content_versions in base? Same all content? Requires long lines for cli.py. How describe versions?
    - [ ] Add support to print only selected fields, like brief and digest for CLI text output. Hard to generalize since layout e.g. contains header with three fields.
    - [ ] Add statistics object which tracks peak and percentile latencies with memory and CPU usage.
    - [ ] Add support for REST API YAML responses.

@@ -44,7 +44,7 @@ class ApiContentBase(object):  # pylint: disable=too-many-instance-attributes
     def on_post(self, request, response, **kwargs):  # pylint: disable=unused-argument
         """Create new content."""
 
-        self._logger.debug('run post %s', request.uri)
+        self._logger.debug('run: %s %s', request.method, request.uri)
         collection = Validate.json_object(request)
         for resource in collection:
             api = Api(self._category, Api.CREATE, resource)
@@ -60,7 +60,7 @@ class ApiContentBase(object):  # pylint: disable=too-many-instance-attributes
             response.status = Cause.http_status()
 
         Cause.reset()
-        self._logger.debug('end post %s', request.uri)
+        self._logger.debug('end: %s %s', request.method, request.uri)
 
     @Logger.timeit(refresh_oid=True)
     def on_put(self, request, response, **kwargs):  # pylint: disable=unused-argument,no-self-use
@@ -72,7 +72,7 @@ class ApiContentBase(object):  # pylint: disable=too-many-instance-attributes
     def on_get(self, request, response, sall=None, stag=None, sgrp=None):
         """Search content based on query parameters."""
 
-        self._logger.debug('run get %s', request.uri)
+        self._logger.debug('run: %s %s', request.method, request.uri)
         if sall:
             request.params['sall'] = sall
         if stag:
@@ -94,20 +94,20 @@ class ApiContentBase(object):  # pylint: disable=too-many-instance-attributes
             response.status = Cause.http_status()
 
         Cause.reset()
-        self._logger.debug('end get %s', request.uri)
+        self._logger.debug('end: %s %s', request.method, request.uri)
 
     @Logger.timeit(refresh_oid=True)
     def on_delete(self, request, response, **kwargs):  # pylint: disable=unused-argument
         """Deleting content without resource is not supported."""
 
-        self._logger.debug('run delete %s', request.uri)
+        self._logger.debug('run: %s %s', request.method, request.uri)
         Cause.push(Cause.HTTP_NOT_FOUND, 'cannot delete content without identified resource')
         response.content_type = ApiContentBase.MEDIA_JSON_API
         response.body = Generate.error(Cause.json_message())
         response.status = Cause.http_status()
 
         Cause.reset()
-        self._logger.debug('end delete %s', request.uri)
+        self._logger.debug('end: %s %s', request.method, request.uri)
 
     @staticmethod
     @Logger.timeit(refresh_oid=True)
@@ -130,7 +130,7 @@ class ApiContentDigestBase(object):
     def on_post(self, request, response, digest):
         """Update content."""
 
-        self._logger.debug('run post %', request.uri)
+        self._logger.debug('run: %s %s', request.method, request.uri)
         if request.get_header('x-http-method-override', default='post').lower() == 'put':
             self.on_put(request, response, digest)
         elif request.get_header('x-http-method-override', default='post').lower() == 'patch':
@@ -144,7 +144,7 @@ class ApiContentDigestBase(object):
             response.status = Cause.http_status()
 
         Cause.reset()
-        self._logger.debug('end post %s', request.uri)
+        self._logger.debug('end: %s %s', request.method, request.uri)
 
     @Logger.timeit(refresh_oid=True)
     def on_get(self, request, response, digest):
@@ -155,7 +155,7 @@ class ApiContentDigestBase(object):
         specifications. See the Snippy documentation for more information.
         """
 
-        self._logger.debug('run get %s', request.uri)
+        self._logger.debug('run: %s %s', request.method, request.uri)
         local_params = {'digest': digest}
         api = Api(self._category, Api.SEARCH, local_params)
         Config.load(api)
@@ -173,13 +173,13 @@ class ApiContentDigestBase(object):
             response.status = Cause.http_status()
 
         Cause.reset()
-        self._logger.debug('end get %s', request.uri)
+        self._logger.debug('end: %s %s', request.method, request.uri)
 
     @Logger.timeit(refresh_oid=True)
     def on_delete(self, request, response, digest):
         """Delete content based on digest."""
 
-        self._logger.debug('run delete %s', request.uri)
+        self._logger.debug('run: %s %s', request.method, request.uri)
         local_params = {'digest': digest}
         api = Api(self._category, Api.DELETE, local_params)
         Config.load(api)
@@ -192,13 +192,13 @@ class ApiContentDigestBase(object):
             response.status = Cause.http_status()
 
         Cause.reset()
-        self._logger.debug('end delete %s', request.uri)
+        self._logger.debug('end: %s %s', request.method, request.uri)
 
     @Logger.timeit(refresh_oid=True)
     def on_put(self, request, response, digest):
         """Update whole content based on digest."""
 
-        self._logger.debug('run put %s', request.uri)
+        self._logger.debug('run: %s %s', request.method, request.uri)
         collection = Validate.json_object(request, digest)
         for resource in collection:
             api = Api(self._category, Api.UPDATE, resource)
@@ -214,16 +214,16 @@ class ApiContentDigestBase(object):
             response.status = Cause.http_status()
 
         Cause.reset()
-        self._logger.debug('end put %s', request.uri)
+        self._logger.debug('end: %s %s', request.method, request.uri)
 
     @Logger.timeit(refresh_oid=True)
     def on_patch(self, request, response, digest):
         """Update partial content based on digest."""
 
-        self._logger.debug('run patch %s', request.uri)
+        self._logger.debug('run: %s %s', request.method, request.uri)
         self.on_put(request, response, digest)
         Cause.reset()
-        self._logger.debug('end patch %s', request.uri)
+        self._logger.debug('end: %s %s', request.method, request.uri)
 
     @staticmethod
     @Logger.timeit(refresh_oid=True)
@@ -251,7 +251,7 @@ class ApiContentDigestFieldBase(object):
         specifications. See the Snippy documentation for more information.
         """
 
-        self._logger.debug('run get %s', request.uri)
+        self._logger.debug('run: %s %s', request.method, request.uri)
         local_params = {'digest': digest, 'fields': field}
         api = Api(self._category, Api.SEARCH, local_params)
         Config.load(api)
@@ -269,7 +269,7 @@ class ApiContentDigestFieldBase(object):
             response.status = Cause.http_status()
 
         Cause.reset()
-        self._logger.debug('end get %s', request.uri)
+        self._logger.debug('end: %s %s', request.method, request.uri)
 
     @staticmethod
     @Logger.timeit(refresh_oid=True)
@@ -297,7 +297,7 @@ class ApiContentUuidBase(object):
         specifications. See the Snippy documentation for more information.
         """
 
-        self._logger.debug('run get %s', request.uri)
+        self._logger.debug('run: %s %s', request.method, request.uri)
         local_params = {'uuid': uuid}
         api = Api(self._category, Api.SEARCH, local_params)
         Config.load(api)
@@ -315,7 +315,7 @@ class ApiContentUuidBase(object):
             response.status = Cause.http_status()
 
         Cause.reset()
-        self._logger.debug('end get %s', request.uri)
+        self._logger.debug('end: %s %s', request.method, request.uri)
 
     @staticmethod
     @Logger.timeit(refresh_oid=True)
@@ -343,7 +343,7 @@ class ApiContentUuidFieldBase(object):
         specifications. See the Snippy documentation for more information.
         """
 
-        self._logger.debug('run get %s', request.uri)
+        self._logger.debug('run: %s %s', request.method, request.uri)
         local_params = {'uuid': uuid, 'fields': field}
         api = Api(self._category, Api.SEARCH, local_params)
         Config.load(api)
@@ -361,7 +361,7 @@ class ApiContentUuidFieldBase(object):
             response.status = Cause.http_status()
 
         Cause.reset()
-        self._logger.debug('end get %s', request.uri)
+        self._logger.debug('end: %s %s', request.method, request.uri)
 
     @staticmethod
     @Logger.timeit(refresh_oid=True)

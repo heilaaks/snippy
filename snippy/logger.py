@@ -266,8 +266,9 @@ class Logger(object):
                 start = time.time()
                 if refresh_oid:
                     Logger.refresh_oid()
+                Logger.get_logger().debug('run method: %s', method.__name__)
                 result = method(*args, **kwargs)
-                Logger.get_logger().debug('operation: %s :duration: %.6fs', method.__name__, (time.time() - start))
+                Logger.get_logger().debug('end method: %s :duration: %.6fs', method.__name__, (time.time() - start))
 
                 return result
 

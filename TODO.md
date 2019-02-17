@@ -3,7 +3,6 @@
    - [ ] How to compile psycopg2 for PyPY?
    - [ ] Snippy does not tolerate second connect? If there are two servers to one Postgre, there is an error coming from Snippy?
    - [ ] Fix help text to use import --all instead of content specific commands. Or keep?
-   - [ ] Why there is operation: on_get :duration log after the first get with incorrect OID? This happens only once for the very first GET after server startup.
    - [ ] Document and test that update now also supports --format option and the default is Markdown.
    - [ ] Add support to read storage and server options from env variables.
    - [ ] Why starting server calls collection initialization 4 times?

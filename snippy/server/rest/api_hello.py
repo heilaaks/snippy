@@ -33,9 +33,8 @@ from snippy.meta import __version__
 class ApiHello(ApiContentBase):  # pylint: disable=too-few-public-methods
     """Hello API."""
 
-    @staticmethod
     @Logger.timeit(refresh_oid=True)
-    def on_get(_request, response, _sall=None, _stag=None, _sgrp=None):
+    def on_get(self, request, response, _sall=None, _stag=None, _sgrp=None):
         """Get Hello!"""
 
         hello = {
@@ -46,14 +45,17 @@ class ApiHello(ApiContentBase):  # pylint: disable=too-few-public-methods
                 'openapi': __openapi__
             }
         }
+        self._logger.debug('run: %s %s', request.method, request.uri)
         response.content_type = ApiContentBase.MEDIA_JSON_API
         response.body = Generate.dumps(hello)
         response.status = falcon.HTTP_200
+        self._logger.debug('end: %s %s', request.method, request.uri)
 
-    @staticmethod
     @Logger.timeit(refresh_oid=True)
-    def on_options(_request, response, _sall=None, _stag=None, _sgrp=None):
+    def on_options(self, request, response, _sall=None, _stag=None, _sgrp=None):
         """Respond with allowed methods for Hello!"""
 
+        self._logger.debug('run: %s %s', request.method, request.uri)
         response.status = falcon.HTTP_200
         response.set_header('Allow', 'GET')
+        self._logger.debug('end: %s %s', request.method, request.uri)

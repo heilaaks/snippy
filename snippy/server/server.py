@@ -29,6 +29,7 @@ try:
 except ImportError:
     from urlparse import urljoin
 
+from snippy.cause import Cause
 from snippy.config.config import Config
 from snippy.content.fields import Fields
 from snippy.content.reference import Reference
@@ -110,6 +111,12 @@ class Server(object):  # pylint: disable=too-few-public-methods
         self.api.add_route(urljoin(Config.server_app_base_path, 'uuid/{uuid}'), ApiUuid(fields))
         self.api.add_route(urljoin(Config.server_app_base_path, 'uuid/{uuid}/{field}'), ApiUuidField(fields))
         self.api.add_route(urljoin(Config.server_app_base_path, '{sall}'), ApiKeywords(fields))
+
+        # Reset cause just before starting the server. If there are any
+        # failures during server statup phase that set a cause they are
+        # still stored when the server runs. If this is the case, the
+        # first response sent by the server will be error response.
+        Cause.reset()
 
         # The signal handler manipulation and the flush below prevent the
         # 'broken pipe' error with grep. See more information from Logger

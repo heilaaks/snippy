@@ -33,6 +33,7 @@
    - [ ] Add tool configs to pyproject.toml.
 
 ## OPTIMIZATIONS
+   - [ ] Fix (optimize) Import all and the storage reads and returns all imported data that is not actually used in any way.
    - [ ] Fix (optimize) migrate and dump. The dump_dict is not needed in case of text and mkdn because those methods do not need the dict format but produce string directly.
    - [x] Fix (optimize) digest computation for Resource.
    - [ ] Fix (optimize) POST API with multiple contents. Now each content in collection is *.run with own resources. The create supports collection so this should work.

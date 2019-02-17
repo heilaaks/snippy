@@ -125,9 +125,7 @@ class Storage(object):
         """
 
         self._logger.debug('import content')
-        collection = self._database.insert(collection)
-
-        return collection
+        _ = self._database.insert(collection)  # noqa: F841
 
     def disconnect(self):
         """Disconnect storage."""

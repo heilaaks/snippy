@@ -89,6 +89,8 @@ class Snippy(object):
         try:
             from snippy.server.server import Server
 
+            if Config.defaults:
+                AllContent(self.storage).import_all()
             self.server = Server(self.storage)
             self.server.run()
         except ImportError:

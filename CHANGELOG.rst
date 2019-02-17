@@ -12,6 +12,8 @@ Breaking changes
 New features
 ~~~~~~~~~~~~
 
+* Add option to import all default content when server is started.
+
 Bugfixes
 ~~~~~~~~
 

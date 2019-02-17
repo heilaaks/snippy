@@ -2,7 +2,6 @@
    - [ ] Environment markers do not work in setup.py for yaml? https://github.com/inveniosoftware/troubleshooting/issues/1
    - [ ] How to compile psycopg2 for PyPY?
    - [ ] Snippy does not tolerate second connect? If there are two servers to one Postgre, there is an error coming from Snippy?
-   - [ ] How to import defaults with Postgre with container? Command line in container imports to sqlite? The container CLI reads from local sqlite files but the REST correctly from postgreSQL. (doh, the CLI is another instance from snippy container)
    - [ ] Fix help text to use import --all instead of content specific commands. Or keep?
    - [ ] Why there is operation: on_get :duration log after the first get with incorrect OID? This happens only once for the very first GET after server startup.
    - [ ] Document and test that update now also supports --format option and the default is Markdown.
@@ -43,6 +42,7 @@
    - [ ] Fix (optimize) the order of SQL columns. Fixed length columns first. This should ? allow database to optimize the length of data. Is this the case?
 
 ## FEATURES
+   - [ ] Add support to store any content in YAML files when server starts. Give path to folder that contains yaml files and import all?
    - [ ] Add combine on top of migrate and merge. The combine would allow adding for example a tag to an existing list of tags. This would be nice for CLI and could be used with RFC 6902 (JSON Patch) (if implemented).
    - [ ] Add support to search phrases like has 'active end'. This should return one result with default set but it returns two since each word is searched separately.
    - [ ] Add support to find dead links.

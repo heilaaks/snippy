@@ -214,6 +214,7 @@ class Config(object):
         cls.template_format = cls.source.template_format
         cls.use_ansi = not cls.source.no_ansi
         cls.failure = cls.source.failure
+        cls.failure_message = cls.source.failure_message
 
         # Server must be updated again because only the first init starts the server.
         cls.run_server = bool(cls.source.server_host)
@@ -241,6 +242,9 @@ class Config(object):
     @classmethod
     def reset(cls):
         """Reset configuration."""
+
+        if cls.source.failure:
+            cls._logger.debug('configuration failure: {}'.format(cls.source.failure_message))
 
         Profiler.disable()
 

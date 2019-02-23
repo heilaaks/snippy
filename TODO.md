@@ -1,6 +1,4 @@
 ## WORKING
-   - [ ] Fix better logs if --logs-json (invalid option name) is used with -vv. Now there is not proper log what went wrong with -vv/--debug?
-   - [ ] Running server withouth server-host terminates the server with funny logs includeing 400 cause.
    - [ ] Document and test that update now also supports --format option and the default is Markdown.
    - [ ] Fix and test adding two same tags, links and categories. At least from text source two tags are duplicated. Verify others.
    - [ ] Fix '--filter 0' maps to None instead of 0?

@@ -143,7 +143,7 @@ class Cli(ConfigSourceBase):
         if args is None:
             args = []
         args = args[1:]  # Remove the first parameter that is the program name.
-        parameters = Cli._parse_args(args)
+        parameters = Cli._parse_args(self, args)
         Cli._set_editor(parameters)
         Cli._set_format(parameters)
         # CLI always updates existing content if it exit exists (merge). This
@@ -158,12 +158,11 @@ class Cli(ConfigSourceBase):
         parameters['merge'] = True
         self.init_conf(parameters)
 
-    @staticmethod
-    def _parse_args(args):  # pylint: disable=too-many-statements
+    def _parse_args(self, args):  # pylint: disable=too-many-statements,too-many-locals
         """Parse command line arguments."""
 
         parameters = {}
-        parser = argparse.ArgumentParser(
+        parser = CustomArgumentParser(
             prog='snippy',
             add_help=False,
             usage=Cli.ARGS_USAGE,
@@ -264,13 +263,19 @@ class Cli(ConfigSourceBase):
 
             parameters = vars(parser.parse_args(args))
             parameters['failure'] = False
+            parameters['failure_message'] = ''
         except SystemExit:
             parameters['failure'] = True
+            parameters['failure_message'] = parser.get_message()
+            self._logger.debug('cli: {}'.format(parameters['failure_message']))
 
-        # Print help if no parameters are provided at all.
+        # Print tool help if parameters are not provided. Logs are not printed
+        # from this branch because adding -vv or --debug option would not go
+        # in this branch.
         if not args:
             parser.print_help(sys.stdout)
             parameters['failure'] = True
+            parameters['failure_message'] = 'no command line parameters'
 
         return parameters
 
@@ -316,6 +321,27 @@ class Cli(ConfigSourceBase):
             parameters['format'] = Const.CONTENT_FORMAT_TEXT
         elif 'format' not in parameters:
             parameters['format'] = Const.CONTENT_FORMAT_MKDN
+
+
+class CustomArgumentParser(argparse.ArgumentParser):
+    """Customized Argument Parser to get the failure string."""
+
+    def __init__(self, *args, **kwargs):
+        self._snippy_message = ''
+        super(CustomArgumentParser, self).__init__(*args, **kwargs)
+
+    def error(self, message):
+        self._snippy_message = message
+        super(CustomArgumentParser, self).error(message)
+
+    def get_message(self):
+        """Read the error message that caused parser to exit.
+
+        Returns:
+            string: Error message from argument parser.
+        """
+
+        return self._snippy_message
 
 
 class CustomHelpAction(argparse.Action):  # pylint: disable=too-few-public-methods

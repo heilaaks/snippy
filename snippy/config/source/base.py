@@ -19,6 +19,7 @@
 
 """base: Base class for configuration sources."""
 
+import os
 import re
 from collections import OrderedDict
 
@@ -60,7 +61,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self._derived = derived
         self._reset_fields = {}
         self._repr = self._get_repr()
-        self.set_conf(parameters)
+        self.init_conf(parameters)
 
     def __str__(self):
         """Print class attributes in a controlled manner.
@@ -145,8 +146,21 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
 
         return repr_
 
-    def set_conf(self, parameters):  # pylint: disable=too-many-statements
-        """Set API configuration parameters."""
+    def init_conf(self, parameters):  # pylint: disable=too-many-statements
+        """Initialize configuration parameters.
+
+        Configuration can be read from command line interface or received
+        from API query. It is also possible to configure for example server
+        and storage parameters with environment variables. The precedence
+        of configuration is:
+
+            1. Command line option.
+            2. Environment variable.
+            3. Hard coded default.
+
+        Args:
+            parameters (dict): Parameters from configuration source.
+        """
 
         if parameters is None:
             parameters = {}
@@ -187,25 +201,25 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self.search_filter = parameters.get('search_filter', None)
         self.search_limit = parameters.get('limit', self.LIMIT_DEFAULT_API)
         self.search_offset = parameters.get('offset', self.OFFSET_DEFAULT)
-        self.server_app_base_path = parameters.get('server_app_base_path', self.SERVER_APP_BASE_PATH)
-        self.server_host = parameters.get('server_host', Const.EMPTY)
-        self.server_minify_json = parameters.get('server_minify_json', False)
-        self.server_ssl_ca_cert = parameters.get('server_ssl_ca_cert', None)
-        self.server_ssl_cert = parameters.get('server_ssl_cert', None)
-        self.server_ssl_key = parameters.get('server_ssl_key', None)
+        self.server_app_base_path = parameters.get(*self._read_env('server_app_base_path', self.SERVER_APP_BASE_PATH))
+        self.server_host = parameters.get(*self._read_env('server_host', Const.EMPTY))
+        self.server_minify_json = parameters.get(*self._read_env('server_minify_json', False))
+        self.server_ssl_ca_cert = parameters.get(*self._read_env('server_ssl_ca_cert', None))
+        self.server_ssl_cert = parameters.get(*self._read_env('server_ssl_cert', None))
+        self.server_ssl_key = parameters.get(*self._read_env('server_ssl_key', None))
         self.sgrp = parameters.get('sgrp', None)
         self.sort_fields = parameters.get('sort', ('brief'))
         self.source = parameters.get('source', Const.EMPTY)
         self.stag = parameters.get('stag', None)
-        self.storage_path = parameters.get('storage_path', Const.EMPTY)
-        self.storage_type = parameters.get('storage_type', Const.DB_SQLITE)
-        self.storage_host = parameters.get('storage_host', Const.EMPTY)
-        self.storage_user = parameters.get('storage_user', Const.EMPTY)
-        self.storage_password = parameters.get('storage_password', Const.EMPTY)
-        self.storage_database = parameters.get('storage_database', Const.EMPTY)
-        self.storage_ssl_cert = parameters.get('storage_ssl_cert', Const.EMPTY)
-        self.storage_ssl_key = parameters.get('storage_ssl_key', Const.EMPTY)
-        self.storage_ssl_ca_cert = parameters.get('storage_ssl_ca_cert', Const.EMPTY)
+        self.storage_path = parameters.get(*self._read_env('storage_path', Const.EMPTY))
+        self.storage_type = parameters.get(*self._read_env('storage_type', Const.DB_SQLITE))
+        self.storage_host = parameters.get(*self._read_env('storage_host', Const.EMPTY))
+        self.storage_user = parameters.get(*self._read_env('storage_user', Const.EMPTY))
+        self.storage_password = parameters.get(*self._read_env('storage_password', Const.EMPTY))
+        self.storage_database = parameters.get(*self._read_env('storage_database', Const.EMPTY))
+        self.storage_ssl_cert = parameters.get(*self._read_env('storage_ssl_cert', None))
+        self.storage_ssl_key = parameters.get(*self._read_env('storage_ssl_key', None))
+        self.storage_ssl_ca_cert = parameters.get(*self._read_env('storage_ssl_ca_cert', None))
         self.tags = parameters.get('tags', ())
         self.template = parameters.get('template', False)
         self.uuid = parameters.get('uuid', None)
@@ -602,3 +616,28 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
             value = self.SERVER_APP_BASE_PATH
 
         self._server_app_base_path = value  # pylint: disable=attribute-defined-outside-init
+
+    def _read_env(self, parameter, default):
+        """Read parameter from optional environment variable.
+
+        Read parameter value from environment variable or return the given
+        default value. Environment variables follow the same parameter names
+        but with full upper case letters with `SNIPPY_` prefix. For example
+        the `--server-host` command line option equals to `SNIPPY_SERVER_HOST`
+        environment variable.
+
+        Args:
+            parameter (string): Parameter name.
+            default: Parameter default value.
+
+        Returns:
+            tuple: Given parameter name and the value.
+        """
+
+        value = os.getenv("SNIPPY_" + parameter.upper(), default)
+        if parameter == 'storage_type' and value not in Const.STORAGES:
+            Cause.push(Cause.HTTP_BAD_REQUEST, 'incorrect storage type: {} :is not a subset of: {}'.format(value, Const.STORAGES))
+            value = Const.DB_SQLITE
+            self._logger.debug('storage type configured to default: {}'.format(value))
+
+        return (parameter, value)

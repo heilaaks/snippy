@@ -35,7 +35,7 @@ class Api(ConfigSourceBase):
 
         Api._validate(params)
         self._set_sall(params)
-        self.set_conf(params)
+        self.init_conf(params)
 
     @staticmethod
     def _set_sall(parameters):

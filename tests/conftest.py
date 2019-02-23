@@ -818,6 +818,20 @@ def isfile_mock(mocker):
 
     mocker.patch('snippy.content.migrate.os.path.isfile', return_value=True)
 
+## os.environ
+
+@pytest.fixture(scope='function', name='osenviron')
+def mock_os_environ(monkeypatch):
+    """Mock os.environe."""
+
+    #mocker.patch('snippy.content.migrate.os.path.isfile', return_value=True)
+    #return mocker.patch.object('snippy.config.source.base.os.environ')
+    #return mocker.patch.object('snippy.config.source.base.os', 'getenv')
+    ##return mocker.patch('os.getenv')
+    #return mocker.patch.dict('snippy.config.source.base.os.environ')
+
+    return monkeypatch
+
 ## editor
 
 @pytest.fixture(scope='function', name='editor_data')

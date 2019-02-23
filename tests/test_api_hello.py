@@ -29,7 +29,7 @@ from tests.testlib.content import Content
 pytest.importorskip('gunicorn')
 
 
-class TestApiHello(object):
+class TestApiHello(object):  # pylint: disable=too-many-public-methods
     """Test hello API and OPTIONS method."""
 
     def test_api_hello_api_001(self, server):
@@ -183,10 +183,10 @@ class TestApiHello(object):
 
     @pytest.mark.usefixtures('mock-server')
     def test_api_hello_api_008(self, caplog):
-        """Test hello API with modified server ip and port configuration.
+        """Test hello API with modified server IP and port configuration.
 
-        Call GET /api/app/v1 to get hello! In this case the server base path is
-        changed from default and it is set in correct format.
+        Call GET /api/app/v1 to get hello! In this case the server host is
+        changed from the default with command line option.
         """
 
         expect_headers = {
@@ -376,6 +376,66 @@ class TestApiHello(object):
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
         assert not result.text
+
+    @pytest.mark.usefixtures('mock-server')
+    def test_api_hello_api_019(self, caplog, osenviron):
+        """Test server startup with environment variable configuration.
+
+        Call GET /api/app/v1 to get hello! In this case the server variables
+        are changed with environment variables.
+        """
+
+        osenviron.setenv('SNIPPY_SERVER_APP_BASE_PATH', '/snippy/api/v2')
+        osenviron.setenv('SNIPPY_SERVER_HOST', '127.0.0.1:8081')
+        osenviron.setenv('SNIPPY_SERVER_MINIFY_JSON', 'True')
+        osenviron.setenv('SNIPPY_STORAGE_TYPE', 'misconfig')
+        expect_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '199'
+        }
+        expect_body = {'meta': Content.get_api_meta()}
+        server = Snippy(['snippy', '--debug'])
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get('/snippy/api/v2/')
+        assert 'server_app_base_path=/snippy/api/v2' in caplog.text
+        assert 'server_host=127.0.0.1:8081' in caplog.text
+        assert 'server_minify_json=True' in caplog.text
+        assert 'storage_type=sqlite' in caplog.text
+        assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
+        server.release()
+        Content.delete()
+
+    @pytest.mark.usefixtures('mock-server')
+    def test_api_hello_api_020(self, caplog, osenviron):
+        """Test server startup with environment and command line config.
+
+        Call GET /api/app/v1 to get hello! In this case the server optons are
+        configured with environment variables and command line options. The
+        command line option has higher precedence and they must be used.
+        """
+
+        osenviron.setenv('SNIPPY_SERVER_APP_BASE_PATH', '/snippy/api/v2')
+        osenviron.setenv('SNIPPY_SERVER_HOST', '127.0.0.1:8081')
+        osenviron.setenv('SNIPPY_SERVER_MINIFY_JSON', 'False')
+        expect_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '199'
+        }
+        expect_body = {'meta': Content.get_api_meta()}
+        server = Snippy(['snippy', '--server-host', 'localhost:8080', '--server-app-base-path', '/snippy/api/v3', '--server-minify-json', '--debug'])  # noqa pylint: disable=line-too-long
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get('/snippy/api/v3/')
+        assert 'server_app_base_path=/snippy/api/v3' in caplog.text
+        assert 'server_host=localhost:8080' in caplog.text
+        assert 'server_minify_json=True' in caplog.text
+        assert 'storage_type=sqlite' in caplog.text
+        assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
+        server.release()
+        Content.delete()
 
     @classmethod
     def teardown_class(cls):

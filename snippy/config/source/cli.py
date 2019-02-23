@@ -156,7 +156,7 @@ class Cli(ConfigSourceBase):
         #
         # $ snippy update -d f3fd167c64b6f97e --tags new,tags,from,cli
         parameters['merge'] = True
-        self.set_conf(parameters)
+        self.init_conf(parameters)
 
     @staticmethod
     def _parse_args(args):  # pylint: disable=too-many-statements
@@ -223,23 +223,23 @@ class Cli(ConfigSourceBase):
 
         # server options
         server = parser.add_argument_group(title='server options')
-        server.add_argument('--server-host', type=Parser.to_unicode, dest='server_host', default=Const.EMPTY, help=argparse.SUPPRESS)
-        server.add_argument('--server-minify-json', dest='server_minify_json', action='store_true', default=False, help=argparse.SUPPRESS)
-        server.add_argument('--server-app-base-path', type=Parser.to_unicode, dest='server_app_base_path', default=Cli.SERVER_APP_BASE_PATH, help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
-        server.add_argument('--server-ssl-cert', type=Parser.to_unicode, dest='server_ssl_cert', default=None, help=argparse.SUPPRESS)
-        server.add_argument('--server-ssl-key', type=Parser.to_unicode, dest='server_ssl_key', default=None, help=argparse.SUPPRESS)
-        server.add_argument('--server-ssl-ca-cert', type=Parser.to_unicode, dest='server_ssl_ca_cert', default=None, help=argparse.SUPPRESS)
+        server.add_argument('--server-host', type=Parser.to_unicode, dest='server_host', default=argparse.SUPPRESS, help=argparse.SUPPRESS)
+        server.add_argument('--server-minify-json', dest='server_minify_json', action='store_true', default=argparse.SUPPRESS, help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
+        server.add_argument('--server-app-base-path', type=Parser.to_unicode, dest='server_app_base_path', default=argparse.SUPPRESS, help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
+        server.add_argument('--server-ssl-cert', type=Parser.to_unicode, dest='server_ssl_cert', default=argparse.SUPPRESS, help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
+        server.add_argument('--server-ssl-key', type=Parser.to_unicode, dest='server_ssl_key', default=argparse.SUPPRESS, help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
+        server.add_argument('--server-ssl-ca-cert', type=Parser.to_unicode, dest='server_ssl_ca_cert', default=argparse.SUPPRESS, help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
 
         # storage options
-        server.add_argument('--storage-path', type=Parser.to_unicode, dest='storage_path', default=Const.EMPTY, help=argparse.SUPPRESS)
-        server.add_argument('--storage-type', type=Parser.to_unicode, dest='storage_type', choices=Const.STORAGES, default=Const.DB_SQLITE, help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
-        server.add_argument('--storage-host', type=Parser.to_unicode, dest='storage_host', default=Const.EMPTY, help=argparse.SUPPRESS)
-        server.add_argument('--storage-user', type=Parser.to_unicode, dest='storage_user', default=Const.EMPTY, help=argparse.SUPPRESS)
-        server.add_argument('--storage-password', type=Parser.to_unicode, dest='storage_password', default=Const.EMPTY, help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
-        server.add_argument('--storage-database', type=Parser.to_unicode, dest='storage_database', default=Const.EMPTY, help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
-        server.add_argument('--storage-ssl-cert', type=Parser.to_unicode, dest='storage_ssl_cert', default=None, help=argparse.SUPPRESS)
-        server.add_argument('--storage-ssl-key', type=Parser.to_unicode, dest='storage_ssl_key', default=None, help=argparse.SUPPRESS)
-        server.add_argument('--storage-ssl-ca-cert', type=Parser.to_unicode, dest='storage_ssl_ca_cert', default=None, help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
+        server.add_argument('--storage-path', type=Parser.to_unicode, dest='storage_path', default=argparse.SUPPRESS, help=argparse.SUPPRESS) # noqa pylint: disable=line-too-long
+        server.add_argument('--storage-type', type=Parser.to_unicode, dest='storage_type', choices=Const.STORAGES, default=argparse.SUPPRESS, help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
+        server.add_argument('--storage-host', type=Parser.to_unicode, dest='storage_host', default=argparse.SUPPRESS, help=argparse.SUPPRESS) # noqa pylint: disable=line-too-long
+        server.add_argument('--storage-user', type=Parser.to_unicode, dest='storage_user', default=argparse.SUPPRESS, help=argparse.SUPPRESS) # noqa pylint: disable=line-too-long
+        server.add_argument('--storage-password', type=Parser.to_unicode, dest='storage_password', default=argparse.SUPPRESS, help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
+        server.add_argument('--storage-database', type=Parser.to_unicode, dest='storage_database', default=argparse.SUPPRESS, help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
+        server.add_argument('--storage-ssl-cert', type=Parser.to_unicode, dest='storage_ssl_cert', default=argparse.SUPPRESS, help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
+        server.add_argument('--storage-ssl-key', type=Parser.to_unicode, dest='storage_ssl_key', default=argparse.SUPPRESS, help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
+        server.add_argument('--storage-ssl-ca-cert', type=Parser.to_unicode, dest='storage_ssl_ca_cert', default=argparse.SUPPRESS, help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
 
         # The argparse module will exit with support options help or version
         # and when argument parsing fails. The --no-ansi flag is needed before

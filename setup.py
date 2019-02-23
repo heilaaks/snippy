@@ -59,7 +59,7 @@ extras_tests = (
     'pyflakes==1.6.0',
     'pylint==1.9.4 ; python_version=="2.7.*"',
     'pylint==2.2.2 ; python_version>"2.7"',
-    'pytest==4.2.1',
+    'pytest==4.3.0',
     'pytest-cov==2.6.1',
     'pytest-mock==1.10.1',
     'pytest-xdist==1.26.1',

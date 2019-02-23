@@ -266,7 +266,7 @@ class Cli(ConfigSourceBase):
             parameters['failure_message'] = ''
         except SystemExit:
             parameters['failure'] = True
-            parameters['failure_message'] = parser.get_message()
+            parameters['failure_message'] = parser.snippy_failure_message
             self._logger.debug('cli: {}'.format(parameters['failure_message']))
 
         # Print tool help if parameters are not provided. Logs are not printed
@@ -327,21 +327,12 @@ class CustomArgumentParser(argparse.ArgumentParser):
     """Customized Argument Parser to get the failure string."""
 
     def __init__(self, *args, **kwargs):
-        self._snippy_message = ''
+        self.snippy_failure_message = ''
         super(CustomArgumentParser, self).__init__(*args, **kwargs)
 
     def error(self, message):
-        self._snippy_message = message
+        self.snippy_failure_message = message
         super(CustomArgumentParser, self).error(message)
-
-    def get_message(self):
-        """Read the error message that caused parser to exit.
-
-        Returns:
-            string: Error message from argument parser.
-        """
-
-        return self._snippy_message
 
 
 class CustomHelpAction(argparse.Action):  # pylint: disable=too-few-public-methods

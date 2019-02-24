@@ -21,6 +21,7 @@
 
 from __future__ import print_function
 
+import re
 import sys
 import argparse
 
@@ -189,7 +190,7 @@ class Cli(ConfigSourceBase):
         options.add_argument('-d', '--digest', type=Parser.to_unicode, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
         options.add_argument('-u', '--uuid', type=Parser.to_unicode, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
         options.add_argument('--editor', action='store_true', default=False, help=argparse.SUPPRESS)
-        options.add_argument('--no-editor', dest='no_editor', action='store_true', default=False, help=argparse.SUPPRESS)
+        options.add_argument('--no-editor', action='store_true', default=False, help=argparse.SUPPRESS)
         options.add_argument('--format', nargs='?', choices=(Const.CONTENT_FORMAT_MKDN, Const.CONTENT_FORMAT_TEXT), default=argparse.SUPPRESS, help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
 
         # search options
@@ -212,33 +213,33 @@ class Cli(ConfigSourceBase):
         # support options
         support = parser.add_argument_group(title='support options')
         support.add_argument('-v', '--version', nargs=0, action=CustomVersionAction, help=argparse.SUPPRESS)
-        support.add_argument('-vv', dest='very_verbose', action='store_true', default=False, help=argparse.SUPPRESS)
-        support.add_argument('-q', dest='quiet', action='store_true', default=False, help=argparse.SUPPRESS)
-        support.add_argument('--debug', action='store_true', default=False, help=argparse.SUPPRESS)
-        support.add_argument('--profile', dest='profiler', action='store_true', default=False, help=argparse.SUPPRESS)
-        support.add_argument('--no-ansi', dest='no_ansi', action='store_true', default=False, help=argparse.SUPPRESS)
-        support.add_argument('--log-json', dest='log_json', action='store_true', default=False, help=argparse.SUPPRESS)
-        support.add_argument('--log-msg-max', type=int, default=Cli.DEFAULT_LOG_MSG_MAX, help=argparse.SUPPRESS)
+        support.add_argument('-vv', action='store_true', default=argparse.SUPPRESS, help=argparse.SUPPRESS)
+        support.add_argument('-q', action='store_true', default=argparse.SUPPRESS, help=argparse.SUPPRESS)
+        support.add_argument('--debug', action='store_true', default=argparse.SUPPRESS, help=argparse.SUPPRESS)
+        support.add_argument('--profile', action='store_true', default=argparse.SUPPRESS, help=argparse.SUPPRESS)
+        support.add_argument('--no-ansi', action='store_true', default=argparse.SUPPRESS, help=argparse.SUPPRESS)
+        support.add_argument('--log-json', action='store_true', default=argparse.SUPPRESS, help=argparse.SUPPRESS)
+        support.add_argument('--log-msg-max', type=int, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
 
         # server options
         server = parser.add_argument_group(title='server options')
-        server.add_argument('--server-host', type=Parser.to_unicode, dest='server_host', default=argparse.SUPPRESS, help=argparse.SUPPRESS)
-        server.add_argument('--server-minify-json', dest='server_minify_json', action='store_true', default=argparse.SUPPRESS, help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
-        server.add_argument('--server-app-base-path', type=Parser.to_unicode, dest='server_app_base_path', default=argparse.SUPPRESS, help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
-        server.add_argument('--server-ssl-cert', type=Parser.to_unicode, dest='server_ssl_cert', default=argparse.SUPPRESS, help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
-        server.add_argument('--server-ssl-key', type=Parser.to_unicode, dest='server_ssl_key', default=argparse.SUPPRESS, help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
-        server.add_argument('--server-ssl-ca-cert', type=Parser.to_unicode, dest='server_ssl_ca_cert', default=argparse.SUPPRESS, help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
+        server.add_argument('--server-host', type=Parser.to_unicode, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
+        server.add_argument('--server-minify-json', action='store_true', default=argparse.SUPPRESS, help=argparse.SUPPRESS)
+        server.add_argument('--server-app-base-path', type=Parser.to_unicode, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
+        server.add_argument('--server-ssl-cert', type=Parser.to_unicode, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
+        server.add_argument('--server-ssl-key', type=Parser.to_unicode, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
+        server.add_argument('--server-ssl-ca-cert', type=Parser.to_unicode, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
 
         # storage options
-        server.add_argument('--storage-path', type=Parser.to_unicode, dest='storage_path', default=argparse.SUPPRESS, help=argparse.SUPPRESS) # noqa pylint: disable=line-too-long
-        server.add_argument('--storage-type', type=Parser.to_unicode, dest='storage_type', choices=Const.STORAGES, default=argparse.SUPPRESS, help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
-        server.add_argument('--storage-host', type=Parser.to_unicode, dest='storage_host', default=argparse.SUPPRESS, help=argparse.SUPPRESS) # noqa pylint: disable=line-too-long
-        server.add_argument('--storage-user', type=Parser.to_unicode, dest='storage_user', default=argparse.SUPPRESS, help=argparse.SUPPRESS) # noqa pylint: disable=line-too-long
-        server.add_argument('--storage-password', type=Parser.to_unicode, dest='storage_password', default=argparse.SUPPRESS, help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
-        server.add_argument('--storage-database', type=Parser.to_unicode, dest='storage_database', default=argparse.SUPPRESS, help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
-        server.add_argument('--storage-ssl-cert', type=Parser.to_unicode, dest='storage_ssl_cert', default=argparse.SUPPRESS, help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
-        server.add_argument('--storage-ssl-key', type=Parser.to_unicode, dest='storage_ssl_key', default=argparse.SUPPRESS, help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
-        server.add_argument('--storage-ssl-ca-cert', type=Parser.to_unicode, dest='storage_ssl_ca_cert', default=argparse.SUPPRESS, help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
+        server.add_argument('--storage-path', type=Parser.to_unicode, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
+        server.add_argument('--storage-type', type=Parser.to_unicode, choices=Const.STORAGES, default=argparse.SUPPRESS, help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
+        server.add_argument('--storage-host', type=Parser.to_unicode, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
+        server.add_argument('--storage-user', type=Parser.to_unicode, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
+        server.add_argument('--storage-password', type=Parser.to_unicode, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
+        server.add_argument('--storage-database', type=Parser.to_unicode, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
+        server.add_argument('--storage-ssl-cert', type=Parser.to_unicode, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
+        server.add_argument('--storage-ssl-key', type=Parser.to_unicode, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
+        server.add_argument('--storage-ssl-ca-cert', type=Parser.to_unicode, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
 
         # The argparse module will exit with support options help or version
         # and when argument parsing fails. The --no-ansi flag is needed before
@@ -259,7 +260,7 @@ class Cli(ConfigSourceBase):
             parser.add_argument('operation', nargs='?', choices=operations, metavar='  {create,search,update,delete,export,import}')
 
             # support options
-            support.add_argument('-h', '--help', nargs='?', action=CustomHelpAction, no_ansi=parameters['no_ansi'], help=argparse.SUPPRESS)
+            support.add_argument('-h', '--help', nargs='?', action=CustomHelpAction, no_ansi=parameters.get('no_ansi', False), help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
 
             parameters = vars(parser.parse_args(args))
             parameters['failure'] = False
@@ -321,6 +322,55 @@ class Cli(ConfigSourceBase):
             parameters['format'] = Const.CONTENT_FORMAT_TEXT
         elif 'format' not in parameters:
             parameters['format'] = Const.CONTENT_FORMAT_MKDN
+
+    @classmethod
+    def read_arg(cls, arg, default, args):
+        """Read argument directly from sys.argv.
+
+        This is intenden to read comman line options directly from sys.argv
+        only for special cases. The special cases are only related to debug
+        options that are required for example to print logs before parsing
+        command line arguments.
+
+        This supports only bool and integer values because there are no other
+        use cases at the moment. In case of other type, default is returned.
+
+        The option parsing precedence is the same as with other command line
+        options:
+
+          1. Command line option.
+          2. Environment variable.
+          3. Hard coded default.
+
+        Args:
+            arg (string): Command line option with optional leading dashes.
+            default: Default value if option is not configured.
+            args (list): Argument list received from command line.
+
+        Returns:
+            value: Value for the command line option.
+        """
+
+        value = Const.EMPTY
+        arg_option = re.sub(r'''
+            ^[-]{0,2}    # Remove leading hyphens used to indicate command line option.
+            ''', '', arg, flags=re.VERBOSE)
+        if isinstance(default, bool):
+            value = bool(arg in args) or Cli.read_env(arg_option, default)[1]
+        elif isinstance(default, int):
+            try:
+                if bool(arg in args):
+                    value = int(args[args.index(arg) + 1])
+                else:
+                    value = int(Cli.read_env(arg_option, default)[1])
+                if value < 0:
+                    value = default
+            except (IndexError, ValueError):
+                value = default
+        else:
+            value = default
+
+        return value
 
 
 class CustomArgumentParser(argparse.ArgumentParser):

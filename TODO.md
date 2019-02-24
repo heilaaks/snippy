@@ -1,4 +1,5 @@
 ## WORKING
+   - [ ] Add note to logger that -vv and --debug take precedence over -q. Only -q as only option is quiet.
    - [ ] Document and test that update now also supports --format option and the default is Markdown.
    - [ ] Fix and test adding two same tags, links and categories. At least from text source two tags are duplicated. Verify others.
    - [ ] Fix '--filter 0' maps to None instead of 0?
@@ -90,7 +91,6 @@
    - [ ] Fix test reference to match to main(['snippy', 'search', '--sall', '.', '--profile']) and new document stuff
    - [ ] Fix updating cls.server = cls.source.server does not make sense after start. But this was propably fix to some other problem.
    - [ ] Fix insert_content and digest check is probably unnecessary. Remove it after content refactor.
-   - [ ] Fix server crash (use e.g. sys.exit(0)) loses e.g. debug config like -vv
    - [ ] Fix all post responses to have link to created resource. Why this is not always included? Only in updates but not in create?
    - [ ] Fix failing tests print the help. Something was broken. This applies only (rare?) some cases? This comes from UT sqlite cases at least.
    - [ ] Fix help tests since it is not reading new _cli_ tests. What I was thinking?

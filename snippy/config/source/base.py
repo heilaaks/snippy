@@ -155,9 +155,9 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         and storage parameters with environment variables. The precedence
         of configuration is:
 
-            1. Command line option.
-            2. Environment variable.
-            3. Hard coded default.
+          1. Command line option.
+          2. Environment variable.
+          3. Hard coded default.
 
         Args:
             parameters (dict): Parameters from configuration source.
@@ -177,7 +177,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         # make sense.
         self.brief = parameters.get('brief', Const.EMPTY)
         self.data = parameters.get('data', None)
-        self.debug = parameters.get('debug', False)
+        self.debug = parameters.get(*self.read_env('debug', False))
         self.defaults = parameters.get('defaults', False)
         self.description = parameters.get('description', Const.EMPTY)
         self.digest = parameters.get('digest', None)
@@ -188,46 +188,46 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self.template_format = parameters.get('format', Const.CONTENT_FORMAT_MKDN)
         self.groups = parameters.get('groups', Const.DEFAULT_GROUPS)
         self.links = parameters.get('links', ())
-        self.log_json = parameters.get('log_json', False)
-        self.log_msg_max = parameters.get('log_msg_max', Logger.DEFAULT_LOG_MSG_MAX)
+        self.log_json = parameters.get(*self.read_env('log_json', False))
+        self.log_msg_max = parameters.get(*self.read_env('log_msg_max', self.DEFAULT_LOG_MSG_MAX))
         self.merge = parameters.get('merge', False)
         self.name = parameters.get('name', Const.EMPTY)
-        self.no_ansi = parameters.get('no_ansi', False)
+        self.no_ansi = parameters.get(*self.read_env('no_ansi', False))
         self.no_editor = parameters.get('no_editor', False)
         self.operation = parameters.get('operation')
-        self.profiler = parameters.get('profiler', False)
-        self.quiet = parameters.get('quiet', False)
+        self.profiler = parameters.get(*self.read_env('profile', False))
+        self.quiet = parameters.get(*self.read_env('q', False))
         self.remove_fields = parameters.get('fields', self.ATTRIBUTES)
         self.sall = parameters.get('sall', None)
         self.scat = parameters.get('scat', None)
         self.search_filter = parameters.get('search_filter', None)
         self.search_limit = parameters.get('limit', self.LIMIT_DEFAULT_API)
         self.search_offset = parameters.get('offset', self.OFFSET_DEFAULT)
-        self.server_app_base_path = parameters.get(*self._read_env('server_app_base_path', self.SERVER_APP_BASE_PATH))
-        self.server_host = parameters.get(*self._read_env('server_host', Const.EMPTY))
-        self.server_minify_json = parameters.get(*self._read_env('server_minify_json', False))
-        self.server_ssl_ca_cert = parameters.get(*self._read_env('server_ssl_ca_cert', None))
-        self.server_ssl_cert = parameters.get(*self._read_env('server_ssl_cert', None))
-        self.server_ssl_key = parameters.get(*self._read_env('server_ssl_key', None))
+        self.server_app_base_path = parameters.get(*self.read_env('server_app_base_path', self.SERVER_APP_BASE_PATH))
+        self.server_host = parameters.get(*self.read_env('server_host', Const.EMPTY))
+        self.server_minify_json = parameters.get(*self.read_env('server_minify_json', False))
+        self.server_ssl_ca_cert = parameters.get(*self.read_env('server_ssl_ca_cert', None))
+        self.server_ssl_cert = parameters.get(*self.read_env('server_ssl_cert', None))
+        self.server_ssl_key = parameters.get(*self.read_env('server_ssl_key', None))
         self.sgrp = parameters.get('sgrp', None)
         self.sort_fields = parameters.get('sort', ('brief'))
         self.source = parameters.get('source', Const.EMPTY)
         self.stag = parameters.get('stag', None)
-        self.storage_path = parameters.get(*self._read_env('storage_path', Const.EMPTY))
-        self.storage_type = parameters.get(*self._read_env('storage_type', Const.DB_SQLITE))
-        self.storage_host = parameters.get(*self._read_env('storage_host', Const.EMPTY))
-        self.storage_user = parameters.get(*self._read_env('storage_user', Const.EMPTY))
-        self.storage_password = parameters.get(*self._read_env('storage_password', Const.EMPTY))
-        self.storage_database = parameters.get(*self._read_env('storage_database', Const.EMPTY))
-        self.storage_ssl_cert = parameters.get(*self._read_env('storage_ssl_cert', None))
-        self.storage_ssl_key = parameters.get(*self._read_env('storage_ssl_key', None))
-        self.storage_ssl_ca_cert = parameters.get(*self._read_env('storage_ssl_ca_cert', None))
+        self.storage_path = parameters.get(*self.read_env('storage_path', Const.EMPTY))
+        self.storage_type = parameters.get(*self.read_env('storage_type', Const.DB_SQLITE))
+        self.storage_host = parameters.get(*self.read_env('storage_host', Const.EMPTY))
+        self.storage_user = parameters.get(*self.read_env('storage_user', Const.EMPTY))
+        self.storage_password = parameters.get(*self.read_env('storage_password', Const.EMPTY))
+        self.storage_database = parameters.get(*self.read_env('storage_database', Const.EMPTY))
+        self.storage_ssl_cert = parameters.get(*self.read_env('storage_ssl_cert', None))
+        self.storage_ssl_key = parameters.get(*self.read_env('storage_ssl_key', None))
+        self.storage_ssl_ca_cert = parameters.get(*self.read_env('storage_ssl_ca_cert', None))
         self.tags = parameters.get('tags', ())
         self.template = parameters.get('template', False)
         self.uuid = parameters.get('uuid', None)
         self.version = parameters.get('version', __version__)
         self.versions = parameters.get('versions', ())
-        self.very_verbose = parameters.get('very_verbose', False)
+        self.very_verbose = parameters.get(*self.read_env('vv', False))
         self._repr = self._get_repr()
 
     @property
@@ -619,27 +619,41 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
 
         self._server_app_base_path = value  # pylint: disable=attribute-defined-outside-init
 
-    def _read_env(self, parameter, default):
+    @classmethod
+    def read_env(cls, option, default):
         """Read parameter from optional environment variable.
 
         Read parameter value from environment variable or return the given
-        default value. Environment variables follow the same parameter names
-        but with full upper case letters with `SNIPPY_` prefix. For example
-        the `--server-host` command line option equals to `SNIPPY_SERVER_HOST`
-        environment variable.
+        default value. Environment variable names follow the same command
+        line option naming convesion with
+
+          1. A SNIPPY_ prefix is added,
+          2. Leading hyphens are removed.
+          2. Words splitted with hyphens are converted to underscores.
+          3. Command line option names converted to full upper case letters.
+
+        For example corresponding environment variable for `--server-host`
+        command line option is `SNIPPY_SERVER_HOST`.
 
         Args:
-            parameter (string): Parameter name.
-            default: Parameter default value.
+            option (string): Command line option.
+            default: Default value.
 
         Returns:
-            tuple: Given parameter name and the value.
+            tuple: Same command line option name as received with value.
         """
 
-        value = os.getenv("SNIPPY_" + parameter.upper(), default)
-        if parameter == 'storage_type' and value not in Const.STORAGES:
+        value = os.getenv("SNIPPY_" + option.replace('-', '_').upper(), default)
+        if isinstance(default, bool):
+            value = bool(value)
+        elif isinstance(default, int):
+            try:
+                value = int(value)
+            except ValueError:
+                value = default
+
+        if option == 'storage_type' and value not in Const.STORAGES:
             Cause.push(Cause.HTTP_BAD_REQUEST, 'incorrect storage type: {} :is not a subset of: {}'.format(value, Const.STORAGES))
             value = Const.DB_SQLITE
-            self._logger.debug('storage type configured to default: {}'.format(value))
 
-        return (parameter, value)
+        return (option, value)

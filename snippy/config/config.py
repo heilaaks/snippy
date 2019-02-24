@@ -65,7 +65,7 @@ class Config(object):
         - Direct printing of command line arguments.
 
         No sensitive information listed here must be printed. The data is not
-        printed with any log level. The through is that if sensitive data would
+        printed with any log level. The thought is that if sensitive data would
         be printed on any level, there would be accidental leak of information
         at some point. The server would be first run with highest debug setting
         and then left running with those.
@@ -346,26 +346,22 @@ class Config(object):
 
     @classmethod
     def _init_logs(cls, args):
-        """Init logger and development configuration."""
+        """Init logger and development configuration.
 
-        # Parse log configuration manually in order to init the logger as
-        # early as possible. The same parameters are read by the argparse.
-        # which will make more through option checking. The value is always
-        # following the parameter name.
-        log_msg_max = Logger.DEFAULT_LOG_MSG_MAX
-        try:
-            value = int(args[args.index('--log-msg-max') + 1])
-            if isinstance(value, int) and value > 0:
-                log_msg_max = int(args[args.index('--log-msg-max') + 1])
-        except (IndexError, ValueError):
-            pass
+        Parse log configuration manually from sys.argv in order to initialize
+        logger as early as possible. The same parameters are read eventually
+        by the Cli class parser.
 
-        cls.debug_logs = bool('--debug' in args)
-        cls.log_json = bool('--log-json' in args)
-        cls.log_msg_max = log_msg_max
-        cls.profiler = bool('--profile' in args)
-        cls.quiet = bool('-q' in args)
-        cls.very_verbose = bool('-vv' in args)
+        Args:
+            args (list): Command line arguments from sys.argv.
+        """
+
+        cls.debug_logs = Cli.read_arg('--debug', False, args)
+        cls.log_json = Cli.read_arg('--log-json', False, args)
+        cls.log_msg_max = Cli.read_arg('--log-msg-max', Logger.DEFAULT_LOG_MSG_MAX, args)
+        cls.profiler = Cli.read_arg('--profile', False, args)
+        cls.quiet = Cli.read_arg('-q', False, args)
+        cls.very_verbose = Cli.read_arg('-vv', False, args)
 
         # Profile code.
         Profiler.enable(cls.profiler)

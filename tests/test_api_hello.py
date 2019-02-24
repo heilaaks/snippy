@@ -33,9 +33,9 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
     """Test hello API and OPTIONS method."""
 
     def test_api_hello_api_001(self, server):
-        """Test hello API in /snippy/api/app/v1/.
+        """Test hello API.
 
-        Call GET /snippy/api/app/v1 to get hello!
+        Call GET /snippy/api/app/v1 to get Hello response.
         """
 
         expect_headers = {
@@ -49,7 +49,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
         Content.assert_restapi(result.json, expect_body)
 
     def test_api_hello_api_002(self, server):
-        """Test hello API in /snippy/api/hello.
+        """Test hello API.
 
         Call GET /api/app/v1/hello to get hello!
         """
@@ -381,14 +381,18 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
     def test_api_hello_api_019(self, caplog, osenviron):
         """Test server startup with environment variable configuration.
 
-        Call GET /api/app/v1 to get hello! In this case the server variables
-        are changed with environment variables.
+        Call GET /api/app/v1 to get Hello response. In this case the server
+        variables are changed with environment variables.
         """
 
         osenviron.setenv('SNIPPY_SERVER_APP_BASE_PATH', '/snippy/api/v2')
         osenviron.setenv('SNIPPY_SERVER_HOST', '127.0.0.1:8081')
         osenviron.setenv('SNIPPY_SERVER_MINIFY_JSON', 'True')
-        osenviron.setenv('SNIPPY_STORAGE_TYPE', 'misconfig')
+        osenviron.setenv('SNIPPY_STORAGE_TYPE', 'misconfig')  # Must be mapped to default.
+        osenviron.setenv('SNIPPY_LOG_MSG_MAX', 'misconfig')  # Must be mapped to default.
+        osenviron.setenv('SNIPPY_LOG_JSON', '1')  # Must be mapped to True.
+        osenviron.setenv('SNIPPY_Q', 'T')  # Must be mapped to True.
+        osenviron.setenv('SNIPPY_PROFILE', 'True')
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '199'
@@ -401,6 +405,13 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
         assert 'server_host=127.0.0.1:8081' in caplog.text
         assert 'server_minify_json=True' in caplog.text
         assert 'storage_type=sqlite' in caplog.text
+        assert 'log_json=True' in caplog.text       # Debug log settings are twice and both parsing must be correct.
+        assert 'json logs: True' in caplog.text     # Debug log settings are twice and both parsing must be correct.
+        assert 'log_msg_max=80' in caplog.text      # Debug log settings are twice and both parsing must be correct.
+        assert 'log msg max: 80' in caplog.text     # Debug log settings are twice and both parsing must be correct.
+        assert 'quiet=True' in caplog.text          # Debug log settings are twice and both parsing must be correct.
+        assert 'quiet: True' in caplog.text         # Debug log settings are twice and both parsing must be correct.
+        assert 'profiler=True' in caplog.text
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
@@ -411,26 +422,30 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
     def test_api_hello_api_020(self, caplog, osenviron):
         """Test server startup with environment and command line config.
 
-        Call GET /api/app/v1 to get hello! In this case the server optons are
-        configured with environment variables and command line options. The
-        command line option has higher precedence and they must be used.
+        Call GET /api/app/v1 to get Hello response. In this case the server
+        options are configured with environment variables and command line
+        options. The command line option has higher precedence and they must
+        be used.
         """
 
         osenviron.setenv('SNIPPY_SERVER_APP_BASE_PATH', '/snippy/api/v2')
         osenviron.setenv('SNIPPY_SERVER_HOST', '127.0.0.1:8081')
         osenviron.setenv('SNIPPY_SERVER_MINIFY_JSON', 'False')
+        osenviron.setenv('SNIPPY_LOG_MSG_MAX', '100')
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '199'
         }
         expect_body = {'meta': Content.get_api_meta()}
-        server = Snippy(['snippy', '--server-host', 'localhost:8080', '--server-app-base-path', '/snippy/api/v3', '--server-minify-json', '--debug'])  # noqa pylint: disable=line-too-long
+        server = Snippy(['snippy', '--server-host', 'localhost:8080', '--server-app-base-path', '/snippy/api/v3', '--server-minify-json', '--log-msg-max', '20', '--debug'])  # noqa pylint: disable=line-too-long
         server.run()
         result = testing.TestClient(server.server.api).simulate_get('/snippy/api/v3/')
         assert 'server_app_base_path=/snippy/api/v3' in caplog.text
         assert 'server_host=localhost:8080' in caplog.text
         assert 'server_minify_json=True' in caplog.text
         assert 'storage_type=sqlite' in caplog.text
+        assert 'log_msg_max=20' in caplog.text      # Debug log settings are twice and both parsing must be correct.
+        assert 'log msg max: 20' in caplog.text     # Debug log settings are twice and both parsing must be correct.
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)

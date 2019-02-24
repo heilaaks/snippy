@@ -13,7 +13,7 @@ New features
 ~~~~~~~~~~~~
 
 * Add option to import all default content when server is started.
-* Add environment variable support for server and storage options.
+* Add environment variable support for server, storage and support options.
 
 Bugfixes
 ~~~~~~~~

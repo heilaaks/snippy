@@ -72,6 +72,16 @@ Run tests with PostgreSQL
       make test-all
       make test-postgresql
 
+Run tests with HTTP server
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   .. code-block:: text
+
+      # Generate TLS sertificates for server.
+      openssl req -x509 -newkey rsa:4096 -nodes -keyout server.key -out server.crt -days 356 -subj "/C=US/O=Snippy/CN=127.0.0.1"
+      python runner --server-host 127.0.0.1:8080 -vv --server-ssl-cert ./server.crt --server-ssl-key ./server.key
+      curl -k -s -X GET "https://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json"
+
 Test local installation
 ~~~~~~~~~~~~~~~~~~~~~~~
 

@@ -36,6 +36,7 @@
    - [ ] Add tool configs to pyproject.toml.
 
 ## OPTIMIZATIONS
+   - [ ] Fix (optimize) PyPy is 2x faster with HTTP than CPython but PyPy is 10% slower than CPython with HTTPS. Is there a problem with HTTPS certs in Snippy?
    - [ ] Fix (optimize) Import all and the storage reads and returns all imported data that is not actually used in any way.
    - [ ] Fix (optimize) migrate and dump. The dump_dict is not needed in case of text and mkdn because those methods do not need the dict format but produce string directly.
    - [x] Fix (optimize) digest computation for Resource.

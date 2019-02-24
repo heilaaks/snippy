@@ -68,6 +68,9 @@ Apache Bench
     # Install testing tools.
     dnf install httpd-tools
     go get -u github.com/rakyll/hey
+    
+    # Generate TLS server certificates
+    openssl req -x509 -newkey rsa:4096 -nodes -keyout server.key -out server.crt -days 356 -subj "/C=US/O=Snippy/CN=127.0.0.1"
 
     # Run HTTP server with sqlite backend with commit f9f418256fccaf7f4c1ee3651b21044aba9a8948 (v0.10.0 + 20 commits)
     docker run -d --net="host" --name snippy heilaaks/snippy:latest --server-host 127.0.0.1:8080 --defaults
@@ -332,6 +335,114 @@ Apache Bench
 
     Status code distribution:
       [200] 10000 responses
+
+    # HTTP server with PyPy and Sqlite as storage backed (comment psycopg2 out from setup)
+    sudo pypy -m pip install --editable .[dev]
+    pypy runner --server-host 127.0.0.1:8080 --defaults
+    /root/go/bin/hey -n 1000 -c 1 http://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=20
+    /root/go/bin/hey -n 1000 -c 1 http://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=20
+    /root/go/bin/hey -n 1000 -c 1 http://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=20
+    /root/go/bin/hey -n 1000 -c 1 http://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=20
+    /root/go/bin/hey -n 1000 -c 1 http://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=20
+    /root/go/bin/hey -n 10000 -c 1 http://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=20
+    /root/go/bin/hey -n 10000 -c 1 http://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=20
+    
+    Summary:
+      Total:        21.4936 secs
+      Slowest:      0.0139 secs
+      Fastest:      0.0017 secs
+      Average:      0.0021 secs
+      Requests/sec: 465.2553
+      
+      Total data:   319140000 bytes
+      Size/request: 31914 bytes
+    
+    Response time histogram:
+      0.002 [1]     |
+      0.003 [9489]  |
+      0.004 [204]   |
+      0.005 [77]    |
+      0.007 [1]     |
+      0.008 [146]   |
+      0.009 [77]    |
+      0.010 [2]     |
+      0.011 [2]     |
+      0.013 [0]     |
+      0.014 [1]     |
+    
+    
+    Latency distribution:
+      10% in 0.0018 secs
+      25% in 0.0019 secs
+      50% in 0.0020 secs
+      75% in 0.0020 secs
+      90% in 0.0021 secs
+      95% in 0.0029 secs
+      99% in 0.0071 secs
+    
+    Details (average, fastest, slowest):
+      DNS+dialup:   0.0001 secs, 0.0017 secs, 0.0139 secs
+      DNS-lookup:   0.0000 secs, 0.0000 secs, 0.0000 secs
+      req write:    0.0000 secs, 0.0000 secs, 0.0002 secs
+      resp wait:    0.0020 secs, 0.0016 secs, 0.0127 secs
+      resp read:    0.0000 secs, 0.0000 secs, 0.0004 secs
+    
+    Status code distribution:
+      [200] 10000 responses
+
+    # HTTPS server with PyPy and Sqlite as storage backed (comment psycopg2 out from setup)
+    pypy runner --server-host 127.0.0.1:8080 --server-ssl-cert ./server.crt --server-ssl-key ./server.key --defaults
+    /root/go/bin/hey -n 1000 -c 1 https://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=20
+    /root/go/bin/hey -n 1000 -c 1 https://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=20
+    /root/go/bin/hey -n 1000 -c 1 https://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=20
+    /root/go/bin/hey -n 1000 -c 1 https://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=20
+    /root/go/bin/hey -n 1000 -c 1 https://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=20
+    /root/go/bin/hey -n 10000 -c 1 https://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=20
+    
+    Summary:
+      Total:        108.0445 secs
+      Slowest:      0.0409 secs
+      Fastest:      0.0075 secs
+      Average:      0.0108 secs
+      Requests/sec: 92.5545
+      
+      Total data:   319140000 bytes
+      Size/request: 31914 bytes
+    
+    Response time histogram:
+      0.008 [1]     |
+      0.011 [7368]  |
+      0.014 [513]   |
+      0.018 [721]   |
+      0.021 [8]     |
+      0.024 [1377]  |
+      0.028 [9]     |
+      0.031 [1]     |
+      0.034 [0]     |
+      0.038 [1]     |
+      0.041 [1]     |
+    
+    
+    Latency distribution:
+      10% in 0.0078 secs
+      25% in 0.0079 secs
+      50% in 0.0081 secs
+      75% in 0.0138 secs
+      90% in 0.0215 secs
+      95% in 0.0217 secs
+      99% in 0.0226 secs
+    
+    Details (average, fastest, slowest):
+      DNS+dialup:   0.0067 secs, 0.0075 secs, 0.0409 secs
+      DNS-lookup:   0.0000 secs, 0.0000 secs, 0.0000 secs
+      req write:    0.0000 secs, 0.0000 secs, 0.0002 secs
+      resp wait:    0.0039 secs, 0.0021 secs, 0.0180 secs
+      resp read:    0.0001 secs, 0.0001 secs, 0.0007 secs
+    
+    Status code distribution:
+      [200] 10000 responses
+
+
 
 .. _virtualenvwrapper: http://virtualenvwrapper.readthedocs.io/en/latest/command_ref.html
 

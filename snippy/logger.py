@@ -100,6 +100,9 @@ class Logger(object):
 
         Args:
             name (str): Name of the module that requests a Logger.
+
+        Returns:
+            CustomLoggerAdapter: Logger to be used by caller.
         """
 
         logger = logging.getLogger(name)
@@ -116,6 +119,10 @@ class Logger(object):
     @classmethod
     def configure(cls, config):
         """Set and update logger configuration.
+
+        The debug and very_verbose options have precedence over the
+        quiet option. That is, if any of the debug options are enabled,
+        quiet option does not have effect.
 
         Args:
             config (dict): Logger configuration dictionary.
@@ -196,8 +203,12 @@ class Logger(object):
         cls.SERVER_OID = format(getrandbits(32), "08x")
 
     @classmethod
-    def print_stdout(cls, text):
-        """Print output to stdout."""
+    def print_stdout(cls, message):
+        """Print output to stdout.
+
+        Args:
+            message (str): Text string to be printed to stdout.
+        """
 
         # The signal handler manipulation and flush setting below prevents
         # 'broken pipe' errors with grep. For example incorrect parameter
@@ -221,10 +232,10 @@ class Logger(object):
         # $ snippy search --sall . | tail -n 20
         # $ snippy search --sall . -vv | head -n 20
         # $ snippy search --sall . -vv | tail -n 20
-        if text:
+        if message:
             signal_sigpipe = getsignal(SIGPIPE)
             signal(SIGPIPE, SIG_DFL)
-            print(text)
+            print(message)
             sys.stdout.flush()
             signal(SIGPIPE, signal_sigpipe)
 
@@ -287,7 +298,7 @@ class Logger(object):
             message (str): Log message which ANSI escape codes are removed.
 
         Returns:
-            str: Same log message but without ANSI escape sequences.
+            str: Same log message but without ANSI escape codes.
         """
 
         return Const.RE_MATCH_ANSI_ESCAPE_SEQUENCES.sub('', message)
@@ -324,7 +335,7 @@ class CustomLoggerAdapter(logging.LoggerAdapter):  # pylint: disable=too-few-pub
         logging.LoggerAdapter.__init__(self, logger, extra)
 
     def security(self, msg, *args, **kwargs):
-        """customer log level."""
+        """Customer log level for security events."""
 
         self.log(logging.SECURITY, msg, *args, **kwargs)
 
@@ -339,7 +350,7 @@ class CustomFormatter(logging.Formatter):
         super(CustomFormatter, self).__init__(*args, **kwargs)
 
     def format(self, record):
-        """Format log string."""
+        """Format log record."""
 
         # Debug option tries to print logs "as is" in full length. There is a
         # maximum limitation for logs for safety and security reasons. Very

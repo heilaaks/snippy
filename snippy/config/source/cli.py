@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""cli: CLI based content management."""
+"""cli: Command line argument parser."""
 
 from __future__ import print_function
 
@@ -33,7 +33,7 @@ from snippy.meta import __version__
 
 
 class Cli(ConfigSourceBase):
-    """CLI argument parsing."""
+    """Command line argument parser."""
 
     ARGS_COPYRIGHT = (
         'Snippy version ' + __version__ + ' - license GNU AGPLv3 or later',
@@ -143,26 +143,33 @@ class Cli(ConfigSourceBase):
         super(Cli, self).__init__(self.__class__.__name__)
         if args is None:
             args = []
-        args = args[1:]  # Remove the first parameter that is the program name.
-        parameters = Cli._parse_args(self, args)
-        Cli._set_editor(parameters)
-        Cli._set_format(parameters)
-        # CLI always updates existing content if it exit exists (merge). This
-        # prevents updating empty values on top of already defined content
-        # attributes from the command line. The example below allows defining
-        # only tags on top of existing content tag attribute.
-        #
-        # The merge option has relevance in API where it allows different
-        # behaviour between PUT and PATCH methods.
+        args = args[1:]  # Remove the first option that is the program name.
+        arguments = Cli._parse_args(self, args)
+        Cli._set_editor(arguments)
+        Cli._set_format(arguments)
+        # Using the tool from command line always updates existing content if
+        # it exists (merge). This prevents updating empty values on top of
+        # already created content attributes. The example below defines only
+        # `tags` attribute on top of existing content.
         #
         # $ snippy update -d f3fd167c64b6f97e --tags new,tags,from,cli
-        parameters['merge'] = True
-        self.init_conf(parameters)
+        #
+        # The merge option has relevance only in API configuration source
+        # where it allows different behaviour between PUT and PATCH methods.
+        arguments['merge'] = True
+        self.init_conf(arguments)
 
     def _parse_args(self, args):  # pylint: disable=too-many-statements,too-many-locals
-        """Parse command line arguments."""
+        """Parse command line arguments.
 
-        parameters = {}
+        Args:
+            args (list): Command line arguments from sys.argv.
+
+        Returns:
+            dict: Command line arguments.
+        """
+
+        arguments = {}
         parser = CustomArgumentParser(
             prog='snippy',
             add_help=False,
@@ -252,36 +259,36 @@ class Cli(ConfigSourceBase):
         # after the --help would be parsed as positional argument and that
         # would fail the parsing.
         try:
-            parameters, _ = parser.parse_known_args(args)
-            parameters = vars(parameters)
+            arguments, _ = parser.parse_known_args(args)
+            arguments = vars(arguments)
 
             # positional arguments
             operations = ('create', 'search', 'update', 'delete', 'export', 'import')
             parser.add_argument('operation', nargs='?', choices=operations, metavar='  {create,search,update,delete,export,import}')
 
             # support options
-            support.add_argument('-h', '--help', nargs='?', action=CustomHelpAction, no_ansi=parameters.get('no_ansi', False), help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
+            support.add_argument('-h', '--help', nargs='?', action=CustomHelpAction, no_ansi=arguments.get('no_ansi', False), help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
 
-            parameters = vars(parser.parse_args(args))
-            parameters['failure'] = False
-            parameters['failure_message'] = ''
+            arguments = vars(parser.parse_args(args))
+            arguments['failure'] = False
+            arguments['failure_message'] = ''
         except SystemExit:
-            parameters['failure'] = True
-            parameters['failure_message'] = parser.snippy_failure_message
-            self._logger.debug('cli: {}'.format(parameters['failure_message']))
+            arguments['failure'] = True
+            arguments['failure_message'] = parser.snippy_failure_message
+            self._logger.debug('cli: {}'.format(arguments['failure_message']))
 
-        # Print tool help if parameters are not provided. Logs are not printed
-        # from this branch because adding -vv or --debug option would not go
-        # in this branch.
+        # Print tool help if command line arguments are not provided. Logs are
+        # not printed from this branch because adding `-vv` or `--debug` option
+        # would not go in this branch since these are command line options.
         if not args:
             parser.print_help(sys.stdout)
-            parameters['failure'] = True
-            parameters['failure_message'] = 'no command line parameters'
+            arguments['failure'] = True
+            arguments['failure_message'] = 'no command line arguments'
 
-        return parameters
+        return arguments
 
     @staticmethod
-    def _set_editor(parameters):
+    def _set_editor(arguments):
         """Enforce editor implicitly.
 
         The no-editor option always prevents implicit usage of editor.
@@ -291,59 +298,63 @@ class Cli(ConfigSourceBase):
         Only if user provided mandatory links for reference or data for
         other content types in create operation, editor is not used by
         default.
+
+        Args:
+            arguments (dict): Command line arguments.
         """
 
-        if parameters['failure'] or parameters['no_editor']:
-            parameters['editor'] = False
+        if arguments['failure'] or arguments['no_editor']:
+            arguments['editor'] = False
             return
 
-        if parameters['operation'] in (Cli.CREATE, Cli.UPDATE):
-            if parameters['category'] == Const.REFERENCE:
-                if not parameters['links']:
-                    parameters['editor'] = True
+        if arguments['operation'] in (Cli.CREATE, Cli.UPDATE):
+            if arguments['category'] == Const.REFERENCE:
+                if not arguments['links']:
+                    arguments['editor'] = True
             else:
-                if 'data' not in parameters:
-                    parameters['editor'] = True
+                if 'data' not in arguments:
+                    arguments['editor'] = True
 
     @staticmethod
-    def _set_format(parameters):
+    def _set_format(arguments):
         """Enforce editor implicitly.
 
         The default is text format when searching content from command line.
         All other cases default to Markdown format. If user defined the format
         option, it overrides this setting.
+
+        Args:
+            arguments (dict): Command line arguments.
         """
 
-        if parameters['failure']:
-            parameters['format'] = Const.CONTENT_FORMAT_MKDN
+        if arguments['failure']:
+            arguments['format'] = Const.CONTENT_FORMAT_MKDN
             return
 
-        if 'format' not in parameters and parameters['operation'] == Cli.SEARCH:
-            parameters['format'] = Const.CONTENT_FORMAT_TEXT
-        elif 'format' not in parameters:
-            parameters['format'] = Const.CONTENT_FORMAT_MKDN
+        if 'format' not in arguments and arguments['operation'] == Cli.SEARCH:
+            arguments['format'] = Const.CONTENT_FORMAT_TEXT
+        elif 'format' not in arguments:
+            arguments['format'] = Const.CONTENT_FORMAT_MKDN
 
     @classmethod
-    def read_arg(cls, arg, default, args):
-        """Read argument directly from sys.argv.
+    def read_arg(cls, option, default, args):
+        """Read command line argument directly from sys.argv.
 
-        This is intenden to read comman line options directly from sys.argv
-        only for special cases. The special cases are only related to debug
-        options that are required for example to print logs before parsing
-        command line arguments.
+        This is intenden to be used only in special cases that are related to
+        debug options. The debug options are required for example to print logs
+        before parsing command line arguments.
 
-        This supports only bool and integer values because there are no other
-        use cases at the moment. In case of other type, default is returned.
+        This function supports only bool and integer values because there are
+        currently no other use cases.
 
-        The option parsing precedence is the same as with other command line
-        options:
+        This follows the standard command option parsing precedence:
 
           1. Command line option.
           2. Environment variable.
           3. Hard coded default.
 
         Args:
-            arg (string): Command line option with optional leading dashes.
+            option (string): Command line option.
             default: Default value if option is not configured.
             args (list): Argument list received from command line.
 
@@ -352,17 +363,17 @@ class Cli(ConfigSourceBase):
         """
 
         value = Const.EMPTY
-        arg_option = re.sub(r'''
+        env_option = re.sub(r'''
             ^[-]{0,2}    # Remove leading hyphens used to indicate command line option.
-            ''', '', arg, flags=re.VERBOSE)
+            ''', '', option, flags=re.VERBOSE)
         if isinstance(default, bool):
-            value = bool(arg in args) or Cli.read_env(arg_option, default)[1]
+            value = bool(option in args) or Cli.read_env(env_option, default)[1]
         elif isinstance(default, int):
             try:
-                if bool(arg in args):
-                    value = int(args[args.index(arg) + 1])
+                if bool(option in args):
+                    value = int(args[args.index(option) + 1])
                 else:
-                    value = int(Cli.read_env(arg_option, default)[1])
+                    value = int(Cli.read_env(env_option, default)[1])
                 if value < 0:
                     value = default
             except (IndexError, ValueError):
@@ -377,10 +388,14 @@ class CustomArgumentParser(argparse.ArgumentParser):
     """Customized Argument Parser to get the failure string."""
 
     def __init__(self, *args, **kwargs):
+        """Store custom attrbite to get the error message."""
+
         self.snippy_failure_message = ''
         super(CustomArgumentParser, self).__init__(*args, **kwargs)
 
     def error(self, message):
+        """Store error message to custom attribute."""
+
         self.snippy_failure_message = message
         super(CustomArgumentParser, self).error(message)
 
@@ -389,6 +404,8 @@ class CustomHelpAction(argparse.Action):  # pylint: disable=too-few-public-metho
     """Customised help action."""
 
     def __init__(self, *args, **kwargs):
+        """Store the tool --no-ansi option as attribute."""
+
         self._no_ansi = kwargs.pop('no_ansi', False)
         super(CustomHelpAction, self).__init__(*args, **kwargs)
 
@@ -413,11 +430,13 @@ class CustomVersionAction(argparse.Action):  # pylint: disable=too-few-public-me
     """Customised version action."""
 
     def __call__(self, parser, namespace, values, option_string=None):
-        """Customised version"""
+        """Customised version
 
-        # Argparse and Python versions below 3.4 print to stderr. In order to
-        # have consistent functionality between supported Python versions, the
-        # version must be explicitly printed into stdout.
+        Argparse and Python versions below 3.4 print to stderr. In order to
+        have consistent functionality between supported Python versions, the
+        version must be explicitly printed into stdout.
+        """
+
         print(__version__)
 
         parser.exit()

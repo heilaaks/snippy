@@ -2,6 +2,7 @@ FROM alpine:3.9 as base
 LABEL maintainer "laaksonen.heikki.j@gmail.com"
 
 ENV LANG C.UTF-8
+ENV SNIPPY_LOG_JSON 1
 
 WORKDIR /usr/local/snippy
 COPY snippy/ snippy/

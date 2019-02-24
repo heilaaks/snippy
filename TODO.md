@@ -5,6 +5,9 @@
    - [ ] Fix '--filter 0' maps to None instead of 0?
    - [ ] Add compression for the response. Default is pretty print, the --server-minify-json is applied if request header does not request compression.
    - [ ] How to compile psycopg2 for PyPY?
+   - [ ] Add bash completion to Snippy. Check example from Poetry.
+   - [ ] Fix coli -f file to see if this goes ot content filename attribute. Should not. -f|--file and content.filename are not the same.
+   - [ ] build-backend from pytest to Toml. This was mandatory from Pep 517 (?). People just not use it (or read) so it is defaulting. Better to have it explicitly.
    - [ ] Fix help text to use import --all instead of content specific commands. Or keep?
    - [ ] Why starting server calls collection initialization 4 times?
    - [ ] Starting the server again and import the default content again with --defaults causes server internal erro 500 because of UUID. The 500 should not be here because this is not internal error. Fix?

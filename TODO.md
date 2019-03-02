@@ -1,6 +1,4 @@
 ## WORKING
-   - [ ] Add note to logger that -vv and --debug take precedence over -q. Only -q as only option is quiet.
-   - [ ] Document and test that update now also supports --format option and the default is Markdown.
    - [ ] Fix and test adding two same tags, links and categories. At least from text source two tags are duplicated. Verify others.
    - [ ] Fix '--filter 0' maps to None instead of 0?
    - [ ] Add compression for the response. Default is pretty print, the --server-minify-json is applied if request header does not request compression.
@@ -23,6 +21,7 @@
    - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format.
    - [ ] Add delete for wheel build directory for automation. If the folder exist this is a problem (at least used to be) see how to fail python release/building/something.
    - [ ] Fix (?) updating JSON or YAML solution (only solution?) with mkdn or text data where data brief changes. This is not now updated in case of YAML/JSON solution because the dict is just read. The problem is to how to identify text or Markdown from YAML/JSON (dict)?
+   - [ ] Fix updating content without updates changes the updated timestamp. There is no need to store the content either.
    - [ ] Fix does the Parser really return UTF-8 encoded strings always? For example (links/keywords) is not coverted and other use decode(utf-8) which is opposite?
    - [ ] Fix clarify how insert multiple - one failure behaves. Should have been fail all because of simplicity. Write test and fix. The code tries to insert all and returns inteserted content in REST API. What about CLI (same behaviour but should this change to fail immediately)?
    - [ ] Fix Parser which assumes always UTF-8. If CLI terminal has something else, this fails.

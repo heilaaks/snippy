@@ -104,6 +104,7 @@ BEATS_CREATED = Solution.BEATS_CREATED
 NGINX_CREATED = Solution.NGINX_CREATED
 KAFKA_CREATED = Solution.KAFKA_CREATED
 KAFKA_MKDN_CREATED = Solution.KAFKA_MKDN_CREATED
+KAFKA_MKDN_UPDATED = Solution.KAFKA_MKDN_UPDATED
 CREATE_BEATS = (BEATS_CREATED,)*1
 CREATE_NGINX = (NGINX_CREATED,)*1
 CREATE_KAFKA = (KAFKA_CREATED,)*1
@@ -116,6 +117,7 @@ EDITED_BEATS = (BEATS_CREATED,)*1
 UPDATE_BEATS = (BEATS_CREATED,)*2
 UPDATE_NGINX = (NGINX_CREATED,)*2
 UPDATE_KAFKA = (KAFKA_CREATED,)*2
+UPDATE_KAFKA_MKDN = (KAFKA_MKDN_UPDATED,)*2
 
 # References
 IMPORT_REFERENCES = Reference.DEFAULT_TIME
@@ -607,6 +609,12 @@ def update_kafka_time_mock(mocker):
     """Mock timestamps to update 'kafka' solution."""
 
     _add_utc_time(mocker, UPDATE_KAFKA)
+
+@pytest.fixture(scope='function', name='update-kafka-mkdn-utc')
+def update_kafka_mkdn_time_mock(mocker):
+    """Mock timestamps to update 'kafka-mkdn' solution."""
+
+    _add_utc_time(mocker, UPDATE_KAFKA_MKDN)
 
 @pytest.fixture(scope='function', name='import-kafka-mkdn-utc')
 def import_kafka_mkdn_time_mock(mocker):

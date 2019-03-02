@@ -269,11 +269,11 @@ class TestCliUpdateSnippet(object):
 
     @pytest.mark.usefixtures('import-remove', 'update-forced-utc')
     def test_cli_update_snippet_013(self, snippy, editor_data):
-        """Update existing reference from editor.
+        """Update existing snippet from editor.
 
-        Update existing reference from editor so that the fields are given
-        from command line. Editor must show the content template with fields
-        received from command line parameters by default.
+        Update existing snippet from editor so that content fields are given
+        from command line. Editor must show the content template with field
+        values received from command line parameters.
         """
 
         content = {
@@ -317,11 +317,11 @@ class TestCliUpdateSnippet(object):
 
     @pytest.mark.usefixtures('import-remove', 'update-forced-utc')
     def test_cli_update_snippet_014(self, snippy, editor_data):
-        """Update existing reference from command line.
+        """Update existing snippet from command line.
 
-        Update existing reference from directly from command line. In this
-        case the editor is not used because of '--no-editor' option which
-        forces direct updated of the content.
+        Update existing snippet from directly from command line. In this case
+        editor is not used because of '--no-editor' option which updates the
+        content without editor.
         """
 
         content = {
@@ -337,6 +337,48 @@ class TestCliUpdateSnippet(object):
         cause = snippy.run(['snippy', 'update', '-d', '54e41e9b52a02b63', '-t', 'cli-tag', '-b', 'brief cli', '-g', 'cli-group', '-l', 'https://cli-link', '--no-editor'])  # pylint: disable=line-too-long
         assert cause == Cause.ALL_OK
         editor_data.assert_not_called()
+        Content.assert_storage(content)
+
+    @pytest.mark.usefixtures('import-remove', 'update-remove-utc')
+    def test_cli_update_snippet_015(self, snippy, editor_data):
+        """Update existing snippet from editor.
+
+        Update existing snippet by explicitly defining content format as
+        Markdown. In this case the content is not changed at all.
+        """
+
+        content = {
+            'data': [
+                Snippet.REMOVE
+            ]
+        }
+        template = (
+            '# Remove all docker containers with volumes @docker',
+            '',
+            '> ',
+            '',
+            '> [1] https://docs.docker.com/engine/reference/commandline/rm/',
+            '',
+            '`$ docker rm --volumes $(docker ps --all --quiet)`',
+            '',
+            '## Meta',
+            '',
+            '> category : snippet  ',
+            'created  : 2017-10-14T19:56:31.000001+00:00  ',
+            'digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319  ',
+            'filename :  ',
+            'name     :  ',
+            'source   :  ',
+            'tags     : cleanup,container,docker,docker-ce,moby  ',
+            'updated  : 2017-10-14T19:56:31.000001+00:00  ',
+            'uuid     : 12cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+            'versions :  ',
+            ''
+        )
+        editor_data.return_value = '\n'.join(template)
+        cause = snippy.run(['snippy', 'update', '-d', '54e41e9b52a02b63', '--format', 'mkdn'])
+        assert cause == Cause.ALL_OK
+        editor_data.assert_called_with('\n'.join(template))
         Content.assert_storage(content)
 
     @classmethod

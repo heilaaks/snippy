@@ -292,6 +292,47 @@ class TestCliUpdateReference(object):
         assert cause == 'NOK: could not identify content category - please keep template tags in place'
         Content.assert_storage(content)
 
+    @pytest.mark.usefixtures('import-regexp', 'update-regexp-utc')
+    def test_cli_update_reference_014(self, snippy, editor_data):
+        """Update existing reference from editor.
+
+        Update existing reference by explicitly defining content format as
+        Markdown. In this case the content is not changed at all.
+        """
+
+        content = {
+            'data': [
+                Reference.REGEXP
+            ]
+        }
+        template = (
+            '# Python regular expression @python',
+            '',
+            '> ',
+            '',
+            '> [1] https://www.cheatography.com/davechild/cheat-sheets/regular-expressions/  ',
+            '[2] https://pythex.org/',
+            '',
+            '## Meta',
+            '',
+            '> category : reference  ',
+            'created  : 2018-06-22T13:11:13.678729+00:00  ',
+            'digest   : cb9225a81eab8ced090649f795001509b85161246b46de7d12ab207698373832  ',
+            'filename :  ',
+            'name     :  ',
+            'source   :  ',
+            'tags     : howto,online,python,regexp  ',
+            'updated  : 2018-06-22T13:11:13.678729+00:00  ',
+            'uuid     : 12cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+            'versions :  ',
+            ''
+        )
+        editor_data.return_value = '\n'.join(template)
+        cause = snippy.run(['snippy', 'update', '-d', 'cb9225a81eab8ced', '--format', 'mkdn'])
+        assert cause == Cause.ALL_OK
+        editor_data.assert_called_with('\n'.join(template))
+        Content.assert_storage(content)
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

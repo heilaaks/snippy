@@ -553,6 +553,50 @@ descriptions of the event.
    :members:
    :member-order: bysource
 
+snippy.config
+~~~~~~~~~~~~~
+
+**Service**
+
+Global configuration.
+
+.. autoclass:: snippy.config.config.Config
+   :members:
+   :member-order: bysource
+
+snippy.config.source.cli
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+**Service**
+
+Command line configuration source.
+
+.. autoclass:: snippy.config.source.cli.Cli
+   :members:
+   :member-order: bysource
+
+snippy.config.source.api
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+**Service**
+
+REST API configuration source.
+
+.. autoclass:: snippy.config.source.api.Api
+   :members:
+   :member-order: bysource
+
+snippy.config.source.base
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**Service**
+
+Configuration source base class.
+
+.. autoclass:: snippy.config.source.base.ConfigSourceBase
+   :members:
+   :member-order: bysource
+
 snippy.content.parser
 ~~~~~~~~~~~~~~~~~~~~~
 

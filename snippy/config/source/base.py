@@ -627,13 +627,13 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         default value. Environment variable names follow the same command
         line option naming convesion with
 
-          1. A SNIPPY_ prefix is added,
+          1. A ``SNIPPY_`` prefix is added,
           2. Leading hyphens are removed.
-          2. Words splitted with hyphens are converted to underscores.
-          3. Command line option names converted to full upper case letters.
+          3. Words splitted with hyphens are converted to underscores.
+          4. Command line option names are converted to full upper case.
 
-        For example corresponding environment variable for `--server-host`
-        command line option is `SNIPPY_SERVER_HOST`.
+        For example corresponding environment variable for the ``--server-host``
+        command line option is ``SNIPPY_SERVER_HOST``.
 
         Args:
             option (string): Command line option.

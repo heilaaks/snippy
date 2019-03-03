@@ -2648,14 +2648,18 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        command line options. The command line option is the long format without
        leading hyphens. For example:
 
-       "Search result are returned with the `sall` option."
+       "Search result are returned with the ``sall`` option."
 
        It is assumed that when code comments are read, the reader is familiar
        with the command line option. This format is shorter than for example
-       `-c|--content` for the code and test comment.
-       
+       ``-c|--content`` for the code and test comment.
+
        Markdown or HTML formatted document is generated from code and tests where
        the Markdown code span can be used to highlight command line options.
+
+       Double backtics must be used Sphinx does not format single backtics to
+       highlight the text. Double backtics seem to work at least in Dillinger
+       online Markdown editor.
 
     3. User guides must use short and long formats from command line options
 
@@ -2664,14 +2668,22 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        is assumed that the reader in this case is not familiar of usage of the
        tool and thus using longer format with leading hyphens is clearer.
 
-       "The `-t|--tags` command line option is used to give tags for a content."
+       Double backtics must be used Sphinx does not format single backtics to
+       highlight the text. Double backtics seem to work at least in Dillinger
+       online Markdown editor.
+
+       "The ``-t|--tags`` command line option is used to give tags for a content."
 
     4. Example test case headers
-    
+
+       Double backtics must be used Sphinx does not format single backtics to
+       highlight the text. Double backtics seem to work at least in Dillinger
+       online Markdown editor.
+
        A). Use command line option name in CLI tests like:
-       
-           Search snippets with `sall` option.
-           Search references with `sall` and `scat` options.
+
+           Search snippets with ``sall`` option.
+           Search references with ``sall`` and `scat` options.
 
     USING IN LINUX
 

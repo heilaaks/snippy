@@ -555,6 +555,72 @@ class TestApiCreateReference(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @pytest.mark.usefixtures('create-regexp-utc')
+    def test_api_create_reference_012(self, server):
+        """Create new reference with duplicated content field values.
+
+        Call POST /v1/references to create new reference. In this case content
+        fields contain duplicated values. For example there are tag 'python'
+        added twice. Only unique values must be added.
+
+        Links are not sorted because the order is assumed to convey relevant
+        information related to link importance in case of reference content.
+        Because of this, removal of duplicated links must not change the
+        order which links are insert.
+        """
+
+        content = {
+            'data': [{
+                'data': (),
+                'brief': 'short brief',
+                'description': '',
+                'groups': ('docker', 'python'),
+                'tags': ('pypy', 'swarm'),
+                'links': ('http://www.dot.com/link2', 'http://www.dot.com/link1'),
+                'category': 'reference',
+                'name': '',
+                'filename': '',
+                'versions': ('1.1', '1.2'),
+                'source': '',
+                'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'created': '2018-06-22T13:11:13.678729+00:00',
+                'updated': '2018-06-22T13:11:13.678729+00:00',
+                'digest': '6ce4b0bac2839d1d658e3b19243c4f2c67f6fbdb6e5849dbb47c9bca0ddafe5e'
+            }]
+        }
+        request_body = {
+            'data': [{
+                'type': 'reference',
+                'attributes': {
+                    'brief': 'short brief',
+                    'description': '',
+                    'groups': ['docker', 'docker', 'python'],
+                    'tags': ['swarm', 'swarm', 'pypy'],
+                    'links': ['http://www.dot.com/link2', 'http://www.dot.com/link2', 'http://www.dot.com/link1'],
+                    'versions': ['1.1', '1.2', '1.1']
+                }
+            }]
+        }
+        expect_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '619'
+        }
+        expect_body = {
+            'data': [{
+                'type': 'reference',
+                'id': content['data'][0]['digest'],
+                'attributes': content['data'][0]
+            }]
+        }
+        result = testing.TestClient(server.server.api).simulate_post(
+            path='/snippy/api/app/v1/references',
+            headers={'accept': 'application/vnd.api+json', 'content-type': 'application/vnd.api+json; charset=UTF-8'},
+            body=json.dumps(request_body, ensure_ascii=False))
+        assert result.status == falcon.HTTP_201
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(content)
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

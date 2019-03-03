@@ -20,6 +20,7 @@
 """base: Base class for text content parsers."""
 
 import re
+from collections import OrderedDict
 
 from snippy.constants import Constants as Const
 from snippy.logger import Logger
@@ -104,7 +105,7 @@ class ContentParserBase(object):
         return keywords
 
     @classmethod
-    def format_list(cls, keywords, sort_=True):
+    def format_list(cls, keywords, unique=True, sort_=True):
         """Convert list of keywords to utf-8 encoded list of strings.
 
         Parse user provided keyword list. The keywords are for example groups,
@@ -119,7 +120,8 @@ class ContentParserBase(object):
 
         Args:
             keywords (str,list,tuple): Keywords in string, list or tuple.
-            sort_ (bool): Define if keywords are sorted or not.
+            unique (bool): Return unique keyword values.
+            sort_ (bool): Return sorted keywords.
 
         Returns:
             tuple: Tuple of utf-8 encoded keywords.
@@ -140,13 +142,15 @@ class ContentParserBase(object):
                 [\\w–\\-\\.\\=]+   # Python 2 and 3 compatible unicode regexp.
                 ''', tag, re.UNICODE | re.VERBOSE)
 
+        if unique:
+            list_ = list(OrderedDict.fromkeys(list_))  # Must retain original order.
         if sort_:
             list_ = sorted(list_)
 
         return tuple(list_)
 
     @classmethod
-    def format_links(cls, links):
+    def format_links(cls, links, unique=True):
         """Convert links to utf-8 encoded list of links.
 
         Parse user provided link list. Because URL and keyword have different
@@ -168,7 +172,8 @@ class ContentParserBase(object):
         [1] https://perishablepress.com/stop-using-unsafe-characters-in-urls/
 
         Args:
-            links (str,list,tuple): Links in string, list or tuple.
+            links (str,list,tuple): Links in a string, list or tuple.
+            unique (bool): Return unique keyword values.
 
         Returns:
             tuple: Tuple of utf-8 encoded links.
@@ -188,6 +193,9 @@ class ContentParserBase(object):
         for link in links:
             list_ = list_ + re.split(r'\s+|\|', link)
         list_ = list(filter(None, list_))
+
+        if unique:
+            list_ = list(OrderedDict.fromkeys(list_))  # Must retain original order.
 
         return tuple(list_)
 

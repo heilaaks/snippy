@@ -1029,6 +1029,68 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @pytest.mark.usefixtures('create-remove-utc')
+    def test_api_create_snippet_022(self, server):
+        """Create new snippet with duplicated content field values.
+
+        Call POST /v1/snippets to create new snippet. In this case content
+        fields contain duplicated values. For example there are tag 'python'
+        added twice. Only unique values must be added.
+        """
+
+        content = {
+            'data': [{
+                'data': ('duplicated field values', ),
+                'brief': 'short brief',
+                'description': '',
+                'groups': ('docker', 'python'),
+                'tags': ('pypy', 'swarm'),
+                'links': ('http://www.dot.com/link1', 'http://www.dot.com/link2'),
+                'category': 'snippet',
+                'name': '',
+                'filename': '',
+                'versions': ('1.1', '1.2'),
+                'source': '',
+                'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'created': '2017-10-14T19:56:31.000001+00:00',
+                'updated': '2017-10-14T19:56:31.000001+00:00',
+                'digest': '88c5f66a1fc61ddde43b5ebc32dc762e9134b0fb78cda4f5600c243658d63c0f'
+            }]
+        }
+        request_body = {
+            'data': [{
+                'type': 'snippet',
+                'attributes': {
+                    'data': ['duplicated field values'],
+                    'brief': 'short brief',
+                    'description': '',
+                    'groups': ['docker', 'docker', 'python'],
+                    'tags': ['swarm', 'swarm', 'pypy'],
+                    'links': ['http://www.dot.com/link2', 'http://www.dot.com/link2', 'http://www.dot.com/link1'],
+                    'versions': ['1.1', '1.2', '1.1']
+                }
+            }]
+        }
+        expect_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '640'
+        }
+        expect_body = {
+            'data': [{
+                'type': 'snippet',
+                'id': content['data'][0]['digest'],
+                'attributes': content['data'][0]
+            }]
+        }
+        result = testing.TestClient(server.server.api).simulate_post(
+            path='/snippy/api/app/v1/snippets',
+            headers={'accept': 'application/vnd.api+json', 'content-type': 'application/vnd.api+json; charset=UTF-8'},
+            body=json.dumps(request_body, ensure_ascii=False))
+        assert result.status == falcon.HTTP_201
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(content)
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

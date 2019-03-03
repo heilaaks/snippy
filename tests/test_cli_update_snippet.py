@@ -319,9 +319,9 @@ class TestCliUpdateSnippet(object):
     def test_cli_update_snippet_014(self, snippy, editor_data):
         """Update existing snippet from command line.
 
-        Update existing snippet from directly from command line. In this case
-        editor is not used because of '--no-editor' option which updates the
-        content without editor.
+        Update existing snippet directly from command line. In this case,
+        editor is not used because of '--no-editor' option which updates
+        given content directly without user interaction.
         """
 
         content = {
@@ -377,6 +377,49 @@ class TestCliUpdateSnippet(object):
         )
         editor_data.return_value = '\n'.join(template)
         cause = snippy.run(['snippy', 'update', '-d', '54e41e9b52a02b63', '--format', 'mkdn'])
+        assert cause == Cause.ALL_OK
+        editor_data.assert_called_with('\n'.join(template))
+        Content.assert_storage(content)
+
+    @pytest.mark.usefixtures('import-remove', 'update-remove-utc')
+    def test_cli_update_snippet_016(self, snippy, editor_data):
+        """Update existing snippet from command line.
+
+        Update existing snippet directly from command line. In this case the
+        given field values are duplicated and thus they must not affect to
+        existing content.
+        """
+
+        content = {
+            'data': [
+                Snippet.REMOVE
+            ]
+        }
+        template = (
+            '# Remove all docker containers with volumes @docker',
+            '',
+            '> ',
+            '',
+            '> [1] https://docs.docker.com/engine/reference/commandline/rm/',
+            '',
+            '`$ docker rm --volumes $(docker ps --all --quiet)`',
+            '',
+            '## Meta',
+            '',
+            '> category : snippet  ',
+            'created  : 2017-10-14T19:56:31.000001+00:00  ',
+            'digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319  ',
+            'filename :  ',
+            'name     :  ',
+            'source   :  ',
+            'tags     : cleanup,container,docker,docker-ce,moby  ',
+            'updated  : 2017-10-14T19:56:31.000001+00:00  ',
+            'uuid     : 12cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+            'versions :  ',
+            ''
+        )
+        editor_data.return_value = '\n'.join(template)
+        cause = snippy.run(['snippy', 'update', '-d', '54e41e9b52a02b63', '-t', 'moby,container,docker,docker-ce,cleanup'])
         assert cause == Cause.ALL_OK
         editor_data.assert_called_with('\n'.join(template))
         Content.assert_storage(content)

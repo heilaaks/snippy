@@ -286,6 +286,33 @@ class TestCliCreateSolution(object):
         assert cause == 'NOK: content was not stored because mandatory content field data is empty'
         Content.assert_storage(None)
 
+    @pytest.mark.usefixtures('snippy', 'create-beats-utc')
+    def test_cli_create_solution_010(self, snippy):
+        """Create solution from command line.
+
+        Create new solution by defining all content parameters from command
+        line. In this case content field values contain duplicates that must
+        not be used when the content is stored. Only unique values must be
+        used.
+        """
+
+        content = {
+            'data': [
+                Content.deepcopy(Solution.BEATS)
+            ]
+        }
+        content['data'][0]['description'] = ''
+        content['data'][0]['filename'] = ''
+        content['data'][0]['digest'] = 'b8dfd78b2f92caac57469acda50bebf4dca9fd3e85bb9083c8408f430fc83f52'
+        data = Const.DELIMITER_DATA.join(content['data'][0]['data'])
+        brief = content['data'][0]['brief']
+        groups = Const.DELIMITER_GROUPS.join(content['data'][0]['groups']) + ',beats'
+        tags = Const.DELIMITER_TAGS.join(content['data'][0]['tags']) + ',howto,filebeat'
+        links = Const.DELIMITER_LINKS.join(content['data'][0]['links']) + ' https://www.elastic.co/guide/en/beats/filebeat/master/enable-filebeat-debugging.html'  # pylint: disable=line-too-long
+        cause = snippy.run(['snippy', 'create', '--solution', '--content', data, '--brief', brief, '--groups', groups, '--tags', tags, '--links', links, '--format', 'text'])  # pylint: disable=line-too-long
+        assert cause == Cause.ALL_OK
+        Content.assert_storage(content)
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

@@ -417,8 +417,8 @@ class TestApiUpdateReference(object):
                 }
             }
         }
-        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '852'}
-        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '864'}
+        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '515'}
+        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '521'}
         expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{

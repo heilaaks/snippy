@@ -172,6 +172,7 @@
    - [ ] How to better prevent commits to snippy.db than git hooks or git --assume-unchanged?
 
 ## FOLLOW EXTERNAL BUGS/ISSUES
+   - [ ] Misleading ValidationError from AnyOf required property list // https://github.com/Julian/jsonschema/issues/535
    - [ ] Is there an external bug with more and ANSI color codes? // 'Linux more command with ANSI colors'
    - [ ] Pytest support for PEP-518 pyproject.toml is missing // https://github.com/pytest-dev/pytest/issues/1556
    - [ ] OpenAPI does not support OPTIONS HTTP method and it cannot be defined. // https://github.com/OAI/OpenAPI-Specification/issues/325

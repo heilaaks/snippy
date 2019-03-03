@@ -478,7 +478,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         Try to call POST /v1/snippets to create two snippets. First one is
         correctly defind but the second one contains error in JSON structure.
         This must not create any resources and the whole request must be
-        considered erronous.
+        considered erroneous.
         """
 
         request_body = {
@@ -490,8 +490,8 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                 'attributes': {'brief': ''}
             }]
         }
-        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '774'}
-        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '778'}
+        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '470'}
+        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '472'}
         expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{

@@ -41,13 +41,13 @@ extras_docs = (
 extras_server = (
     'falcon==1.4.1',
     'gunicorn==19.9.0',
-    'jsonschema==2.6.0',
+    'jsonschema==3.0.1',
     'psycopg2-binary==2.7.7'
 )
 extras_docker = (
     'falcon==1.4.1',
     'gunicorn==19.9.0',
-    'jsonschema==2.6.0',
+    'jsonschema==3.0.1',
     'psycopg2>=2.7.5,<=2.7.7'
 )
 extras_tests = (

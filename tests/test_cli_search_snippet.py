@@ -32,7 +32,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_001(self, snippy, capsys):
-        """Search snippet from all fields.
+        """Search snippets with `sall` option.
 
         Search snippets from all fields. The match is made from one
         snippet content data.
@@ -58,7 +58,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_002(self, snippy, capsys):
-        """Search snippet from all fields.
+        """Search snippets with `sall` option.
 
         Search snippets from all fields. The match is made from one snippet
         brief description.
@@ -83,7 +83,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_003(self, snippy, capsys):
-        """Search snippet from all fields.
+        """Search snippets with `sall` option.
 
         Search snippets from all fields. The match is made from two snippets
         group metadata.
@@ -116,7 +116,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_004(self, snippy, capsys):
-        """Search snippet from all fields.
+        """Search snippets with `sall` option.
 
         Search snippets from all fields. The match is made from two snippets
         tags metadata.
@@ -149,7 +149,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_005(self, snippy, capsys):
-        """Search snippet from all fields.
+        """Search snippets with `sall` option.
 
         Search snippets from all fields. The match is made from one snippet
         links metadata.
@@ -175,7 +175,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_006(self, snippy, capsys):
-        """Search snippet from all fields.
+        """Search snippets with `sall` option.
 
         Search snippets from all fields. The match is made from one snippet
         digest.
@@ -201,7 +201,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_007(self, snippy, capsys):
-        """Search snippet from all fields.
+        """Search snippets with `sall` option.
 
         Search snippets from all fields with two keywords. The match is made
         from two different snippets. In this search keywords are separated
@@ -235,7 +235,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets', 'import-netcat')
     def test_cli_search_snippet_008(self, snippy, capsys):
-        """Search snippet from all fields.
+        """Search snippets with `sall` option.
 
         Search snippets from all fields with three keywords. The match is made
         two different snippts. In this case search keywords are separated by
@@ -269,7 +269,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_009(self, snippy, capsys):
-        """Search snippet from all fields.
+        """Search snippets with `sall` option.
 
         List all snippets by defining search criteria of search all to
         'match any'.
@@ -302,7 +302,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_010(self, snippy, capsys):
-        """Search snippet from all fields.
+        """Search snippets with `sall` option.
 
         List all snippets by leaving search criteria for 'search all fields'
         out completely. This is translated to 'match any'.
@@ -335,7 +335,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_011(self, snippy, capsys):
-        """Search snippet from all fields.
+        """Search snippets with `sall` option.
 
         List all snippets by leaving search criteria of search all as empty.
         This is translated to 'match any'.
@@ -368,7 +368,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('snippy')
     def test_cli_search_snippet_012(self, snippy, capsys):
-        """Search snippet from all fields.
+        """Search snippets with `sall` option.
 
         Try to search snippets when there are no content stored. The used
         search keyword matches to 'match any' that tries to list all the
@@ -384,7 +384,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_013(self, snippy, capsys):
-        """Search snippet from all fields.
+        """Search snippets with `sall` option.
 
         Try to search snippets with keyword that cannot be found.
         """
@@ -543,12 +543,13 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets', 'default-solutions', 'import-netcat')
     def test_cli_search_snippet_020(self, snippy, capsys):
-        """Search snippet with regexp filter.
+        """Search snippets with regexp `filter` option.
 
-        Search all content with regexp filter. The filter removes all content
-        from search results that do not match to the regexp filter in any
-        resource field. In this case there is no regexp conditions around the
-        text.
+        Search all content with a regexp filter. The filter removes all
+        content from the search result returned with the `sall` option
+        that do not match to the regexp in any of the resource field. In
+        this case there are no regexp matches like '.*' included into the
+        filter.
         """
 
         output = (
@@ -578,12 +579,12 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets', 'default-solutions', 'import-netcat')
     def test_cli_search_snippet_021(self, snippy, capsys):
-        """Search snippet with regexp filter.
+        """Search snippets with regexp `filter` option.
 
-        Search all content with regexp filter. The filter removes all content
-        from search results that do not match to the regexp filter in any
-        resource field. In this case there are regexp match with '.*' around
-        the searched text.
+        Search all content with a regexp filter. The filter removes all
+        content from the search result returned with the `sall` option
+        that do not match to the regexp in any of the resource field. In
+        this case there is a regexp match '.*' included into the filter.
         """
 
         output = (
@@ -613,12 +614,13 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets', 'default-solutions', 'import-netcat')
     def test_cli_search_snippet_022(self, snippy, capsys):
-        """Search snippet with regexp filter.
+        """Search snippets with regexp `filter` option.
 
-        Search all content with regexp filter. The filter removes all content
-        from search results that do not match to the regexp filter in any
-        resource field. In this case none of the content matches to filter and
-        everything is removed.
+        Search all content with a regexp filter. The filter removes all
+        content from the search result returned with the `sall` option
+        that do not match to the regexp in any of the resource field. In
+        this case none of the resulting content match to the filter and
+        no content is found.
         """
 
         output = 'NOK: cannot find content with given search criteria\n'
@@ -630,10 +632,11 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets', 'default-solutions')
     def test_cli_search_snippet_023(self, snippy, capsys):
-        """Search snippet with regexp.
+        """Search snippets with regexp `filter` option.
 
-        Try to search all snippets with filter that is not syntactically
-        correct regular expression.
+        Try to search snippets with a regexp filter that is not syntactically
+        correct regular expression. In this case the filter must be excluded
+        and all the results found with the `sall` search must be found.
         """
 
         output = (
@@ -663,7 +666,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_024(self, snippy, capsys):
-        """Search snippets with --content option.
+        """Search snippets with `content` option.
 
         Search snippets based on content data.
         """
@@ -853,7 +856,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets', 'import-netcat')
     def test_cli_search_snippet_031(self, snippy, capsys):
-        """Search snippet from all fields.
+        """Search snippets with `sall` option.
 
         Search snippets from all fields of specific group. The match must not
         be made from other than defined group. In this case the list all must
@@ -887,7 +890,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets', 'import-netcat')
     def test_cli_search_snippet_032(self, snippy, capsys):
-        """Search snippet from all fields.
+        """Search snippets with `sall` option.
 
         Search snippets from all fields of two different groups.
         """
@@ -1030,36 +1033,11 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    @pytest.mark.usefixtures('import-interp')
     def test_cli_search_snippet_038(self, snippy, capsys):
-        """Search snippet from all fields.
-
-        Print snippet which content data has ASCII string that is newline.
-        This must not be interpolated to newline but to be printed as is.
-        """
-
-        output = (
-            '1. Perform recursive git status on subdirectories @git [9e1949c2810df2a5]',
-            '',
-            r'''   $ find . -type d -name '.git' | while read dir ; do sh -c "cd $dir/../ && echo -e \"\nGIT STATUS IN ${dir//\.git/}\" && git status -s" ; done''',  # noqa pylint: disable=line-too-long
-            '',
-            '   # git,status',
-            '   > https://gist.github.com/tafkey/664266c00387c98631b3',
-            '',
-            'OK',
-            ''
-        )
-        cause = snippy.run(['snippy', 'search', '--sall', 'git', '--no-ansi'])
-        out, err = capsys.readouterr()
-        assert cause == Cause.ALL_OK
-        assert out == Const.NEWLINE.join(output)
-        assert not err
-
-    def test_cli_search_snippet_039(self, snippy, capsys):
         """Print snippet with aligned comments.
 
         Print snippet which has commends on every command. In this case the
-        comments must be all aligned.
+        comments must be all aligned evenly after each command.
         """
 
         Content.store({
@@ -1094,12 +1072,12 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    def test_cli_search_snippet_040(self, snippy, capsys):
+    def test_cli_search_snippet_039(self, snippy, capsys):
         """Print snippet with aligned comments.
 
         Print snippet which do not have comments after every command. In
-        this case the comments must be all aligned only based on commands
-        that have comments.
+        this case the comments must be aligned only based on commands that
+        have comments.
         """
 
         Content.store({
@@ -1134,12 +1112,12 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    def test_cli_search_snippet_041(self, snippy, capsys):
-        """Print snippet with various incorrect comments.
+    def test_cli_search_snippet_040(self, snippy, capsys):
+        """Print snippet with aligned comments.
 
-        Print snippet with comments that should not trigger comment
-        aligment. This case tests also that only one aligned comment
-        is aligned correctly.
+        Print snippet with comments that must not trigger comment aligment
+        because there is only one comment after one command. This verifies
+        also that only one comment is aligned correctly.
 
         In this case, a colored print is used.
         """
@@ -1179,11 +1157,37 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+    @pytest.mark.usefixtures('import-interp')
+    def test_cli_search_snippet_041(self, snippy, capsys):
+        """Search snippets with special format or characters.
+
+        Search a snippet which content data has a ASCII string that is a
+        newline. This string in the command must not be interpolated to a
+        newline but it must be printed "as is".
+        """
+
+        output = (
+            '1. Perform recursive git status on subdirectories @git [9e1949c2810df2a5]',
+            '',
+            r'''   $ find . -type d -name '.git' | while read dir ; do sh -c "cd $dir/../ && echo -e \"\nGIT STATUS IN ${dir//\.git/}\" && git status -s" ; done''',  # noqa pylint: disable=line-too-long
+            '',
+            '   # git,status',
+            '   > https://gist.github.com/tafkey/664266c00387c98631b3',
+            '',
+            'OK',
+            ''
+        )
+        cause = snippy.run(['snippy', 'search', '--sall', 'git', '--no-ansi'])
+        out, err = capsys.readouterr()
+        assert cause == Cause.ALL_OK
+        assert out == Const.NEWLINE.join(output)
+        assert not err
+
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_042(self, snippy, capsys):
-        """Search snippet from all fields.
+        """Search snippets with special format or characters.
 
-        List all snippets and define the output format as Markdown.
+        Search snippets and print the results in Markdown format.
         """
 
         output = (

@@ -32,10 +32,10 @@ class TestCliSearchSolution(object):
 
     @pytest.mark.usefixtures('default-solutions')
     def test_cli_search_solution_001(self, snippy, capsys):
-        """Search solution from all fields.
+        """Search solutions with `sall` option.
 
-        Search solutions from all fields. The match is made from one solution
-        content data.
+        Search solutions from all content fields. The match is made from one
+        solution content data.
         """
 
         output = (
@@ -54,7 +54,7 @@ class TestCliSearchSolution(object):
 
     @pytest.mark.usefixtures('default-solutions')
     def test_cli_search_solution_002(self, snippy, capsys):
-        """Search solution from all fields.
+        """Search solutions with `sall` option.
 
         Try to search solutions with keyword that cannot be found.
         """
@@ -68,7 +68,7 @@ class TestCliSearchSolution(object):
 
     @pytest.mark.usefixtures('default-solutions')
     def test_cli_search_solution_003(self, snippy, capsys):
-        """Search solution with regexp.
+        """Search solutions with `filter` option.
 
         Search all content with regexp filter.
         """
@@ -89,9 +89,10 @@ class TestCliSearchSolution(object):
 
     @pytest.mark.usefixtures('default-solutions')
     def test_cli_search_solution_004(self, snippy, capsys):
-        """Search solution with --digest option.
+        """Search solutions with `digest` option.
 
-        Search solution by explicitly defining short message digest.
+        Search a solution by explicitly defining the solutions message digest
+        short format.
         """
 
         output = (
@@ -110,11 +111,12 @@ class TestCliSearchSolution(object):
 
     @pytest.mark.usefixtures('default-solutions')
     def test_cli_search_solution_005(self, snippy, capsys):
-        """Search solution from all field
+        """Search solutions with `sall` and `sgrp` options.
 
-        Search solutions from all fields and limit the search to specific
-        group. The match must not be made from other than defined group. In
-        this case the list all must print the content of defined group.
+        Search solutions from all fields and limit the search to a specific
+        group. The match must not be made from other than the defined group.
+        In this case the `sall` option must print content only from defined
+        group.
         """
 
         output = (

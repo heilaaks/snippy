@@ -2642,6 +2642,37 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        description explains the complicated parts and the method argument is a
        short explanation of the pararameters.
 
+    2. Command line options is code and test must use Markdown code span
+
+       The test or code comments must use Markdown code span format to highlight
+       command line options. The command line option is the long format without
+       leading hyphens. For example:
+
+       "Search result are returned with the `sall` option."
+
+       It is assumed that when code comments are read, the reader is familiar
+       with the command line option. This format is shorter than for example
+       `-c|--content` for the code and test comment.
+       
+       Markdown or HTML formatted document is generated from code and tests where
+       the Markdown code span can be used to highlight command line options.
+
+    3. User guides must use short and long formats from command line options
+
+       When user guides like README file is written, the command line options
+       must be written with short and long formats in Markdown code span. It
+       is assumed that the reader in this case is not familiar of usage of the
+       tool and thus using longer format with leading hyphens is clearer.
+
+       "The `-t|--tags` command line option is used to give tags for a content."
+
+    4. Example test case headers
+    
+       A). Use command line option name in CLI tests like:
+       
+           Search snippets with `sall` option.
+           Search references with `sall` and `scat` options.
+
     USING IN LINUX
 
     1. Linux more command with ANSI colors
@@ -2655,8 +2686,8 @@ git update-index --no-assume-unchanged FILE_NAME # change back
 
        This can be circumvented by using more command options -c or -p.
 
-       ``python runner search --sall elastic --solutions | more -c``
-       ``python runner search --sall elastic --solutions | more -p``
+       `python runner search --sall elastic --solutions | more -c`
+       `python runner search --sall elastic --solutions | more -p`
 
        This is visible at least with Fedora 26 with 'more from util-linux 2.29.1'.
        The reason for this behaviour is unknown. It may be related to color codes

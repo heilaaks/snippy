@@ -1,4 +1,5 @@
 ## WORKING
+   - [ ] Refactor Makefile to have python|python3|pypy|pypy3 as ${PYTHON}.
    - [ ] Add compression for the response. Default is pretty print, the --server-minify-json is applied if request header does not request compression.
    - [ ] How to compile psycopg2 for PyPY?
    - [ ] Add bash completion to Snippy. Check example from Poetry.

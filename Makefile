@@ -13,8 +13,26 @@ uninstall:
 server:
 	pip install -e .[server]
 
+server-pypy3:
+	@echo "##########################################################################"
+	@echo "Requires on Fedora:"
+	@echo "    dnf install pypy3"
+	@echo "    dnf install pypy3-dev"
+	@echo "    dnf install postgresql-devel"
+	@echo "##########################################################################"
+	pypy3 -m pip install --editable .[serverpypy]
+
 dev:
 	pip install -e .[dev]
+
+dev-pypy3:
+	@echo "##########################################################################"
+	@echo "Requires on Fedora:"
+	@echo "    dnf install pypy3"
+	@echo "    dnf install pypy3-dev"
+	@echo "    dnf install postgresql-devel"
+	@echo "##########################################################################"
+	pypy3 -m pip install --editable .[devpypy]
 
 test: test-sqlite
 
@@ -23,8 +41,14 @@ test-all: test-sqlite test-postgresql
 test-sqlite:
 	python -m pytest -x ./tests/test_*.py --cov snippy --snippy-db sqlite
 
+test-sqlite-pypy3:
+	pypy3 -m pytest -x ./tests/test_*.py --cov snippy --snippy-db sqlite
+
 test-postgresql:
 	python -m pytest -x ./tests/test_*.py --cov snippy --snippy-db postgresql
+
+test-postgresql-pypy:
+	pypy3 -m pytest -x ./tests/test_*.py --cov snippy --snippy-db postgresql
 
 test-fast:
 ifeq ($(python_version_major), 3)

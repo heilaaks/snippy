@@ -50,14 +50,16 @@ Run tests with PyPy
       # psycopg2 replacement psycopg2cffi has not been so far to get installed with PyPy.
       make clean
       make clean-db
-      dnf install pypy
-      pypy -m ensurepip
-      pypy -m pip install --upgrade pip wheel
-      pypy -m pip install --editable .[dev]
-      pypy -m pytest -x ./tests/test_*.py --cov snippy -m "not serial"
-      pypy runner --help
-      pypy runner import --defaults --all
-      pypy runner --server-host 127.0.0.1:8080 -vv
+      dnf install pypy3
+      dnf install pypy3-devel
+      dnf install postgresql-devel
+      pypy3 -m ensurepip
+      pypy3 -m pip install --upgrade pip wheel
+      pypy3 -m pip install --editable .[dev]
+      pypy3 -m pytest -x ./tests/test_*.py --cov snippy -m "not serial"
+      pypy3 runner --help
+      pypy3 runner import --defaults --all
+      pypy3 runner --server-host 127.0.0.1:8080 -vv
       curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=4" -H "accept: application/vnd.api+json"
 
 Run tests with PostgreSQL

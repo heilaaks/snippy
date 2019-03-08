@@ -32,12 +32,17 @@ try:
         warnings.filterwarnings("ignore", category=UserWarning, module='psycopg2')
     import psycopg2
 except ImportError:
-    class psycopg2(object):  # noqa pylint: disable=C,R
-        """Dummy psycopg2 class to use exceptions."""
+    try:
+        from psycopg2cffi import compat
+        compat.register()
+        import psycopg2
+    except ImportError:
+        class psycopg2(object):  # noqa pylint: disable=C,R
+            """Dummy psycopg2 class to use exceptions."""
 
-    setattr(psycopg2, 'Error', sqlite3.Error)
-    setattr(psycopg2, 'DataError', sqlite3.DataError)
-    setattr(psycopg2, 'IntegrityError', sqlite3.IntegrityError)
+        setattr(psycopg2, 'Error', sqlite3.Error)
+        setattr(psycopg2, 'DataError', sqlite3.DataError)
+        setattr(psycopg2, 'IntegrityError', sqlite3.IntegrityError)
 
 from snippy.constants import Constants as Const
 from snippy.logger import Logger

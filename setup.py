@@ -44,11 +44,17 @@ extras_server = (
     'jsonschema==3.0.1',
     'psycopg2-binary==2.7.7'
 )
-extras_docker = (
-    'falcon==1.4.1',
-    'gunicorn==19.9.0',
-    'jsonschema==3.0.1',
+extras_server_docker = (
+    extras_server[0],
+    extras_server[1],
+    extras_server[2],
     'psycopg2>=2.7.5,<=2.7.7'
+)
+extras_server_pypy = (
+    extras_server[0],
+    extras_server[1],
+    extras_server[2],
+    'psycopg2cffi==2.8.1'
 )
 extras_tests = (
     'codecov==2.0.15',
@@ -125,9 +131,11 @@ setup(
     ],
     extras_require={
         'dev': extras_dev + extras_docs + extras_server + extras_tests,
-        'docker': extras_docker,
+        'devpypy': extras_dev + extras_docs + extras_server_pypy + extras_tests,
+        'docker': extras_server_docker,
         'docs': extras_docs,
         'server': extras_server,
+        'serverpypy': extras_server_pypy,
         'test': extras_server + extras_tests,
     },
     tests_require=extras_tests,

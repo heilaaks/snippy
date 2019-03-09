@@ -35,7 +35,7 @@ except ImportError:
     try:
         from psycopg2cffi import compat
         compat.register()
-        import psycopg2
+        import psycopg2  # noqa pylint: disable=ungrouped-imports
     except ImportError:
         class psycopg2(object):  # noqa pylint: disable=C,R
             """Dummy psycopg2 class to use exceptions."""

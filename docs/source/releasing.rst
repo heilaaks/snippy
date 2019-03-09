@@ -54,7 +54,7 @@ Run tests with PyPy
       dnf install pypy3-devel
       dnf install postgresql-devel
       pypy3 -m ensurepip
-      pypy3 -m pip install --upgrade pip wheel
+      pypy3 -m pip install --upgrade pip setuptools wheel
       pypy3 -m pip install --editable .[dev]
       pypy3 -m pytest -x ./tests/test_*.py --cov snippy -m "not serial"
       pypy3 runner --help

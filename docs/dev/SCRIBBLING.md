@@ -83,6 +83,70 @@ Random notes and scribling during development.
    $ pypy -m pytest -x ./tests/test_*.py --cov snipp
    $ unset PYTHONPATH
    ```
+      
+   ```
+   # - Pypy2 does no likely support implementation_name
+   # - Pypy3 latest 7 requires FC29
+   # - Pypy3 could support implementation_name which would allow single "extras_server" for cpython and PyPy.
+   # - Support only Pypy3
+   extras_server = (
+       'falcon==1.4.1',
+       'gunicorn==19.9.0',
+       'jsonschema==3.0.1',
+       'psycopg2-binary==2.7.7;implementation_name=="cpython"',
+       'psycopg2cffi==2.8.1 ; implementation_name=="PyPy"'
+   )
+   BOLD := \033[1m
+   RESET := \033[0m
+   #PYPY := ""
+   #PYPY2 :=
+   #PYPY  := $(if $(PYPY2),$(PYPY3),$(something else))
+   
+   #@echo ${PYPY}
+   #	@type pypy --version >/dev/null 2>&1
+   # ifeq ($(python_version_major), 3)
+   
+   #PYPY3 := $(shell which pypy3)
+   #ifeq ($(PYPY3),)
+   #PYPY = $(PYPY3)
+   #else
+   #PYPY = $(PYPY3)
+   #endif
+   
+   
+   
+   check-pypy:
+   	@echo "HERE2"
+   	@if { pypy --version; } 2>/dev/null; then PYPY=pypy; else echo "pypy missing"; fi
+   	@echo "COMMAND: $(PYPY)"
+   
+   check-pypy3:
+   	@echo "HERE3"
+   	@if { pypy3 --version; } 2>/dev/null; then PYPY = pypy3; else echo "pypy3 missing"; fi
+   
+   install:
+   	pip install .
+   
+   upgrade:
+   	pip install --upgrade .
+   
+   uninstall:
+   	pip uninstall --yes snippy
+   
+   server:
+   	pip install -e .[server]
+   
+   server-pypy3: check-pypy check-pypy3
+   	@echo "COMMAND: ${PYPY}"
+   	@echo "##########################################################################"
+   	@echo "$(BOLD)Requires on Fedora:$(RESET)"
+   	@echo "    dnf install pypy3"
+   	@echo "    dnf install pypy3-dev"
+   	@echo "    dnf install postgresql-devel"
+   	@echo "##########################################################################"
+   	$(PYTHON) -m pip install --editable .[serverpypy]
+   ```
+
 
    ```
    # Upgrade pip tools.

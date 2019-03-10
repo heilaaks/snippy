@@ -13,6 +13,7 @@
    - [ ] Add logic versions. Change version to content_versions in base? Same all content? Requires long lines for cli.py. How describe versions?
    - [ ] Config get_resource could return empty Resource instead of None in failure. This is now related to new migrate refactoring that prevents migrating template resources.
    - [ ] Fix (remove) the LANG in Alpine based dockerfile? Is this useless as MUSL does not support locales? https://github.com/gliderlabs/docker-alpine/issues/144
+   - [ ] Fix PyPy 5.5.0 (Python 3.3) that does not have sqlite uri=True and does not have server 'ssl_version': ssl.PROTOCOL_TLSv1_2. Otherwise tests pass with exception of schema validation errors. works with later Pypy would be the best quess.
    - [ ] Fix server silent startup failure if for example the port is reserved. How to get proper error cause for user?
    - [ ] Test postgreSQL SSL connection manually.
    - [ ] Test API performance by disabling server start from api_performance against all db's. (what was this?)

@@ -14,7 +14,6 @@ PYPY2_LIBS     := pypy pypy-devel postgresql-devel
 PYPY3_LIBS     := pypy3 pypy3-devel postgresql-devel
 PYTHON         := python
 PYTHON_VERSION := $(shell python -c 'import sys; print(sys.version_info[0])')
-PYTEST         := pytest
 
 .PHONY: clean
 clean: clean-build clean-pyc clean-test
@@ -94,7 +93,7 @@ test-all: test-sqlite test-postgresql
 test-sqlite:
 	$(PYTHON) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db sqlite
 
-test-sqlite-pypy3:
+test-sqlite-pypy:
 	$(PYPY) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db sqlite
 
 test-postgresql:
@@ -142,25 +141,25 @@ security-scan:
 # $(call test-pypy-libs, pkg-manager, pkg-COMMAND, required-libs)
 #
 # Test if given array of pacakges is installed with given package
-# manager.
+# manager. Backslashes are aligned for 8 space tabs.
 define test-installed-libs
-	$$(                                                             \
-		set -x;                                                     \
-		MISSING=();                                                 \
-		i=0;                                                        \
-		if [ ! -z "${1}" ]; then                                    \
-			for PACKAGE in ${3}; do                                 \
-				if [ -z "$$(${1} ${2} | grep $${PACKAGE})" ]; then  \
-					MISSING+=$$PACKAGE;                             \
-				fi                                                  \
-			done;                                                   \
-		else                                                        \
-			false;                                                  \
-		fi;                                                         \
-		if [ $${#MISSING[@]} -eq 0 ]; then                          \
-			true;                                                   \
-		else                                                        \
-			echo "$${MISSING[*]}";                                  \
-		fi                                                          \
+	$$(										\
+		set -x;									\
+		MISSING=();								\
+		i=0;									\
+		if [ ! -z "${1}" ]; then						\
+			for PACKAGE in ${3}; do						\
+				if [ -z "$$(${1} ${2} | grep $${PACKAGE})" ]; then	\
+					MISSING+=$$PACKAGE;				\
+				fi							\
+			done;								\
+		else									\
+			false;								\
+		fi;									\
+		if [ $${#MISSING[@]} -eq 0 ]; then					\
+			true;								\
+		else									\
+			echo "$${MISSING[*]}";						\
+		fi									\
 	)
 endef

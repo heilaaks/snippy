@@ -1,58 +1,111 @@
-python_version_full := $(wordlist 2,4,$(subst ., ,$(shell python --version 2>&1)))
-python_version_major := $(word 1,${python_version_full})
+# Disable default suffixes and rules to reduce spam with make --debug
+# option. This is a Python project and these are not needed.
+MAKEFLAGS += --no-builtin-rules
+MAKEFLAGS += --no-builtin-variables
+
+# Run all commands in one shell.
+.ONESHELL:
+
+PKG_MANAGER    := $(shell command -v dnf)
+PKG_COMMAND    := list installed
+PIP            := pip
+PYPY           := pypy3
+PYPY2_LIBS     := pypy pypy-devel postgresql-devel
+PYPY3_LIBS     := pypy3 pypy3-devel postgresql-devel
+PYTHON         := python
+PYTHON_VERSION := $(shell python -c 'import sys; print(sys.version_info[0])')
+PYTEST         := pytest
+
+.PHONY: clean
+clean: clean-build clean-pyc clean-test
+
+clean-build:
+	rm -drf .cache
+	rm -drf build
+	rm -drf dist
+	rm -drf docs/build/*
+	rm -drf pip-wheel-metadata
+	rm -drf snippy.egg-info
+	find . -name '*.egg-info' -exec rm -fr {} +
+	find . -name '*.egg' -exec rm -f {} +
+
+clean-pyc:
+	find . -name '*.pyc' -exec rm -f {} +
+	find . -name '*.pyo' -exec rm -f {} +
+	find . -name '*~' -exec rm -f {} +
+	find . -name '__pycache__' -exec rm -fr {} +
+
+clean-test:
+	rm -drf .cache
+	rm -drf .coverage
+	rm -drf .pytest_cache
+	rm -drf .tox
+	rm -drf htmlcov
+	rm -f .coverage.*
+	rm -f coverage.xml
+	rm -f pytestdebug.log
+
+clean-db:
+	> snippy/data/storage/snippy.db
 
 install:
-	pip install .
+	$(PIP) install .
 
 upgrade:
-	pip install --upgrade .
+	$(PIP) install --upgrade .
 
 uninstall:
-	pip uninstall --yes snippy
+	$(PIP) uninstall --yes snippy
+
+.PHONY: devel
+devel:
+	$(PIP) install --editable .[devel]
+
+.PHONY: docs
+docs:
+	make -C docs html
 
 server:
-	pip install -e .[server]
+	$(PIP) install --editable .[server]
 
-server-pypy3:
+server-pypy:
 	@echo "##########################################################################"
 	@echo "Requires on Fedora:"
-	@echo "    dnf install pypy3"
-	@echo "    dnf install pypy3-dev"
-	@echo "    dnf install postgresql-devel"
+	@echo "    dnf install pypy3 -y"
+	@echo "    dnf install pypy3-devel -y"
+	@echo "    dnf install postgresql-devel -y"
 	@echo "##########################################################################"
-	pypy3 -m pip install --editable .[serverpypy]
+	$(PYPY) -m pip install --editable .[serverpypy]
 
-dev:
-	pip install -e .[dev]
-
-dev-pypy3:
+devel-pypy:
 	@echo "##########################################################################"
 	@echo "Requires on Fedora:"
-	@echo "    dnf install pypy3"
-	@echo "    dnf install pypy3-dev"
-	@echo "    dnf install postgresql-devel"
+	@echo "    dnf install pypy3 -y"
+	@echo "    dnf install pypy3-devel -y"
+	@echo "    dnf install postgresql-devel -y"
 	@echo "##########################################################################"
-	pypy3 -m pip install --editable .[devpypy]
+	$(PYPY) -m pip install --editable .[develpypy]
 
+.PHONY: test
 test: test-sqlite
 
 test-all: test-sqlite test-postgresql
 
 test-sqlite:
-	python -m pytest -x ./tests/test_*.py --cov snippy --snippy-db sqlite
+	$(PYTHON) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db sqlite
 
 test-sqlite-pypy3:
-	pypy3 -m pytest -x ./tests/test_*.py --cov snippy --snippy-db sqlite
+	$(PYPY) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db sqlite
 
 test-postgresql:
-	python -m pytest -x ./tests/test_*.py --cov snippy --snippy-db postgresql
+	$(PYTHON) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db postgresql
 
 test-postgresql-pypy:
-	pypy3 -m pytest -x ./tests/test_*.py --cov snippy --snippy-db postgresql
+	$(PYPY) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db postgresql
 
 test-fast:
-ifeq ($(python_version_major), 3)
-	python -m pytest -n auto -x ./tests/test_*.py --cov snippy -m "not serial"
+ifeq ($(PYTHON_VERSION), 3)
+	$(PYTHON) -m pytest -n auto -x ./tests/test_*.py --cov snippy -m "not serial"
 else
 	@echo "##########################################################################"
 	@echo "Parallel tests are supported only with Python 3. Executing tests serially."
@@ -61,66 +114,53 @@ else
 endif
 
 coverage:
-	pytest --cov=snippy --cov-branch --cov-report html tests/
-	pytest --cov=snippy tests/
-
-outdated:
-	pip list --outdated
-
-docs:
-	make -C docs html
+	$(PYTHON) -m pytest --cov=snippy --cov-branch --cov-report html tests/
+	$(PYTHON) -m pytest --cov=snippy tests/
 
 lint:
-	-pylint --rcfile tests/pylint/pylint-snippy-tests.rc tests/ | tee tests/pylint/pylint-snippy-tests.txt
-	-pylint --rcfile tests/pylint/pylint-snippy.rc snippy/ | tee tests/pylint/pylint-snippy.txt
-	-flake8 --config tests/flake8/flake8.ini snippy
+	-$(PYTHON) -m pylint --rcfile tests/pylint/pylint-snippy-tests.rc tests/ | tee tests/pylint/pylint-snippy-tests.txt
+	-$(PYTHON) -m pylint --rcfile tests/pylint/pylint-snippy.rc snippy/ | tee tests/pylint/pylint-snippy.txt
+	-$(PYTHON) -m flake8 --config tests/flake8/flake8.ini snippy
 
 pyflakes:
-	-python -m pyflakes .
+	-$(PYTHON) -m pyflakes .
 
+outdated:
+	$(PIP) list --outdated
+
+.PHONY: schema
 schema:
 	openapi2jsonschema snippy/data/server/openapi/swagger-2.0.yml -o snippy/data/server/openapi/schema/
 
+.PHONY: docker
 docker: clean clean-db
 	docker build --build-arg http_proxy=${http_proxy} --build-arg https_proxy=${https_proxy} -t heilaaks/snippy .
 
 security-scan:
 	-bandit -r snippy | tee tests/bandit/bandit.txt
 
-clean:
-	find . \( -name \*.pyc -o -name \*.pyo -o -name __pycache__ \) -prune -exec rm -rf {} +
-	rm -drf .cache
-	rm -drf .coverage
-	rm -drf .pytest_cache
-	rm -drf .tox
-	rm -dfr build
-	rm -dfr dist
-	rm -drf docs/build/*
-	rm -drf htmlcov
-	rm -drf pip-wheel-metadata
-	rm -drf snippy.egg-info
-	rm -f .coverage.*
-	rm -f coverage.xml
-	rm -f pytestdebug.log
-	rm -f snippets.json
-	rm -f snippets.yaml
-	rm -f snippet*.text
-	rm -f snippets.txt
-	rm -f snippet-template.*
-	rm -f solutions.json
-	rm -f solutions.yaml
-	rm -f solution*.text
-	rm -f solutions.txt
-	rm -f solution-template.*
-	rm -f references.json
-	rm -f references.yaml
-	rm -f references.text
-	rm -f references.txt
-	rm -f reference-template.*
-	rm -f content.yaml
-	rm -f content.text
-
-clean-db:
-	> snippy/data/storage/snippy.db
-
-.PHONY: install upgrade uninstall server dev test test-all test-fast test-sqlite test-postgresql coverage outdated docs lint pyflakes docker security-scan clean clean-db
+# $(call test-pypy-libs, pkg-manager, pkg-COMMAND, required-libs)
+#
+# Test if given array of pacakges is installed with given package
+# manager.
+define test-installed-libs
+	$$(                                                             \
+		set -x;                                                     \
+		MISSING=();                                                 \
+		i=0;                                                        \
+		if [ ! -z "${1}" ]; then                                    \
+			for PACKAGE in ${3}; do                                 \
+				if [ -z "$$(${1} ${2} | grep $${PACKAGE})" ]; then  \
+					MISSING+=$$PACKAGE;                             \
+				fi                                                  \
+			done;                                                   \
+		else                                                        \
+			false;                                                  \
+		fi;                                                         \
+		if [ $${#MISSING[@]} -eq 0 ]; then                          \
+			true;                                                   \
+		else                                                        \
+			echo "$${MISSING[*]}";                                  \
+		fi                                                          \
+	)
+endef

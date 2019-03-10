@@ -46,8 +46,7 @@ Run tests with PyPy
 
    .. code-block:: text
 
-      # Example installation for Fedora 28. Comment psycopg2 out from setup.py because
-      # psycopg2 replacement psycopg2cffi has not been so far to get installed with PyPy.
+      # Example installation for Fedora 28.
       make clean
       make clean-db
       dnf install pypy3
@@ -55,7 +54,7 @@ Run tests with PyPy
       dnf install postgresql-devel
       pypy3 -m ensurepip
       pypy3 -m pip install --upgrade pip setuptools wheel
-      pypy3 -m pip install --editable .[dev]
+      pypy3 -m pip install --editable .[devel]
       pypy3 -m pytest -x ./tests/test_*.py --cov snippy -m "not serial"
       pypy3 runner --help
       pypy3 runner import --defaults --all

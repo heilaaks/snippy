@@ -11,7 +11,7 @@ for Python virtual environment like below:
 
     git clone https://github.com/heilaaks/snippy.git
     mkvirtualenv snippy
-    make dev
+    make devel
 
 The basic commands to run and test are:
 
@@ -337,7 +337,7 @@ Apache Bench
       [200] 10000 responses
 
     # HTTP server with PyPy and Sqlite as storage backed (comment psycopg2 out from setup)
-    sudo pypy -m pip install --editable .[dev]
+    sudo pypy -m pip install --editable .[devel]
     pypy runner --server-host 127.0.0.1:8080 --defaults
     /root/go/bin/hey -n 1000 -c 1 http://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=20
     /root/go/bin/hey -n 1000 -c 1 http://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=20

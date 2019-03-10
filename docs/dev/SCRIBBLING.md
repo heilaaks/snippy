@@ -25,7 +25,7 @@ Random notes and scribling during development.
    # Installing for Python 3
    $ mkvirtualenv snippy
    $ pip3 install .
-   $ pip3 install -e .[dev] # Development packages.
+   $ pip3 install -e .[devel] # Development packages.
    ```
 
    ```
@@ -35,7 +35,7 @@ Random notes and scribling during development.
    #$ export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python2    # Add to ~/.bashrc
    #$ mkvirtualenv snippy-python27
    #$ workon snippy-python27
-   #$ pip install -e .[dev]
+   #$ pip install -e .[devel]
    #$ sudo dnf install redhat-rpm-config
    ```
 
@@ -49,7 +49,7 @@ Random notes and scribling during development.
    $ export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python34    # Add to ~/.bashrc
    $ mkvirtualenv snippy-python34
    $ workon snippy-python34
-   $ pip install -e .[dev]
+   $ pip install -e .[devel]
    $ sudo dnf install redhat-rpm-config
    ```
 
@@ -85,6 +85,112 @@ Random notes and scribling during development.
    ```
       
    ```
+   # Change variable
+   make server PYTHON=pypy
+   
+   # debug 
+   make -d server PYTHON=pypy
+
+PROJECT_NAME := $(shell python setup.py --name)
+PROJECT_VERSION := $(shell python setup.py --version)
+
+DEPENDENCIES := pypy3 pypy3-dev postgresql-devel
+
+	#PACKAGES += $(shell dnf list installed | grep pypy3-dev) \
+	#PACKAGES := $(foreach PACKAGE,$(DEPENDENCIES), \
+    #$(if $(shell dnf list installed | grep $(PACKAGE)),$(PACKAGE),$(error "No $(PACKAGE) nstalled"))) \
+
+
+define pypy_dependencies
+echo "start"
+for PACKAGE in $$DEPENDENCIES; do    \
+    echo " inside $$PACKAGE"             \
+done
+endef
+
+
+#if ! dnf list installed | grep pypy3-dev; then
+    #yum install glibc-static
+#fi
+
+# works
+# $(call get-missing-libs, pkg-manager, pkg-COMMAND, required-libs)
+define get-missing-libs
+	$$(                                                             \
+		set -x;                                                     \
+		MISSING=();                                                 \
+		i=0;                                                        \
+		if [ ! -z "${1}" ]; then                                    \
+			for PACKAGE in ${3}; do                                 \
+				if [ -z "$$(${1} ${2} | grep $${PACKAGE})" ]; then  \
+					MISSING+=$$PACKAGE;                             \
+				fi                                                  \
+			done;                                                   \
+		fi;                                                         \
+		echo $$MISSING;                                             \
+	)
+endef
+	#ifeq (${INSTALLED,isValid},false)
+	#$(error app not valid)
+	#endif
+	#$(if $(INSTALLED),@echo match is broken,@echo match works)
+
+	#echo $(MISSING_LIBS)
+	#$(eval $(call test-installed-libs,$(PKG_MANAGER),$(PKG_COMMAND),$(PYPY3)))
+	#$(eval $(call myfuntest,return_value,$(abc)))
+
+
+server-pypy:
+	EXECUTABLES = ls dd dudu lxop
+	K := $(foreach exec,$(EXECUTABLES),\
+    	$(if $(shell which $(exec)),some string,$(error "No $(exec) in PATH")))#
+	$(info var is $(PACKAGES))
+
+    ##working
+    check-pypy:
+if test -x "$(DNF)"; then $(DNF_OR_YUM)
+MISSING := $(foreach exec,$(DEPENDENCIES),\
+	$(if $(shell dnf list installed | grep $(exec)),,$(exec)))
+ifdef MISSING
+$(error missing $(MISSING))
+endif
+
+
+#for PACKAGE in $(PYPY3) ; do command ; command ; doneendif
+#ifdef MISSING
+#$(error missing $(MISSING))
+#endif
+
+
+#check-pypy3:
+#ifndef PKG_MANAGER
+#MISSING := $(foreach PACKAGE,$(PYPY3), \
+#               $(if [ -z $(shell dnf list installed | grep $(PACKAGE)) ],$(PACKAGE),))
+#endif
+#ifdef MISSING
+#$(error missing $(MISSING))
+#endif
+#
+#check-pypy3:
+#ifndef PKG_MANAGER
+#MISSING := $(foreach PACKAGE,$(PYPY3), \
+#               $(if [ -z "$(shell dnf list installed | grep $(PACKAGE))" ],$(PACKAGE),))
+#endif
+#ifdef MISSING
+#$(error missing $(MISSING))
+#endif
+#
+#
+#check-pypy3:
+#ifndef PKG_MANAGER
+#MISSING := $(foreach PACKAGE,$(PYPY3),$(if -z $(shell dnf list installed | grep $(PACKAGE)),$(PACKAGE),))
+#endif
+#ifdef MISSING
+#$(error missing $(MISSING))
+#endif
+
+
+   
    # - Pypy2 does no likely support implementation_name
    # - Pypy3 latest 7 requires FC29
    # - Pypy3 could support implementation_name which would allow single "extras_server" for cpython and PyPy.
@@ -113,7 +219,8 @@ Random notes and scribling during development.
    #PYPY = $(PYPY3)
    #endif
    
-   
+   #$(info var is $(PYTHON))
+   #$(info var is $(PYTHON_VERSION))
    
    check-pypy:
    	@echo "HERE2"

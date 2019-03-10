@@ -130,8 +130,8 @@ setup(
         'Topic :: Utilities'
     ],
     extras_require={
-        'dev': extras_dev + extras_docs + extras_server + extras_tests,
-        'devpypy': extras_dev + extras_docs + extras_server_pypy + extras_tests,
+        'devel': extras_dev + extras_docs + extras_server + extras_tests,
+        'develpypy': extras_dev + extras_docs + extras_server_pypy + extras_tests,
         'docker': extras_server_docker,
         'docs': extras_docs,
         'server': extras_server,

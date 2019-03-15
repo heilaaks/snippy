@@ -36,7 +36,7 @@ data:
   - 'grep -rni ./ -e ''pattern''  #  recursive, line numbers, case insensitive'
   - grep -rni ./ -e 'pattern' --include=\*.{ini,xml,cfg,conf,yaml}
   description: ''
-  digest: adba4298f8e4773c0c29d6c2f892b17d5cace472c47dc708b2e246b40b997158
+  digest: e600c0bbe6d5f325d84a86312f9d17a73bb4f54d89ccddb005dfcef25209ec3a
   filename: ''
   groups:
   - linux
@@ -46,9 +46,9 @@ data:
   name: ''
   source: ''
   tags:
+  - find
   - linux
-  - search
-  updated: '2018-11-06T12:43:25.774128+00:00'
+  updated: '2019-03-14T11:22:25.518978+00:00'
   uuid: f511fc21-dad2-4275-878d-039191a15505
   versions: []
 - brief: Run containers and connect to them
@@ -795,7 +795,36 @@ data:
   updated: '2019-01-26T16:21:01.001938+00:00'
   uuid: acd90500-2cfc-4c95-9aa4-d3d414474473
   versions: []
+- brief: Find files and count lines
+  category: snippet
+  created: '2019-03-14T11:11:23.844282+00:00'
+  data:
+  - 'find . -iregex ''.*\(py\|robot\)''  #  Find files.'
+  - 'find . -iregex ''.*\(py\|robot\)'' -print0 | wc -l --files0-from=-  #  Find files
+    and count lines.'
+  - find . -iregex '.*\(py\|robot\)' -print0 | wc -l --files0-from=- | tail -n 1
+  - 'find . -name ''*.py'' -print0 | wc -l --files0-from=-  #  Find files and count
+    lines.'
+  - find . -name '*.py' -print0 | wc -l --files0-from=- | tail -n 1
+  - 'find . -name ''*.py'' -exec cat {} + | wc -l  #  Find files and count lines.'
+  description: Find files with or without regexp pattern and count lines.
+  digest: cf309a58c078531b26f235871e22a878b9af7ad3da9bdf08adf83365bc3ef620
+  filename: ''
+  groups:
+  - linux
+  links:
+  - https://superuser.com/a/260079
+  - https://unix.stackexchange.com/a/55973
+  name: ''
+  source: ''
+  tags:
+  - find
+  - linux
+  - regexp
+  updated: '2019-03-14T11:22:03.966913+00:00'
+  uuid: 58e26441-2ece-45e2-9d0f-cd6fb8716743
+  versions: []
 meta:
   homepage: https://github.com/heilaaks/snippy
-  updated: '2019-01-27T13:55:04.518374+00:00'
-  version: 0.9.0
+  updated: '2019-03-14T11:23:02.255020+00:00'
+  version: 0.10a0

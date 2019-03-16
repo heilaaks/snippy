@@ -12,6 +12,7 @@ Breaking changes
 New features
 ~~~~~~~~~~~~
 
+* Add ``gzip`` compression support for REST API responses.
 * Add option to import all default content when server is started.
 * Add environment variable support for server, storage and support options.
 

@@ -19,6 +19,9 @@
 
 """test_api_search_solution: Test GET /snippy/api/solutions API."""
 
+import json
+import zlib
+
 from falcon import testing
 import falcon
 import pytest
@@ -593,6 +596,45 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
+
+    @pytest.mark.usefixtures('default-solutions')
+    def test_api_search_solution_017(self, server):
+        """Search solution with GET.
+
+        Search solutions and accept gzip compressed response. Note that the
+        response length cannot be checked because the compression efficiency
+        can change between Python versions. because of this, the response
+        lenght is tested only that it should be less than the uncompressed
+        response.
+        """
+
+        expect_body = {
+            'meta': {
+                'count': 2,
+                'limit': 20,
+                'offset': 0,
+                'total': 2
+            },
+            'data': [{
+                'type': 'solution',
+                'id': Solution.BEATS_DIGEST,
+                'attributes': Solution.BEATS
+            }, {
+                'type': 'solution',
+                'id': Solution.NGINX_DIGEST,
+                'attributes': Solution.NGINX
+            }]
+        }
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/app/v1/solutions',
+            headers={'accept': 'application/vnd.api+json; charset=UTF-8', 'accept-encoding': 'gzip'},
+            query_string='sall=nginx%2CElastic&limit=20&sort=brief')
+        result_body = zlib.decompress(result.content, 16+zlib.MAX_WBITS).decode("utf-8")
+        assert result.status == falcon.HTTP_200
+        assert result.headers['content-type'] == 'application/vnd.api+json; charset=UTF-8'
+        assert result.headers['content-encoding'] == 'gzip'
+        assert int(result.headers['content-length']) < len(result_body)
+        Content.assert_restapi(json.loads(result_body), expect_body)
 
     @pytest.mark.usefixtures('default-solutions', 'import-kafka')
     def test_api_search_solution_paginate_001(self, server):

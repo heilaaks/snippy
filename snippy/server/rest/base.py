@@ -52,7 +52,7 @@ class ApiContentBase(object):  # pylint: disable=too-many-instance-attributes
             self._content.run()
         if Cause.is_ok():
             response.content_type = ApiContentBase.MEDIA_JSON_API
-            response.body = Generate.collection(self._content.collection, request)
+            response.body = Generate.collection(self._content.collection, request, response)
             response.status = Cause.http_status()
         else:
             response.content_type = ApiContentBase.MEDIA_JSON_API
@@ -86,7 +86,7 @@ class ApiContentBase(object):  # pylint: disable=too-many-instance-attributes
             Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find resources')
         if Cause.is_ok():
             response.content_type = ApiContentBase.MEDIA_JSON_API
-            response.body = Generate.collection(self._content.collection, request, pagination=True)
+            response.body = Generate.collection(self._content.collection, request, response, pagination=True)
             response.status = Cause.http_status()
         else:
             response.content_type = ApiContentBase.MEDIA_JSON_API
@@ -165,7 +165,7 @@ class ApiContentDigestBase(object):
                        (digest, len(self._content.collection)))
         if Cause.is_ok():
             response.content_type = ApiContentBase.MEDIA_JSON_API
-            response.body = Generate.resource(self._content.collection, request, digest, pagination=True)
+            response.body = Generate.resource(self._content.collection, request, response, digest, pagination=True)
             response.status = Cause.http_status()
         else:
             response.content_type = ApiContentBase.MEDIA_JSON_API
@@ -206,7 +206,7 @@ class ApiContentDigestBase(object):
             self._content.run()
         if Cause.is_ok():
             response.content_type = ApiContentBase.MEDIA_JSON_API
-            response.body = Generate.resource(self._content.collection, request, digest)
+            response.body = Generate.resource(self._content.collection, request, response, digest)
             response.status = Cause.http_status()
         else:
             response.content_type = ApiContentBase.MEDIA_JSON_API
@@ -261,7 +261,7 @@ class ApiContentDigestFieldBase(object):
                        (digest, len(self._content.collection)))
         if Cause.is_ok():
             response.content_type = ApiContentBase.MEDIA_JSON_API
-            response.body = Generate.resource(self._content.collection, request, digest, field=field, pagination=False)
+            response.body = Generate.resource(self._content.collection, request, response, digest, field=field, pagination=False)
             response.status = Cause.http_status()
         else:
             response.content_type = ApiContentBase.MEDIA_JSON_API
@@ -307,7 +307,7 @@ class ApiContentUuidBase(object):
                        (uuid, len(self._content.collection)))
         if Cause.is_ok():
             response.content_type = ApiContentBase.MEDIA_JSON_API
-            response.body = Generate.resource(self._content.collection, request, uuid, pagination=True)
+            response.body = Generate.resource(self._content.collection, request, response, uuid, pagination=True)
             response.status = Cause.http_status()
         else:
             response.content_type = ApiContentBase.MEDIA_JSON_API
@@ -353,7 +353,7 @@ class ApiContentUuidFieldBase(object):
                        (uuid, len(self._content.collection)))
         if Cause.is_ok():
             response.content_type = ApiContentBase.MEDIA_JSON_API
-            response.body = Generate.resource(self._content.collection, request, uuid, field=field, pagination=False)
+            response.body = Generate.resource(self._content.collection, request, response, uuid, field=field, pagination=False)
             response.status = Cause.http_status()
         else:
             response.content_type = ApiContentBase.MEDIA_JSON_API

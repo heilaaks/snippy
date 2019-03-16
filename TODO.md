@@ -1,11 +1,8 @@
 ## WORKING
-   - [ ] Update snippet (0d243b48a43cb853) with same comment field with multiple snippets. The editor markdown is not correct after opening editor.
-   - [ ] python runner update -d cf309a58c078531b --format text does not return "content not changed" Shoyuld it? was there such cause --> no?
    - [ ] Refactor Makefile to have python|python3|pypy|pypy3 as ${PYTHON}.
-   - [ ] Add compression for the response. Default is pretty print, the --server-minify-json is applied if request header does not request compression.
    - [ ] How to compile psycopg2 for PyPY?
    - [ ] Add bash completion to Snippy. Check example from Poetry.
-   - [ ] Fix coli -f file to see if this goes ot content filename attribute. Should not. -f|--file and content.filename are not the same.
+   - [ ] Fix cli -f file to see if this goes ot content filename attribute. Should not. -f|--file and content.filename are not the same.
    - [ ] build-backend from pytest to Toml. This was mandatory from Pep 517 (?). People just not use it (or read) so it is defaulting. Better to have it explicitly.
    - [ ] Fix help text to use import --all instead of content specific commands. Or keep?
    - [ ] Why starting server calls collection initialization 4 times?
@@ -72,6 +69,7 @@
    - [ ] Remove server name and version from HTTP responses. This would require overriding Gunicorn https://stackoverflow.com/a/21294524.
 
 ## FIX
+   - [ ] Refactor rest.generate that now updates also headers. Body, content type and status are set in the main level but header are set in Generate which may be confusing.
    - [ ] Fix somehow (?) the python runner search --sall 'test' --filter test -vv | grep --all?
    - [ ] Fix reading data from cli that does not parse description and filename from CLI --content data test_cli_create_solution_001.
    - [ ] Fix why new mkdn log driver kafka solution does not have description in quotations in defaults?  This is normal YAML behaviour?

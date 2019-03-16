@@ -17,11 +17,16 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""generate: Generate REST API responses."""
+"""generate: Generate a body for HTTP REST API response."""
 
+import gzip
 import json
 import math
 import re
+try:
+    import StringIO  # Only in Python 2.
+except ImportError:
+    pass
 try:
     from urllib.parse import urljoin
     from urllib.parse import urlparse, urlunparse
@@ -36,13 +41,28 @@ from snippy.logger import Logger
 
 
 class Generate(object):
-    """Generate REST API responses."""
+    """Generate a body for HTTP REST API response."""
 
     _logger = Logger.get_logger(__name__)
 
     @classmethod
-    def resource(cls, collection, request, unique_id, field=Const.EMPTY, pagination=False):
-        """Generate JSON API v1.0 resource."""
+    def resource(cls, collection, request, response, unique_id, field=Const.EMPTY, pagination=False):
+        """Generate HTTP body with a single resource.
+
+        Created body follows the JSON API specification.
+
+        Args:
+            collection (Collection()): Collection that has resources to be send in HTTP response.
+            request (object): HTTP request.
+            response (object): HTTP response.
+            unique_id (string): Unique ID that is either digest or UUID that identifies the resource.
+            field (string): Content field attribute that was used in the HTTP request URL.
+            pagination (bool): Define if pagination is used.
+
+        Returns:
+            body: JSON body as a string or compressed bytes.
+
+        """
 
         data = {
             'data': {},
@@ -87,11 +107,24 @@ class Generate(object):
         if not data['data']:
             data = json.loads('{"links": {"self": "' + request.uri + '"}, "data": null}')
 
-        return cls.dumps(data)
+        return cls.compress(request, response, cls.dumps(data))
 
     @classmethod
-    def collection(cls, collection, request, pagination=False):  # pylint: disable=too-many-locals,too-many-branches
-        """Generate JSON API v1.0 collection."""
+    def collection(cls, collection, request, response, pagination=False):  # pylint: disable=too-many-locals,too-many-branches
+        """Generate HTTP body with multiple resources.
+
+        Created body follows the JSON API specification.
+
+        Args:
+            collection (Collection()): Collection that has resources to be send in HTTP response.
+            request (object): HTTP request.
+            response (object): HTTP response.
+            pagination (bool): Define if pagination is used.
+
+        Returns:
+            body: JSON body as a string or compressed bytes.
+
+        """
 
         data = {
             'data': []
@@ -172,11 +205,21 @@ class Generate(object):
                 data['links']['first'] = first_link
                 data['links']['last'] = last_link
 
-        return cls.dumps(data)
+        return cls.compress(request, response, cls.dumps(data))
 
     @classmethod
     def error(cls, causes):
-        """Generate JSON API v1.0 error."""
+        """Generate HTTP body with an error.
+
+        Created body follows the JSON API specification.
+
+        Args:
+            cause (Cause()): Cause that is used to build the error response.
+
+        Returns:
+            body: JSON body as a string or compressed bytes.
+
+        """
 
         # Follow CamelCase in field names because expected usage is from
         # Javascript that uses CamelCase.
@@ -205,8 +248,21 @@ class Generate(object):
         return cls.dumps(data)
 
     @classmethod
-    def dumps(cls, response):
-        """Create string from json structure."""
+    def dumps(cls, body):
+        """Create string presentation from a JSON body.
+
+        The JSON body is converted to a string presentation from the data
+        structure.
+
+        By default the body is pretty printed to help readability. Optionally
+        it can be minified by removing all whitespaces from the string.
+
+        Args:
+            body (dict): HTTP JSON response body in a dictionary.
+
+        Returns:
+            string: JSON string presentation from the HTTP response body.
+        """
 
         # Python 2 and Python 3 have different defaults for separators and
         # thus they have to be defined here. In case of Python 2, there is
@@ -215,4 +271,32 @@ class Generate(object):
         if Config.server_minify_json:
             kwargs = {}
 
-        return json.dumps(response, **kwargs)
+        return json.dumps(body, **kwargs)
+
+    @classmethod
+    def compress(cls, request, response, body):
+        """Compress the HTTP response body.
+
+        The response headers are updated if the response body is compressed.
+
+        Args:
+            request (object): Received HTTP request.
+            response (object): HTTP response which headers may be updated.
+            body (string): String presentation from HTTP response body.
+
+        Returns:
+            string|bytes: Body compressed to bytes or original JSON string.
+        """
+
+        if 'gzip' not in request.get_header('accept-encoding', default='').lower():
+            return body
+
+        response.set_header('content-encoding', 'gzip')
+        if Const.PYTHON2:
+            outfile = StringIO.StringIO()
+            gzip_file = gzip.GzipFile(fileobj=outfile, mode="wb")
+            gzip_file.write(body.encode('utf-8'))
+            gzip_file.close()
+            return outfile.getvalue()
+
+        return gzip.compress(body.encode('utf-8'), compresslevel=9)  # slowest with most compression.

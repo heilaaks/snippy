@@ -32,7 +32,7 @@ class TestCliSearchSolution(object):
 
     @pytest.mark.usefixtures('default-solutions')
     def test_cli_search_solution_001(self, snippy, capsys):
-        """Search solutions with `sall` option.
+        """Search solutions with ``sall`` option.
 
         Search solutions from all content fields. The match is made from one
         solution content data.
@@ -54,7 +54,7 @@ class TestCliSearchSolution(object):
 
     @pytest.mark.usefixtures('default-solutions')
     def test_cli_search_solution_002(self, snippy, capsys):
-        """Search solutions with `sall` option.
+        """Search solutions with ``sall`` option.
 
         Try to search solutions with keyword that cannot be found.
         """
@@ -68,7 +68,7 @@ class TestCliSearchSolution(object):
 
     @pytest.mark.usefixtures('default-solutions')
     def test_cli_search_solution_003(self, snippy, capsys):
-        """Search solutions with `filter` option.
+        """Search solutions with ``filter`` option.
 
         Search all content with regexp filter.
         """
@@ -89,7 +89,7 @@ class TestCliSearchSolution(object):
 
     @pytest.mark.usefixtures('default-solutions')
     def test_cli_search_solution_004(self, snippy, capsys):
-        """Search solutions with `digest` option.
+        """Search solutions with ``digest`` option.
 
         Search a solution by explicitly defining the solutions message digest
         short format.
@@ -111,11 +111,11 @@ class TestCliSearchSolution(object):
 
     @pytest.mark.usefixtures('default-solutions')
     def test_cli_search_solution_005(self, snippy, capsys):
-        """Search solutions with `sall` and `sgrp` options.
+        """Search solutions with ``sall`` and ``sgrp`` options.
 
         Search solutions from all fields and limit the search to a specific
         group. The match must not be made from other than the defined group.
-        In this case the `sall` option must print content only from defined
+        In this case the ``sall`` option must print content only from defined
         group.
         """
 

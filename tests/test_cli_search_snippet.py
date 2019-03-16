@@ -32,7 +32,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_001(self, snippy, capsys):
-        """Search snippets with `sall` option.
+        """Search snippets with ``sall`` option.
 
         Search snippets from all fields. The match is made from one
         snippet content data.
@@ -58,7 +58,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_002(self, snippy, capsys):
-        """Search snippets with `sall` option.
+        """Search snippets with ``sall`` option.
 
         Search snippets from all fields. The match is made from one snippet
         brief description.
@@ -83,7 +83,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_003(self, snippy, capsys):
-        """Search snippets with `sall` option.
+        """Search snippets with ``sall`` option.
 
         Search snippets from all fields. The match is made from two snippets
         group metadata.
@@ -116,7 +116,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_004(self, snippy, capsys):
-        """Search snippets with `sall` option.
+        """Search snippets with ``sall`` option.
 
         Search snippets from all fields. The match is made from two snippets
         tags metadata.
@@ -149,7 +149,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_005(self, snippy, capsys):
-        """Search snippets with `sall` option.
+        """Search snippets with ``sall`` option.
 
         Search snippets from all fields. The match is made from one snippet
         links metadata.
@@ -175,7 +175,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_006(self, snippy, capsys):
-        """Search snippets with `sall` option.
+        """Search snippets with ``sall`` option.
 
         Search snippets from all fields. The match is made from one snippet
         digest.
@@ -201,7 +201,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_007(self, snippy, capsys):
-        """Search snippets with `sall` option.
+        """Search snippets with ``sall`` option.
 
         Search snippets from all fields with two keywords. The match is made
         from two different snippets. In this search keywords are separated
@@ -235,7 +235,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets', 'import-netcat')
     def test_cli_search_snippet_008(self, snippy, capsys):
-        """Search snippets with `sall` option.
+        """Search snippets with ``sall`` option.
 
         Search snippets from all fields with three keywords. The match is made
         two different snippts. In this case search keywords are separated by
@@ -269,7 +269,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_009(self, snippy, capsys):
-        """Search snippets with `sall` option.
+        """Search snippets with ``sall`` option.
 
         List all snippets by defining search criteria of search all to
         'match any'.
@@ -302,7 +302,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_010(self, snippy, capsys):
-        """Search snippets with `sall` option.
+        """Search snippets with ``sall`` option.
 
         List all snippets by leaving search criteria for 'search all fields'
         out completely. This is translated to 'match any'.
@@ -335,7 +335,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_011(self, snippy, capsys):
-        """Search snippets with `sall` option.
+        """Search snippets with ``sall`` option.
 
         List all snippets by leaving search criteria of search all as empty.
         This is translated to 'match any'.
@@ -368,7 +368,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('snippy')
     def test_cli_search_snippet_012(self, snippy, capsys):
-        """Search snippets with `sall` option.
+        """Search snippets with ``sall`` option.
 
         Try to search snippets when there are no content stored. The used
         search keyword matches to 'match any' that tries to list all the
@@ -384,7 +384,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_013(self, snippy, capsys):
-        """Search snippets with `sall` option.
+        """Search snippets with ``sall`` option.
 
         Try to search snippets with keyword that cannot be found.
         """
@@ -398,7 +398,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets', 'import-netcat')
     def test_cli_search_snippet_014(self, snippy, capsys):
-        """Search snippet from tag field.
+        """Search snippets with ``stag`` option.
 
         Search snippets from tag field. The match is made from one snippet.
         """
@@ -423,7 +423,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets', 'import-netcat')
     def test_cli_search_snippet_015(self, snippy, capsys):
-        """Search snippet from tag field.
+        """Search snippets with ``stag`` option.
 
         Search snippets from tag field. No matches are made.
         """
@@ -437,7 +437,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_016(self, snippy, capsys):
-        """Search snippet from tag field.
+        """Search snippets with ``stag`` option.
 
         List all snippets by leaving search criteria for 'search tags' out
         completely. This is translated to 'match any'.
@@ -471,7 +471,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets', 'import-netcat')
     def test_cli_search_snippet_017(self, snippy, capsys):
-        """Search snippet from group field.
+        """Search snippets with ``sgrp`` option.
 
         Search snippets from group field. The match is made from one snippet.
         """
@@ -496,7 +496,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets', 'import-netcat')
     def test_cli_search_snippet_018(self, snippy, capsys):
-        """Search snippet from group field.
+        """Search snippets with ``sgrp`` option.
 
         Search snippets from group field. No matches are made.
         """
@@ -510,7 +510,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_019(self, snippy, capsys):
-        """Search snippet from group field.
+        """Search snippets with ``sgrp`` option.
 
         List all snippets by leaving search criteria for 'search groups' out
         completely. This is translated to 'match any'.
@@ -543,7 +543,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets', 'default-solutions', 'import-netcat')
     def test_cli_search_snippet_020(self, snippy, capsys):
-        """Search snippets with regexp `filter` option.
+        """Search snippets with ``filter`` option.
 
         Search all content with a regexp filter. The filter removes all
         content from the search result returned with the `sall` option
@@ -579,7 +579,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets', 'default-solutions', 'import-netcat')
     def test_cli_search_snippet_021(self, snippy, capsys):
-        """Search snippets with regexp `filter` option.
+        """Search snippets with ``filter`` option.
 
         Search all content with a regexp filter. The filter removes all
         content from the search result returned with the `sall` option
@@ -614,7 +614,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets', 'default-solutions', 'import-netcat')
     def test_cli_search_snippet_022(self, snippy, capsys):
-        """Search snippets with regexp `filter` option.
+        """Search snippets with ``filter`` option.
 
         Search all content with a regexp filter. The filter removes all
         content from the search result returned with the `sall` option
@@ -632,7 +632,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets', 'default-solutions')
     def test_cli_search_snippet_023(self, snippy, capsys):
-        """Search snippets with regexp `filter` option.
+        """Search snippets with ``filter`` option.
 
         Try to search snippets with a regexp filter that is not syntactically
         correct regular expression. In this case the filter must be excluded
@@ -666,7 +666,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_024(self, snippy, capsys):
-        """Search snippets with `content` option.
+        """Search snippets with ``content`` option.
 
         Search snippets based on content data.
         """
@@ -715,7 +715,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_026(self, snippy, capsys):
-        """Search snippets with --content option.
+        """Search snippets with ``content`` option.
 
         Search snippets based on content data that matches to a string in
         the middle of a content.
@@ -740,7 +740,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_027(self, snippy, capsys):
-        """Search snippet with --digest option.
+        """Search snippets with ``digest`` option.
 
         Search snippet by explicitly defining short message digest.
         """
@@ -765,7 +765,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_028(self, snippy, capsys):
-        """Search snippet with --digest option.
+        """Search snippets with ``digest`` option.
 
         Search snippet by explicitly defining long message digest.
         """
@@ -790,7 +790,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_029(self, snippy, capsys):
-        """Search snippet with --digest option.
+        """Search snippets with ``digest`` option.
 
         Search snippets by defining one digit message digest. In this case
         the searched digit matches to two snippets.
@@ -823,7 +823,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_030(self, snippy, capsys):
-        """Search snippet with --digest option.
+        """Search snippets with ``digest`` option.
 
         Search snippets by defining empty string as message digest. This
         matches to all content in all categories.
@@ -856,7 +856,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets', 'import-netcat')
     def test_cli_search_snippet_031(self, snippy, capsys):
-        """Search snippets with `sall` option.
+        """Search snippets with ``sall`` option.
 
         Search snippets from all fields of specific group. The match must not
         be made from other than defined group. In this case the list all must
@@ -890,7 +890,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets', 'import-netcat')
     def test_cli_search_snippet_032(self, snippy, capsys):
-        """Search snippets with `sall` option.
+        """Search snippets with ``sall`` option.
 
         Search snippets from all fields of two different groups.
         """
@@ -930,7 +930,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets', 'import-netcat')
     def test_cli_search_snippet_033(self, snippy, capsys):
-        """Search snippet from tag fields.
+        """Search snippets with ``stag`` option.
 
         Search snippets from tag fields of specific group. The match must not
         be made from other than defined group. In this case the list all must
@@ -964,7 +964,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets', 'import-netcat')
     def test_cli_search_snippet_034(self, snippy, capsys):
-        """Search snippet from tag fields.
+        """Search snippets with ``stag`` option.
 
         Try to search snippets based on tag fields of specific group. In this
         case there are no matches made.
@@ -993,7 +993,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_036(self, snippy, capsys):
-        """Search snippets with special failures.
+        """Search snippets with ``filter`` option.
 
         Try to search snippets defining filter but not any search criteria.
         In this case the filter cannot be applied because no search criteria
@@ -1159,7 +1159,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('import-interp')
     def test_cli_search_snippet_041(self, snippy, capsys):
-        """Search snippets with special format or characters.
+        """Search snippets with special format and characters.
 
         Search a snippet which content data has a ASCII string that is a
         newline. This string in the command must not be interpolated to a
@@ -1185,7 +1185,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_042(self, snippy, capsys):
-        """Search snippets with special format or characters.
+        """Search snippets with special format and characters.
 
         Search snippets and print the results in Markdown format.
         """

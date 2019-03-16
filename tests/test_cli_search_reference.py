@@ -32,7 +32,7 @@ class TestCliSearchReference(object):
 
     @pytest.mark.usefixtures('default-references')
     def test_cli_search_reference_001(self, snippy, capsys):
-        """Search references with `sall` option.
+        """Search references with ``sall`` option.
 
         Search references from all fields. The match is made from one reference
         content data.
@@ -56,7 +56,7 @@ class TestCliSearchReference(object):
 
     @pytest.mark.usefixtures('default-references')
     def test_cli_search_reference_002(self, snippy, capsys):
-        """Search references with `sall` option.
+        """Search references with ``sall`` option.
 
         Try to search references with keyword that cannot be found.
         """
@@ -70,7 +70,7 @@ class TestCliSearchReference(object):
 
     @pytest.mark.usefixtures('default-references')
     def test_cli_search_reference_003(self, snippy, capsys):
-        """Search references with `digest` option.
+        """Search references with ``digest`` option.
 
         Search reference by explicitly defining short message digest.
         """
@@ -92,7 +92,7 @@ class TestCliSearchReference(object):
 
     @pytest.mark.usefixtures('default-references')
     def test_cli_search_reference_004(self, snippy, capsys):
-        """Search references with `uuid` option.
+        """Search references with ``uuid`` option.
 
         Search reference by explicitly defining full length content uuid.
         """
@@ -114,7 +114,7 @@ class TestCliSearchReference(object):
 
     @pytest.mark.usefixtures('default-references')
     def test_cli_search_reference_005(self, snippy, capsys):
-        """Search references with `uuid` option.
+        """Search references with ``uuid`` option.
 
         Search reference by explicitly defining content uuid.
         """
@@ -136,7 +136,7 @@ class TestCliSearchReference(object):
 
     @pytest.mark.usefixtures('default-references')
     def test_cli_search_reference_006(self, snippy, capsys):
-        """Search references with `uuid` option.
+        """Search references with ``uuid`` option.
 
         Try to search reference by explicitly defining content uuid that
         cannot be found.
@@ -151,7 +151,7 @@ class TestCliSearchReference(object):
 
     @pytest.mark.usefixtures('default-references', 'import-netcat')
     def test_cli_search_reference_007(self, snippy, capsys):
-        """Search references with `uuid` option.
+        """Search references with ``uuid`` option.
 
         Try to search references by defining empty string for uuid which is
         invalid. This must not result any content
@@ -169,7 +169,7 @@ class TestCliSearchReference(object):
 
     @pytest.mark.usefixtures('default-references', 'import-netcat')
     def test_cli_search_reference_008(self, snippy, capsys):
-        """Search references with `uuid` option.
+        """Search references with ``uuid`` option.
 
         Try to search references by defining short uuid that matches to
         multiple contents in different categories. Since uuid must be
@@ -189,7 +189,7 @@ class TestCliSearchReference(object):
 
     @pytest.mark.usefixtures('default-references')
     def test_cli_search_reference_009(self, snippy, capsys):
-        """Search references with `sall` and `sgrp` options.
+        """Search references with ``sall`` and ``sgrp`` options.
 
         Search references from all fields and limit the search to specific
         group. The match must not be made from other than defined group. In
@@ -213,7 +213,7 @@ class TestCliSearchReference(object):
 
     @pytest.mark.usefixtures('default-references')
     def test_cli_search_reference_010(self, snippy, capsys):
-        """Search references with `sall` and `scat` options.
+        """Search references with ``sall`` and `scat` options.
 
         Search references from all fields. In this case the category has been
         set to 'all' which must find also references.
@@ -237,7 +237,7 @@ class TestCliSearchReference(object):
 
     @pytest.mark.usefixtures('default-references', 'import-remove', 'import-beats')
     def test_cli_search_reference_011(self, snippy, capsys):
-        """Search references with `sall` option.
+        """Search references with ``sall`` option.
 
         Search content from all fields. Search category defines that the
         search must be made from snippets, solutions and references.
@@ -272,7 +272,7 @@ class TestCliSearchReference(object):
 
     @pytest.mark.usefixtures('default-references', 'import-remove', 'import-beats')
     def test_cli_search_reference_012(self, snippy, capsys):
-        """Search references with `sall` and `scat` options.
+        """Search references with ``sall`` and `scat` options.
 
         Search content from all fields. Search category defines that the
         search must be made from snippets and references.
@@ -303,10 +303,10 @@ class TestCliSearchReference(object):
 
     @pytest.mark.usefixtures('default-references', 'import-remove', 'import-beats')
     def test_cli_search_reference_013(self, snippy, capsys):
-        """Search references with `sall` option.
+        """Search references with ``sall`` option.
 
-        Search content from all fields. Category is defined as --all so search
-        must result a hit from each category.
+        Search content from all fields. The content category is defined with
+        ``all`` so the search must result a hit from each category.
         """
 
         output = (
@@ -338,7 +338,7 @@ class TestCliSearchReference(object):
 
     @pytest.mark.usefixtures('default-references', 'import-remove', 'import-beats')
     def test_cli_search_reference_014(self, snippy, capsys):
-        """Search references with `sall`  and `scat` options.
+        """Search references with ``sall`` and ``scat`` options.
 
         Search content from all fields. Content category is set to --all but
         the search category defines that the search must be made from snippets

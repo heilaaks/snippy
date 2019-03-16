@@ -29,6 +29,12 @@ from snippy.logger import Logger
 class ContentParserBase(object):
     """Base class for text content parser."""
 
+    # Temporar placeholder to align snippets in Markdown format. This
+    # is used with snippets that have multiple commands when only part
+    # of the commands have user comment. This is used in editor when
+    # content is updated or when it is exporeted in Markdown format.
+    SNIPPET_DEFAULT_COMMENT = '<not documented>'
+
     _logger = Logger.get_logger(__name__)
 
     @classmethod

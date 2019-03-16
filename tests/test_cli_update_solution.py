@@ -31,7 +31,7 @@ class TestCliUpdateSolution(object):
 
     @pytest.mark.usefixtures('default-solutions')
     def test_cli_update_solution_001(self, snippy, edited_beats):
-        """Update solution with digest.
+        """Update solution with ``digest`` option.
 
         Update solution based on short message digest. Only content data
         is updated. Because the description tag was changed, the description
@@ -54,7 +54,7 @@ class TestCliUpdateSolution(object):
 
     @pytest.mark.usefixtures('default-solutions')
     def test_cli_update_solution_002(self, snippy, edited_beats):
-        """Update solution with digest.
+        """Update solution with ``digest`` option.
 
         Update solution based on very short message digest. This must match
         to a single solution that must be updated.
@@ -76,7 +76,7 @@ class TestCliUpdateSolution(object):
 
     @pytest.mark.usefixtures('default-solutions')
     def test_cli_update_solution_003(self, snippy, edited_beats):
-        """Update solution with digest.
+        """Update solution with ``digest`` option.
 
         Update solution based on long message digest. Only the content data
         is updated.
@@ -98,7 +98,7 @@ class TestCliUpdateSolution(object):
 
     @pytest.mark.usefixtures('default-solutions')
     def test_cli_update_solution_004(self, snippy, edited_beats):
-        """Update solution with digest.
+        """Update solution with ``digest`` option.
 
         Update solution based on message digest and accidentally define
         snippet category explicitly from command line. In this case the
@@ -121,7 +121,7 @@ class TestCliUpdateSolution(object):
 
     @pytest.mark.usefixtures('default-solutions')
     def test_cli_update_solution_005(self, snippy, edited_beats):
-        """Update solution with digest.
+        """Update solution with ``digest`` option.
 
         Update solution based on message digest and accidentally implicitly
         use snippet category by not using content category option that
@@ -145,7 +145,7 @@ class TestCliUpdateSolution(object):
 
     @pytest.mark.usefixtures('default-solutions')
     def test_cli_update_solution_006(self, snippy):
-        """Update solution with digest.
+        """Update solution with ``digest`` option.
 
         Try to update solution with message digest that cannot be found. No
         changes must be made to stored content.
@@ -163,7 +163,7 @@ class TestCliUpdateSolution(object):
 
     @pytest.mark.usefixtures('default-solutions')
     def test_cli_update_solution_007(self, snippy):
-        """Update solution with digest.
+        """Update solution with ``digest`` option.
 
         Try to update solution with empty message digest. Nothing should be
         updated in this case because the empty digest matches to more than
@@ -182,7 +182,7 @@ class TestCliUpdateSolution(object):
 
     @pytest.mark.usefixtures('default-solutions')
     def test_cli_update_solution_008(self, snippy, edited_beats):
-        """Update solution with data.
+        """Update solution with ``content`` option.
 
         Update solution based on content data.
         """
@@ -204,7 +204,7 @@ class TestCliUpdateSolution(object):
 
     @pytest.mark.usefixtures('default-solutions')
     def test_cli_update_solution_009(self, snippy):
-        """Update solution with data.
+        """Update solution with ``content`` option.
 
         Try to update solution based on content data that is not found.
         """
@@ -221,7 +221,7 @@ class TestCliUpdateSolution(object):
 
     @pytest.mark.usefixtures('default-solutions')
     def test_cli_update_solution_010(self, snippy):
-        """Update solution with data.
+        """Update solution with ``content`` option.
 
         Try to update solution with empty content data. Nothing must be
         updated in this case because there is more than one content stored.
@@ -239,7 +239,7 @@ class TestCliUpdateSolution(object):
 
     @pytest.mark.usefixtures('import-nginx', 'update-beats-utc')
     def test_cli_update_solution_011(self, snippy, edited_beats):
-        """Update existing solution from editor.
+        """Update solution with editor.
 
         Update existing solution by defining all values from editor. In this
         case the solution is existing and previously stored data must be set
@@ -261,7 +261,7 @@ class TestCliUpdateSolution(object):
 
     @pytest.mark.usefixtures('import-kafka-mkdn', 'update-beats-utc')
     def test_cli_update_solution_012(self, snippy, editor_data):
-        """Update existing solution with editor.
+        """Update solution with editor.
 
         Update existing Markdown native solution. Editor must show existing
         Markdown native content as is. Updated content must be identified as
@@ -332,7 +332,7 @@ class TestCliUpdateSolution(object):
 
     @pytest.mark.usefixtures('import-kafka', 'update-kafka-utc')
     def test_cli_update_solution_013(self, snippy, editor_data):
-        """Update existing text solution from editor.
+        """Update solution with editor.
 
         Update existing solution by explicitly defining content format as
         Markdown. In this case the content is not changed at all. In this
@@ -355,7 +355,7 @@ class TestCliUpdateSolution(object):
 
     @pytest.mark.usefixtures('import-kafka-mkdn', 'update-kafka-mkdn-utc')
     def test_cli_update_solution_014(self, snippy, editor_data):
-        """Update existing text solution from editor.
+        """Update solution with editor.
 
         Update existing solution by explicitly defining content format as
         Markdown. In this case the content is not changed at all. In this

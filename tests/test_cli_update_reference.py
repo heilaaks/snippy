@@ -31,7 +31,7 @@ class TestCliUpdateReference(object):
 
     @pytest.mark.usefixtures('default-references')
     def test_cli_update_reference_001(self, snippy, edited_gitlog):
-        """Update reference with digest.
+        """Update reference with ``digest`` option.
 
         Update reference based on short message digest. Only content links
         are updated. The update is made with editor.
@@ -52,7 +52,7 @@ class TestCliUpdateReference(object):
 
     @pytest.mark.usefixtures('default-references')
     def test_cli_update_reference_002(self, snippy, edited_gitlog):
-        """Update reference with digest.
+        """Update reference with ``digest`` option.
 
         Update reference based on very short message digest. This must match
         to a single reference that must be updated.
@@ -73,7 +73,7 @@ class TestCliUpdateReference(object):
 
     @pytest.mark.usefixtures('default-references')
     def test_cli_update_reference_003(self, snippy, edited_gitlog):
-        """Update reference with digest.
+        """Update reference with ``digest`` option.
 
         Update reference based on message digest and accidentally define
         solution category explicitly from command line. In this case the
@@ -95,7 +95,7 @@ class TestCliUpdateReference(object):
 
     @pytest.mark.usefixtures('default-references')
     def test_cli_update_reference_004(self, snippy, edited_gitlog):
-        """Update reference with digest.
+        """Update reference with ``digest`` option.
 
         Update reference based on message digest and accidentally implicitly
         use snippet category by not using content category option that
@@ -118,7 +118,7 @@ class TestCliUpdateReference(object):
 
     @pytest.mark.usefixtures('default-references')
     def test_cli_update_reference_005(self, snippy):
-        """Update reference with digest.
+        """Update reference with ``digest`` option.
 
         Try to update reference with message digest that cannot be found. No
         changes must be made to stored content.
@@ -136,7 +136,7 @@ class TestCliUpdateReference(object):
 
     @pytest.mark.usefixtures('default-references')
     def test_cli_update_reference_006(self, snippy):
-        """Update reference with digest.
+        """Update reference with ``digest`` option.
 
         Try to update reference with empty message digest. Nothing should be
         updated in this case because the empty digest matches to more than
@@ -155,7 +155,7 @@ class TestCliUpdateReference(object):
 
     @pytest.mark.usefixtures('default-references')
     def test_cli_update_reference_007(self, snippy, edited_gitlog):
-        """Update reference with uuid.
+        """Update reference with ``uuid`` option.
 
         Update reference based on uuid. The content must be updated so that
         only links get updated.
@@ -176,7 +176,7 @@ class TestCliUpdateReference(object):
 
     @pytest.mark.usefixtures('default-references')
     def test_cli_update_reference_008(self, snippy):
-        """Update reference with uuid.
+        """Update reference with ``uuid`` option.
 
         Try to update reference based on uuid that cannot be found.
         """
@@ -194,7 +194,7 @@ class TestCliUpdateReference(object):
     @pytest.mark.skip(reason='not supported yet')
     @pytest.mark.usefixtures('default-references')
     def test_cli_update_reference_009(self, snippy, edited_gitlog):
-        """Update reference with data.
+        """Update reference with ``content`` option.
 
         Update reference based on content links.
         """
@@ -215,7 +215,7 @@ class TestCliUpdateReference(object):
     @pytest.mark.skip(reason='not supported yet')
     @pytest.mark.usefixtures('default-references')
     def test_cli_update_reference_010(self, snippy):
-        """Update reference with data.
+        """Update reference with ``content`` option.
 
         Try to update reference based on content links that is not found.
         """
@@ -232,7 +232,7 @@ class TestCliUpdateReference(object):
 
     @pytest.mark.usefixtures('default-references')
     def test_cli_update_reference_011(self, snippy, edited_gitlog):
-        """Update reference with data.
+        """Update reference with ``content`` option.
 
         Try to update reference with empty content links. Nothing must be
         updated in this case because links are mandatory item in reference
@@ -254,7 +254,7 @@ class TestCliUpdateReference(object):
 
     @pytest.mark.usefixtures('import-regexp', 'update-gitlog-utc')
     def test_cli_update_reference_012(self, snippy, edited_gitlog):
-        """Update existing reference from editor.
+        """Update reference with editor.
 
         Update existing reference by defining all values from editor. In this
         case the reference is existing and previously stored data must be set
@@ -276,7 +276,7 @@ class TestCliUpdateReference(object):
 
     @pytest.mark.usefixtures('default-references')
     def test_cli_update_reference_013(self, snippy, edited_gitlog):
-        """Update reference with digest.
+        """Update reference with ``digest`` option.
 
         Try to update reference with empty string read from editor.
         """
@@ -294,7 +294,7 @@ class TestCliUpdateReference(object):
 
     @pytest.mark.usefixtures('import-regexp', 'update-regexp-utc')
     def test_cli_update_reference_014(self, snippy, editor_data):
-        """Update existing reference from editor.
+        """Update reference with editor.
 
         Update existing reference by explicitly defining content format as
         Markdown. In this case the content is not changed at all.

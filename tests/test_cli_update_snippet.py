@@ -31,9 +31,9 @@ class TestCliUpdateSnippet(object):
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_update_snippet_001(self, snippy, edited_remove):
-        """Update snippet based on digest.
+        """Update snippet with ``digest`` option.
 
-        Update snippet based on short message digest. Only content data
+        Update snippet based on short message digest. Only the content data
         is updated.
         """
 
@@ -52,7 +52,7 @@ class TestCliUpdateSnippet(object):
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_update_snippet_002(self, snippy, edited_remove):
-        """Update snippet based on digest.
+        """Update snippet with ``digest`` option.
 
         Update snippet based on very short message digest. This must match to
         a single snippet that must be updated.
@@ -73,7 +73,7 @@ class TestCliUpdateSnippet(object):
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_update_snippet_003(self, snippy, edited_remove):
-        """Update snippet based on digest.
+        """Update snippet with ``digest`` option.
 
         Update snippet based on long message digest. Only the content data is
         updated.
@@ -94,7 +94,7 @@ class TestCliUpdateSnippet(object):
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_update_snippet_004(self, snippy, edited_remove):
-        """Update snippet based on digest.
+        """Update snippet with ``digest`` option.
 
         Update snippet based on message digest and explicitly define the
         content category.
@@ -115,7 +115,7 @@ class TestCliUpdateSnippet(object):
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_update_snippet_005(self, snippy, edited_remove):
-        """Update snippet based on digest.
+        """Update snippet with ``digest`` option.
 
         Update snippet based on message digest and accidentally define
         solution category. In this case the snippet is updated properly
@@ -137,7 +137,7 @@ class TestCliUpdateSnippet(object):
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_update_snippet_006(self, snippy):
-        """Update snippet based on digest.
+        """Update snippet with ``digest`` option.
 
         Try to update snippet with message digest that cannot be found. No
         changes must be made to stored content.
@@ -155,7 +155,7 @@ class TestCliUpdateSnippet(object):
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_update_snippet_007(self, snippy):
-        """Update snippet based on digest.
+        """Update snippet with ``digest`` option.
 
         Try to update snippet with empty message digest. Nothing should be
         updated in this case because the empty digest matches to more than
@@ -174,7 +174,7 @@ class TestCliUpdateSnippet(object):
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_update_snippet_008(self, snippy):
-        """Update snippet based on digest.
+        """Update snippet with ``digest`` option.
 
         Try to update snippet with one digit digest that matches two snippets.
 
@@ -195,7 +195,7 @@ class TestCliUpdateSnippet(object):
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_update_snippet_009(self, snippy, edited_remove):
-        """Update snippet based on content data.
+        """Update snippet with ``content`` option.
 
         Update snippet based on content data.
         """
@@ -215,7 +215,7 @@ class TestCliUpdateSnippet(object):
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_update_snippet_010(self, snippy):
-        """Update snippet based on content data.
+        """Update snippet with ``content`` option.
 
         Try to update snippet based on content data that is not found.
         """
@@ -232,7 +232,7 @@ class TestCliUpdateSnippet(object):
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_update_snippet_011(self, snippy):
-        """Update snippet based on content data.
+        """Update snippet with ``content`` option.
 
         Try to update snippet with empty content data. Nothing must be updated
         in this case because there is more than one content stored.
@@ -250,7 +250,7 @@ class TestCliUpdateSnippet(object):
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_update_snippet_012(self, snippy):
-        """Update snippet based on content data.
+        """Update snippet with ``content`` option.
 
         Try to update snippet with content data that matches to two different
         snippets. Nothing must be updated in this case because content can be
@@ -269,7 +269,7 @@ class TestCliUpdateSnippet(object):
 
     @pytest.mark.usefixtures('import-remove', 'update-forced-utc')
     def test_cli_update_snippet_013(self, snippy, editor_data):
-        """Update existing snippet from editor.
+        """Update snippet with editor.
 
         Update existing snippet from editor so that content fields are given
         from command line. Editor must show the content template with field
@@ -317,7 +317,7 @@ class TestCliUpdateSnippet(object):
 
     @pytest.mark.usefixtures('import-remove', 'update-forced-utc')
     def test_cli_update_snippet_014(self, snippy, editor_data):
-        """Update existing snippet from command line.
+        """Update snippet from command line.
 
         Update existing snippet directly from command line. In this case,
         editor is not used because of '--no-editor' option which updates
@@ -341,7 +341,7 @@ class TestCliUpdateSnippet(object):
 
     @pytest.mark.usefixtures('import-remove', 'update-remove-utc')
     def test_cli_update_snippet_015(self, snippy, editor_data):
-        """Update existing snippet from editor.
+        """Update snippet with editor.
 
         Update existing snippet by explicitly defining content format as
         Markdown. In this case the content is not changed at all.
@@ -383,7 +383,7 @@ class TestCliUpdateSnippet(object):
 
     @pytest.mark.usefixtures('import-remove', 'update-remove-utc')
     def test_cli_update_snippet_016(self, snippy, editor_data):
-        """Update existing snippet from command line.
+        """Update snippet from command line.
 
         Update existing snippet directly from command line. In this case the
         given field values are duplicated and thus they must not affect to
@@ -420,6 +420,107 @@ class TestCliUpdateSnippet(object):
         )
         editor_data.return_value = '\n'.join(template)
         cause = snippy.run(['snippy', 'update', '-d', '54e41e9b52a02b63', '-t', 'moby,container,docker,docker-ce,cleanup'])
+        assert cause == Cause.ALL_OK
+        editor_data.assert_called_with('\n'.join(template))
+        Content.assert_storage(content)
+
+    @pytest.mark.usefixtures('update-remove-utc')
+    def test_cli_update_snippet_017(self, snippy, editor_data):
+        """Update snippet with editor.
+
+        Update existing snippet directly from command line. In this case the
+        snippet contains multiple comments which are same. The update is made
+        in Markdown format and editor must be able to show the content. There
+        are no changes and the parser must notice that the content was not
+        updated.
+        """
+
+        Content.store({
+            'data': [
+                "find . -iregex '.*\\(py\\|robot\\)'  #  Find files.",
+                "find . -iregex '.*\\(py\\|robot\\)' -print0 | wc -l --files0-from=-  #  Find files and count lines.",
+                "find . -iregex '.*\\(py\\|robot\\)' -print0 | wc -l --files0-from=- | tail -n 1",
+                "find . -name '*.py' -print0 | wc -l --files0-from=-  #  Find files and count lines.",
+                "find . -name '*.py' -print0 | wc -l --files0-from=- | tail -n 1",
+                "find . -name '*.py' -exec cat {} + | wc -l  #  Find files and count lines."],
+            'brief': 'Find files and count lines',
+            'description': 'Find files with or without regexp pattern and count lines.',
+            'groups': ['linux'],
+            'tags': ['find', 'linux', 'regexp'],
+            'category': Content.SNIPPET,
+            'digest': 'dae4e22c3c3858b5616a29be11916112a16994e30bc3e4b93b069bc9a772d889'
+        })
+        content = {
+            'data': [{
+                'brief': 'Find files and count lines',
+                'category': 'snippet',
+                'created': '2018-03-02T02:02:02.000001+00:00',
+                'data': ("find . -iregex '.*\\(py\\|robot\\)'  #  Find files.",
+                         "find . -iregex '.*\\(py\\|robot\\)' -print0 | wc -l --files0-from=-  #  Find files and count lines.",
+                         "find . -iregex '.*\\(py\\|robot\\)' -print0 | wc -l --files0-from=- | tail -n 1",
+                         "find . -name '*.py' -print0 | wc -l --files0-from=-  #  Find files and count lines.",
+                         "find . -name '*.py' -print0 | wc -l --files0-from=- | tail -n 1",
+                         "find . -name '*.py' -exec cat {} + | wc -l  #  Find files and count lines."),
+                'description': 'Find files with or without regexp pattern and count lines.',
+                'digest': 'dae4e22c3c3858b5616a29be11916112a16994e30bc3e4b93b069bc9a772d889',
+                'filename': '',
+                'groups': ('linux', ),
+                'links': (),
+                'name': '',
+                'source': '',
+                'tags': ('find', 'linux', 'regexp'),
+                'updated': '2017-10-14T19:56:31.000001+00:00',
+                'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'versions': (),
+            }]
+        }
+        template = (
+            '# Find files and count lines @linux',
+            '',
+            '> Find files with or without regexp pattern and count lines.',
+            '',
+            '> ',
+            '',
+            '- Find files.',
+            '',
+            '    `$ find . -iregex \'.*\\(py\\|robot\\)\'`',
+            '',
+            '- Find files and count lines.',
+            '',
+            '    `$ find . -iregex \'.*\\(py\\|robot\\)\' -print0 | wc -l --files0-from=-`',
+            '',
+            '- <not documented>',
+            '',
+            '    `$ find . -iregex \'.*\\(py\\|robot\\)\' -print0 | wc -l --files0-from=- | tail -n 1`  ',
+            '',
+            '- Find files and count lines.',
+            '',
+            '    `$ find . -name \'*.py\' -print0 | wc -l --files0-from=-`',
+            '',
+            '- <not documented>',
+            '',
+            '    `$ find . -name \'*.py\' -print0 | wc -l --files0-from=- | tail -n 1`  ',
+            '',
+            '- Find files and count lines.',
+            '',
+            '    `$ find . -name \'*.py\' -exec cat {} + | wc -l`',
+            '',
+            '## Meta',
+            '',
+            '> category : snippet  ',
+            'created  : 2018-03-02T02:02:02.000001+00:00  ',
+            'digest   : dae4e22c3c3858b5616a29be11916112a16994e30bc3e4b93b069bc9a772d889  ',
+            'filename :  ',
+            'name     :  ',
+            'source   :  ',
+            'tags     : find,linux,regexp  ',
+            'updated  : 2018-03-02T02:02:02.000001+00:00  ',
+            'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+            'versions :  ',
+            ''
+        )
+        editor_data.return_value = '\n'.join(template)
+        cause = snippy.run(['snippy', 'update', '-d', 'dae4e22c3c3858b5'])
         assert cause == Cause.ALL_OK
         editor_data.assert_called_with('\n'.join(template))
         Content.assert_storage(content)

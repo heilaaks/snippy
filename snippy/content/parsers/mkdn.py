@@ -211,7 +211,7 @@ class ContentParserMkdn(ContentParserBase):
                 [`$\s]{3}(?P<command>.*)[`]     # Catch one line command indicated by dollar sign between grave accents (`).
                 ''', re.MULTILINE | re.VERBOSE).search(command)
             if match:
-                if match.group('comment'):
+                if match.group('comment') and match.group('comment') != ContentParserMkdn.SNIPPET_DEFAULT_COMMENT:
                     data.append(match.group('command') + Const.SNIPPET_COMMENT + match.group('comment'))
                 else:
                     data.append(match.group('command'))

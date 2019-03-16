@@ -46,6 +46,9 @@ from tests.testlib.solution import Solution
 class Content(object):  # pylint: disable=too-many-public-methods
     """Helper methods for content testing."""
 
+    # Categories
+    SNIPPET = Const.SNIPPET
+
     # Contents
     EXPORT_TIME = Helper.EXPORT_TIME
     IMPORT_TIME = Helper.IMPORT_TIME

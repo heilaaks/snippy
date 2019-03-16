@@ -709,17 +709,19 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
 
         data = Const.EMPTY
         if self.is_snippet():
+            comments = self._snippet_has_comments(self.data)
             for command in self.data:
-                match = re.compile(r'''
-                    (?P<command>.*?)                # Catch mandatory command.
-                    (?:\s+[#]\s+(?P<comment>.*)|$)  # Catch optional comment.
-                    ''', re.VERBOSE).search(command)
+                match = Const.RE_CATCH_COMMAND_AND_COMMENT.search(command)
                 if match:
                     if match.group('comment'):
                         data = data + "- " + match.group('comment') + Const.NEWLINE * 2
                         data = data + "    `$ " + match.group('command') + "`" + Const.NEWLINE * 2
                     else:
-                        data = data + "`$ " + match.group('command') + "`  " + Const.NEWLINE
+                        if comments:
+                            data = data + "- " + Parser.SNIPPET_DEFAULT_COMMENT + Const.NEWLINE * 2
+                            data = data + "    `$ " + match.group('command') + "`  " + Const.NEWLINE * 2
+                        else:
+                            data = data + "`$ " + match.group('command') + "`  " + Const.NEWLINE
                 else:
                     self._logger.debug('command parsing failed: %s', command)
             data = data.rstrip()
@@ -732,6 +734,24 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
                 data = data + '```'
 
         return data
+
+    @staticmethod
+    def _snippet_has_comments(data):
+        """Test if any of the snippets have comments.
+
+        Args:
+            data (tuple): Content data.
+
+        Returns:
+            bool: True if any of the commands in snipped data have a comment.
+        """
+
+        for command in data:
+            match = Const.RE_CATCH_COMMAND_AND_COMMENT.search(command)
+            if match and match.group('comment'):
+                return True
+
+        return False
 
     def _dump_mkdn_links(self):
         """Dump resource links to Markdown format.

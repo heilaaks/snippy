@@ -1,5 +1,6 @@
 ## WORKING
    - [ ] Update snippet (0d243b48a43cb853) with same comment field with multiple snippets. The editor markdown is not correct after opening editor.
+   - [ ] python runner update -d cf309a58c078531b --format text does not return "content not changed" Shoyuld it? was there such cause --> no?
    - [ ] Refactor Makefile to have python|python3|pypy|pypy3 as ${PYTHON}.
    - [ ] Add compression for the response. Default is pretty print, the --server-minify-json is applied if request header does not request compression.
    - [ ] How to compile psycopg2 for PyPY?

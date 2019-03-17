@@ -401,17 +401,16 @@ class Solution(object):  # pylint: disable=too-few-public-methods
     DEFAULT_SOLUTIONS = (BEATS, NGINX)
 
     TEMPLATE = Helper.read_template('solution.txt').split('\n')
-    TEMPLATE_DIGEST_TEXT_EMPTY = 'e4157216f2f620421a90a57aa874a831a876b780a66f5311406129bdd6591ab3'
-    TEMPLATE_DIGEST_TEXT_MODEL = '12a56740b950e2a588f1d1070a3a26bca33f380a3d88024551ac2b54d43bd14b'
-    TEMPLATE_DIGEST_MKDN_MODEL = '3c1ddd75eeb6f32aab002a719638ab4849016a35dfe63b84da93a4c041426a8f'
+    TEMPLATE_DIGEST_TEXT = '711315d13d19bc7a6afc860ca0d24672ccdc665b4ca46110a9d7ce7c665bc17e'
+    TEMPLATE_DIGEST_MKDN = '073ea152d867cf06b2ee993fb1aded4c8ccbc618972db5c18158b5b68a5da6e4'
 
     TEMPLATE_TEXT = (
         '################################################################################',
         '## BRIEF  : Add brief title for content',
         '##',
         '## GROUPS : groups',
-        '## TAGS   : comma,separated,tags',
-        '## FILE   : ',
+        '## TAGS   : example,tags',
+        '## FILE   : example-content.md',
         '################################################################################',
         '',
         '',
@@ -445,7 +444,7 @@ class Solution(object):  # pylint: disable=too-few-public-methods
         '',
         '> Add a description that defines the content in one chapter.',
         '',
-        '> [1] https://www.example.com/add-links-here.html',
+        '> ',
         '',
         '## Description',
         '',
@@ -463,14 +462,14 @@ class Solution(object):  # pylint: disable=too-few-public-methods
         '',
         '> category : solution  ',
         'created  : 2017-10-14T19:56:31.000001+00:00  ',
-        'digest   : 1e7722f1821550a07782c4e9f3e198d5a561f97c567161c3040324d61a168976  ',
-        'filename :  ',
-        'name     :  ',
-        'source   :  ',
-        'tags     : comma,separated,tags  ',
+        'digest   : 9108157db7d397dad4f96674893253128e1549e40d4003507a9f661f62380e8a  ',
+        'filename : example-content.md  ',
+        'name     : example content handle  ',
+        'source   : https://www.example.com/source.md  ',
+        'tags     : example,tags  ',
         'updated  : 2017-10-14T19:56:31.000001+00:00  ',
         'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
-        'versions :  ',
+        'versions : example=3.9.0,python=3  ',
         ''
     )
 

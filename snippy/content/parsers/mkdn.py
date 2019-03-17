@@ -111,6 +111,7 @@ class ContentParserMkdn(ContentParserBase):
 
         contents = self._text.split('---')
         for content in contents:
+            content = self.remove_template_fillers(content)
             category = self._read_category(content)
             resource = self._collection.get_resource(category, self._timestamp)
             resource.data = self._read_data(category, content)

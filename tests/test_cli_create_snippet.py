@@ -241,10 +241,11 @@ class TestCliCreateSnippet(object):
     def test_cli_create_snippet_009(self, snippy, editor_data):
         """Create snippet with editor.
 
-        Create new snippet by using the default Markdown template. All values
-        are set with editor. The template is defined in this on purpose. This
-        tries to make sure that the testing framework does not hide possible
-        problems if the template would be generated automatically.
+        Create a new snippet by using the prefilled default Markdown template
+        in editor. The template presented in editor is manually defined in this
+        test case on purpose. This tries to verity that the testing framework
+        does not hide problems compared to situation where the template would
+        be generated automatically by the testing framework.
         """
 
         content = {
@@ -259,20 +260,20 @@ class TestCliCreateSnippet(object):
             '',
             '> [1] https://www.example.com/add-links-here.html',
             '',
-            '`$ commands between backtics and prefixed by dollar sign`',
+            '`$ Markdown commands are defined between backtics and prefixed by a dollar sign`',
             '',
             '## Meta',
             '',
             '> category : snippet  ',
             'created  : 2017-10-14T19:56:31.000001+00:00  ',
-            'digest   : ' + Snippet.TEMPLATE_DIGEST_MKDN_MODEL + '  ',
-            'filename :  ',
-            'name     :  ',
-            'source   :  ',
-            'tags     : comma,separated,tags  ',
+            'digest   : 2bffd4a833596915ba2e20b4c948439fd8f94dc2ea81b4d74ed36b00f26e9780  ',
+            'filename : example-content.md  ',
+            'name     : example content handle  ',
+            'source   : https://www.example.com/source.md  ',
+            'tags     : example,tags  ',
             'updated  : 2017-10-14T19:56:31.000001+00:00  ',
             'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
-            'versions :  ',
+            'versions : example=3.9.0,python=3  ',
             ''
         )
         edited = (
@@ -307,8 +308,9 @@ class TestCliCreateSnippet(object):
     def test_cli_create_snippet_010(self, snippy, editor_data):
         """Try to create snippet with editor.
 
-        Try to create new snippet by using the default Markdown template. In
-        this case there are no any changes to the template.
+        Try to create a new snippet by using the prefilled default Markdown
+        template in editor. In this case there are no any changes made in
+        editor on top of the displayed template.
         """
 
         template = (
@@ -318,20 +320,20 @@ class TestCliCreateSnippet(object):
             '',
             '> [1] https://www.example.com/add-links-here.html',
             '',
-            '`$ commands between backtics and prefixed by dollar sign`',
+            '`$ Markdown commands are defined between backtics and prefixed by a dollar sign`',
             '',
             '## Meta',
             '',
             '> category : snippet  ',
             'created  : 2017-10-14T19:56:31.000001+00:00  ',
-            'digest   : ' + Snippet.TEMPLATE_DIGEST_MKDN_MODEL + '  ',
-            'filename :  ',
-            'name     :  ',
-            'source   :  ',
-            'tags     : comma,separated,tags  ',
+            'digest   : 2bffd4a833596915ba2e20b4c948439fd8f94dc2ea81b4d74ed36b00f26e9780  ',
+            'filename : example-content.md  ',
+            'name     : example content handle  ',
+            'source   : https://www.example.com/source.md  ',
+            'tags     : example,tags  ',
             'updated  : 2017-10-14T19:56:31.000001+00:00  ',
             'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
-            'versions :  ',
+            'versions : example=3.9.0,python=3  ',
             ''
         )
         edited = template
@@ -357,11 +359,16 @@ class TestCliCreateSnippet(object):
     def test_cli_create_snippet_012(self, snippy, editor_data):
         """Create snippet with editor.
 
-        Create new snippet and define tags and brief already from command line.
-        Other fields must have the default template content that is normally
-        presented for the user when content is created with editor.
+        Create a new snippet and define tags and brief already from command
+        line interface. Other fields must have the default template content
+        that is normally presented for the user when content is created with
+        editor.
 
-        User adds the content data from editor.
+        The groups, links and description default values are not changed from
+        default examples. These values must result tool internal defaults when
+        content is stored.
+
+        User fills the content data from editor so the content is stored.
 
         Editor must be used by default.
         """
@@ -372,11 +379,11 @@ class TestCliCreateSnippet(object):
                 'category': 'snippet',
                 'created': '2017-10-14T19:56:31.000001+00:00',
                 'data': ('docker rm --volumes $(docker ps --all --quiet)', ),
-                'description': 'Add a description that defines the content in one chapter.',
-                'digest': '7c6c1d7b742581d056508d67046e5852e738f2f90fa982b1bd3fa695b9e231eb',
+                'description': '',
+                'digest': 'a020eb12a278e4426169360af1e124fb989747fd8a9192c293c938cea05798fa',
                 'filename': '',
-                'groups': ('groups', ),
-                'links': ('https://www.example.com/add-links-here.html', ),
+                'groups': ('default', ),
+                'links': (),
                 'name': '',
                 'source': '',
                 'tags': ('cli', 'from', 'tags'),
@@ -392,20 +399,20 @@ class TestCliCreateSnippet(object):
             '',
             '> [1] https://www.example.com/add-links-here.html',
             '',
-            '`$ commands between backtics and prefixed by dollar sign`',
+            '`$ Markdown commands are defined between backtics and prefixed by a dollar sign`',
             '',
             '## Meta',
             '',
             '> category : snippet  ',
             'created  : 2017-10-14T19:56:31.000001+00:00  ',
-            'digest   : fdbf285d091a8c46cf491da675ecfeda38f7796ef034124b357f49737963cd19  ',
-            'filename :  ',
-            'name     :  ',
-            'source   :  ',
+            'digest   : 27ed3bfa699ab5de455bd3d5eb007b5c3edc42ebcf6a84de80adc37650197391  ',
+            'filename : example-content.md  ',
+            'name     : example content handle  ',
+            'source   : https://www.example.com/source.md  ',
             'tags     : cli,from,tags  ',
             'updated  : 2017-10-14T19:56:31.000001+00:00  ',
             'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
-            'versions :  ',
+            'versions : example=3.9.0,python=3  ',
             ''
         )
         edited = (

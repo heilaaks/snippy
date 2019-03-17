@@ -108,13 +108,12 @@ class Reference(object):  # pylint: disable=too-few-public-methods
     DEFAULT_REFERENCES = (GITLOG, REGEXP)
 
     TEMPLATE = Helper.read_template('reference.txt').split('\n')
-    TEMPLATE_DIGEST_TEXT_MODEL = 'e0cd55c650ef936a66633ee29500e47ee60cc497c342212381c40032ea2850d9'
-    TEMPLATE_DIGEST_MKDN_MODEL = '5f8abf17149b097453571524f403754997682cdbcfc6de8605bb0eff19fc507e'
+    TEMPLATE_DIGEST_EMPTY = '0cba049de5098ccdfec00258e77fa3c355149a347625c4f405f3e835d45d77fe'
     TEMPLATE_TEXT = (
         '# Commented lines will be ignored.',
         '#',
         '# Add mandatory links below one link per line.',
-        'https://www.example.com/add-links-here.html',
+        '',
         '',
         '# Add optional brief description below.',
         'Add brief title for content',
@@ -126,7 +125,19 @@ class Reference(object):  # pylint: disable=too-few-public-methods
         'groups',
         '',
         '# Add optional comma separated list of tags below.',
-        'comma,separated,tags',
+        'example,tags',
+        '',
+        '# Add optional comma separated list of key=value versions below.',
+        'example=3.9.0,python=3',
+        '',
+        '# Add optional name below.',
+        'example content handle',
+        '',
+        '# Add optional filename below.',
+        'example-content.md',
+        '',
+        '# Add optional source reference below.',
+        'https://www.example.com/source.md',
         ''
     )
     TEMPLATE_MKDN = (
@@ -140,13 +151,13 @@ class Reference(object):  # pylint: disable=too-few-public-methods
         '',
         '> category : reference  ',
         'created  : 2018-02-02T02:02:02.000001+00:00  ',
-        'digest   : 5f8abf17149b097453571524f403754997682cdbcfc6de8605bb0eff19fc507e  ',
-        'filename :  ',
-        'name     :  ',
-        'source   :  ',
-        'tags     : comma,separated,tags  ',
+        'digest   : 0cba049de5098ccdfec00258e77fa3c355149a347625c4f405f3e835d45d77fe  ',
+        'filename : example-content.md  ',
+        'name     : example content handle  ',
+        'source   : https://www.example.com/source.md  ',
+        'tags     : example,tags  ',
         'updated  : 2018-02-02T02:02:02.000001+00:00  ',
         'uuid     : 1acd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
-        'versions :  ',
+        'versions : example=3.9.0,python=3  ',
         ''
     )

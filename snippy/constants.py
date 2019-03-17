@@ -84,6 +84,10 @@ class Constants(object):  # pylint: disable=too-few-public-methods
 
     RE_CATCH_COMMAND_AND_COMMENT = re.compile(r'''
         (?P<command>[\s\S]+?)     # Catch command untill following separator.
-        (:?\s{1,}[#]{1}\s{1,}|$)  # Match optional separator between command and comment or end of line.
-        (?P<comment>[\s\S]+|$)    # Catch optional comment. Force empty string instead of None in optional group.
+        (:?\s{1,}[#]{1}\s{1,}|$)  # Match optional separator between command and comment or end of the line.
+        (?P<comment>[\s\S]+|$)    # Catch optional comment. This regexp forces empty string instead of None in optional group.
+        ''', re.VERBOSE)
+
+    RE_DO_NOT_MATCH_ANYTHING = re.compile(r'''
+        \A(?!x)x  # Never match anything.
         ''', re.VERBOSE)

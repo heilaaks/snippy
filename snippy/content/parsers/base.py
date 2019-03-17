@@ -29,6 +29,91 @@ from snippy.logger import Logger
 class ContentParserBase(object):
     """Base class for text content parser."""
 
+    # Content template tags.
+    TEXT_TAG_DATA = '<data>'
+    TEXT_TAG_BRIEF = '<brief>'
+    TEXT_TAG_DESCRIPTION = '<description>'
+    TEXT_TAG_GROUPS = '<groups>'
+    TEXT_TAG_TAGS = '<tags>'
+    TEXT_TAG_LINKS = '<links>'
+    TEXT_TAG_VERSIONS = '<versions>'
+    TEXT_TAG_NAME = '<name>'
+    TEXT_TAG_FILENAME = '<filename>'
+    TEXT_TAG_SOURCE = '<source>'
+
+    # Match content template tags.
+    RE_MATCH_TEMPLATE_TAGS = re.compile(r'''
+         %s  # Match content data.
+        |%s  # Match brief.
+        |%s  # Match description.
+        |%s  # Match groups.
+        |%s  # Match tags.
+        |%s  # Match links.
+        |%s  # Match versions.
+        |%s  # Match name.
+        |%s  # Match filename.
+        |%s  # Match source.
+        ''' % (re.escape(TEXT_TAG_DATA),
+               re.escape(TEXT_TAG_BRIEF),
+               re.escape(TEXT_TAG_DESCRIPTION),
+               re.escape(TEXT_TAG_GROUPS),
+               re.escape(TEXT_TAG_TAGS),
+               re.escape(TEXT_TAG_LINKS),
+               re.escape(TEXT_TAG_VERSIONS),
+               re.escape(TEXT_TAG_NAME),
+               re.escape(TEXT_TAG_FILENAME),
+               re.escape(TEXT_TAG_SOURCE)
+               ), re.VERBOSE)
+
+    # Content template example content.
+    #
+    # Do not add a dot at the end of the example ``brief``. This value
+    # used in Markdown formatted template and using a dot with the
+    # brief line, which also has the group field, does not look good.
+    EXAMPLE_DATA = 'Markdown commands are defined between backtics and prefixed by a dollar sign'  # Used only with Markdown template.
+    EXAMPLE_BRIEF = 'Add brief title for content'
+    EXAMPLE_DESCRIPTION = 'Add a description that defines the content in one chapter.'
+    EXAMPLE_GROUPS = 'groups'
+    EXAMPLE_TAGS = 'example,tags'
+    EXAMPLE_LINKS = 'https://www.example.com/add-links-here.html'
+    EXAMPLE_VERSIONS = 'example=3.9.0,python=3'
+    EXAMPLE_NAME = 'example content handle'
+    EXAMPLE_FILENAME = 'example-content.md'
+    EXAMPLE_SOURCE = 'https://www.example.com/source.md'
+
+    # Match content template texamples with the exception of groups.
+    RE_MATCH_TEMPLATE_EXAMPLES = re.compile(r'''
+        [`$\s]{3}%s[`]{1}\n    # Match data in Markdown surrounded by `$ `.
+        |%s                    # Match brief.
+        |%s                    # Match description.
+        |%s                    # Match tags.
+        |(?:[\[\d\]\s]{4})?%s  # Match links that are optionally prefixed by '[1] ' in case of Markdown template.
+        |%s                    # Match versions.
+        |%s                    # Match name.
+        |%s                    # Match filename.
+        |%s                    # Match source.
+        ''' % (re.escape(EXAMPLE_DATA),
+               re.escape(EXAMPLE_BRIEF),
+               re.escape(EXAMPLE_DESCRIPTION),
+               re.escape(EXAMPLE_TAGS),
+               re.escape(EXAMPLE_LINKS),
+               re.escape(EXAMPLE_VERSIONS),
+               re.escape(EXAMPLE_NAME),
+               re.escape(EXAMPLE_FILENAME),
+               re.escape(EXAMPLE_SOURCE)
+               ), re.VERBOSE)
+
+    TITLE_TEXT_GROUPS = '# Add optional comma separated list of groups below.\n'
+    RE_MATCH_TEXT_GROUPS_EXAMPLES = re.compile(r'''
+        %s  # Match groups title in text template.
+        %s  # Match example groups.
+        ''' % (re.escape(TITLE_TEXT_GROUPS),
+               re.escape(EXAMPLE_GROUPS)
+               ), re.VERBOSE)
+    RE_MATCH_MKDN_GROUPS_EXAMPLES = re.compile(r'''
+        @groups$
+        ''', re.MULTILINE | re.VERBOSE)
+
     # Temporar placeholder to align snippets in Markdown format. This
     # is used with snippets that have multiple commands when only part
     # of the commands have user comment. This is used in editor when
@@ -206,6 +291,32 @@ class ContentParserBase(object):
         return tuple(list_)
 
     @classmethod
+    def parse_groups(cls, category, regexp, text):
+        """Parse content groups from text string.
+
+        Args:
+            category (str): Content category.
+            regexp (re): Compiled regexp to search groups.
+            text (str): Content text string.
+
+        Returns:
+            tuple: Tuple of utf-8 encoded groups.
+        """
+
+        groups = ()
+        if category not in Const.CATEGORIES:
+            return groups
+
+        match = regexp.search(text)
+        if match:
+            groups = cls.format_list([match.group('groups')])
+            cls._logger.debug('parsed content groups: %s', groups)
+        else:
+            cls._logger.debug('parser did not find content for groups')
+
+        return groups
+
+    @classmethod
     def parse_links(cls, category, regexp, text):
         """Parse content links from text string.
 
@@ -232,30 +343,29 @@ class ContentParserBase(object):
         return links
 
     @classmethod
-    def parse_groups(cls, category, regexp, text):
-        """Parse content groups from text string.
+    def remove_template_fillers(cls, content):
+        """Remove tags and examples from content.
+
+        There are examples and tags in content templates that need to be
+        removed before further processing the content. This method removes
+        all the unnecessary tags and examples that are set to help user to
+        fill a content template.
+
+        The received content can be text for Markdown based.
 
         Args:
-            category (str): Content category.
-            regexp (re): Compiled regexp to search groups.
-            text (str): Content text string.
+            content (str): Content text or Markdown string.
 
         Returns:
-            tuple: Tuple of utf-8 encoded groups.
+            str: String without content fillers.
         """
 
-        groups = ()
-        if category not in Const.CATEGORIES:
-            return groups
+        content = cls.RE_MATCH_TEMPLATE_TAGS.sub('', content)
+        content = cls.RE_MATCH_TEMPLATE_EXAMPLES.sub('', content)
+        content = cls.RE_MATCH_TEXT_GROUPS_EXAMPLES.sub(cls.TITLE_TEXT_GROUPS + Const.DELIMITER_GROUPS.join(Const.DEFAULT_GROUPS), content)
+        content = cls.RE_MATCH_MKDN_GROUPS_EXAMPLES.sub('@' + Const.DELIMITER_GROUPS.join(Const.DEFAULT_GROUPS), content)
 
-        match = regexp.search(text)
-        if match:
-            groups = cls.format_list([match.group('groups')])
-            cls._logger.debug('parsed content groups: %s', groups)
-        else:
-            cls._logger.debug('parser did not find content for groups')
-
-        return groups
+        return content
 
     @classmethod
     def to_unicode(cls, value, strip_lines=True):

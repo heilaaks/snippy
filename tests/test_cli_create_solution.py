@@ -129,10 +129,11 @@ class TestCliCreateSolution(object):
     def test_cli_create_solution_007(self, snippy, editor_data):
         """Create solution from editor.
 
-        Create new solution by using the default Markdown template. All values
-        are set with editor. The template is defined in this on purpose. This
-        tries to make sure that the testing framework does not hide possible
-        problems if the template would be generated automatically.
+        Create a new solution by using the prefilled default Markdown template
+        in editor. The template presented in editor is manually defined in this
+        test case on purpose. This tries to verity that the testing framework
+        does not hide problems compared to situation where the template would
+        be generated automatically by the testing framework.
 
         When content is created, the timestamp is allocated once for created
         and updated timestamps. The timestamp must not be updated from what
@@ -149,7 +150,7 @@ class TestCliCreateSolution(object):
             '',
             '> Add a description that defines the content in one chapter.',
             '',
-            '> [1] https://www.example.com/add-links-here.html',
+            '> ',
             '',
             '## Description',
             '',
@@ -167,14 +168,14 @@ class TestCliCreateSolution(object):
             '',
             '> category : solution  ',
             'created  : 2019-01-04T10:54:49.265512+00:00  ',
-            'digest   : 1e7722f1821550a07782c4e9f3e198d5a561f97c567161c3040324d61a168976  ',
-            'filename :  ',
-            'name     :  ',
-            'source   :  ',
-            'tags     : comma,separated,tags  ',
+            'digest   : 9108157db7d397dad4f96674893253128e1549e40d4003507a9f661f62380e8a  ',
+            'filename : example-content.md  ',
+            'name     : example content handle  ',
+            'source   : https://www.example.com/source.md  ',
+            'tags     : example,tags  ',
             'updated  : 2019-01-04T10:54:49.265512+00:00  ',
             'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
-            'versions :  ',
+            'versions : example=3.9.0,python=3  ',
             ''
         )
         edited = (
@@ -230,8 +231,9 @@ class TestCliCreateSolution(object):
     def test_cli_create_solution_008(self, snippy, editor_data):
         """Try to create solution from editor.
 
-        Try to create new solution by using the default Markdown template. In
-        this case there are no any changes to the template.
+        Try to create a new solution by using the prefilled default Markdown
+        template in editor. In this case there are no any changes made in
+        editor on top of the displayed template.
         """
 
         template = (
@@ -239,7 +241,7 @@ class TestCliCreateSolution(object):
             '',
             '> Add a description that defines the content in one chapter.',
             '',
-            '> [1] https://www.example.com/add-links-here.html',
+            '> ',
             '',
             '## Description',
             '',
@@ -257,14 +259,14 @@ class TestCliCreateSolution(object):
             '',
             '> category : solution  ',
             'created  : 2019-01-04T10:54:49.265512+00:00  ',
-            'digest   : 1e7722f1821550a07782c4e9f3e198d5a561f97c567161c3040324d61a168976  ',
-            'filename :  ',
-            'name     :  ',
-            'source   :  ',
-            'tags     : comma,separated,tags  ',
+            'digest   : 9108157db7d397dad4f96674893253128e1549e40d4003507a9f661f62380e8a  ',
+            'filename : example-content.md  ',
+            'name     : example content handle  ',
+            'source   : https://www.example.com/source.md  ',
+            'tags     : example,tags  ',
             'updated  : 2019-01-04T10:54:49.265512+00:00  ',
             'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
-            'versions :  ',
+            'versions : example=3.9.0,python=3  ',
             ''
         )
         edited = template

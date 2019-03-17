@@ -99,10 +99,11 @@ class TestCliCreateReferece(object):
     def test_cli_create_reference_005(self, snippy, editor_data):
         """Create reference with editor.
 
-        Create new reference by using the default Markdown template. All values
-        are set with editor. The template is defined in this on purpose. This
-        tries to make sure that the testing framework does not hide possible
-        problems if the template would be generated automatically.
+        Create a new reference by using the prefilled default Markdown template
+        in editor. The template presented in editor is manually defined in this
+        test case on purpose. This tries to verity that the testing framework
+        does not hide problems compared to situation where the template would
+        be generated automatically by the testing framework.
         """
 
         content = {
@@ -121,14 +122,14 @@ class TestCliCreateReferece(object):
             '',
             '> category : reference  ',
             'created  : 2018-06-22T13:11:13.678729+00:00  ',
-            'digest   : ' + Reference.TEMPLATE_DIGEST_MKDN_MODEL + '  ',
-            'filename :  ',
-            'name     :  ',
-            'source   :  ',
-            'tags     : comma,separated,tags  ',
+            'digest   : 0cba049de5098ccdfec00258e77fa3c355149a347625c4f405f3e835d45d77fe  ',
+            'filename : example-content.md  ',
+            'name     : example content handle  ',
+            'source   : https://www.example.com/source.md  ',
+            'tags     : example,tags  ',
             'updated  : 2018-06-22T13:11:13.678729+00:00  ',
             'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
-            'versions :  ',
+            'versions : example=3.9.0,python=3  ',
             ''
         )
         edited = (
@@ -144,7 +145,7 @@ class TestCliCreateReferece(object):
             '',
             '> category : reference  ',
             'created  : 2018-06-22T13:11:13.678729+00:00  ',
-            'digest   : ' + Reference.TEMPLATE_DIGEST_MKDN_MODEL + '  ',
+            'digest   : 0cba049de5098ccdfec00258e77fa3c355149a347625c4f405f3e835d45d77fe  ',
             'filename :  ',
             'name     :  ',
             'source   :  ',
@@ -163,8 +164,9 @@ class TestCliCreateReferece(object):
     def test_cli_create_reference_006(self, snippy, editor_data):
         """Try to create reference with editor.
 
-        Try to create new reference by using the default Markdown template. In
-        this case there are no any changes to the template.
+        Try to create a new reference by using the prefilled default Markdown
+        template in editor. In this case there are no any changes made in
+        editor on top of the displayed template.
         """
 
         template = (
@@ -178,14 +180,14 @@ class TestCliCreateReferece(object):
             '',
             '> category : reference  ',
             'created  : 2018-06-22T13:11:13.678729+00:00  ',
-            'digest   : ' + Reference.TEMPLATE_DIGEST_MKDN_MODEL + '  ',
-            'filename :  ',
-            'name     :  ',
-            'source   :  ',
-            'tags     : comma,separated,tags  ',
+            'digest   : 0cba049de5098ccdfec00258e77fa3c355149a347625c4f405f3e835d45d77fe  ',
+            'filename : example-content.md  ',
+            'name     : example content handle  ',
+            'source   : https://www.example.com/source.md  ',
+            'tags     : example,tags  ',
             'updated  : 2018-06-22T13:11:13.678729+00:00  ',
             'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
-            'versions :  ',
+            'versions : example=3.9.0,python=3  ',
             ''
         )
         edited = template

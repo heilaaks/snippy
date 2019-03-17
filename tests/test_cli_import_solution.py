@@ -267,7 +267,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         content templates without any modifications cannot be imported.
         """
 
-        file_content = mock.mock_open(read_data=Const.NEWLINE.join(Solution.TEMPLATE))
+        file_content = mock.mock_open(read_data=Const.NEWLINE.join(Solution.TEMPLATE_TEXT))
         with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--solution', '-f', './solution-template.txt'])
             assert cause == 'NOK: content was not stored because it was matching to an empty template'

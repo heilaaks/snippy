@@ -1,5 +1,10 @@
 ## WORKING
+   - [ ] Add description to cli and modify template settings to set it if provided.
+   - [ ] Add logic to name. This can be updated from REST. This should not do anything because of security?
+   - [ ] Add logic versions. Change version to content_versions in base? Same all content? Requires long lines for cli.py. How describe versions? Require key=value like version=1.1.1 format.
+   - [ ] Add logic source.
    - [ ] Refactor Makefile to have python|python3|pypy|pypy3 as ${PYTHON}.
+   - [ ] Test export/import Mkdn snippet with partial comments. The export must have the <not documented> tag and import must remove it.
    - [ ] How to compile psycopg2 for PyPY?
    - [ ] Add bash completion to Snippy. Check example from Poetry.
    - [ ] Fix cli -f file to see if this goes ot content filename attribute. Should not. -f|--file and content.filename are not the same.
@@ -7,9 +12,6 @@
    - [ ] Fix help text to use import --all instead of content specific commands. Or keep?
    - [ ] Why starting server calls collection initialization 4 times?
    - [ ] Starting the server again and import the default content again with --defaults causes server internal erro 500 because of UUID. The 500 should not be here because this is not internal error. Fix?
-   - [ ] Add description to cli and modify template settings to set it if provided.
-   - [ ] Add logic to name. This can be updated from REST. This should not do anything because of security?
-   - [ ] Add logic versions. Change version to content_versions in base? Same all content? Requires long lines for cli.py. How describe versions?
    - [ ] Config get_resource could return empty Resource instead of None in failure. This is now related to new migrate refactoring that prevents migrating template resources.
    - [ ] Fix (remove) the LANG in Alpine based dockerfile? Is this useless as MUSL does not support locales? https://github.com/gliderlabs/docker-alpine/issues/144
    - [ ] Fix PyPy 5.5.0 (Python 3.3) that does not have sqlite uri=True and does not have server 'ssl_version': ssl.PROTOCOL_TLSv1_2. Otherwise tests pass with exception of schema validation errors. works with later Pypy would be the best quess.

@@ -17,3 +17,15 @@
 
 # Add optional links below one link per line.
 <links>
+
+# Add optional comma separated list of key=value versions below.
+<versions>
+
+# Add optional name below.
+<name>
+
+# Add optional filename below.
+<filename>
+
+# Add optional source reference below.
+<source>

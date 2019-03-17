@@ -178,9 +178,7 @@ class Snippet(object):  # pylint: disable=too-few-public-methods
     DEFAULT_SNIPPETS = (REMOVE, FORCED)
 
     TEMPLATE = Helper.read_template('snippet.txt').split('\n')
-    TEMPLATE_DIGEST_TEXT_EMPTY = 'b4bedc2603e3b9ea95bcf53cb7b8aa6efa31eabb788eed60fccf3d8029a6a6cc'
-    TEMPLATE_DIGEST_TEXT_MODEL = 'd3d97da5397794cce15ed9a2778eb1350ac2c8aa07599e21955619145ed977ce'
-    TEMPLATE_DIGEST_MKDN_MODEL = 'c6744ff5c433d48cb3a54044722e808ee0d73776ceccaab975b5005bc449cd92'
+    TEMPLATE_DIGEST_EMPTY = 'b4bedc2603e3b9ea95bcf53cb7b8aa6efa31eabb788eed60fccf3d8029a6a6cc'
     TEMPLATE_TEXT = (
         '# Commented lines will be ignored.',
         '#',
@@ -197,10 +195,22 @@ class Snippet(object):  # pylint: disable=too-few-public-methods
         'groups',
         '',
         '# Add optional comma separated list of tags below.',
-        'comma,separated,tags',
+        'example,tags',
         '',
         '# Add optional links below one link per line.',
         'https://www.example.com/add-links-here.html',
+        '',
+        '# Add optional comma separated list of key=value versions below.',
+        'example=3.9.0,python=3',
+        '',
+        '# Add optional name below.',
+        'example content handle',
+        '',
+        '# Add optional filename below.',
+        'example-content.md',
+        '',
+        '# Add optional source reference below.',
+        'https://www.example.com/source.md',
         ''
     )
     TEMPLATE_MKDN = (
@@ -210,19 +220,19 @@ class Snippet(object):  # pylint: disable=too-few-public-methods
         '',
         '> [1] https://www.example.com/add-links-here.html',
         '',
-        '`$ commands between backtics and prefixed by dollar sign`',
+        '`$ Markdown commands are defined between backtics and prefixed by a dollar sign`',
         '',
         '## Meta',
         '',
         '> category : snippet  ',
         'created  : 2018-02-02T02:02:02.000001+00:00  ',
-        'digest   : c6744ff5c433d48cb3a54044722e808ee0d73776ceccaab975b5005bc449cd92  ',
-        'filename :  ',
-        'name     :  ',
-        'source   :  ',
-        'tags     : comma,separated,tags  ',
+        'digest   : 2bffd4a833596915ba2e20b4c948439fd8f94dc2ea81b4d74ed36b00f26e9780  ',
+        'filename : example-content.md  ',
+        'name     : example content handle  ',
+        'source   : https://www.example.com/source.md  ',
+        'tags     : example,tags  ',
         'updated  : 2018-02-02T02:02:02.000001+00:00  ',
         'uuid     : 1acd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
-        'versions :  ',
+        'versions : example=3.9.0,python=3  ',
         ''
     )

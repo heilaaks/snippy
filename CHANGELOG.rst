@@ -19,6 +19,7 @@ New features
 Bugfixes
 ~~~~~~~~
 
+* Fix creating new content with prefilled templates.
 * Fix exporting and importing content template.
 * Fix error when content matching to a text template is saved.
 * Fix duplicated content field values when updating content.

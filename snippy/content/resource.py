@@ -53,23 +53,15 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     UPDATED = 14
     DIGEST = 15
 
-    SNIPPET_TEMPLATE_TEXT_EMPTY = 'b4bedc2603e3b9ea95bcf53cb7b8aa6efa31eabb788eed60fccf3d8029a6a6cc'
-    SNIPPET_TEMPLATE_TEXT_MODEL = 'd3d97da5397794cce15ed9a2778eb1350ac2c8aa07599e21955619145ed977ce'
-    SNIPPET_TEMPLATE_MKDN_MODEL = 'c6744ff5c433d48cb3a54044722e808ee0d73776ceccaab975b5005bc449cd92'
-    SOLUTION_TEMPLATE_TEXT_EMPTY = 'e4157216f2f620421a90a57aa874a831a876b780a66f5311406129bdd6591ab3'
-    SOLUTION_TEMPLATE_TEXT_MODEL = '12a56740b950e2a588f1d1070a3a26bca33f380a3d88024551ac2b54d43bd14b'
-    SOLUTION_TEMPLATE_MKDN_MODEL = '3c1ddd75eeb6f32aab002a719638ab4849016a35dfe63b84da93a4c041426a8f'
-    REFERENCE_TEMPLATE_TEXT_MODEL = 'e0cd55c650ef936a66633ee29500e47ee60cc497c342212381c40032ea2850d9'
-    REFERENCE_TEMPLATE_MKDN_MODEL = '5f8abf17149b097453571524f403754997682cdbcfc6de8605bb0eff19fc507e'
+    SNIPPET_TEMPLATE = 'b4bedc2603e3b9ea95bcf53cb7b8aa6efa31eabb788eed60fccf3d8029a6a6cc'
+    SOLUTION_TEMPLATE_TEXT = '711315d13d19bc7a6afc860ca0d24672ccdc665b4ca46110a9d7ce7c665bc17e'
+    SOLUTION_TEMPLATE_MKDN = '073ea152d867cf06b2ee993fb1aded4c8ccbc618972db5c18158b5b68a5da6e4'
+    REFERENCE_TEMPLATE = 'e0cd55c650ef936a66633ee29500e47ee60cc497c342212381c40032ea2850d9'
     TEMPLATES = (
-        SNIPPET_TEMPLATE_TEXT_EMPTY,
-        SNIPPET_TEMPLATE_TEXT_MODEL,
-        SNIPPET_TEMPLATE_MKDN_MODEL,
-        SOLUTION_TEMPLATE_TEXT_EMPTY,
-        SOLUTION_TEMPLATE_TEXT_MODEL,
-        SOLUTION_TEMPLATE_MKDN_MODEL,
-        REFERENCE_TEMPLATE_TEXT_MODEL,
-        REFERENCE_TEMPLATE_MKDN_MODEL
+        SNIPPET_TEMPLATE,
+        SOLUTION_TEMPLATE_TEXT,
+        SOLUTION_TEMPLATE_MKDN,
+        REFERENCE_TEMPLATE,
     )
 
     def __init__(self, category='', timestamp=''):
@@ -306,14 +298,26 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
 
         self._digest = value
 
-    def get_template(self, category, template_format, templates):
+    def get_template(self, category, template_format, templates):  # pylint: disable=too-many-branches
         """Return resource in a text template.
 
-        If the resource is empty, an empty text template is returned. If
-        there already exist content data, the actual content is transformed
-        into a text template.
+        If the resource is empty, an empty text template with examples is
+        returned. If there already is a defined resource attributes, the
+        content stored in the resource is transformed into a template.
 
-        A text template here refers to Markdown or text formatted content.
+        In case of an text formatted template, the mandatory fields are
+        left empty for snippets and resources. The reason is that it is
+        considered that filling a text template is easy and can be done
+        without examples.
+
+        In case of an Markdown formatted template, the mandatory fields
+        are filled for snippets and resources. The Markdown formatted
+        template is considered too difficult even for author to operate
+        without examples.
+
+        In case of a solution content, the example links are not set in
+        the template because the links are automatically parsed from the
+        content data.
 
         Args:
            category (str): Content category.
@@ -325,22 +329,47 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         """
 
         if self._is_empty():
-            if template_format == Const.CONTENT_FORMAT_MKDN and category == Const.SNIPPET:
-                self.data = ('commands between backtics and prefixed by dollar sign',)
+            if template_format == Const.CONTENT_FORMAT_MKDN:
+                if category == Const.SNIPPET:
+                    self.data = (Parser.EXAMPLE_DATA,)
+                    if not self.links:
+                        self.links = (Parser.EXAMPLE_LINKS.split(Const.DELIMITER_LINKS))
+                elif category == Const.SOLUTION:
+                    self.data = (
+                        '## Description',
+                        '',
+                        '## References',
+                        '',
+                        '## Commands',
+                        '',
+                        '## Configurations',
+                        '',
+                        '## Solutions',
+                        '',
+                        '## Whiteboard'
+                    )
+                elif category == Const.REFERENCE:
+                    if not self.links:
+                        self.links = (Parser.EXAMPLE_LINKS.split(Const.DELIMITER_LINKS))
+
             if not self.brief:
-                # Do not add dot at end of the template brief below. This is
-                # used for Markdown format template and using a dot with the
-                # brief line, which also has the group field, does not look
-                # good.
-                self.brief = 'Add brief title for content'
+                self.brief = Parser.EXAMPLE_BRIEF
             if not self.description:
-                self.description = 'Add a description that defines the content in one chapter.'
+                self.description = Parser.EXAMPLE_DESCRIPTION
             if Const.DEFAULT_GROUPS == self.groups:
-                self.groups = ('groups',)
+                self.groups = (Parser.EXAMPLE_GROUPS.split(Const.DELIMITER_GROUPS))
             if not self.tags:
-                self.tags = ('comma', 'separated', 'tags')
-            if not self.links:
-                self.links = ('https://www.example.com/add-links-here.html',)
+                self.tags = (Parser.EXAMPLE_TAGS.split(Const.DELIMITER_TAGS))
+            if not self.links and category == Const.SNIPPET:
+                self.links = (Parser.EXAMPLE_LINKS.split(Const.DELIMITER_LINKS))
+            if not self.versions:
+                self.versions = (Parser.EXAMPLE_VERSIONS.split(Const.DELIMITER_VERSIONS))
+            if not self.name:
+                self.name = Parser.EXAMPLE_NAME
+            if not self.filename:
+                self.filename = Parser.EXAMPLE_FILENAME
+            if not self.source:
+                self.source = Parser.EXAMPLE_SOURCE
 
             # In order to match is_template before and after parsing, reference
             # data must be set to links. This is done automatically after the
@@ -349,22 +378,10 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
                 self.data = self.links
             self.digest = self._compute_digest()
 
-        template = Const.EMPTY
-        if template_format == Const.CONTENT_FORMAT_MKDN and category == Const.SOLUTION and self._is_empty():
-            self.data = (
-                '## Description',
-                '',
-                '## References',
-                '',
-                '## Commands',
-                '',
-                '## Configurations',
-                '',
-                '## Solutions',
-                '',
-                '## Whiteboard'
-            )
+        if self._is_empty() and category == Const.SOLUTION and template_format == Const.CONTENT_FORMAT_MKDN:
             self.digest = self._compute_digest()
+
+        template = Const.EMPTY
         if template_format == Const.CONTENT_FORMAT_MKDN:
             template = self.dump_mkdn(templates)
         elif template_format == Const.CONTENT_FORMAT_TEXT:
@@ -661,7 +678,10 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         text = text.replace('<groups>', Const.DELIMITER_GROUPS.join(self.groups))
         text = text.replace('<tags>', Const.DELIMITER_TAGS.join(self.tags))
         text = text.replace('<links>', Const.DELIMITER_LINKS.join(self.links))
+        text = text.replace('<versions>', Const.DELIMITER_VERSIONS.join(self.versions))
+        text = text.replace('<name>', self.name)
         text = text.replace('<filename>', self.filename)
+        text = text.replace('<source>', self.source)
 
         return text
 

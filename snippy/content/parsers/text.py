@@ -59,8 +59,22 @@ class ContentParserText(ContentParserBase):
     LINKS[Const.SNIPPET] = '# Add optional links below one link per line.\n'
     LINKS[Const.REFERENCE] = '# Add mandatory links below one link per line.\n'
 
+    VERSIONS = {}
+    VERSIONS[Const.SNIPPET] = '# Add optional comma separated list of key=value versions below.\n'
+    VERSIONS[Const.REFERENCE] = VERSIONS[Const.SNIPPET]
+
+    NAME = {}
+    NAME[Const.SNIPPET] = '# Add optional name below.\n'
+    NAME[Const.REFERENCE] = NAME[Const.SNIPPET]
+
     FILENAME = {}
+    FILENAME[Const.SNIPPET] = '# Add optional filename below.\n'
+    FILENAME[Const.REFERENCE] = FILENAME[Const.SNIPPET]
     FILENAME[Const.SOLUTION] = '## FILE   :'
+
+    SOURCE = {}
+    SOURCE[Const.SNIPPET] = '# Add optional source reference below.\n'
+    SOURCE[Const.REFERENCE] = SOURCE[Const.SNIPPET]
 
     REGEXP = {}
     REGEXP['data'] = {}
@@ -135,22 +149,51 @@ class ContentParserText(ContentParserBase):
         (?P<links>http.*)       # Catch link.
         ''', re.MULTILINE | re.VERBOSE)
 
+    REGEXP['versions'] = {}
+    REGEXP['versions'][Const.SNIPPET] = re.compile(r'''
+        (?:%s|%s)               # Match snippet or reference versions.
+        (?P<versions>.*?)       # Catch versions.
+        (?:\n{2}|[#]|$)         # Match newlines or next header indicated by hash or end of the string.
+        ''' % (re.escape(VERSIONS[Const.SNIPPET]), re.escape(VERSIONS[Const.REFERENCE])), re.DOTALL | re.VERBOSE)
+    REGEXP['versions'][Const.REFERENCE] = REGEXP['versions'][Const.SNIPPET]
+    REGEXP['versions'][Const.SOLUTION] = Const.RE_DO_NOT_MATCH_ANYTHING  # There is no versions tag in solution content.
+
+    REGEXP['name'] = {}
+    REGEXP['name'][Const.SNIPPET] = re.compile(r'''
+        (?:%s|%s)               # Match snippet or reference name.
+        (?P<name>.*?)           # Catch name.
+        (?:\n{2}|[#]|$)         # Match newlines or next header indicated by hash or end of the string.
+        ''' % (re.escape(NAME[Const.SNIPPET]), re.escape(NAME[Const.REFERENCE])), re.DOTALL | re.VERBOSE)
+    REGEXP['name'][Const.REFERENCE] = REGEXP['name'][Const.SNIPPET]
+    REGEXP['name'][Const.SOLUTION] = Const.RE_DO_NOT_MATCH_ANYTHING  # There is no name tag in solution content.
+
     REGEXP['filename'] = {}
     REGEXP['filename'][Const.SNIPPET] = re.compile(r'''
-        \A(?!x)x                # Never match anything because there is no filename in the content.
-        ''', re.VERBOSE)
+        (?:%s|%s)               # Match snippet or reference filename.
+        (?P<filename>.*?)       # Catch filename.
+        (?:\n{2}|[#]|$)         # Match newlines or next header indicated by hash or end of the string.
+        ''' % (re.escape(FILENAME[Const.SNIPPET]), re.escape(FILENAME[Const.REFERENCE])), re.DOTALL | re.VERBOSE)
     REGEXP['filename'][Const.REFERENCE] = REGEXP['filename'][Const.SNIPPET]
     REGEXP['filename'][Const.SOLUTION] = re.compile(r'''
         %s\s*?                  # Match filename tag from solution.
         (?P<filename>.*|$)      # Catch filename.
         ''' % re.escape(FILENAME[Const.SOLUTION]), re.MULTILINE | re.VERBOSE)
 
+    REGEXP['source'] = {}
+    REGEXP['source'][Const.SNIPPET] = re.compile(r'''
+        (?:%s|%s)               # Match snippet or reference source.
+        (?P<source>.*?)         # Catch source.
+        (?:\n{2}|[#]|$)         # Match newlines or next header indicated by hash or end of the string.
+        ''' % (re.escape(SOURCE[Const.SNIPPET]), re.escape(SOURCE[Const.REFERENCE])), re.DOTALL | re.VERBOSE)
+    REGEXP['source'][Const.REFERENCE] = REGEXP['source'][Const.SNIPPET]
+    REGEXP['source'][Const.SOLUTION] = Const.RE_DO_NOT_MATCH_ANYTHING  # There is no source tag in solution content.
+
     def __init__(self, timestamp, text, collection):
         """
         Args:
             timestamp (str): IS8601 timestamp used with created resources.
             text (str): Source text that is parsed.
-            collection (Collection()): Collection where the content is stored.
+            collection (:obj:`Collection`): Collection where the content is stored.
         """
 
         self._logger = Logger.get_logger(__name__)
@@ -171,21 +214,30 @@ class ContentParserText(ContentParserBase):
             resource.groups = self._read_groups(category, content)
             resource.tags = self._read_tags(category, content)
             resource.links = self._read_links(category, content)
-            resource.category = category
+            resource.versions = self._read_versions(category, content)
+            #resource.name = self._read_name(category, content)
+            #resource.source = self._read_source(category, content)
             resource.filename = self._read_filename(category, content)
+            resource.category = category
             self._collection.migrate(resource)
 
     def _split_contents(self):
-        """Split text to multiple contents.
+        """Split source text to multiple contents.
 
-        This method parses text string and extracts a list of text contents
-        from it.
+        This method parses a single text string and extracts a list of text
+        contents from it.
 
-        All line numbers with content specific tag is searched. The tag is
-        the first content field in the text template. The content is then
-        split based on line numbers based on specific tag and the offset.
-        The offset is substracted from the line number that had the content
-        specific tag.
+        All line numbers with a content specific ``head tag`` are scanned. The
+        head tag is the first field description in a content specific template.
+        The whole text string is then split based on scanned line numbers where
+        a head tag was found.
+
+        An offset is substracted from the line number where a ``head tag`` was
+        found. The offset is coming from informative description field of a
+        text template that has few lines before the head tag.
+
+        If the source test string contains template tags or examples, those are
+        removed from each returned content.
 
         Returns:
             list: List of text contents.
@@ -194,13 +246,13 @@ class ContentParserText(ContentParserBase):
         contents = []
         category = self._read_category(self._text)
         if category == Const.SNIPPET:
-            offset = 2
+            offset = 2  # Two lines in the text template before the head tag.
             tag = '# Add mandatory snippet below'
         elif category == Const.SOLUTION:
-            offset = 1
+            offset = 1  # One line in the text template before the content starts.
             tag = self.BRIEF[Const.SOLUTION]
         elif category == Const.REFERENCE:
-            offset = 1
+            offset = 2  # Two lines in the text template before the head tag.
             tag = '# Add mandatory links below one link per line'
         else:
             Cause.push(Cause.HTTP_BAD_REQUEST, 'could not identify content category - please keep template tags in place')
@@ -215,12 +267,15 @@ class ContentParserText(ContentParserBase):
             for line in line_numbers:
                 contents.append(Const.NEWLINE.join(lines[head:line]))
                 head = line
-            contents.append(Const.NEWLINE.join(lines[head:]))
+            contents.append(self.remove_template_fillers(Const.NEWLINE.join(lines[head:])))
 
         return contents
 
     def _read_category(self, text):
-        """Read content category from text string.
+        """Read content category from a text string.
+
+        Args:
+            text (str): Source text where the category is determined.
 
         Returns:
             str: Content category.
@@ -384,6 +439,30 @@ class ContentParserText(ContentParserBase):
         """
 
         return self.parse_links(category, self.REGEXP['links'].get(category, None), text)
+
+    def _read_versions(self, category, text):
+        """Read content versions from text string.
+
+        Args:
+            category (str): Content category.
+            text (str): Content text string.
+
+        Returns:
+            tuple: Tuple of utf-8 encoded versions.
+        """
+
+        versions = ()
+        if category not in Const.CATEGORIES:
+            return self.format_list(versions)
+
+        match = self.REGEXP['versions'][category].search(text)
+        if match:
+            versions = [match.group('versions')]
+            self._logger.debug('parsed content versions: %s', versions)
+        else:
+            self._logger.debug('parser did not find content for versions: {}'.format(text))
+
+        return self.format_list(versions)
 
     def _read_filename(self, category, text):
         """Read content filename from text string.

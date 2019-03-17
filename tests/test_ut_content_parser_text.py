@@ -371,6 +371,132 @@ class TestUtContentParserText(object):
         assert resource.tags == tags
         assert resource.links == links
 
+    def test_parser_snippet_008(self):
+        """Test parsing snippet.
+
+        Test case verifies that snippet with versions, name, filename and
+        source fields is parsed correctly. In this case template tags are
+        not removed when the snippet is parsed.
+        """
+
+        text = '\n'.join((
+            '# Commented lines will be ignored.',
+            '#',
+            '# Add mandatory snippet below.',
+            'tar tvf mytar.tar.gz',
+            '',
+            '# Add optional brief description below.',
+            'Manipulate compressed tar files',
+            '',
+            '# Add optional description below.',
+            '<description>',
+            '',
+            '# Add optional comma separated list of groups below.',
+            'linux',
+            '',
+            '# Add optional comma separated list of tags below.',
+            'howto,linux,tar,untar',
+            '',
+            '# Add optional links below one link per line.',
+            '',
+            '# Add optional comma separated list of key=value versions below.',
+            '<versions>',
+            '',
+            '# Add optional name below.',
+            '<name>',
+            '',
+            '# Add optional filename below.',
+            '<filename>',
+            '',
+            '# Add optional source reference below.',
+            '<source>',
+            '',
+            ''
+        ))
+        data = ('tar tvf mytar.tar.gz',)
+        brief = 'Manipulate compressed tar files'
+        groups = ('linux',)
+        tags = ('howto', 'linux', 'tar', 'untar')
+        links = ()
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
+        assert resource.category == Const.SNIPPET
+        assert resource.data == data
+        assert resource.brief == brief
+        assert resource.description == ''
+        assert resource.groups == groups
+        assert resource.tags == tags
+        assert resource.links == links
+
+    def test_parser_snippet_009(self):
+        """Test parsing snippet.
+
+        Test case verifies that snippet with versions, name, filename and
+        source fields is parsed correctly. In this case each field contains
+        valid value.
+        """
+
+        text = '\n'.join((
+            '# Commented lines will be ignored.',
+            '#',
+            '# Add mandatory snippet below.',
+            'tar tvf mytar.tar.gz',
+            '',
+            '# Add optional brief description below.',
+            'Manipulate compressed tar files',
+            '',
+            '# Add optional description below.',
+            'short description',
+            '',
+            '# Add optional comma separated list of groups below.',
+            'linux',
+            '',
+            '# Add optional comma separated list of tags below.',
+            'howto,linux,tar,untar',
+            '',
+            '# Add optional links below one link per line.',
+            'https://alpinelinux.org/',
+            '',
+            '# Add optional comma separated list of key=value versions below.',
+            'python=3.7.0,alpine=3.9',
+            '',
+            '# Add optional name below.',
+            'manage tar files',
+            '',
+            '# Add optional filename below.',
+            'tar-file-operations.mkdn',
+            '',
+            '# Add optional source reference below.',
+            'https://github.com/tldr-pages/tldr/blob/master/pages/linux/alpine.md',
+            '',
+            ''
+        ))
+        data = ('tar tvf mytar.tar.gz',)
+        brief = 'Manipulate compressed tar files'
+        description = 'short description'
+        groups = ('linux',)
+        tags = ('howto', 'linux', 'tar', 'untar')
+        links = ('https://alpinelinux.org/',)
+        versions = ('alpine=3.9', 'python=3.7.0')
+        name = ''  # 'manage tar files'
+        filename = 'tar-file-operations.mkdn'
+        source = ''  # 'tar-file-operations.mkdn'
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
+        assert resource.category == Const.SNIPPET
+        assert resource.data == data
+        assert resource.brief == brief
+        assert resource.description == description
+        assert resource.groups == groups
+        assert resource.tags == tags
+        assert resource.links == links
+        assert resource.versions == versions
+        assert resource.name == name
+        assert resource.filename == filename
+        assert resource.source == source
+
     def test_parser_solution_001(self):
         """Test parsing solution.
 

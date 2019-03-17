@@ -752,7 +752,7 @@ def edit_snippet_template(mocker):
 def edit_solution_template(mocker):
     """Edited default solution template."""
 
-    template = Const.NEWLINE.join(Solution.TEMPLATE)
+    template = Const.NEWLINE.join(Solution.TEMPLATE_TEXT)
     mocker.patch.object(Editor, '_call_editor', return_value=template)
 
 @pytest.fixture(scope='function', name='edit-reference-template')

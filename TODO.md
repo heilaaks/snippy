@@ -1,16 +1,11 @@
 ## WORKING
-   - [ ] Add description to cli and modify template settings to set it if provided.
-   - [ ] Add logic to name. This can be updated from REST. This should not do anything because of security?
-   - [ ] Add logic versions. Change version to content_versions in base? Same all content? Requires long lines for cli.py. How describe versions? Require key=value like version=1.1.1 format.
-   - [ ] Add logic source.
    - [ ] Fix creating/updating resource with invalid versions. The seal() cannot check if Cause not is_is because it generates incorrect error. For example GET ../<valid digest>/error shows error that digest not foind. See test_api_search_reference_field_012.
-   - [ ] Fix pinning of yaml that does not install globally. THe instructions are to use local but that could contain help to add the ~./local/bin to path.
+   - [ ] Fix pinning of yaml that does not install globally. The instructions are to use local but that could contain help to add the ~./local/bin to path.
    - [ ] Refactor Makefile to have python|python3|pypy|pypy3 as ${PYTHON}.
    - [ ] Test export/import Mkdn snippet with partial comments. The export must have the <not documented> tag and import must remove it.
    - [ ] How to compile psycopg2 for PyPY?
    - [ ] Add bash completion to Snippy. Check example from Poetry.
    - [ ] Fix cli -f file to see if this goes ot content filename attribute. Should not. -f|--file and content.filename are not the same.
-   - [ ] build-backend from pytest to Toml. This was mandatory from Pep 517 (?). People just not use it (or read) so it is defaulting. Better to have it explicitly.
    - [ ] Fix help text to use import --all instead of content specific commands. Or keep?
    - [ ] Why starting server calls collection initialization 4 times?
    - [ ] Starting the server again and import the default content again with --defaults causes server internal erro 500 because of UUID. The 500 should not be here because this is not internal error. Fix?
@@ -49,6 +44,7 @@
    - [ ] Fix (optimize) the order of SQL columns. Fixed length columns first. This should ? allow database to optimize the length of data. Is this the case?
 
 ## FEATURES
+   - [ ] Add decsription, name, versions and source to CLI? Or does this make the CLI too bloated? These can be updated via editor or REST API.
    - [ ] Add support to store any content in YAML files when server starts. Give path to folder that contains yaml files and import all?
    - [ ] Add combine on top of migrate and merge. The combine would allow adding for example a tag to an existing list of tags. This would be nice for CLI and could be used with RFC 6902 (JSON Patch) (if implemented).
    - [ ] Add support to search phrases like has 'active end'. This should return one result with default set but it returns two since each word is searched separately.

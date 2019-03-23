@@ -710,7 +710,6 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/vnd.api+json', 'X-HTTP-Method-Override': 'PATCH'},
             body=json.dumps(request_body))
-        print(result.json)
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
@@ -1087,7 +1086,62 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/vnd.api+json', 'content-type': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body, ensure_ascii=False))
-        print(Content.output())
+        assert result.status == falcon.HTTP_201
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(content)
+
+    @pytest.mark.usefixtures('create-remove-utc')
+    def test_api_create_snippet_023(self, server):
+        """Create one snippet with POST.
+
+        Call POST /v1/snippets to create new snippet. If the ``groups`` field
+        is not defined at all. The default value for the field must be always
+        added if no value is provided.
+        """
+
+        content = {
+            'data': [{
+                'data': ('test',),
+                'brief': '',
+                'description': '',
+                'groups': ('default',),
+                'tags': (),
+                'links': (),
+                'category': 'snippet',
+                'name': '',
+                'filename': '',
+                'versions': (),
+                'source': '',
+                'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'created': '2017-10-14T19:56:31.000001+00:00',
+                'updated': '2017-10-14T19:56:31.000001+00:00',
+                'digest': '4531ade7232dda7debd7ec3a20b2669afb57d665bd058184155442de203c76af',
+            }]
+        }
+        request_body = {
+            'data': [{
+                'type': 'snippet',
+                'attributes': {
+                    'data': 'test',
+                }
+            }]
+        }
+        expect_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '520'
+        }
+        expect_body = {
+            'data': [{
+                'type': 'snippet',
+                'id': content['data'][0]['digest'],
+                'attributes': content['data'][0]
+            }]
+        }
+        result = testing.TestClient(server.server.api).simulate_post(
+            path='/snippy/api/app/v1/snippets',
+            headers={'accept': 'application/json'},
+            body=json.dumps(request_body))
         assert result.status == falcon.HTTP_201
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)

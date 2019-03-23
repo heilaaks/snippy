@@ -1168,3 +1168,51 @@ class TestUtContentParserMkdn(object):
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.updated == '2018-10-12T11:52:11.000001+00:00'
         assert resource.digest == '8e17edeb07b35d87aecaf26a5b8fa6ab77b9229088b95afabbcea3691b0a15ea'
+
+    def test_parser_reference_003(self):
+        """Test parsing reference.
+
+        Test case verifies that the default group is added even when the group
+        is not defined at all.
+        """
+
+        text = Const.NEWLINE.join((
+            '# @',
+            '',
+            '> ',
+            '',
+            '> [1] https://docs.docker.com/engine/reference/commandline/images/',
+            '',
+            '## Meta',
+            '',
+            '> category : reference  ',
+            'created  : 2017-10-12T11:52:11.000001+00:00  ',
+            'digest   : 0bd50d9035d987a2407b0dfe68aea761fadf1306556bd5fafea3f59bef51c826  ',
+            'filename :   ',
+            'name     :   ',
+            'source   :   ',
+            'tags     : cleanup, container, python, docker-ce, moby  ',
+            'updated  : 2018-10-12T11:52:11.000001+00:00  ',
+            'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
+            'versions : docker_ce=1.1.1,moby!=2.7.0',
+            '',
+        ))
+        links = ('https://docs.docker.com/engine/reference/commandline/images/',)
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
+        assert resource.category == Const.REFERENCE
+        assert resource.data == links
+        assert resource.brief == ''
+        assert resource.description == ''
+        assert resource.groups == ('default',)
+        assert resource.tags == ('cleanup', 'container', 'docker-ce', 'moby', 'python')
+        assert resource.links == links
+        assert resource.filename == ''
+        assert resource.name == ''
+        assert resource.versions == ('docker_ce=1.1.1', 'moby!=2.7.0')
+        assert resource.source == ''
+        assert resource.uuid == 'f21c6318-8830-11e8-a114-2c4d54508088'
+        assert resource.created == '2017-10-12T11:52:11.000001+00:00'
+        assert resource.updated == '2018-10-12T11:52:11.000001+00:00'
+        assert resource.digest == '8e17edeb07b35d87aecaf26a5b8fa6ab77b9229088b95afabbcea3691b0a15ea'

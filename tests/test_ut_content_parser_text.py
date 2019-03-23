@@ -250,7 +250,7 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
         )
         assert resource.brief == ''
         assert resource.description == ''
-        assert resource.groups == ()
+        assert resource.groups == ('default',)
         assert resource.tags == ()
         assert resource.links == ()
         assert resource.versions == ()
@@ -524,7 +524,7 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
         assert resource.data == ('tar tvf mytar.tar.gz',)
         assert resource.brief == ''
         assert resource.description == ''
-        assert resource.groups == () #('default',)
+        assert resource.groups == ('default',)
         assert resource.tags == ()
         assert resource.links == ()
         assert resource.versions == ('alpine!=3.9',)

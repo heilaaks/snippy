@@ -331,6 +331,8 @@ class ContentParserBase(object):
     def parse_groups(cls, category, regexp, text):
         """Parse content groups from text string.
 
+        There is always a default group added into the content group field.
+
         Args:
             category (str): Content category.
             regexp (re): Compiled regexp to search groups.
@@ -340,18 +342,20 @@ class ContentParserBase(object):
             tuple: Tuple of utf-8 encoded groups.
         """
 
-        groups = ()
+        groups = Const.DEFAULT_GROUPS
         if category not in Const.CATEGORIES:
             return cls.format_list(groups)
 
         match = regexp.search(text)
         if match:
             groups = cls.format_list([match.group('groups')])
+            if not groups:
+                groups = Const.DEFAULT_GROUPS
             cls._logger.debug('parsed content groups: %s', groups)
         else:
             cls._logger.debug('parser did not find content for groups')
 
-        return groups
+        return cls.format_list(groups)
 
     @classmethod
     def parse_links(cls, category, regexp, text):

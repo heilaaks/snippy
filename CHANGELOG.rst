@@ -24,6 +24,7 @@ Bugfixes
 * Fix exporting and importing content template.
 * Fix error when content matching to a text template is saved.
 * Fix duplicated content field values when updating content.
+* Fix default value setting to ``groups`` field if no value was given.
 * All commits in `0.10.0`_.
 
 Security

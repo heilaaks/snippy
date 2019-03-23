@@ -1,25 +1,26 @@
 ## WORKING
-   - [ ] Fix creating/updating resource with invalid versions. The seal() cannot check if Cause not is_is because it generates incorrect error. For example GET ../<valid digest>/error shows error that digest not foind. See test_api_search_reference_field_012.
-   - [ ] Fix pinning of yaml that does not install globally. The instructions are to use local but that could contain help to add the ~./local/bin to path.
-   - [ ] Refactor Makefile to have python|python3|pypy|pypy3 as ${PYTHON}.
    - [ ] Test export/import Mkdn snippet with partial comments. The export must have the <not documented> tag and import must remove it.
-   - [ ] How to compile psycopg2 for PyPY?
-   - [ ] Add bash completion to Snippy. Check example from Poetry.
    - [ ] Fix cli -f file to see if this goes ot content filename attribute. Should not. -f|--file and content.filename are not the same.
    - [ ] Fix help text to use import --all instead of content specific commands. Or keep?
-   - [ ] Why starting server calls collection initialization 4 times?
    - [ ] Starting the server again and import the default content again with --defaults causes server internal erro 500 because of UUID. The 500 should not be here because this is not internal error. Fix?
+   - [ ] Fix creating/updating resource with invalid versions. The seal() cannot check if Cause not is_is because it generates incorrect error. For example GET ../<valid digest>/error shows error that digest not foind. See test_api_search_reference_field_012.
+   - [ ] Fix pinning of yaml that does not install globally. The instructions are to use local but that could contain help to add the ~./local/bin to path.
+   - [ ] Fix duplicated paths in swagger specs. This seems to work with OAS3.0 (at least it does not complain) But how to specific this in swagger nicely without duplicated code? // https://en.wikipedia.org/wiki/Percent-encoding and https://stackoverflow.com/questions/44150758/swagger-2-0-multiple-path-objects-with-different-paths-but-same-request-and-res
+   - [ ] Fix somehow (?) the python runner search --sall 'test' --filter test -vv | grep --all?
+   - [ ] Fix updating content without updates changes the updated timestamp. There is no need to store the content either.
+   - [ ] Fix tox which seems to test on latest python 3.6 and not e.g. 3.4. Tox -e py34 // http://notes.webutvikling.org/darn-installation-of-python-3-4/
+   - [ ] Add delete for wheel build directory for automation. If the folder exist this is a problem (at least used to be) see how to fail python release/building/something.
+   - [ ] Refactor Makefile to have python|python3|pypy|pypy3 as ${PYTHON}.
+   - [ ] How to compile psycopg2 for PyPY?
+   - [ ] Fix PyPy 5.5.0 (Python 3.3) that does not have sqlite uri=True and does not have server 'ssl_version': ssl.PROTOCOL_TLSv1_2. Otherwise tests pass with exception of schema validation errors. works with later Pypy would be the best quess.
+   - [ ] Add bash completion to Snippy. Check example from Poetry. Check git argcomplete which is used also by Pytest.
+   - [ ] Why starting server calls collection initialization 4 times?
    - [ ] Config get_resource could return empty Resource instead of None in failure. This is now related to new migrate refactoring that prevents migrating template resources.
    - [ ] Fix (remove) the LANG in Alpine based dockerfile? Is this useless as MUSL does not support locales? https://github.com/gliderlabs/docker-alpine/issues/144
-   - [ ] Fix PyPy 5.5.0 (Python 3.3) that does not have sqlite uri=True and does not have server 'ssl_version': ssl.PROTOCOL_TLSv1_2. Otherwise tests pass with exception of schema validation errors. works with later Pypy would be the best quess.
    - [ ] Fix server silent startup failure if for example the port is reserved. How to get proper error cause for user?
    - [ ] Test postgreSQL SSL connection manually.
-   - [ ] Test API performance by disabling server start from api_performance against all db's. (what was this?)
-   - [ ] Add support for CockroachDB.
-   - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format.
-   - [ ] Add delete for wheel build directory for automation. If the folder exist this is a problem (at least used to be) see how to fail python release/building/something.
+   - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format. Try tldr.
    - [ ] Fix (?) updating JSON or YAML solution (only solution?) with mkdn or text data where data brief changes. This is not now updated in case of YAML/JSON solution because the dict is just read. The problem is to how to identify text or Markdown from YAML/JSON (dict)?
-   - [ ] Fix updating content without updates changes the updated timestamp. There is no need to store the content either.
    - [ ] Fix does the Parser really return UTF-8 encoded strings always? For example (links/keywords) is not coverted and other use decode(utf-8) which is opposite?
    - [ ] Fix clarify how insert multiple - one failure behaves. Should have been fail all because of simplicity. Write test and fix. The code tries to insert all and returns inteserted content in REST API. What about CLI (same behaviour but should this change to fail immediately)?
    - [ ] Fix Parser which assumes always UTF-8. If CLI terminal has something else, this fails.
@@ -45,6 +46,7 @@
 
 ## FEATURES
    - [ ] Add decsription, name, versions and source to CLI? Or does this make the CLI too bloated? These can be updated via editor or REST API.
+   - [ ] Add support for CockroachDB.
    - [ ] Add support to store any content in YAML files when server starts. Give path to folder that contains yaml files and import all?
    - [ ] Add combine on top of migrate and merge. The combine would allow adding for example a tag to an existing list of tags. This would be nice for CLI and could be used with RFC 6902 (JSON Patch) (if implemented).
    - [ ] Add support to search phrases like has 'active end'. This should return one result with default set but it returns two since each word is searched separately.
@@ -70,7 +72,6 @@
 
 ## FIX
    - [ ] Refactor rest.generate that now updates also headers. Body, content type and status are set in the main level but header are set in Generate which may be confusing.
-   - [ ] Fix somehow (?) the python runner search --sall 'test' --filter test -vv | grep --all?
    - [ ] Fix reading data from cli that does not parse description and filename from CLI --content data test_cli_create_solution_001.
    - [ ] Fix why new mkdn log driver kafka solution does not have description in quotations in defaults?  This is normal YAML behaviour?
    - [ ] Fix timestamp usage to be Datetime native. Now the created and updated times are strings. It may be usefull in future (no use case now) to have Datetime objects instead of strings.
@@ -78,12 +79,10 @@
    - [ ] Fix long description in Markdown format does not support keeping paragraph. The description supports only one paragraph that is wrapped for Markdown. Fix or ok? Read only one paragrap. This is good for example for solution which may have longer Description chapter as own header.
    - [ ] Fix Gunicorn info logs to debug somehow?
    - [ ] Fix Fields class. It may not have to be inherited like now. The operation ID refresh and logs are problematic now because the Fields logs would refresh OID to be different than with the base class logs. How?
-   - [ ] Fix duplicated paths in swagger specs. This seems to work with OAS3.0 (at least it does not complain) But how to specific this in swagger nicely without duplicated code? // https://en.wikipedia.org/wiki/Percent-encoding and https://stackoverflow.com/questions/44150758/swagger-2-0-multiple-path-objects-with-different-paths-but-same-request-and-res
    - [ ] Fix (by using OAS3.0?) swagger yaml since it uses 3.0. Componentst and etc should be under defintions // https://stackoverflow.com/questions/47293855/swagger-schema-error-should-not-have-additional-properties
    - [ ] Fix it seems that python can do like Config.parameternewparameter which adds new parameter in case of typo. Can this be prevented?
    - [ ] Fix test cases hiding that cls.source was _not_ set in init when the Config.init called storage method that used cls.source. How this can be not noticed?
    - [ ] Fix print resource it does not print data in debug part because it is empty tuple.
-   - [ ] Fix tox which seems to test on latest python 3.6 and not e.g. 3.4. Tox -e py34 // http://notes.webutvikling.org/darn-installation-of-python-3-4/
    - [ ] Fix failure to process request like SSL error does not refresh OID. Is there a hook for this?
    - [ ] Fix few failing tests like api perf test in Docker Trusty. Reason unknown. See 'WSGIWarning: Unknown REQUEST_METHOD: 'PATCH''.
    - [ ] Fix 'WSGIWarning: Unknown REQUEST_METHOD: 'PATCH'' It seems Python 2.7 does not support PATCH somewhere? This is coming in docker snippy/python34-trusty when running tests.

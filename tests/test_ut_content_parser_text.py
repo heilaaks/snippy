@@ -454,7 +454,7 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
             'https://alpinelinux.org/',
             '',
             '# Add optional comma separated list of key=value versions below.',
-            'python=3.7.0,alpine=3.9',
+            'python=3.7.0,alpine=3.9,linux~4.9',
             '',
             '# Add optional name below.',
             'manage tar files',
@@ -477,7 +477,7 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
         assert resource.groups == ('linux',)
         assert resource.tags == ('howto', 'linux', 'tar', 'untar')
         assert resource.links == ('https://alpinelinux.org/',)
-        assert resource.versions == ('alpine=3.9', 'python=3.7.0')
+        assert resource.versions == ('alpine=3.9', 'linux~4.9', 'python=3.7.0')
         assert resource.name == 'manage tar files'
         assert resource.filename == 'tar-file-operations.mkdn'
         assert resource.source == 'https://github.com/tldr-pages/tldr/blob/master/pages/linux/alpine.md'

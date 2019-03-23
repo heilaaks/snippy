@@ -237,7 +237,7 @@ class ContentParserBase(object):
         keywords = cls._to_list(keywords)
         for tag in keywords:
             list_ = list_ + re.findall(u'''
-                [\\w–\\-\\.\\=\\<\\>\\!]+   # Python 2 and 3 compatible unicode regexp.
+                [\\w–\\-\\.\\=\\<\\>\\!\\~]+   # Python 2 and 3 compatible unicode regexp.
                 ''', tag, re.UNICODE | re.VERBOSE)
 
         if unique:
@@ -316,13 +316,12 @@ class ContentParserBase(object):
         # Order of operators matter for the code logic. If operators < or >
         # are before >= and <=, the version is split into three values. Add
         # the longest match first into the operators.
-        operators = ('>=', '<=', '!=', '>', '<', '=')
+        operators = ('>=', '<=', '!=', '>', '<', '=', '~')
         for version in versions:
             value = re.split('|'.join(operators), version)
             if len(value) == 2 and value[0] and value[1]:
                 versions_.append(version)
             else:
-                print("CAUSE")
                 Cause.push(Cause.HTTP_BAD_REQUEST,
                            'version: {} did not have key value pair with any of the supported operators: {}'.format(version, operators))
 

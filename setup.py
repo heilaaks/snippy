@@ -33,7 +33,7 @@ extras_dev = (
     'openapi2jsonschema==0.8.0'
 )
 extras_docs = (
-    'sphinx==1.8.4',
+    'sphinx==1.8.5',
     'sphinxcontrib-openapi==0.4.0',
     'sphinx_rtd_theme==0.4.3',
     'sphinx-autobuild==0.7.1'
@@ -65,10 +65,10 @@ extras_tests = (
     'pyflakes==1.6.0',
     'pylint==1.9.4 ; python_version=="2.7.*"',
     'pylint==2.3.1 ; python_version>"2.7"',
-    'pytest==4.3.0',
+    'pytest==4.3.1',
     'pytest-cov==2.6.1',
     'pytest-mock==1.10.1',
-    'pytest-xdist==1.26.1',
+    'pytest-xdist==1.27.0',
     'tox==3.5.3'
 )
 

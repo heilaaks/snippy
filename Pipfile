@@ -16,10 +16,10 @@ sphinxcontrib-openapi = "==0.4.0"
 tox = "==3.5.3"
 pyflakes = "==1.6.0"
 logging-tree = "==1.8"
-pytest-xdist = "==1.26.1"
+pytest-xdist = "==1.27.0"
 sphinx-rtd-theme = "==0.4.3"
-sphinx = "==1.8.4"
-pytest = "==4.3.0"
+sphinx = "==1.8.5"
+pytest = "==4.3.1"
 
 [packages]
 PyYAML = ">=3.12"

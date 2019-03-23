@@ -58,48 +58,42 @@ class TestUtContentParserMkdn(object):
             '> category : snippet  ',
             'created  : 2017-10-12T11:52:11.000001+00:00  ',
             'digest   : 0a8b31f0ab442991e56dcaef1fc65aa6bff479c567e04dd7990948f201187c69  ',
-            'filename :  ',
-            'name     :  ',
-            'source   :  ',
+            'filename : snippet.txt',
+            'name     : example text',
+            'source   : https://www.random.org/',
             'tags     : cleanup, container, docker, docker-ce, moby  ',
             'updated  : 2017-10-12T11:52:11.000001+00:00  ',
             'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
-            'versions : ',
+            'versions : git<=1.1.1,python>=2.7.0,python==3.7.0',
             '',
         ))
-        data = (
-            'docker rm $(docker ps --all -q -f status=exited)  #  Remove all exited containers',
-            'docker images -q --filter dangling=true | xargs docker rmi  #  Remove all dangling images'
-        )
-        brief = 'Remove all exited containers and dangling images'
-        description = ('Remove all exited containers and dangling images. The command examples ' +
-                       'first remove all exited containers and the all dangling images.')
-        groups = ('docker',)
-        tags = ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
-        links = (
-            'https://docs.docker.com/engine/reference/commandline/images/',
-            'https://docs.docker.com/engine/reference/commandline/rm/'
-        )
-        uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
-        digest = '9dcf81a0484d6551a3a0a0cf892d22bfba6b25b0f0ec6ef7080a617e3cf0b092'
         collection = Collection()
         Parser(self.TIMESTAMP, text, collection).read_collection()
         resource = next(collection.resources())
         assert resource.category == Const.SNIPPET
-        assert resource.data == data
-        assert resource.brief == brief
-        assert resource.groups == groups
-        assert resource.description == description
-        assert resource.tags == tags
-        assert resource.links == links
-        assert resource.filename == Const.EMPTY
-        assert resource.name == Const.EMPTY
-        assert resource.versions == ()
-        assert resource.source == Const.EMPTY
-        assert resource.uuid == uuid
+        assert resource.data == (
+            'docker rm $(docker ps --all -q -f status=exited)  #  Remove all exited containers',
+            'docker images -q --filter dangling=true | xargs docker rmi  #  Remove all dangling images'
+        )
+        assert resource.brief == 'Remove all exited containers and dangling images'
+        assert resource.description == (
+            'Remove all exited containers and dangling images. The command examples ' +
+            'first remove all exited containers and the all dangling images.'
+        )
+        assert resource.groups == ('docker',)
+        assert resource.tags == ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
+        assert resource.links == (
+            'https://docs.docker.com/engine/reference/commandline/images/',
+            'https://docs.docker.com/engine/reference/commandline/rm/'
+        )
+        assert resource.filename == 'snippet.txt'
+        assert resource.name == 'example text'
+        assert resource.versions == ('git<=1.1.1', 'python>=2.7.0')
+        assert resource.source == 'https://www.random.org/'
+        assert resource.uuid == 'f21c6318-8830-11e8-a114-2c4d54508088'
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
-        assert resource.digest == digest
+        assert resource.digest == '30bdd4e9e864093981b5ab6e40ea3b3e2962816908c11c16ca7b7517e28043eb'
 
     def test_parser_snippet_002(self):
         """Test parsing two snippets.
@@ -169,69 +163,57 @@ class TestUtContentParserMkdn(object):
             'versions : ',
             ''
         ))
-        data = (
-            'docker rm $(docker ps --all -q -f status=exited)  #  Remove all exited containers',
-            'docker images -q --filter dangling=true | xargs docker rmi  #  Remove all dangling images'
-        )
-        brief = 'Remove all exited containers and dangling images'
-        description = ('Remove all exited containers and dangling images. The command examples ' +
-                       'first remove all exited containers and the all dangling images.')
-        groups = ('docker',)
-        tags = ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
-        links = (
-            'https://docs.docker.com/engine/reference/commandline/images/',
-            'https://docs.docker.com/engine/reference/commandline/rm/'
-        )
-        uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
         digest = '9dcf81a0484d6551a3a0a0cf892d22bfba6b25b0f0ec6ef7080a617e3cf0b092'
         collection = Collection()
         Parser(self.TIMESTAMP, text, collection).read_collection()
         assert len(collection) == 2
         resource = collection[digest]
         assert resource.category == Const.SNIPPET
-        assert resource.data == data
-        assert resource.brief == brief
-        assert resource.groups == groups
-        assert resource.description == description
-        assert resource.tags == tags
-        assert resource.links == links
-        assert resource.filename == Const.EMPTY
-        assert resource.name == Const.EMPTY
+        assert resource.data == (
+            'docker rm $(docker ps --all -q -f status=exited)  #  Remove all exited containers',
+            'docker images -q --filter dangling=true | xargs docker rmi  #  Remove all dangling images'
+        )
+        assert resource.brief == 'Remove all exited containers and dangling images'
+        assert resource.description == (
+            'Remove all exited containers and dangling images. The command examples ' +
+            'first remove all exited containers and the all dangling images.'
+        )
+        assert resource.groups == ('docker',)
+        assert resource.tags == ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
+        assert resource.links == (
+            'https://docs.docker.com/engine/reference/commandline/images/',
+            'https://docs.docker.com/engine/reference/commandline/rm/'
+        )
+        assert resource.filename == ''
+        assert resource.name == ''
         assert resource.versions == ()
-        assert resource.source == Const.EMPTY
-        assert resource.uuid == uuid
+        assert resource.source == ''
+        assert resource.uuid == 'f21c6318-8830-11e8-a114-2c4d54508088'
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
         assert resource.digest == digest
 
-        data = (
+        digest = '0bcf78d5c36a96a556fa3293f9b68c3dca577ea9c7fa5de76b354ccf27885df2'
+        resource = collection[digest]
+        assert resource.category == Const.SNIPPET
+        assert resource.data == (
             'docker network ls',
             'docker network inspect y0fdm2xoyuca',
             'docker network disconnect -f y0fdm2xoyuca devstack_logstash.1.7iqgrfd2xwcidj87zbkmauw4l',
             'docker network rm y0fdm2xoyuca'
         )
-        brief = 'Solve docker networking \'has active endpoints\' problem'
-        description = ('Fix docker problem that results \'has active endpoints\' error log.')
-        groups = ('docker', 'python')
-        tags = ()
-        links = (
+        assert resource.brief == 'Solve docker networking \'has active endpoints\' problem'
+        assert resource.description == ('Fix docker problem that results \'has active endpoints\' error log.')
+        assert resource.groups == ('docker', 'python')
+        assert resource.tags == ()
+        assert resource.links == (
             'https://github.com/moby/moby/issues/23302',
         )
-        uuid = 'f31c752e-8830-11e8-a114-2c4d54508088'
-        digest = '0bcf78d5c36a96a556fa3293f9b68c3dca577ea9c7fa5de76b354ccf27885df2'
-        resource = collection[digest]
-        assert resource.category == Const.SNIPPET
-        assert resource.data == data
-        assert resource.brief == brief
-        assert resource.groups == groups
-        assert resource.description == description
-        assert resource.tags == tags
-        assert resource.links == links
-        assert resource.filename == Const.EMPTY
-        assert resource.name == Const.EMPTY
+        assert resource.filename == ''
+        assert resource.name == ''
         assert resource.versions == ()
-        assert resource.source == Const.EMPTY
-        assert resource.uuid == uuid
+        assert resource.source == ''
+        assert resource.uuid == 'f31c752e-8830-11e8-a114-2c4d54508088'
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
         assert resource.digest == digest
@@ -272,32 +254,27 @@ class TestUtContentParserMkdn(object):
             'versions : ',
             '',
         ))
-        data = (
-            'docker rm $(docker ps --all -q -f status=exited)  #  Remove all exited containers',
-            'docker images -q --filter dangling=true | xargs docker rmi  #  Remove all dangling images'
-        )
-        groups = ('default',)
-        tags = ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
-        uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
-        digest = 'd8cc7d0f05108952002ab2dffab29e60bdb1b7a8abc41416ff4e43812eb5bb14'
         collection = Collection()
         Parser(self.TIMESTAMP, text, collection).read_collection()
         resource = next(collection.resources())
         assert resource.category == Const.SNIPPET
-        assert resource.data == data
-        assert resource.brief == Const.EMPTY
-        assert resource.groups == groups
-        assert resource.description == Const.EMPTY
-        assert resource.tags == tags
+        assert resource.data == (
+            'docker rm $(docker ps --all -q -f status=exited)  #  Remove all exited containers',
+            'docker images -q --filter dangling=true | xargs docker rmi  #  Remove all dangling images'
+        )
+        assert resource.brief == ''
+        assert resource.description == ''
+        assert resource.groups == ('default',)
+        assert resource.tags == ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
         assert resource.links == ()
-        assert resource.filename == Const.EMPTY
-        assert resource.name == Const.EMPTY
+        assert resource.filename == ''
+        assert resource.name == ''
         assert resource.versions == ()
-        assert resource.source == Const.EMPTY
-        assert resource.uuid == uuid
+        assert resource.source == ''
+        assert resource.uuid == 'f21c6318-8830-11e8-a114-2c4d54508088'
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
-        assert resource.digest == digest
+        assert resource.digest == 'd8cc7d0f05108952002ab2dffab29e60bdb1b7a8abc41416ff4e43812eb5bb14'
 
     def test_parser_snippet_004(self):
         """Test parsing snippet.
@@ -346,36 +323,30 @@ class TestUtContentParserMkdn(object):
             'versions : ',
             ''
         ))
-        data = (
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
+        assert resource.category == Const.SNIPPET
+        assert resource.data == (
             'tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./  #  Compress folder excluding the tar.',
             'tar tvf mytar.tar.gz  #  List content of compressed tar.',
             'tar xfO mytar.tar.gz manifest.json  #  Cat file in compressed tar.',
             'tar -zxvf mytar.tar.gz --exclude "./mytar.tar.gz"  #  Extract and exclude one file.',
             'tar -xf mytar.tar.gz manifest.json  #  Extract only one file.'
         )
-        brief = 'Manipulate compressed tar files'
-        groups = ('linux',)
-        tags = ('howto', 'linux', 'tar', 'untar')
-        uuid = 'f21c8ed8-8830-11e8-a114-2c4d54508088'
-        digest = '61014e2d1ec56a9ae6fa71f781221b2706f69c8bd3090bf35af179c7a87f284a'
-        collection = Collection()
-        Parser(self.TIMESTAMP, text, collection).read_collection()
-        resource = next(collection.resources())
-        assert resource.category == Const.SNIPPET
-        assert resource.data == data
-        assert resource.brief == brief
-        assert resource.groups == groups
-        assert resource.description == Const.EMPTY
-        assert resource.tags == tags
+        assert resource.brief == 'Manipulate compressed tar files'
+        assert resource.description == ''
+        assert resource.groups == ('linux',)
+        assert resource.tags == ('howto', 'linux', 'tar', 'untar')
         assert resource.links == ()
-        assert resource.filename == Const.EMPTY
-        assert resource.name == Const.EMPTY
+        assert resource.filename == ''
+        assert resource.name == ''
         assert resource.versions == ()
-        assert resource.source == Const.EMPTY
-        assert resource.uuid == uuid
+        assert resource.source == ''
+        assert resource.uuid == 'f21c8ed8-8830-11e8-a114-2c4d54508088'
         assert resource.created == '2018-05-07T11:13:17.000001+00:00'
         assert resource.updated == '2018-05-07T11:13:17.000001+00:00'
-        assert resource.digest == digest
+        assert resource.digest == '61014e2d1ec56a9ae6fa71f781221b2706f69c8bd3090bf35af179c7a87f284a'
 
     def test_parser_snippet_005(self):
         """Test parsing snippet.
@@ -418,40 +389,34 @@ class TestUtContentParserMkdn(object):
             'versions : ',
             '',
         ))
-        data = (
-            'docker rm $(docker ps --all -q -f status=exited)',
-            'docker images -q --filter dangling=true | xargs docker rmi'
-        )
-        brief = 'Remove all exited containers and dangling images'
-        description = ('Remove all exited containers and dangling images. The command examples ' +
-                       'first remove all exited containers and the all dangling images.')
-        groups = ('docker',)
-        tags = ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
-        links = (
-            'https://docs.docker.com/engine/reference/commandline/images/',
-            'https://docs.docker.com/engine/reference/commandline/rm/',
-            'https://docs.docker.com/engine/reference/commandline/test/'
-        )
-        uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
-        digest = '38f478ac1f85234f7885960f72c27ec36049bea32007a46b032f18cbf86f3f08'
         collection = Collection()
         Parser(self.TIMESTAMP, text, collection).read_collection()
         resource = next(collection.resources())
         assert resource.category == Const.SNIPPET
-        assert resource.data == data
-        assert resource.brief == brief
-        assert resource.groups == groups
-        assert resource.description == description
-        assert resource.tags == tags
-        assert resource.links == links
-        assert resource.filename == Const.EMPTY
-        assert resource.name == Const.EMPTY
+        assert resource.data == (
+            'docker rm $(docker ps --all -q -f status=exited)',
+            'docker images -q --filter dangling=true | xargs docker rmi'
+        )
+        assert resource.brief == 'Remove all exited containers and dangling images'
+        assert resource.description == (
+            'Remove all exited containers and dangling images. The command examples ' +
+            'first remove all exited containers and the all dangling images.'
+        )
+        assert resource.groups == ('docker',)
+        assert resource.tags == ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
+        assert resource.links == (
+            'https://docs.docker.com/engine/reference/commandline/images/',
+            'https://docs.docker.com/engine/reference/commandline/rm/',
+            'https://docs.docker.com/engine/reference/commandline/test/'
+        )
+        assert resource.filename == ''
+        assert resource.name == ''
         assert resource.versions == ()
-        assert resource.source == Const.EMPTY
-        assert resource.uuid == uuid
+        assert resource.source == ''
+        assert resource.uuid == 'f21c6318-8830-11e8-a114-2c4d54508088'
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
-        assert resource.digest == digest
+        assert resource.digest == '38f478ac1f85234f7885960f72c27ec36049bea32007a46b032f18cbf86f3f08'
 
     def test_parser_snippet_006(self):
         """Test parsing snippet.
@@ -494,37 +459,31 @@ class TestUtContentParserMkdn(object):
             'versions : ',
             '',
         ))
-        data = ('docker rm $(docker ps --all -q -f status=exited)',)
-        brief = 'Remove all exited containers and dangling images'
-        description = ('Remove all exited containers and dangling images. The command examples ' +
-                       'first remove all exited containers and the all dangling images.')
-        groups = ('docker',)
-        tags = ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
-        links = (
-            'https://docs.docker.com/engine/reference/commandline/images/',
-            'https://docs.docker.com/engine/reference/commandline/rm/',
-            'https://docs.docker.com/engine/reference/commandline/test/'
-        )
-        uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
-        digest = 'b1ddb8f29d857a9f654c99a5c1c46cb1fd6d71aa321d4ba4063e9ae549a2b63d'
         collection = Collection()
         Parser(self.TIMESTAMP, text, collection).read_collection()
         resource = next(collection.resources())
         assert resource.category == Const.SNIPPET
-        assert resource.data == data
-        assert resource.brief == brief
-        assert resource.groups == groups
-        assert resource.description == description
-        assert resource.tags == tags
-        assert resource.links == links
-        assert resource.filename == Const.EMPTY
-        assert resource.name == Const.EMPTY
+        assert resource.data == ('docker rm $(docker ps --all -q -f status=exited)',)
+        assert resource.brief == 'Remove all exited containers and dangling images'
+        assert resource.description == (
+            'Remove all exited containers and dangling images. The command examples ' +
+            'first remove all exited containers and the all dangling images.'
+        )
+        assert resource.groups == ('docker',)
+        assert resource.tags == ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
+        assert resource.links == (
+            'https://docs.docker.com/engine/reference/commandline/images/',
+            'https://docs.docker.com/engine/reference/commandline/rm/',
+            'https://docs.docker.com/engine/reference/commandline/test/'
+        )
+        assert resource.filename == ''
+        assert resource.name == ''
         assert resource.versions == ()
-        assert resource.source == Const.EMPTY
-        assert resource.uuid == uuid
+        assert resource.source == ''
+        assert resource.uuid == 'f21c6318-8830-11e8-a114-2c4d54508088'
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
-        assert resource.digest == digest
+        assert resource.digest == 'b1ddb8f29d857a9f654c99a5c1c46cb1fd6d71aa321d4ba4063e9ae549a2b63d'
 
     def test_parser_solution_001(self):
         """Test parsing solution.
@@ -566,14 +525,9 @@ class TestUtContentParserMkdn(object):
             'tags     : cleanup, container, docker, docker-ce, moby  ',
             'updated  : 2017-10-12T11:52:11.000001+00:00  ',
             'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
-            'versions : ',
+            'versions : docker=1.1.1,moby!=2.7.0',
             '',
         ))
-        brief = 'Testing docker log drivers'
-        description = (
-            'Remove all exited containers and dangling images. The command examples ' +
-            'first remove all exited containers and the all dangling images.'
-        )
         data = (
             '################################################################################',
             '## BRIEF  : Testing docker log drivers',
@@ -588,24 +542,24 @@ class TestUtContentParserMkdn(object):
             '################################################################################',
             '',
         )
-        groups = ('docker',)
-        tags = ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
-        uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
         collection = Collection()
         Parser(self.TIMESTAMP, text, collection).read_collection()
         resource = next(collection.resources())
         assert resource.category == Const.SOLUTION
         assert resource.data == data
-        assert resource.brief == brief
-        assert resource.groups == groups
-        assert resource.description == description
-        assert resource.tags == tags
+        assert resource.brief == 'Testing docker log drivers'
+        assert resource.description == (
+            'Remove all exited containers and dangling images. The command examples ' +
+            'first remove all exited containers and the all dangling images.'
+        )
+        assert resource.groups == ('docker',)
+        assert resource.tags == ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
         assert resource.links == ()
-        assert resource.filename == Const.EMPTY
-        assert resource.name == Const.EMPTY
-        assert resource.versions == ()
-        assert resource.source == Const.EMPTY
-        assert resource.uuid == uuid
+        assert resource.filename == ''
+        assert resource.name == ''
+        assert resource.versions == ('docker=1.1.1', 'moby!=2.7.0')
+        assert resource.source == ''
+        assert resource.uuid == 'f21c6318-8830-11e8-a114-2c4d54508088'
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
 
@@ -660,11 +614,6 @@ class TestUtContentParserMkdn(object):
             'versions : ',
             '',
         ))
-        brief = 'Testing docker log drivers'
-        description = (
-            'Remove all exited containers and dangling images. The command examples ' +
-            'first remove all exited containers and the all dangling images.'
-        )
         data = (
             '## Solution',
             '',
@@ -685,25 +634,24 @@ class TestUtContentParserMkdn(object):
             '### Whiteboard',
             '',
         )
-        groups = ('docker',)
-        tags = ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
-        links = ()
-        uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
         collection = Collection()
         Parser(self.TIMESTAMP, text, collection).read_collection()
         resource = next(collection.resources())
         assert resource.category == Const.SOLUTION
         assert resource.data == data
-        assert resource.brief == brief
-        assert resource.groups == groups
-        assert resource.description == description
-        assert resource.tags == tags
-        assert resource.links == links
-        assert resource.filename == Const.EMPTY
-        assert resource.name == Const.EMPTY
+        assert resource.brief == 'Testing docker log drivers'
+        assert resource.description == (
+            'Remove all exited containers and dangling images. The command examples ' +
+            'first remove all exited containers and the all dangling images.'
+        )
+        assert resource.groups == ('docker',)
+        assert resource.tags == ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
+        assert resource.links == ()
+        assert resource.filename == ''
+        assert resource.name == ''
         assert resource.versions == ()
-        assert resource.source == Const.EMPTY
-        assert resource.uuid == uuid
+        assert resource.source == ''
+        assert resource.uuid == 'f21c6318-8830-11e8-a114-2c4d54508088'
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
 
@@ -757,11 +705,6 @@ class TestUtContentParserMkdn(object):
             'versions : ',
             '',
         ))
-        brief = 'Testing docker log drivers'
-        description = (
-            'Remove all exited containers and dangling images. The command examples ' +
-            'first remove all exited containers and the all dangling images.'
-        )
         data = (
             '## Solution',
             '',
@@ -782,25 +725,24 @@ class TestUtContentParserMkdn(object):
             '```',
             '',
         )
-        groups = ('docker',)
-        tags = ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
-        links = ()
-        uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
         collection = Collection()
         Parser(self.TIMESTAMP, text, collection).read_collection()
         resource = next(collection.resources())
         assert resource.category == Const.SOLUTION
         assert resource.data == data
-        assert resource.brief == brief
-        assert resource.groups == groups
-        assert resource.description == description
-        assert resource.tags == tags
-        assert resource.links == links
-        assert resource.filename == Const.EMPTY
-        assert resource.name == Const.EMPTY
+        assert resource.brief == 'Testing docker log drivers'
+        assert resource.description == (
+            'Remove all exited containers and dangling images. The command examples ' +
+            'first remove all exited containers and the all dangling images.'
+        )
+        assert resource.groups == ('docker',)
+        assert resource.tags == ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
+        assert resource.links == ()
+        assert resource.filename == ''
+        assert resource.name == ''
         assert resource.versions == ()
-        assert resource.source == Const.EMPTY
-        assert resource.uuid == uuid
+        assert resource.source == ''
+        assert resource.uuid == 'f21c6318-8830-11e8-a114-2c4d54508088'
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
 
@@ -861,24 +803,21 @@ class TestUtContentParserMkdn(object):
             '################################################################################',
             '',
         )
-        groups = ('default',)
-        tags = ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
-        uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
         collection = Collection()
         Parser(self.TIMESTAMP, text, collection).read_collection()
         resource = next(collection.resources())
         assert resource.category == Const.SOLUTION
         assert resource.data == data
-        assert resource.brief == Const.EMPTY
-        assert resource.groups == groups
-        assert resource.description == Const.EMPTY
-        assert resource.tags == tags
+        assert resource.brief == ''
+        assert resource.description == ''
+        assert resource.groups == ('default',)
+        assert resource.tags == ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
         assert resource.links == ()
-        assert resource.filename == Const.EMPTY
-        assert resource.name == Const.EMPTY
+        assert resource.filename == ''
+        assert resource.name == ''
         assert resource.versions == ()
-        assert resource.source == Const.EMPTY
-        assert resource.uuid == uuid
+        assert resource.source == ''
+        assert resource.uuid == 'f21c6318-8830-11e8-a114-2c4d54508088'
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
 
@@ -947,24 +886,21 @@ class TestUtContentParserMkdn(object):
             '```',
             '',
         )
-        groups = ('default',)
-        tags = ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
-        uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
         collection = Collection()
         Parser(self.TIMESTAMP, text, collection).read_collection()
         resource = next(collection.resources())
         assert resource.category == Const.SOLUTION
         assert resource.data == data
-        assert resource.brief == Const.EMPTY
-        assert resource.groups == groups
-        assert resource.description == Const.EMPTY
-        assert resource.tags == tags
+        assert resource.brief == ''
+        assert resource.description == ''
+        assert resource.groups == ('default',)
+        assert resource.tags == ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
         assert resource.links == ()
-        assert resource.filename == Const.EMPTY
-        assert resource.name == Const.EMPTY
+        assert resource.filename == ''
+        assert resource.name == ''
         assert resource.versions == ()
-        assert resource.source == Const.EMPTY
-        assert resource.uuid == uuid
+        assert resource.source == ''
+        assert resource.uuid == 'f21c6318-8830-11e8-a114-2c4d54508088'
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
 
@@ -1020,11 +956,6 @@ class TestUtContentParserMkdn(object):
             'versions :',
             '',
         ))
-        brief = 'Testing docker log drivers'
-        description = (
-            'Remove all exited containers and dangling images. The command examples ' +
-            'first remove all exited containers and the all dangling images.'
-        )
         data = (
             '################################################################################',
             '## BRIEF  : Testing docker log drivers',
@@ -1044,28 +975,27 @@ class TestUtContentParserMkdn(object):
             '################################################################################',
             ''
         )
-        groups = ('docker',)
-        tags = ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
-        links = (
-            'https://github.com/MickayG/moby-kafka-logdriver',
-            'https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ'
-        )
-        uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
         collection = Collection()
         Parser(self.TIMESTAMP, text, collection).read_collection()
         resource = next(collection.resources())
         assert resource.category == Const.SOLUTION
         assert resource.data == data
-        assert resource.brief == brief
-        assert resource.groups == groups
-        assert resource.description == description
-        assert resource.tags == tags
-        assert resource.links == links
+        assert resource.brief == 'Testing docker log drivers'
+        assert resource.description == (
+            'Remove all exited containers and dangling images. The command examples ' +
+            'first remove all exited containers and the all dangling images.'
+        )
+        assert resource.groups == ('docker',)
+        assert resource.tags == ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
+        assert resource.links == (
+            'https://github.com/MickayG/moby-kafka-logdriver',
+            'https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ'
+        )
         assert resource.filename == 'docker-example.txt'
-        assert resource.name == Const.EMPTY
+        assert resource.name == ''
         assert resource.versions == ()
-        assert resource.source == Const.EMPTY
-        assert resource.uuid == uuid
+        assert resource.source == ''
+        assert resource.uuid == 'f21c6318-8830-11e8-a114-2c4d54508088'
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
 
     def test_parser_solution_007(self):
@@ -1108,10 +1038,6 @@ class TestUtContentParserMkdn(object):
             'versions : ',
             ''
         ))
-        brief = 'Testing docker log drivers'
-        description = (
-            'Investigate docker log drivers and the logs2kafka log plugin'
-        )
         data = (
             '## Description',
             '',
@@ -1122,25 +1048,21 @@ class TestUtContentParserMkdn(object):
             '## Whiteboard',
             ''
         )
-        groups = ('docker',)
-        tags = ('docker', 'driver', 'kafka', 'kubernetes', 'logging', 'logs2kafka', 'moby', 'plugin')
-        links = ()
-        uuid = '24cd5827-b6ef-4067-b5ac-3ceac07dde9f'
         collection = Collection()
         Parser(self.TIMESTAMP, text, collection).read_collection()
         resource = next(collection.resources())
         assert resource.category == Const.SOLUTION
         assert resource.data == data
-        assert resource.brief == brief
-        assert resource.groups == groups
-        assert resource.description == description
-        assert resource.tags == tags
-        assert resource.links == links
+        assert resource.brief == 'Testing docker log drivers'
+        assert resource.description == ('Investigate docker log drivers and the logs2kafka log plugin')
+        assert resource.groups == ('docker',)
+        assert resource.tags == ('docker', 'driver', 'kafka', 'kubernetes', 'logging', 'logs2kafka', 'moby', 'plugin')
+        assert resource.links == ()
         assert resource.filename == 'kubernetes-docker-log-driver-kafka.mkdn'
-        assert resource.name == Const.EMPTY
+        assert resource.name == ''
         assert resource.versions == ()
-        assert resource.source == Const.EMPTY
-        assert resource.uuid == uuid
+        assert resource.source == ''
+        assert resource.uuid == '24cd5827-b6ef-4067-b5ac-3ceac07dde9f'
         assert resource.created == '2019-01-04T10:54:49.265512+00:00'
 
     def test_parser_reference_001(self):
@@ -1170,38 +1092,34 @@ class TestUtContentParserMkdn(object):
             'tags     : cleanup, container, python, docker-ce, moby  ',
             'updated  : 2018-10-12T11:52:11.000001+00:00  ',
             'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
-            'versions :',
+            'versions : docker-ce=1.1.1,moby!=2.7.0,moby>2.6.0,docker-ce<1.1.1',
             '',
         ))
-        brief = 'Remove all exited containers and dangling images'
-        description = ('Remove all exited containers and dangling images. The command examples ' +
-                       'first remove all exited containers and the all dangling images.')
-        groups = ('docker',)
-        tags = ('cleanup', 'container', 'docker-ce', 'moby', 'python')
         links = (
             'https://docs.docker.com/engine/reference/commandline/images/',
             'https://docs.docker.com/engine/reference/commandline/rm/'
         )
-        uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
-        digest = 'ec6ff1c1e8c52bc2ca8de76c71cd2eebd4f5ca07e6bdd9bba42ad2154d40503b'
         collection = Collection()
         Parser(self.TIMESTAMP, text, collection).read_collection()
         resource = next(collection.resources())
         assert resource.category == Const.REFERENCE
         assert resource.data == links
-        assert resource.brief == brief
-        assert resource.groups == groups
-        assert resource.description == description
-        assert resource.tags == tags
+        assert resource.brief == 'Remove all exited containers and dangling images'
+        assert resource.description == (
+            'Remove all exited containers and dangling images. The command examples ' +
+            'first remove all exited containers and the all dangling images.'
+        )
+        assert resource.groups == ('docker',)
+        assert resource.tags == ('cleanup', 'container', 'docker-ce', 'moby', 'python')
         assert resource.links == links
-        assert resource.filename == Const.EMPTY
-        assert resource.name == Const.EMPTY
-        assert resource.versions == ()
-        assert resource.source == Const.EMPTY
-        assert resource.uuid == uuid
+        assert resource.filename == ''
+        assert resource.name == ''
+        assert resource.versions == ('docker-ce<1.1.1', 'docker-ce=1.1.1', 'moby!=2.7.0', 'moby>2.6.0')
+        assert resource.source == ''
+        assert resource.uuid == 'f21c6318-8830-11e8-a114-2c4d54508088'
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.updated == '2018-10-12T11:52:11.000001+00:00'
-        assert resource.digest == digest
+        assert resource.digest == 'ed74eb765e3357bf2b828ef3652348623edce4c2263b02bf2e3a5f28c449c3fd'
 
     def test_parser_reference_002(self):
         """Test parsing reference.
@@ -1228,29 +1146,25 @@ class TestUtContentParserMkdn(object):
             'tags     : cleanup, container, python, docker-ce, moby  ',
             'updated  : 2018-10-12T11:52:11.000001+00:00  ',
             'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
-            'versions :',
+            'versions : docker_ce=1.1.1,moby!=2.7.0',
             '',
         ))
-        groups = ('default',)
         links = ('https://docs.docker.com/engine/reference/commandline/images/',)
-        tags = ('cleanup', 'container', 'docker-ce', 'moby', 'python')
-        uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
-        digest = '0bd50d9035d987a2407b0dfe68aea761fadf1306556bd5fafea3f59bef51c826'
         collection = Collection()
         Parser(self.TIMESTAMP, text, collection).read_collection()
         resource = next(collection.resources())
         assert resource.category == Const.REFERENCE
         assert resource.data == links
-        assert resource.brief == Const.EMPTY
-        assert resource.groups == groups
-        assert resource.description == Const.EMPTY
-        assert resource.tags == tags
+        assert resource.brief == ''
+        assert resource.description == ''
+        assert resource.groups == ('default',)
+        assert resource.tags == ('cleanup', 'container', 'docker-ce', 'moby', 'python')
         assert resource.links == links
-        assert resource.filename == Const.EMPTY
-        assert resource.name == Const.EMPTY
-        assert resource.versions == ()
-        assert resource.source == Const.EMPTY
-        assert resource.uuid == uuid
+        assert resource.filename == ''
+        assert resource.name == ''
+        assert resource.versions == ('docker_ce=1.1.1', 'moby!=2.7.0')
+        assert resource.source == ''
+        assert resource.uuid == 'f21c6318-8830-11e8-a114-2c4d54508088'
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.updated == '2018-10-12T11:52:11.000001+00:00'
-        assert resource.digest == digest
+        assert resource.digest == '8e17edeb07b35d87aecaf26a5b8fa6ab77b9229088b95afabbcea3691b0a15ea'

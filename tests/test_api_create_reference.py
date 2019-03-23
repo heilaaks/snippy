@@ -580,12 +580,12 @@ class TestApiCreateReference(object):
                 'category': 'reference',
                 'name': '',
                 'filename': '',
-                'versions': ('1.1', '1.2'),
+                'versions': (),
                 'source': '',
                 'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
                 'created': '2018-06-22T13:11:13.678729+00:00',
                 'updated': '2018-06-22T13:11:13.678729+00:00',
-                'digest': '6ce4b0bac2839d1d658e3b19243c4f2c67f6fbdb6e5849dbb47c9bca0ddafe5e'
+                'digest': 'aa6aa8c9a94f1959c9935d7bc6aca060edd5369ae5a24d26ce2960852751d09d'
             }]
         }
         request_body = {
@@ -597,13 +597,13 @@ class TestApiCreateReference(object):
                     'groups': ['docker', 'docker', 'python'],
                     'tags': ['swarm', 'swarm', 'pypy'],
                     'links': ['http://www.dot.com/link2', 'http://www.dot.com/link2', 'http://www.dot.com/link1'],
-                    'versions': ['1.1', '1.2', '1.1']
+                    'versions': []
                 }
             }]
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '619'
+            'content-length': '607'
         }
         expect_body = {
             'data': [{
@@ -616,6 +616,7 @@ class TestApiCreateReference(object):
             path='/snippy/api/app/v1/references',
             headers={'accept': 'application/vnd.api+json', 'content-type': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body, ensure_ascii=False))
+        print(result.json)
         assert result.status == falcon.HTTP_201
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)

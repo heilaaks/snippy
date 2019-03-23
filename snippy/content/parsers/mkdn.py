@@ -93,6 +93,15 @@ class ContentParserMkdn(ContentParserBase):
         ''', re.MULTILINE | re.VERBOSE)
     REGEXP['links'][Const.REFERENCE] = REGEXP['links'][Const.SNIPPET]
 
+    REGEXP['versions'] = {}
+    REGEXP['versions'][Const.SNIPPET] = re.compile(r'''
+        ^versions           # Match versions metadata key at the beginning of line.
+        \s+[:]{1}\s         # Match spaces and column between key and value.
+        (?P<versions>.*$)   # Catch versions value till end of the line.
+        ''', re.MULTILINE | re.VERBOSE)
+    REGEXP['versions'][Const.SOLUTION] = REGEXP['versions'][Const.SNIPPET]
+    REGEXP['versions'][Const.REFERENCE] = REGEXP['versions'][Const.SNIPPET]
+
     def __init__(self, timestamp, text, collection):
         """
         Args:
@@ -123,7 +132,7 @@ class ContentParserMkdn(ContentParserBase):
             resource.category = category
             resource.filename = self._read_meta_value(category, 'filename', content)
             resource.name = self._read_meta_value(category, 'name', content)
-            resource.versions = self._read_meta_value(category, 'versions', content)
+            resource.versions = self._read_versions(category, content)
             resource.source = self._read_meta_value(category, 'source', content)
             resource.uuid = self._read_meta_value(category, 'uuid', content)
             resource.created = self._read_meta_value(category, 'created', content)
@@ -319,6 +328,19 @@ class ContentParserMkdn(ContentParserBase):
         """
 
         return self.parse_links(category, self.REGEXP['links'].get(category, None), text)
+
+    def _read_versions(self, category, text):
+        """Read content versions from text string.
+
+        Args:
+            category (str): Content category.
+            text (str): Content text string.
+
+        Returns:
+            tuple: Tuple of utf-8 encoded versions.
+        """
+
+        return self.parse_versions(category, self.REGEXP['versions'].get(category, None), text)
 
     def _read_meta_value(self, category, key, text):
         """Read content metadata value from text string.

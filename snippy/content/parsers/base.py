@@ -22,6 +22,7 @@
 import re
 from collections import OrderedDict
 
+from snippy.cause import Cause
 from snippy.constants import Constants as Const
 from snippy.logger import Logger
 
@@ -200,14 +201,17 @@ class ContentParserBase(object):
         """Convert list of keywords to utf-8 encoded list of strings.
 
         Parse user provided keyword list. The keywords are for example groups,
-        tags or search all keywords. User may use string or list context for
-        the keywords. In case of list context for the keywords, each element
-        in the list is split separately.
+        tags search all keywords or versions. It is possible to use string or
+        list context for the given keywords. In case of list context for the
+        given keywords, each element in the list is split separately.
 
         The keywords are split in word boundary.
 
         The dot is a special case. It is allowed for the regexp to match and
         print all records.
+
+        Content versions field must support specific mathematical operators
+        that do not split the keyword.
 
         Args:
             keywords (str,list,tuple): Keywords in string, list or tuple.
@@ -225,12 +229,15 @@ class ContentParserBase(object):
         #           4. -t 'docker, container, cleanup'
         #           5. -t docker–testing', container-managemenet', cleanup_testing
         #           6. --sall '.'
-        #           6. kafka=1.0.0 '.'
+        #           7. kafka=1.0.0
+        #           8. kafka>=1.0.0
+        #           9. kafka<=1.0.0
+        #          10. kafka!=1.0.0
         list_ = []
         keywords = cls._to_list(keywords)
         for tag in keywords:
             list_ = list_ + re.findall(u'''
-                [\\w–\\-\\.\\=]+   # Python 2 and 3 compatible unicode regexp.
+                [\\w–\\-\\.\\=\\<\\>\\!]+   # Python 2 and 3 compatible unicode regexp.
                 ''', tag, re.UNICODE | re.VERBOSE)
 
         if unique:
@@ -291,6 +298,37 @@ class ContentParserBase(object):
         return tuple(list_)
 
     @classmethod
+    def format_versions(cls, versions):
+        """Convert versions to utf-8 encoded list of version.
+
+        Only specific operators between key value versions are allowed.
+
+        Args:
+            versions (str,list,tuple): Versions in a string, list or tuple.
+
+        Returns:
+            tuple: Tuple of utf-8 encoded versions.
+        """
+
+        versions_ = []
+        versions = cls._to_list(versions)
+
+        # Order of operators matter for the code logic. If operators < or >
+        # are before >= and <=, the version is split into three values. Add
+        # the longest match first into the operators.
+        operators = ('>=', '<=', '!=', '>', '<', '=')
+        for version in versions:
+            value = re.split('|'.join(operators), version)
+            if len(value) == 2 and value[0] and value[1]:
+                versions_.append(version)
+            else:
+                print("CAUSE")
+                Cause.push(Cause.HTTP_BAD_REQUEST,
+                           'version: {} did not have key value pair with any of the supported operators: {}'.format(version, operators))
+
+        return tuple(versions_)
+
+    @classmethod
     def parse_groups(cls, category, regexp, text):
         """Parse content groups from text string.
 
@@ -305,7 +343,7 @@ class ContentParserBase(object):
 
         groups = ()
         if category not in Const.CATEGORIES:
-            return groups
+            return cls.format_list(groups)
 
         match = regexp.search(text)
         if match:
@@ -331,16 +369,46 @@ class ContentParserBase(object):
 
         links = ()
         if category not in Const.CATEGORIES:
-            return links
+            return cls.format_links(links)
 
         match = regexp.findall(text)
         if match:
             links = cls.format_links(match)
             cls._logger.debug('parsed content links: %s', links)
         else:
-            cls._logger.debug('parser did not find content for links')
+            cls._logger.debug('parser did not find content for links: {}'.format(text))
 
         return links
+
+    @classmethod
+    def parse_versions(cls, category, regexp, text):
+        """Parse content versions from text string.
+
+        Version strings are validated. Only versions which pass the validation
+        rules are stored. The rules allow only specific operators between key
+        value pairs.
+
+        Args:
+            category (str): Content category.
+            regexp (re): Compiled regexp to search versions.
+            text (str): Content text string.
+
+        Returns:
+            tuple: Tuple of utf-8 encoded versions.
+        """
+
+        versions = ()
+        if category not in Const.CATEGORIES:
+            return cls.format_list(versions)
+
+        match = regexp.search(text)
+        if match:
+            versions = cls.format_list([match.group('versions')])
+            cls._logger.debug('parsed content versions: %s', versions)
+        else:
+            cls._logger.debug('parser did not find content for versions: {}'.format(text))
+
+        return cls.format_versions(versions)
 
     @classmethod
     def remove_template_fillers(cls, content):

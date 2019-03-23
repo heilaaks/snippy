@@ -371,7 +371,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         if value is None:
             self._reset_fields['versions'] = 'versions'
 
-        self._versions = Parser.format_list(value)  # pylint: disable=attribute-defined-outside-init
+        self._versions = Parser.format_versions(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
     def source(self):

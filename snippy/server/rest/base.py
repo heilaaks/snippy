@@ -256,6 +256,7 @@ class ApiContentDigestFieldBase(object):
         api = Api(self._category, Api.SEARCH, local_params)
         Config.load(api)
         self._content.run()
+        print(self._content.collection)
         if len(self._content.collection) != 1:
             Cause.push(Cause.HTTP_NOT_FOUND, 'content digest: %s was not unique and matched to: %d resources' %
                        (digest, len(self._content.collection)))

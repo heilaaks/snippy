@@ -710,6 +710,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/vnd.api+json', 'X-HTTP-Method-Override': 'PATCH'},
             body=json.dumps(request_body))
+        print(result.json)
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
@@ -1049,12 +1050,12 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                 'category': 'snippet',
                 'name': '',
                 'filename': '',
-                'versions': ('1.1', '1.2'),
+                'versions': ('docker-ce>17.09.2',),
                 'source': '',
                 'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
                 'created': '2017-10-14T19:56:31.000001+00:00',
                 'updated': '2017-10-14T19:56:31.000001+00:00',
-                'digest': '88c5f66a1fc61ddde43b5ebc32dc762e9134b0fb78cda4f5600c243658d63c0f'
+                'digest': '800af62696ab9592c23dd5674642b91854e73a0c23f7659ac553de7fc66400d5'
             }]
         }
         request_body = {
@@ -1067,13 +1068,13 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                     'groups': ['docker', 'docker', 'python'],
                     'tags': ['swarm', 'swarm', 'pypy'],
                     'links': ['http://www.dot.com/link2', 'http://www.dot.com/link2', 'http://www.dot.com/link1'],
-                    'versions': ['1.1', '1.2', '1.1']
+                    'versions': ['docker-ce>17.09.2']
                 }
             }]
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '640'
+            'content-length': '647'
         }
         expect_body = {
             'data': [{
@@ -1086,6 +1087,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/vnd.api+json', 'content-type': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body, ensure_ascii=False))
+        print(Content.output())
         assert result.status == falcon.HTTP_201
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)

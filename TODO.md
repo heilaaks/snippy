@@ -1,8 +1,10 @@
 ## WORKING
+   - [ ] Fix default group not set if group not set in text/mkdn.
    - [ ] Add description to cli and modify template settings to set it if provided.
    - [ ] Add logic to name. This can be updated from REST. This should not do anything because of security?
    - [ ] Add logic versions. Change version to content_versions in base? Same all content? Requires long lines for cli.py. How describe versions? Require key=value like version=1.1.1 format.
    - [ ] Add logic source.
+   - [ ] Fix creating/updating resource with invalid versions. The seal() cannot check if Cause not is_is because it generates incorrect error. For example GET ../<valid digest>/error shows error that digest not foind. See test_api_search_reference_field_012.
    - [ ] Refactor Makefile to have python|python3|pypy|pypy3 as ${PYTHON}.
    - [ ] Test export/import Mkdn snippet with partial comments. The export must have the <not documented> tag and import must remove it.
    - [ ] How to compile psycopg2 for PyPY?

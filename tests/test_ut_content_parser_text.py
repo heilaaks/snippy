@@ -24,7 +24,7 @@ from snippy.content.parsers.text import ContentParserText as Parser
 from snippy.content.collection import Collection
 
 
-class TestUtContentParserText(object):
+class TestUtContentParserText(object):  # pylint: disable=too-many-public-methods
     """Test ContentParserText() class."""
 
     TIMESTAMP = '2018-09-09T14:44:00.000001+00:00'
@@ -66,29 +66,27 @@ class TestUtContentParserText(object):
             '  https://docs.docker.com/engine/reference/commandline/images/',
             'https://docs.docker.com/engine/reference/commandline/rmi/  '
         ))
-        data = (
-            'docker rm $(docker ps --all -q -f status=exited)',
-            'docker images -q --filter dangling=true | xargs docker rm'
-        )
-        brief = 'Remove docker image with force'
-        description = 'Remove all hanging docker images.'
-        groups = ('docker',)
-        tags = ('cleanup', 'container', 'docker', 'docker-ce', 'image', 'moby')
-        links = (
-            'https://docs.docker.com/engine/reference/commandline/images/',
-            'https://docs.docker.com/engine/reference/commandline/rm/',
-            'https://docs.docker.com/engine/reference/commandline/rmi/'
-        )
         collection = Collection()
         Parser(self.TIMESTAMP, text, collection).read_collection()
         resource = next(collection.resources())
         assert resource.category == Const.SNIPPET
-        assert resource.data == data
-        assert resource.brief == brief
-        assert resource.description == description
-        assert resource.groups == groups
-        assert resource.tags == tags
-        assert resource.links == links
+        assert resource.data == (
+            'docker rm $(docker ps --all -q -f status=exited)',
+            'docker images -q --filter dangling=true | xargs docker rm'
+        )
+        assert resource.brief == 'Remove docker image with force'
+        assert resource.description == 'Remove all hanging docker images.'
+        assert resource.groups == ('docker',)
+        assert resource.tags == ('cleanup', 'container', 'docker', 'docker-ce', 'image', 'moby')
+        assert resource.links == (
+            'https://docs.docker.com/engine/reference/commandline/images/',
+            'https://docs.docker.com/engine/reference/commandline/rm/',
+            'https://docs.docker.com/engine/reference/commandline/rmi/'
+        )
+        assert resource.versions == ()
+        assert resource.name == ''
+        assert resource.filename == ''
+        assert resource.source == ''
 
     def test_parser_snippet_002(self):
         """Test parsing snippet.
@@ -123,29 +121,27 @@ class TestUtContentParserText(object):
             'https://docs.docker.com/engine/reference/commandline/rm/',
             'https://docs.docker.com/engine/reference/commandline/rmi/  '
         ))
-        data = (
-            'docker rm $(docker ps --all -q -f status=exited)',
-            'docker images -q --filter dangling=true | xargs docker rm'
-        )
-        brief = 'Remove docker image with force'
-        description = 'Remove all hanging docker images. This uses force command and it removes all with force.'
-        groups = ('docker', 'moby')
-        tags = ('cleanup', 'container', 'docker', 'docker-ce', 'image', 'moby')
-        links = (
-            'https://docs.docker.com/engine/reference/commandline/images/',
-            'https://docs.docker.com/engine/reference/commandline/rm/',
-            'https://docs.docker.com/engine/reference/commandline/rmi/'
-        )
         collection = Collection()
         Parser(self.TIMESTAMP, text, collection).read_collection()
         resource = next(collection.resources())
         assert resource.category == Const.SNIPPET
-        assert resource.data == data
-        assert resource.brief == brief
-        assert resource.description == description
-        assert resource.groups == groups
-        assert resource.tags == tags
-        assert resource.links == links
+        assert resource.data == (
+            'docker rm $(docker ps --all -q -f status=exited)',
+            'docker images -q --filter dangling=true | xargs docker rm'
+        )
+        assert resource.brief == 'Remove docker image with force'
+        assert resource.description == 'Remove all hanging docker images. This uses force command and it removes all with force.'
+        assert resource.groups == ('docker', 'moby')
+        assert resource.tags == ('cleanup', 'container', 'docker', 'docker-ce', 'image', 'moby')
+        assert resource.links == (
+            'https://docs.docker.com/engine/reference/commandline/images/',
+            'https://docs.docker.com/engine/reference/commandline/rm/',
+            'https://docs.docker.com/engine/reference/commandline/rmi/'
+        )
+        assert resource.versions == ()
+        assert resource.name == ''
+        assert resource.filename == ''
+        assert resource.source == ''
 
     def test_parser_snippet_003(self):
         """Test parsing snippet.
@@ -172,29 +168,27 @@ class TestUtContentParserText(object):
             'https://docs.docker.com/engine/reference/commandline/rm/',
             'https://docs.docker.com/engine/reference/commandline/rmi/  '
         ))
-        data = (
-            'docker rm $(docker ps --all -q -f status=exited)',
-            'docker images -q --filter dangling=true | xargs docker rm'
-        )
-        brief = 'Remove docker image with force'
-        description = 'Remove all hanging docker images. This uses force command and it removes all with force.'
-        groups = ('docker', 'moby')
-        tags = ('cleanup', 'container', 'docker', 'docker-ce', 'image', 'moby')
-        links = (
-            'https://docs.docker.com/engine/reference/commandline/images/',
-            'https://docs.docker.com/engine/reference/commandline/rm/',
-            'https://docs.docker.com/engine/reference/commandline/rmi/'
-        )
         collection = Collection()
         Parser(self.TIMESTAMP, text, collection).read_collection()
         resource = next(collection.resources())
         assert resource.category == Const.SNIPPET
-        assert resource.data == data
-        assert resource.brief == brief
-        assert resource.description == description
-        assert resource.groups == groups
-        assert resource.tags == tags
-        assert resource.links == links
+        assert resource.data == (
+            'docker rm $(docker ps --all -q -f status=exited)',
+            'docker images -q --filter dangling=true | xargs docker rm'
+        )
+        assert resource.brief == 'Remove docker image with force'
+        assert resource.description == 'Remove all hanging docker images. This uses force command and it removes all with force.'
+        assert resource.groups == ('docker', 'moby')
+        assert resource.tags == ('cleanup', 'container', 'docker', 'docker-ce', 'image', 'moby')
+        assert resource.links == (
+            'https://docs.docker.com/engine/reference/commandline/images/',
+            'https://docs.docker.com/engine/reference/commandline/rm/',
+            'https://docs.docker.com/engine/reference/commandline/rmi/'
+        )
+        assert resource.versions == ()
+        assert resource.name == ''
+        assert resource.filename == ''
+        assert resource.source == ''
 
     def test_parser_snippet_004(self):
         """Test parsing snippet.
@@ -245,20 +239,24 @@ class TestUtContentParserText(object):
             '# Add mandatory snippet below',
             '# unknown 2.'
         ))
-        data = (
-            '# Remove docker image with.',
-            'docker rm $(docker ps --all -q -f status=exited)')
         collection = Collection()
         Parser(self.TIMESTAMP, text, collection).read_collection()
         assert len(collection) == 1
         resource = next(collection.resources())
         assert resource.category == Const.SNIPPET
-        assert resource.data == data
+        assert resource.data == (
+            '# Remove docker image with.',
+            'docker rm $(docker ps --all -q -f status=exited)'
+        )
         assert resource.brief == ''
         assert resource.description == ''
         assert resource.groups == ()
         assert resource.tags == ()
         assert resource.links == ()
+        assert resource.versions == ()
+        assert resource.name == ''
+        assert resource.filename == ''
+        assert resource.source == ''
 
     def test_parser_snippet_006(self):
         """Test parsing snippet.
@@ -294,27 +292,26 @@ class TestUtContentParserText(object):
             '',
             ''
         ))
-        data = (
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
+        assert resource.category == Const.SNIPPET
+        assert resource.data == (
             'tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./  #  Compress folder excluding the tar.',
             'tar tvf mytar.tar.gz  #  List content of compressed tar.',
             'tar xfO mytar.tar.gz manifest.json  #  Cat file in compressed tar.',
             'tar -zxvf mytar.tar.gz --exclude "./mytar.tar.gz"  #  Extract and exclude one file.',
             'tar -xf mytar.tar.gz manifest.json  #  Extract only one file.',
         )
-        brief = 'Manipulate compressed tar files'
-        groups = ('linux',)
-        tags = ('howto', 'linux', 'tar', 'untar')
-        links = ()
-        collection = Collection()
-        Parser(self.TIMESTAMP, text, collection).read_collection()
-        resource = next(collection.resources())
-        assert resource.category == Const.SNIPPET
-        assert resource.data == data
-        assert resource.brief == brief
+        assert resource.brief == 'Manipulate compressed tar files'
         assert resource.description == ''
-        assert resource.groups == groups
-        assert resource.tags == tags
-        assert resource.links == links
+        assert resource.groups == ('linux',)
+        assert resource.tags == ('howto', 'linux', 'tar', 'untar')
+        assert resource.links == ()
+        assert resource.versions == ()
+        assert resource.name == ''
+        assert resource.filename == ''
+        assert resource.source == ''
 
     def test_parser_snippet_007(self):
         """Test parsing snippet.
@@ -349,27 +346,26 @@ class TestUtContentParserText(object):
             '',
             ''
         ))
-        data = (
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
+        assert resource.category == Const.SNIPPET
+        assert resource.data == (
             'tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./  #  Compress folder excluding the tar.',
             'tar tvf mytar.tar.gz  #  List content of compressed tar.',
             'tar xfO mytar.tar.gz manifest.json  #  Cat file in compressed tar.',
             'tar -zxvf mytar.tar.gz --exclude "./mytar.tar.gz"  #  Extract and exclude one file.',
             'tar -xf mytar.tar.gz manifest.json  #  Extract only one file.',
         )
-        brief = 'Manipulate compressed tar files'
-        groups = ('linux',)
-        tags = ('howto', 'linux', 'tar', 'untar')
-        links = ()
-        collection = Collection()
-        Parser(self.TIMESTAMP, text, collection).read_collection()
-        resource = next(collection.resources())
-        assert resource.category == Const.SNIPPET
-        assert resource.data == data
-        assert resource.brief == brief
+        assert resource.brief == 'Manipulate compressed tar files'
         assert resource.description == ''
-        assert resource.groups == groups
-        assert resource.tags == tags
-        assert resource.links == links
+        assert resource.groups == ('linux',)
+        assert resource.tags == ('howto', 'linux', 'tar', 'untar')
+        assert resource.links == ()
+        assert resource.versions == ()
+        assert resource.name == ''
+        assert resource.filename == ''
+        assert resource.source == ''
 
     def test_parser_snippet_008(self):
         """Test parsing snippet.
@@ -413,28 +409,27 @@ class TestUtContentParserText(object):
             '',
             ''
         ))
-        data = ('tar tvf mytar.tar.gz',)
-        brief = 'Manipulate compressed tar files'
-        groups = ('linux',)
-        tags = ('howto', 'linux', 'tar', 'untar')
-        links = ()
         collection = Collection()
         Parser(self.TIMESTAMP, text, collection).read_collection()
         resource = next(collection.resources())
         assert resource.category == Const.SNIPPET
-        assert resource.data == data
-        assert resource.brief == brief
+        assert resource.data == ('tar tvf mytar.tar.gz',)
+        assert resource.brief == 'Manipulate compressed tar files'
         assert resource.description == ''
-        assert resource.groups == groups
-        assert resource.tags == tags
-        assert resource.links == links
+        assert resource.groups == ('linux',)
+        assert resource.tags == ('howto', 'linux', 'tar', 'untar')
+        assert resource.links == ()
+        assert resource.versions == ()
+        assert resource.name == ''
+        assert resource.filename == ''
+        assert resource.source == ''
 
     def test_parser_snippet_009(self):
         """Test parsing snippet.
 
         Test case verifies that snippet with versions, name, filename and
         source fields is parsed correctly. In this case each field contains
-        valid value.
+        a valid value.
         """
 
         text = '\n'.join((
@@ -472,30 +467,70 @@ class TestUtContentParserText(object):
             '',
             ''
         ))
-        data = ('tar tvf mytar.tar.gz',)
-        brief = 'Manipulate compressed tar files'
-        description = 'short description'
-        groups = ('linux',)
-        tags = ('howto', 'linux', 'tar', 'untar')
-        links = ('https://alpinelinux.org/',)
-        versions = ('alpine=3.9', 'python=3.7.0')
-        name = ''  # 'manage tar files'
-        filename = 'tar-file-operations.mkdn'
-        source = ''  # 'tar-file-operations.mkdn'
         collection = Collection()
         Parser(self.TIMESTAMP, text, collection).read_collection()
         resource = next(collection.resources())
         assert resource.category == Const.SNIPPET
-        assert resource.data == data
-        assert resource.brief == brief
-        assert resource.description == description
-        assert resource.groups == groups
-        assert resource.tags == tags
-        assert resource.links == links
-        assert resource.versions == versions
-        assert resource.name == name
-        assert resource.filename == filename
-        assert resource.source == source
+        assert resource.data == ('tar tvf mytar.tar.gz',)
+        assert resource.brief == 'Manipulate compressed tar files'
+        assert resource.description == 'short description'
+        assert resource.groups == ('linux',)
+        assert resource.tags == ('howto', 'linux', 'tar', 'untar')
+        assert resource.links == ('https://alpinelinux.org/',)
+        assert resource.versions == ('alpine=3.9', 'python=3.7.0')
+        assert resource.name == 'manage tar files'
+        assert resource.filename == 'tar-file-operations.mkdn'
+        assert resource.source == 'https://github.com/tldr-pages/tldr/blob/master/pages/linux/alpine.md'
+
+    def test_parser_snippet_010(self):
+        """Test parsing snippet.
+
+        Try to parse snippet which version does not follow required syntax. In
+        This case there is one version that has correct syntax which must be
+        stored in the content.
+        """
+
+        text = '\n'.join((
+            '# Commented lines will be ignored.',
+            '#',
+            '# Add mandatory snippet below.',
+            'tar tvf mytar.tar.gz',
+            '',
+            '# Add optional brief description below.',
+            '',
+            '# Add optional description below.',
+            '',
+            '# Add optional comma separated list of groups below.',
+            '',
+            '# Add optional comma separated list of tags below.',
+            '',
+            '# Add optional links below one link per line.',
+            '',
+            '# Add optional comma separated list of key=value versions below.',
+            'python=^3.7.0,alpine!=3.9,kafka',
+            '',
+            '# Add optional name below.',
+            '',
+            '# Add optional filename below.',
+            '',
+            '# Add optional source reference below.',
+            '',
+            ''
+        ))
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
+        assert resource.category == Const.SNIPPET
+        assert resource.data == ('tar tvf mytar.tar.gz',)
+        assert resource.brief == ''
+        assert resource.description == ''
+        assert resource.groups == () #('default',)
+        assert resource.tags == ()
+        assert resource.links == ()
+        assert resource.versions == ('alpine!=3.9',)
+        assert resource.name == ''
+        assert resource.filename == ''
+        assert resource.source == ''
 
     def test_parser_solution_001(self):
         """Test parsing solution.
@@ -616,27 +651,24 @@ class TestUtContentParserText(object):
             '################################################################################',
             ''
         ))
-        links = (
-            'https://github.com/MickayG/moby-kafka-logdriver',
-            'https://github.com/garo/logs2kafka',
-            'https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ'
-        )
-        brief = 'Testing docker log drivers'
-        description = 'This is a one line solution description.'
-        groups = ('docker',)
-        tags = ('docker', 'driver', 'kafka', 'kubernetes', 'logging', 'logs2kafka', 'moby', 'plugin')
-        filename = 'kubernetes-docker-log-driver-kafka.txt'
         collection = Collection()
         Parser(self.TIMESTAMP, text, collection).read_collection()
         resource = next(collection.resources())
         assert resource.category == Const.SOLUTION
         assert resource.data == tuple(text.split(Const.DELIMITER_DATA))
-        assert resource.brief == brief
-        assert resource.description == description
-        assert resource.groups == groups
-        assert resource.tags == tags
-        assert resource.links == links
-        assert resource.filename == filename
+        assert resource.brief == 'Testing docker log drivers'
+        assert resource.description == 'This is a one line solution description.'
+        assert resource.groups == ('docker',)
+        assert resource.tags == ('docker', 'driver', 'kafka', 'kubernetes', 'logging', 'logs2kafka', 'moby', 'plugin')
+        assert resource.links == (
+            'https://github.com/MickayG/moby-kafka-logdriver',
+            'https://github.com/garo/logs2kafka',
+            'https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ'
+        )
+        assert resource.versions == ()
+        assert resource.name == ''
+        assert resource.filename == 'kubernetes-docker-log-driver-kafka.txt'
+        assert resource.source == ''
 
     def test_parser_solution_002(self):
         """Test parsing solution.
@@ -689,27 +721,24 @@ class TestUtContentParserText(object):
             '################################################################################',
             ''
         ))
-        links = (
-            'https://github.com/MickayG/moby-kafka-logdriver',
-            'https://github.com/garo/logs2kafka',
-            'https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ'
-        )
-        brief = 'Testing docker log drivers'
-        description = 'This is two line solution description.'
-        groups = ('docker',)
-        tags = ('docker', 'driver', 'kafka', 'kubernetes', 'logging', 'logs2kafka', 'moby', 'plugin')
-        filename = 'kubernetes-docker-log-driver-kafka.txt'
         collection = Collection()
         Parser(self.TIMESTAMP, text, collection).read_collection()
         resource = next(collection.resources())
         assert resource.category == Const.SOLUTION
         assert resource.data == tuple(text.split(Const.DELIMITER_DATA))
-        assert resource.brief == brief
-        assert resource.description == description
-        assert resource.groups == groups
-        assert resource.tags == tags
-        assert resource.links == links
-        assert resource.filename == filename
+        assert resource.brief == 'Testing docker log drivers'
+        assert resource.description == 'This is two line solution description.'
+        assert resource.groups == ('docker',)
+        assert resource.tags == ('docker', 'driver', 'kafka', 'kubernetes', 'logging', 'logs2kafka', 'moby', 'plugin')
+        assert resource.links == (
+            'https://github.com/MickayG/moby-kafka-logdriver',
+            'https://github.com/garo/logs2kafka',
+            'https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ'
+        )
+        assert resource.versions == ()
+        assert resource.name == ''
+        assert resource.filename == 'kubernetes-docker-log-driver-kafka.txt'
+        assert resource.source == ''
 
     def test_parser_solution_003(self):
         """Test parsing solution.
@@ -761,27 +790,24 @@ class TestUtContentParserText(object):
             '################################################################################',
             ''
         ))
-        links = (
-            'https://github.com/MickayG/moby-kafka-logdriver',
-            'https://github.com/garo/logs2kafka',
-            'https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ'
-        )
-        brief = 'Testing docker log drivers'
-        description = 'This is two line solution description without newline before next header.'
-        groups = ('docker',)
-        tags = ('docker', 'driver', 'kafka', 'kubernetes', 'logging', 'logs2kafka', 'moby', 'plugin')
-        filename = 'kubernetes-docker-log-driver-kafka.txt'
         collection = Collection()
         Parser(self.TIMESTAMP, text, collection).read_collection()
         resource = next(collection.resources())
         assert resource.category == Const.SOLUTION
         assert resource.data == tuple(text.split(Const.DELIMITER_DATA))
-        assert resource.brief == brief
-        assert resource.description == description
-        assert resource.groups == groups
-        assert resource.tags == tags
-        assert resource.links == links
-        assert resource.filename == filename
+        assert resource.brief == 'Testing docker log drivers'
+        assert resource.description == 'This is two line solution description without newline before next header.'
+        assert resource.groups == ('docker',)
+        assert resource.tags == ('docker', 'driver', 'kafka', 'kubernetes', 'logging', 'logs2kafka', 'moby', 'plugin')
+        assert resource.links == (
+            'https://github.com/MickayG/moby-kafka-logdriver',
+            'https://github.com/garo/logs2kafka',
+            'https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ'
+        )
+        assert resource.versions == ()
+        assert resource.name == ''
+        assert resource.filename == 'kubernetes-docker-log-driver-kafka.txt'
+        assert resource.source == ''
 
     def test_parser_solution_004(self):
         """Test parsing solution.
@@ -831,26 +857,24 @@ class TestUtContentParserText(object):
             '################################################################################',
             ''
         ))
-        links = (
-            'https://github.com/MickayG/moby-kafka-logdriver',
-            'https://github.com/garo/logs2kafka',
-            'https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ'
-        )
-        brief = 'Testing docker log drivers'
-        groups = ('docker',)
-        tags = ('docker', 'driver', 'kafka', 'kubernetes', 'logging', 'logs2kafka', 'moby', 'plugin')
-        filename = 'kubernetes-docker-log-driver-kafka.txt'
         collection = Collection()
         Parser(self.TIMESTAMP, text, collection).read_collection()
         resource = next(collection.resources())
         assert resource.category == Const.SOLUTION
         assert resource.data == tuple(text.split(Const.DELIMITER_DATA))
-        assert resource.brief == brief
+        assert resource.brief == 'Testing docker log drivers'
         assert resource.description == ''
-        assert resource.groups == groups
-        assert resource.tags == tags
-        assert resource.links == links
-        assert resource.filename == filename
+        assert resource.groups == ('docker',)
+        assert resource.tags == ('docker', 'driver', 'kafka', 'kubernetes', 'logging', 'logs2kafka', 'moby', 'plugin')
+        assert resource.links == (
+            'https://github.com/MickayG/moby-kafka-logdriver',
+            'https://github.com/garo/logs2kafka',
+            'https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ'
+        )
+        assert resource.versions == ()
+        assert resource.name == ''
+        assert resource.filename == 'kubernetes-docker-log-driver-kafka.txt'
+        assert resource.source == ''
 
     def test_parser_solution_005(self):
         """Test parsing solution.
@@ -931,20 +955,20 @@ class TestUtContentParserText(object):
             'https://writingfordevelopers.substack.com/p/how-to-write-commit-messages',
             'https://chris.beams.io/posts/git-commit/'
         )
-        brief = 'How to write commit messages'
-        description = 'How to write git commit.'
-        groups = ('git',)
-        tags = ('commit', 'git', 'howto', 'message', 'scm')
         collection = Collection()
         Parser(self.TIMESTAMP, text, collection).read_collection()
         resource = next(collection.resources())
         assert resource.category == Const.REFERENCE
         assert resource.data == links
-        assert resource.brief == brief
-        assert resource.description == description
-        assert resource.groups == groups
-        assert resource.tags == tags
+        assert resource.brief == 'How to write commit messages'
+        assert resource.description == 'How to write git commit.'
+        assert resource.groups == ('git',)
+        assert resource.tags == ('commit', 'git', 'howto', 'message', 'scm')
         assert resource.links == links
+        assert resource.versions == ()
+        assert resource.name == ''
+        assert resource.filename == ''
+        assert resource.source == ''
 
     def test_parser_reference_002(self):
         """Test parsing reference.
@@ -977,20 +1001,20 @@ class TestUtContentParserText(object):
             'https://writingfordevelopers.substack.com/p/how-to-write-commit-messages',
             'https://chris.beams.io/posts/git-commit/'
         )
-        brief = 'How to write commit messages'
-        description = 'How to write git commit.'
-        groups = ('git',)
-        tags = ('commit', 'git', 'howto', 'message', 'scm')
         collection = Collection()
         Parser(self.TIMESTAMP, text, collection).read_collection()
         resource = next(collection.resources())
         assert resource.category == Const.REFERENCE
         assert resource.data == links
-        assert resource.brief == brief
-        assert resource.description == description
-        assert resource.groups == groups
-        assert resource.tags == tags
+        assert resource.brief == 'How to write commit messages'
+        assert resource.description == 'How to write git commit.'
+        assert resource.groups == ('git',)
+        assert resource.tags == ('commit', 'git', 'howto', 'message', 'scm')
         assert resource.links == links
+        assert resource.versions == ()
+        assert resource.name == ''
+        assert resource.filename == ''
+        assert resource.source == ''
 
     def test_parser_reference_003(self):
         """Test parsing reference.
@@ -1018,20 +1042,20 @@ class TestUtContentParserText(object):
             'https://writingfordevelopers.substack.com/p/how-to-write-commit-messages',
             'https://chris.beams.io/posts/git-commit/'
         )
-        brief = 'How to write commit messages'
-        description = 'How to write git commit.'
-        groups = ('git', 'moby')
-        tags = ('commit', 'git', 'howto', 'message', 'scm')
         collection = Collection()
         Parser(self.TIMESTAMP, text, collection).read_collection()
         resource = next(collection.resources())
         assert resource.category == Const.REFERENCE
         assert resource.data == links
-        assert resource.brief == brief
-        assert resource.description == description
-        assert resource.groups == groups
-        assert resource.tags == tags
+        assert resource.brief == 'How to write commit messages'
+        assert resource.description == 'How to write git commit.'
+        assert resource.groups == ('git', 'moby')
+        assert resource.tags == ('commit', 'git', 'howto', 'message', 'scm')
         assert resource.links == links
+        assert resource.versions == ()
+        assert resource.name == ''
+        assert resource.filename == ''
+        assert resource.source == ''
 
     def test_parser_reference_004(self):
         """Test parsing reference.
@@ -1087,30 +1111,149 @@ class TestUtContentParserText(object):
             'docker rm $(docker ps --all -q -f status=exited)',
             'docker images -q --filter dangling=true | xargs docker rm'
         )
-        brief = 'Remove docker image with force'
-        description = 'Remove docker image.'
-        groups = ('docker',)
-        tags = ('cleanup', 'container', 'docker', 'docker-ce', 'image', 'moby')
-        links = (
-            'https://docs.docker.com/engine/reference/commandline/images/',
-            'https://docs.docker.com/engine/reference/commandline/rm/',
-            'https://docs.docker.com/engine/reference/commandline/rmi/'
-        )
         collection = Collection()
         Parser(self.TIMESTAMP, text, collection).read_collection()
         resource = next(collection.resources())
         assert resource.category == Const.SNIPPET
         assert resource.data == data
-        assert resource.brief == brief
-        assert resource.description == description
-        assert resource.groups == groups
-        assert resource.tags == tags
+        assert resource.brief == 'Remove docker image with force'
+        assert resource.description == 'Remove docker image.'
+        assert resource.groups == ('docker',)
+        assert resource.tags == ('cleanup', 'container', 'docker', 'docker-ce', 'image', 'moby')
+        assert resource.links == (
+            'https://docs.docker.com/engine/reference/commandline/images/',
+            'https://docs.docker.com/engine/reference/commandline/rm/',
+            'https://docs.docker.com/engine/reference/commandline/rmi/'
+        )
+        assert resource.versions == ()
+        assert resource.name == ''
+        assert resource.filename == ''
+        assert resource.source == ''
+
+    def test_parser_reference_006(self):
+        """Test parsing reference.
+
+        Test case verifies that reference with versions, name, filename and
+        source fields is parsed correctly. In this case template tags are
+        not removed when the reference is parsed.
+        """
+
+        text = '\n'.join((
+            '# Commented lines will be ignored.',
+            '#',
+            '# Add mandatory links below one link per line.',
+            'https://writingfordevelopers.substack.com/p/how-to-write-commit-messages',
+            'https://chris.beams.io/posts/git-commit/',
+            '',
+            '# Add optional brief description below.',
+            'How to write commit messages',
+            '',
+            '# Add optional description below.',
+            'How to write git commit',
+            '',
+            '# Add optional comma separated list of groups below.',
+            'git',
+            '',
+            '# Add optional comma separated list of tags below.',
+            'commit,git,howto,message,scm'
+            '',
+            '# Add optional comma separated list of key=value versions below.',
+            '<versions>',
+            '',
+            '# Add optional name below.',
+            '<name>',
+            '',
+            '# Add optional filename below.',
+            '<filename>',
+            '',
+            '# Add optional source reference below.',
+            '<source>',
+            '',
+            ''
+        ))
+        links = (
+            'https://writingfordevelopers.substack.com/p/how-to-write-commit-messages',
+            'https://chris.beams.io/posts/git-commit/'
+        )
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
+        assert resource.category == Const.REFERENCE
+        assert resource.data == links
+        assert resource.brief == 'How to write commit messages'
+        assert resource.description == 'How to write git commit'
+        assert resource.groups == ('git',)
+        assert resource.tags == ('commit', 'git', 'howto', 'message', 'scm')
         assert resource.links == links
+        assert resource.versions == ()
+        assert resource.name == ''
+        assert resource.filename == ''
+        assert resource.source == ''
+
+    def test_parser_reference_007(self):
+        """Test parsing reference.
+
+        Test case verifies that reference with versions, name, filename and
+        source fields is parsed correctly. In this case each field contains
+        a valid value.
+        """
+
+        text = '\n'.join((
+            '# Commented lines will be ignored.',
+            '#',
+            '# Add mandatory links below one link per line.',
+            'https://writingfordevelopers.substack.com/p/how-to-write-commit-messages',
+            'https://chris.beams.io/posts/git-commit/',
+            '',
+            '# Add optional brief description below.',
+            'How to write commit messages',
+            '',
+            '# Add optional description below.',
+            'How to write git commit',
+            '',
+            '# Add optional comma separated list of groups below.',
+            'git',
+            '',
+            '# Add optional comma separated list of tags below.',
+            'commit,git,howto,message,scm'
+            '',
+            '# Add optional comma separated list of key=value versions below.',
+            'git<=1.1.1,python>=2.7.0,python==3.7.0',
+            '',
+            '# Add optional name below.',
+            'git-help-text',
+            '',
+            '# Add optional filename below.',
+            'git.mkdn',
+            '',
+            '# Add optional source reference below.',
+            'https://github.com/',
+            '',
+            ''
+        ))
+        links = (
+            'https://writingfordevelopers.substack.com/p/how-to-write-commit-messages',
+            'https://chris.beams.io/posts/git-commit/'
+        )
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
+        assert resource.category == Const.REFERENCE
+        assert resource.data == links
+        assert resource.brief == 'How to write commit messages'
+        assert resource.description == 'How to write git commit'
+        assert resource.groups == ('git',)
+        assert resource.tags == ('commit', 'git', 'howto', 'message', 'scm')
+        assert resource.links == links
+        assert resource.versions == ('git<=1.1.1', 'python>=2.7.0')
+        assert resource.name == 'git-help-text'
+        assert resource.filename == 'git.mkdn'
+        assert resource.source == 'https://github.com/'
 
     def test_parser_unknown_001(self):
-        """Test parsing unknown content.
+        """Test parsing unidentified content.
 
-        Try to run parser against content that is not identified.
+        Try to parse content which category is not identified.
         """
 
         text = '\n'.join((

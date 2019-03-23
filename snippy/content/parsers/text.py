@@ -215,8 +215,8 @@ class ContentParserText(ContentParserBase):
             resource.tags = self._read_tags(category, content)
             resource.links = self._read_links(category, content)
             resource.versions = self._read_versions(category, content)
-            #resource.name = self._read_name(category, content)
-            #resource.source = self._read_source(category, content)
+            resource.name = self._read_name(category, content)
+            resource.source = self._read_source(category, content)
             resource.filename = self._read_filename(category, content)
             resource.category = category
             self._collection.migrate(resource)
@@ -451,18 +451,55 @@ class ContentParserText(ContentParserBase):
             tuple: Tuple of utf-8 encoded versions.
         """
 
-        versions = ()
+        return self.parse_versions(category, self.REGEXP['versions'].get(category, None), text)
+
+    def _read_name(self, category, text):
+        """Read content name from text string.
+
+        Args:
+            category (str): Content category.
+            text (str): Content text string.
+
+        Returns:
+            str: Utf-8 encoded unicode name string.
+        """
+
+        name = ''
         if category not in Const.CATEGORIES:
-            return self.format_list(versions)
+            return self.format_string(name)
 
-        match = self.REGEXP['versions'][category].search(text)
+        match = self.REGEXP['name'][category].search(text)
         if match:
-            versions = [match.group('versions')]
-            self._logger.debug('parsed content versions: %s', versions)
+            name = match.group('name')
+            self._logger.debug('parsed content name: %s', name)
         else:
-            self._logger.debug('parser did not find content for versions: {}'.format(text))
+            self._logger.debug('parser did not find content for name: {}'.format(text))
 
-        return self.format_list(versions)
+        return self.format_string(name)
+
+    def _read_source(self, category, text):
+        """Read content source from text string.
+
+        Args:
+            category (str): Content category.
+            text (str): Content text string.
+
+        Returns:
+            str: Utf-8 encoded unicode source string.
+        """
+
+        source = ''
+        if category not in Const.CATEGORIES:
+            return self.format_string(source)
+
+        match = self.REGEXP['source'][category].search(text)
+        if match:
+            source = match.group('source')
+            self._logger.debug('parsed content source: %s', source)
+        else:
+            self._logger.debug('parser did not find content for source: {}'.format(text))
+
+        return self.format_string(source)
 
     def _read_filename(self, category, text):
         """Read content filename from text string.

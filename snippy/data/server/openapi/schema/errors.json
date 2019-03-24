@@ -2,12 +2,12 @@
   "type": "object",
   "properties": {
     "meta": {
-      "$ref": "#/definitions/Meta"
+      "$ref": "#/definitions/metaError"
     },
     "errors": {
       "type": "array",
       "items": {
-        "$ref": "#/definitions/Error"
+        "$ref": "#/definitions/error"
       }
     }
   },

@@ -10,7 +10,7 @@
       ]
     },
     "attributes": {
-      "$ref": "#/definitions/Attributes"
+      "$ref": "#/definitions/requestAttributes"
     }
   },
   "required": [

@@ -3,7 +3,7 @@
   "properties": {
     "count": {
       "type": "string",
-      "description": "Number of content items in data list."
+      "description": "Number of resources in the data object."
     },
     "limit": {
       "type": "string",

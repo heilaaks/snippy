@@ -9,6 +9,8 @@ Release history
 Breaking changes
 ~~~~~~~~~~~~~~~~
 
+* Change REST API endpoints `[2019.03.24]`_.
+
 New features
 ~~~~~~~~~~~~
 
@@ -36,20 +38,20 @@ Security
 Breaking changes
 ~~~~~~~~~~~~~~~~
 
-* Change Markdown as default format `[1]`_.
-* Change content field ``group`` to ``groups`` `[2]`_.
-* Change content field ``versions`` from string to array `[3]`_.
-* Change UTC offset format from +0000 to +00:00 `[4]`_.
-* Change server command line options `[5]`_.
-* Change ``filter`` option behaviour `[6]`_.
-* Change ``editor`` option and add ``no-editor`` option `[7]`_.
-* Add new content field ``description`` `[8]`_.
+* Change Markdown as default format `[2019.01.27]`_.
+* Change content field ``group`` to ``groups`` `[2018.08.12]`_.
+* Change content field ``versions`` from string to array `[2019.01.26]`_.
+* Change UTC offset format from +0000 to +00:00 `[2018.12.16]`_.
+* Change server command line options `[2019.01.04]`_.
+* Change ``filter`` option behaviour `[2018.09.02]`_.
+* Change ``editor`` option and add ``no-editor`` option `[2019.01.06]`_.
+* Add new content field ``description`` `[2018.09.08]`_.
 
 New features
 ~~~~~~~~~~~~
 
-* Add REST API routes for: keywords, groups, tags, uuid and digest `[9]`_.
-* Add experimental support for PostgreSQL database `[10]`_.
+* Add REST API routes for: keywords, groups, tags, uuid and digest `[2018.08.09]`_.
+* Add experimental support for PostgreSQL database `[2019.01.29]`_.
 * Add support for Markdown formatted content.
 * Add support to output search results also in Markdown format.
 * Add one command to export and import all default content.
@@ -116,13 +118,14 @@ Security
 .. _0.6.0: https://github.com/heilaaks/snippy/compare/v0.5.0...heilaaks:v0.6.0
 .. _0.5.0: https://github.com/heilaaks/snippy/compare/v0.1.0...heilaaks:v0.5.0
 .. _0.1.0: https://github.com/heilaaks/snippy/compare/ce6395137b...heilaaks:v0.1.0
-.. _`[1]`: https://github.com/heilaaks/snippy/commit/83aa4bb3072fe0fbb5a1c0477ba99c477fc0a3a2
-.. _`[2]`: https://github.com/heilaaks/snippy/commit/08394b6acaf8d1e0c7971e5fe4de95c04c54790b
-.. _`[3]`: https://github.com/heilaaks/snippy/commit/f9fadb04d26d3fbc75d12c198d9b1fff1d10cf90
-.. _`[4]`: https://github.com/heilaaks/snippy/commit/1b00a4d9179bf67ada56f7ee624e851e884c7f6a
-.. _`[5]`: https://github.com/heilaaks/snippy/commit/6f878407320fa1eb8834df5402db977943c55c87
-.. _`[6]`: https://github.com/heilaaks/snippy/commit/4be86cff53ea4d9cdb358ed487420a67d9f5bcbe
-.. _`[7]`: https://github.com/heilaaks/snippy/commit/6a289657e22952ad8276b0bb6062ca8e909ded77
-.. _`[8]`: https://github.com/heilaaks/snippy/commit/8d9b0558809e56ce40798f61c8636e04307743ed
-.. _`[9]`: https://app.swaggerhub.com/apis/heilaaks/snippy/1.0
-.. _`[10]`: https://github.com/heilaaks/snippy/commit/6e60886d5f78d49952cd6b977db3a9b6f803f092
+.. _`[2019.01.27]`: https://github.com/heilaaks/snippy/commit/83aa4bb3072fe0fbb5a1c0477ba99c477fc0a3a2
+.. _`[2018.08.12]`: https://github.com/heilaaks/snippy/commit/08394b6acaf8d1e0c7971e5fe4de95c04c54790b
+.. _`[2019.01.26]`: https://github.com/heilaaks/snippy/commit/f9fadb04d26d3fbc75d12c198d9b1fff1d10cf90
+.. _`[2018.12.16]`: https://github.com/heilaaks/snippy/commit/1b00a4d9179bf67ada56f7ee624e851e884c7f6a
+.. _`[2019.01.04]`: https://github.com/heilaaks/snippy/commit/6f878407320fa1eb8834df5402db977943c55c87
+.. _`[2018.09.02]`: https://github.com/heilaaks/snippy/commit/4be86cff53ea4d9cdb358ed487420a67d9f5bcbe
+.. _`[2019.01.06]`: https://github.com/heilaaks/snippy/commit/6a289657e22952ad8276b0bb6062ca8e909ded77
+.. _`[2018.09.08]`: https://github.com/heilaaks/snippy/commit/8d9b0558809e56ce40798f61c8636e04307743ed
+.. _`[2018.08.09]`: https://github.com/heilaaks/snippy/commit/9e7e9f90e5df54f9930371617114d34e791be2ac
+.. _`[2019.01.29]`: https://github.com/heilaaks/snippy/commit/6e60886d5f78d49952cd6b977db3a9b6f803f092
+.. _`[2019.03.24]`: https://app.swaggerhub.com/apis/heilaaks/snippy/1.0

@@ -1,0 +1,5 @@
+{
+  "type": "string",
+  "description": "# Brief\n\nAutomatically generated UTC timestamp for the latest update. The time is defined with RFC 3339\nprofile of the ISO 8601 specification.\n",
+  "$schema": "http://json-schema.org/schema#"
+}

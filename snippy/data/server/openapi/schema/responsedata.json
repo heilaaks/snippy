@@ -13,7 +13,7 @@
       "type": "string"
     },
     "attributes": {
-      "$ref": "#/definitions/Attributes"
+      "$ref": "#/definitions/responseAttributes"
     }
   },
   "required": [

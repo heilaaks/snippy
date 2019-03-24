@@ -1,0 +1,39 @@
+{
+  "type": "object",
+  "properties": {
+    "data": {
+      "$ref": "#/definitions/attributeData"
+    },
+    "brief": {
+      "$ref": "#/definitions/attributeBrief"
+    },
+    "description": {
+      "$ref": "#/definitions/attributeDescription"
+    },
+    "name": {
+      "$ref": "#/definitions/attributeName"
+    },
+    "groups": {
+      "$ref": "#/definitions/attributeGroups"
+    },
+    "tags": {
+      "$ref": "#/definitions/attributeTags"
+    },
+    "links": {
+      "$ref": "#/definitions/attributeLinks"
+    },
+    "versions": {
+      "$ref": "#/definitions/attributeVersions"
+    },
+    "source": {
+      "$ref": "#/definitions/attributeSource"
+    },
+    "filename": {
+      "$ref": "#/definitions/attributeFilename"
+    }
+  },
+  "required": [
+    "data"
+  ],
+  "$schema": "http://json-schema.org/schema#"
+}

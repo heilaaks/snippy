@@ -1,0 +1,6 @@
+{
+  "type": "string",
+  "default": "",
+  "description": "# Brief\n\nOptional external source for the resource.\"\n",
+  "$schema": "http://json-schema.org/schema#"
+}

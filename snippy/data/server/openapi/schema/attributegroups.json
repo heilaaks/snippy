@@ -1,0 +1,11 @@
+{
+  "type": "array",
+  "items": {
+    "type": "string"
+  },
+  "default": [
+    "default"
+  ],
+  "description": "# Brief\n  \nOptional list of groups to which the resource belongs.\n",
+  "$schema": "http://json-schema.org/schema#"
+}

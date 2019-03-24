@@ -1,92 +1,188 @@
 {
   "definitions": {
-    "RequestResource": {
+    "attributeCategory": {
+      "type": "string",
+      "enum": [
+        "snippet",
+        "solution",
+        "reference"
+      ],
+      "description": "# Brief\n  \nAutomatically assigned resource category.\n"
+    },
+    "attributeData": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "# Brief\n \nResource data attribute.\n"
+    },
+    "attributeBrief": {
+      "type": "string",
+      "default": "",
+      "description": "# Brief\n  \nOptional brief description of the resource.\n"
+    },
+    "attributeDescription": {
+      "type": "string",
+      "default": "",
+      "description": "# Brief\n  \nOptional long description of the resource.\n"
+    },
+    "attributeName": {
+      "type": "string",
+      "default": "",
+      "description": "# Brief\n  \nOptional name for the resource.\n"
+    },
+    "attributeGroups": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [
+        "default"
+      ],
+      "description": "# Brief\n  \nOptional list of groups to which the resource belongs.\n"
+    },
+    "attributeTags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "# Brief\n\nOptional list of tags.\n"
+    },
+    "attributeLinks": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "# Brief\n  \nOptional list of links.\n"
+    },
+    "attributeVersions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "# Brief\n  \nOptional list of services and versions related to the resource.\n"
+    },
+    "attributeSource": {
+      "type": "string",
+      "default": "",
+      "description": "# Brief\n\nOptional external source for the resource.\"\n"
+    },
+    "attributeFilename": {
+      "type": "string",
+      "default": "",
+      "description": "# Brief\n\nOptional filename. This attribute can be used for example to export the resource into file\nwhich name is defined by this attribute-\n"
+    },
+    "attributeCreated": {
+      "type": "string",
+      "description": "# Brief\n\nAutomatically generated UTC timestamp when the resource is created. The time is defined with\nRFC 3339 profile of the ISO 8601 specification.\n"
+    },
+    "attributeUpdated": {
+      "type": "string",
+      "description": "# Brief\n\nAutomatically generated UTC timestamp for the latest update. The time is defined with RFC 3339\nprofile of the ISO 8601 specification.\n"
+    },
+    "attributeUuid": {
+      "type": "string",
+      "description": "# Brief\n\nAutomatically assigned UUID for the resource.\n"
+    },
+    "attributeDigest": {
+      "type": "string",
+      "description": "# Brief\n\nAutomatically assigned message digest that uniquely identifies the resource.\n"
+    },
+    "requestAttributes": {
       "type": "object",
       "properties": {
+        "data": {
+          "$ref": "#/definitions/attributeData"
+        },
+        "brief": {
+          "$ref": "#/definitions/attributeBrief"
+        },
+        "description": {
+          "$ref": "#/definitions/attributeDescription"
+        },
+        "name": {
+          "$ref": "#/definitions/attributeName"
+        },
+        "groups": {
+          "$ref": "#/definitions/attributeGroups"
+        },
+        "tags": {
+          "$ref": "#/definitions/attributeTags"
+        },
         "links": {
-          "$ref": "#/definitions/Links"
+          "$ref": "#/definitions/attributeLinks"
+        },
+        "versions": {
+          "$ref": "#/definitions/attributeVersions"
+        },
+        "source": {
+          "$ref": "#/definitions/attributeSource"
+        },
+        "filename": {
+          "$ref": "#/definitions/attributeFilename"
+        }
+      },
+      "required": [
+        "data"
+      ]
+    },
+    "responseAttributes": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "$ref": "#/definitions/attributeCategory"
         },
         "data": {
-          "$ref": "#/definitions/RequestData"
-        }
-      },
-      "required": [
-        "data"
-      ]
-    },
-    "ResponseResource": {
-      "type": "object",
-      "properties": {
-        "data": {
-          "$ref": "#/definitions/ResponseData"
+          "$ref": "#/definitions/attributeData"
         },
-        "links": {
-          "$ref": "#/definitions/Links"
-        }
-      },
-      "required": [
-        "data"
-      ]
-    },
-    "RequestCollection": {
-      "type": "object",
-      "properties": {
-        "data": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/RequestData"
-          }
-        }
-      },
-      "required": [
-        "data"
-      ]
-    },
-    "ResponseCollectionPost": {
-      "type": "object",
-      "properties": {
-        "data": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ResponseData"
-          }
-        }
-      },
-      "required": [
-        "data"
-      ]
-    },
-    "ResponseCollectionGet": {
-      "type": "object",
-      "properties": {
-        "meta": {
-          "$ref": "#/definitions/ResponseMeta"
+        "brief": {
+          "$ref": "#/definitions/attributeBrief"
         },
-        "data": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ResponseData"
-          }
+        "description": {
+          "$ref": "#/definitions/attributeDescription"
+        },
+        "name": {
+          "$ref": "#/definitions/attributeName"
+        },
+        "groups": {
+          "$ref": "#/definitions/attributeGroups"
+        },
+        "tags": {
+          "$ref": "#/definitions/attributeTags"
         },
         "links": {
-          "$ref": "#/definitions/ResponseLinks"
+          "$ref": "#/definitions/attributeLinks"
+        },
+        "versions": {
+          "$ref": "#/definitions/attributeVersions"
+        },
+        "source": {
+          "$ref": "#/definitions/attributeSource"
+        },
+        "filename": {
+          "$ref": "#/definitions/attributeFilename"
+        },
+        "created": {
+          "$ref": "#/definitions/attributeCreated"
+        },
+        "updated": {
+          "$ref": "#/definitions/attributeUpdated"
+        },
+        "uuid": {
+          "$ref": "#/definitions/attributeUuid"
+        },
+        "digest": {
+          "$ref": "#/definitions/attributeDigest"
         }
       },
       "required": [
-        "meta",
         "data"
       ]
     },
-    "Links": {
-      "type": "object",
-      "properties": {
-        "self": {
-          "type": "string",
-          "description": "Link pointing to resource."
-        }
-      }
-    },
-    "RequestData": {
+    "requestData": {
       "type": "object",
       "properties": {
         "type": {
@@ -98,7 +194,7 @@
           ]
         },
         "attributes": {
-          "$ref": "#/definitions/Attributes"
+          "$ref": "#/definitions/requestAttributes"
         }
       },
       "required": [
@@ -106,34 +202,32 @@
         "attributes"
       ]
     },
-    "ResponseMeta": {
+    "requestResource": {
       "type": "object",
       "properties": {
-        "count": {
-          "type": "string",
-          "description": "Number of content items in data list."
-        },
-        "limit": {
-          "type": "string",
-          "description": "The search limit used in request."
-        },
-        "offset": {
-          "type": "string",
-          "description": "The search offset used in request."
-        },
-        "total": {
-          "type": "string",
-          "description": "Total number of search results without limit being applied."
+        "data": {
+          "$ref": "#/definitions/requestData"
         }
       },
       "required": [
-        "count",
-        "limit",
-        "offset",
-        "total"
+        "data"
       ]
     },
-    "ResponseData": {
+    "requestCollection": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/requestData"
+          }
+        }
+      },
+      "required": [
+        "data"
+      ]
+    },
+    "responseData": {
       "type": "object",
       "properties": {
         "type": {
@@ -148,7 +242,7 @@
           "type": "string"
         },
         "attributes": {
-          "$ref": "#/definitions/Attributes"
+          "$ref": "#/definitions/responseAttributes"
         }
       },
       "required": [
@@ -156,7 +250,65 @@
         "attributes"
       ]
     },
-    "ResponseLinks": {
+    "responseResource": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/responseData"
+        },
+        "link": {
+          "$ref": "#/definitions/resourceLink"
+        }
+      },
+      "required": [
+        "data"
+      ]
+    },
+    "responseCollectionPost": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/responseData"
+          }
+        }
+      },
+      "required": [
+        "data"
+      ]
+    },
+    "responseCollectionGet": {
+      "type": "object",
+      "properties": {
+        "meta": {
+          "$ref": "#/definitions/metaResponse"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/responseData"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/responseLinks"
+        }
+      },
+      "required": [
+        "meta",
+        "data"
+      ]
+    },
+    "resourceLink": {
+      "type": "object",
+      "properties": {
+        "self": {
+          "type": "string",
+          "description": "Link pointing to resource."
+        }
+      }
+    },
+    "responseLinks": {
       "type": "object",
       "properties": {
         "self": {
@@ -191,114 +343,34 @@
         "last"
       ]
     },
-    "Attributes": {
+    "metaResponse": {
       "type": "object",
       "properties": {
-        "data": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Mandatory content data in list context with one line per element."
-        },
-        "brief": {
+        "count": {
           "type": "string",
-          "description": "Optional brief description of the content."
+          "description": "Number of resources in the data object."
         },
-        "description": {
+        "limit": {
           "type": "string",
-          "description": "Optional long description of the content."
+          "description": "The search limit used in request."
         },
-        "groups": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Optional list of groups to which the content belongs.",
-          "default": "default"
-        },
-        "tags": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Optional list of tags."
-        },
-        "links": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Optional list of refrence links."
-        },
-        "category": {
+        "offset": {
           "type": "string",
-          "enum": [
-            "snippet",
-            "solution",
-            "reference"
-          ],
-          "description": "Automatically assigned content category."
+          "description": "The search offset used in request."
         },
-        "name": {
+        "total": {
           "type": "string",
-          "description": "Optional name for the content."
-        },
-        "filename": {
-          "type": "string",
-          "description": "Optional filename that that defines automatically used filename when content is exported."
-        },
-        "versions": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Optional list of services and versions related to the content."
-        },
-        "source": {
-          "type": "string",
-          "description": "Optional external source for the content."
-        },
-        "uuid": {
-          "type": "string",
-          "description": "Automatically assigned UUID for the content."
-        },
-        "created": {
-          "type": "string",
-          "description": "Optional UTC timestamp for creation time in ISO 8601 format that is automatically assigned."
-        },
-        "updated": {
-          "type": "string",
-          "description": "Optional UTC timestamp for the last update time in ISO 8601 format that is automatically assigned."
-        },
-        "digest": {
-          "type": "string",
-          "description": "Automatically assigned message digest that uniquely identifies the content."
+          "description": "Total number of search results without limit being applied."
         }
       },
       "required": [
-        "data"
+        "count",
+        "limit",
+        "offset",
+        "total"
       ]
     },
-    "Errors": {
-      "type": "object",
-      "properties": {
-        "meta": {
-          "$ref": "#/definitions/Meta"
-        },
-        "errors": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Error"
-          }
-        }
-      },
-      "required": [
-        "meta",
-        "errors"
-      ]
-    },
-    "Meta": {
+    "metaError": {
       "type": "object",
       "properties": {
         "version": {
@@ -315,7 +387,7 @@
         "homepage"
       ]
     },
-    "Error": {
+    "error": {
       "type": "object",
       "properties": {
         "status": {
@@ -340,6 +412,24 @@
         "statusString",
         "module",
         "title"
+      ]
+    },
+    "errors": {
+      "type": "object",
+      "properties": {
+        "meta": {
+          "$ref": "#/definitions/metaError"
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/error"
+          }
+        }
+      },
+      "required": [
+        "meta",
+        "errors"
       ]
     }
   }

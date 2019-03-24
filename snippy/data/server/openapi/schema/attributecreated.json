@@ -1,0 +1,5 @@
+{
+  "type": "string",
+  "description": "# Brief\n\nAutomatically generated UTC timestamp when the resource is created. The time is defined with\nRFC 3339 profile of the ISO 8601 specification.\n",
+  "$schema": "http://json-schema.org/schema#"
+}

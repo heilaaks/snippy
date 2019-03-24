@@ -2,10 +2,10 @@
   "type": "object",
   "properties": {
     "data": {
-      "$ref": "#/definitions/ResponseData"
+      "$ref": "#/definitions/responseData"
     },
-    "links": {
-      "$ref": "#/definitions/Links"
+    "link": {
+      "$ref": "#/definitions/resourceLink"
     }
   },
   "required": [

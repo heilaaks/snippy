@@ -1,0 +1,5 @@
+{
+  "type": "string",
+  "description": "# Brief\n\nAutomatically assigned UUID for the resource.\n",
+  "$schema": "http://json-schema.org/schema#"
+}

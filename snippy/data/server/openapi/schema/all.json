@@ -1,46 +1,94 @@
 {
   "oneOf": [
     {
-      "$ref": "_definitions.json#/definitions/RequestResource"
+      "$ref": "_definitions.json#/definitions/attributeCategory"
     },
     {
-      "$ref": "_definitions.json#/definitions/ResponseResource"
+      "$ref": "_definitions.json#/definitions/attributeData"
     },
     {
-      "$ref": "_definitions.json#/definitions/RequestCollection"
+      "$ref": "_definitions.json#/definitions/attributeBrief"
     },
     {
-      "$ref": "_definitions.json#/definitions/ResponseCollectionPost"
+      "$ref": "_definitions.json#/definitions/attributeDescription"
     },
     {
-      "$ref": "_definitions.json#/definitions/ResponseCollectionGet"
+      "$ref": "_definitions.json#/definitions/attributeName"
     },
     {
-      "$ref": "_definitions.json#/definitions/Links"
+      "$ref": "_definitions.json#/definitions/attributeGroups"
     },
     {
-      "$ref": "_definitions.json#/definitions/RequestData"
+      "$ref": "_definitions.json#/definitions/attributeTags"
     },
     {
-      "$ref": "_definitions.json#/definitions/ResponseMeta"
+      "$ref": "_definitions.json#/definitions/attributeLinks"
     },
     {
-      "$ref": "_definitions.json#/definitions/ResponseData"
+      "$ref": "_definitions.json#/definitions/attributeVersions"
     },
     {
-      "$ref": "_definitions.json#/definitions/ResponseLinks"
+      "$ref": "_definitions.json#/definitions/attributeSource"
     },
     {
-      "$ref": "_definitions.json#/definitions/Attributes"
+      "$ref": "_definitions.json#/definitions/attributeFilename"
     },
     {
-      "$ref": "_definitions.json#/definitions/Errors"
+      "$ref": "_definitions.json#/definitions/attributeCreated"
     },
     {
-      "$ref": "_definitions.json#/definitions/Meta"
+      "$ref": "_definitions.json#/definitions/attributeUpdated"
     },
     {
-      "$ref": "_definitions.json#/definitions/Error"
+      "$ref": "_definitions.json#/definitions/attributeUuid"
+    },
+    {
+      "$ref": "_definitions.json#/definitions/attributeDigest"
+    },
+    {
+      "$ref": "_definitions.json#/definitions/requestAttributes"
+    },
+    {
+      "$ref": "_definitions.json#/definitions/responseAttributes"
+    },
+    {
+      "$ref": "_definitions.json#/definitions/requestData"
+    },
+    {
+      "$ref": "_definitions.json#/definitions/requestResource"
+    },
+    {
+      "$ref": "_definitions.json#/definitions/requestCollection"
+    },
+    {
+      "$ref": "_definitions.json#/definitions/responseData"
+    },
+    {
+      "$ref": "_definitions.json#/definitions/responseResource"
+    },
+    {
+      "$ref": "_definitions.json#/definitions/responseCollectionPost"
+    },
+    {
+      "$ref": "_definitions.json#/definitions/responseCollectionGet"
+    },
+    {
+      "$ref": "_definitions.json#/definitions/resourceLink"
+    },
+    {
+      "$ref": "_definitions.json#/definitions/responseLinks"
+    },
+    {
+      "$ref": "_definitions.json#/definitions/metaResponse"
+    },
+    {
+      "$ref": "_definitions.json#/definitions/metaError"
+    },
+    {
+      "$ref": "_definitions.json#/definitions/error"
+    },
+    {
+      "$ref": "_definitions.json#/definitions/errors"
     }
   ]
 }

@@ -83,6 +83,11 @@ Random notes and scribling during development.
    $ pypy -m pytest -x ./tests/test_*.py --cov snipp
    $ unset PYTHONPATH
    ```
+   
+   ```
+   # Swagger editor
+   docker run -d -p 80:8080 swaggerapi/swagger-editor
+   ```
       
    ```
    # Change variable

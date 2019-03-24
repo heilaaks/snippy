@@ -20,20 +20,20 @@
 CREATE TABLE IF NOT EXISTS contents
           (
                     id          UUID PRIMARY KEY NOT NULL UNIQUE
+                  , category    text DEFAULT 'snippet'
                   , data        text NOT NULL UNIQUE
                   , brief       text DEFAULT ''
                   , description text DEFAULT ''
+                  , name        text DEFAULT ''
                   , groups      text DEFAULT ''
                   , tags        text DEFAULT ''
                   , links       text DEFAULT ''
-                  , category    text DEFAULT 'snippet'
-                  , name        text DEFAULT ''
-                  , filename    text DEFAULT ''
                   , versions    text DEFAULT ''
                   , source      text DEFAULT ''
-                  , uuid        UUID NOT NULL UNIQUE
+                  , filename    text DEFAULT ''
                   , created     TIMESTAMP WITH TIME ZONE
                   , updated     TIMESTAMP WITH TIME ZONE
+                  , uuid        UUID NOT NULL UNIQUE
                   , digest      CHAR(64)
           )
 ;

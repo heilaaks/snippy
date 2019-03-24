@@ -302,8 +302,8 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             ]
         }
         content['data'][0]['data'] = content['data'][0]['data'][:13] + ('    # Changed.',) + content['data'][0]['data'][14:]
-        content['data'][0]['digest'] = 'f7c59ea7da22f408d4ba71d4c4ac477b83549d29e1bfcb4d721ccda0b1fedfe2'
         content['data'][0]['updated'] = Content.KAFKA_TIME
+        content['data'][0]['digest'] = 'f7c59ea7da22f408d4ba71d4c4ac477b83549d29e1bfcb4d721ccda0b1fedfe2'
         file_content = Content.get_file_content(Content.YAML, content)
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             yaml.safe_load.return_value = file_content
@@ -326,8 +326,8 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             ]
         }
         content['data'][0]['data'] = content['data'][0]['data'][:13] + ('    # Changed.',) + content['data'][0]['data'][14:]
-        content['data'][0]['digest'] = 'f7c59ea7da22f408d4ba71d4c4ac477b83549d29e1bfcb4d721ccda0b1fedfe2'
         content['data'][0]['updated'] = Content.KAFKA_TIME
+        content['data'][0]['digest'] = 'f7c59ea7da22f408d4ba71d4c4ac477b83549d29e1bfcb4d721ccda0b1fedfe2'
         file_content = Content.get_file_content(Content.YAML, content)
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             yaml.safe_load.return_value = file_content
@@ -351,8 +351,8 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             ]
         }
         content['data'][0]['data'] = content['data'][0]['data'][:13] + ('    # Changed.',) + content['data'][0]['data'][14:]
-        content['data'][0]['digest'] = 'f7c59ea7da22f408d4ba71d4c4ac477b83549d29e1bfcb4d721ccda0b1fedfe2'
         content['data'][0]['updated'] = Content.KAFKA_TIME
+        content['data'][0]['digest'] = 'f7c59ea7da22f408d4ba71d4c4ac477b83549d29e1bfcb4d721ccda0b1fedfe2'
         file_content = Content.get_file_content(Content.JSON, content)
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             json.load.return_value = file_content
@@ -378,8 +378,8 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         }
         content['data'][0]['data'] = content['data'][0]['data'][:13] + ('    # Changed.',) + content['data'][0]['data'][14:]
         content['data'][0]['description'] = 'Changed.'
-        content['data'][0]['digest'] = '44a84d31fd5d4ca67aecf2dd1f92290114cbd64bd33b4f1811761c82f645458a'
         content['data'][0]['updated'] = Content.KAFKA_TIME
+        content['data'][0]['digest'] = '44a84d31fd5d4ca67aecf2dd1f92290114cbd64bd33b4f1811761c82f645458a'
         file_content = Content.get_file_content(Content.TEXT, content)
         with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--solution', '-d', '5dee85bedb7f4d3a', '-f', 'one-solution.txt'])
@@ -404,8 +404,8 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         }
         content['data'][0]['data'] = content['data'][0]['data'][:13] + ('    # Changed.',) + content['data'][0]['data'][14:]
         content['data'][0]['description'] = 'Changed.'
-        content['data'][0]['digest'] = '44a84d31fd5d4ca67aecf2dd1f92290114cbd64bd33b4f1811761c82f645458a'
         content['data'][0]['updated'] = Content.KAFKA_TIME
+        content['data'][0]['digest'] = '44a84d31fd5d4ca67aecf2dd1f92290114cbd64bd33b4f1811761c82f645458a'
         file_content = Content.get_file_content(Content.TEXT, content)
         with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--solution', '-d', '5dee85bedb7f4d3a', '-f', 'one-solution.text'])
@@ -429,8 +429,8 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         }
         content['data'][0]['data'] = content['data'][0]['data'][:13] + ('    # Changed.',) + content['data'][0]['data'][14:]
         content['data'][0]['description'] = 'Changed.'
-        content['data'][0]['digest'] = '44a84d31fd5d4ca67aecf2dd1f92290114cbd64bd33b4f1811761c82f645458a'
         content['data'][0]['updated'] = Content.KAFKA_TIME
+        content['data'][0]['digest'] = '44a84d31fd5d4ca67aecf2dd1f92290114cbd64bd33b4f1811761c82f645458a'
         file_content = Content.get_file_content(Content.TEXT, content)
         with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--snippet', '-d', '5dee85bedb7f4d3a', '-f', 'one-solution.text'])
@@ -458,8 +458,8 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         }
         updates['data'][0]['data'] = content['data'][0]['data'][:13] + ('    # Changed.',) + content['data'][0]['data'][14:]
         updates['data'][0]['description'] = 'Changed.'
-        updates['data'][0]['digest'] = '44a84d31fd5d4ca67aecf2dd1f92290114cbd64bd33b4f1811761c82f645458a'
         updates['data'][0]['updated'] = Content.KAFKA_TIME
+        updates['data'][0]['digest'] = '44a84d31fd5d4ca67aecf2dd1f92290114cbd64bd33b4f1811761c82f645458a'
         file_content = Content.get_file_content(Content.TEXT, updates)
         with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--solution', '-d', '123456789abcdef0', '-f', 'one-solution.text'])

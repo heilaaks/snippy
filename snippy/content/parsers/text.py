@@ -45,6 +45,10 @@ class ContentParserText(ContentParserBase):
     DESCRIPTION[Const.REFERENCE] = DESCRIPTION[Const.SNIPPET]
     DESCRIPTION[Const.SOLUTION] = '## DESCRIPTION  :'
 
+    NAME = {}
+    NAME[Const.SNIPPET] = '# Add optional name below.\n'
+    NAME[Const.REFERENCE] = NAME[Const.SNIPPET]
+
     GROUPS = {}
     GROUPS[Const.SNIPPET] = '# Add optional comma separated list of groups below.\n'
     GROUPS[Const.REFERENCE] = GROUPS[Const.SNIPPET]
@@ -63,18 +67,14 @@ class ContentParserText(ContentParserBase):
     VERSIONS[Const.SNIPPET] = '# Add optional comma separated list of key=value versions below.\n'
     VERSIONS[Const.REFERENCE] = VERSIONS[Const.SNIPPET]
 
-    NAME = {}
-    NAME[Const.SNIPPET] = '# Add optional name below.\n'
-    NAME[Const.REFERENCE] = NAME[Const.SNIPPET]
+    SOURCE = {}
+    SOURCE[Const.SNIPPET] = '# Add optional source reference below.\n'
+    SOURCE[Const.REFERENCE] = SOURCE[Const.SNIPPET]
 
     FILENAME = {}
     FILENAME[Const.SNIPPET] = '# Add optional filename below.\n'
     FILENAME[Const.REFERENCE] = FILENAME[Const.SNIPPET]
     FILENAME[Const.SOLUTION] = '## FILE   :'
-
-    SOURCE = {}
-    SOURCE[Const.SNIPPET] = '# Add optional source reference below.\n'
-    SOURCE[Const.REFERENCE] = SOURCE[Const.SNIPPET]
 
     REGEXP = {}
     REGEXP['data'] = {}
@@ -112,6 +112,15 @@ class ContentParserText(ContentParserBase):
         (?P<description>.*?)            # Catch description.
         (?:\n{2}|[#]{2,}|$)             # Match newlines or next header indicated by hashes or end of the string.
         ''', re.DOTALL | re.VERBOSE)
+
+    REGEXP['name'] = {}
+    REGEXP['name'][Const.SNIPPET] = re.compile(r'''
+        (?:%s|%s)               # Match snippet or reference name.
+        (?P<name>.*?)           # Catch name.
+        (?:\n{2}|[#]|$)         # Match newlines or next header indicated by hash or end of the string.
+        ''' % (re.escape(NAME[Const.SNIPPET]), re.escape(NAME[Const.REFERENCE])), re.DOTALL | re.VERBOSE)
+    REGEXP['name'][Const.REFERENCE] = REGEXP['name'][Const.SNIPPET]
+    REGEXP['name'][Const.SOLUTION] = Const.RE_DO_NOT_MATCH_ANYTHING  # There is no name tag in solution content.
 
     REGEXP['groups'] = {}
     REGEXP['groups'][Const.SNIPPET] = re.compile(r'''
@@ -158,14 +167,14 @@ class ContentParserText(ContentParserBase):
     REGEXP['versions'][Const.REFERENCE] = REGEXP['versions'][Const.SNIPPET]
     REGEXP['versions'][Const.SOLUTION] = Const.RE_DO_NOT_MATCH_ANYTHING  # There is no versions tag in solution content.
 
-    REGEXP['name'] = {}
-    REGEXP['name'][Const.SNIPPET] = re.compile(r'''
-        (?:%s|%s)               # Match snippet or reference name.
-        (?P<name>.*?)           # Catch name.
+    REGEXP['source'] = {}
+    REGEXP['source'][Const.SNIPPET] = re.compile(r'''
+        (?:%s|%s)               # Match snippet or reference source.
+        (?P<source>.*?)         # Catch source.
         (?:\n{2}|[#]|$)         # Match newlines or next header indicated by hash or end of the string.
-        ''' % (re.escape(NAME[Const.SNIPPET]), re.escape(NAME[Const.REFERENCE])), re.DOTALL | re.VERBOSE)
-    REGEXP['name'][Const.REFERENCE] = REGEXP['name'][Const.SNIPPET]
-    REGEXP['name'][Const.SOLUTION] = Const.RE_DO_NOT_MATCH_ANYTHING  # There is no name tag in solution content.
+        ''' % (re.escape(SOURCE[Const.SNIPPET]), re.escape(SOURCE[Const.REFERENCE])), re.DOTALL | re.VERBOSE)
+    REGEXP['source'][Const.REFERENCE] = REGEXP['source'][Const.SNIPPET]
+    REGEXP['source'][Const.SOLUTION] = Const.RE_DO_NOT_MATCH_ANYTHING  # There is no source tag in solution content.
 
     REGEXP['filename'] = {}
     REGEXP['filename'][Const.SNIPPET] = re.compile(r'''
@@ -178,15 +187,6 @@ class ContentParserText(ContentParserBase):
         %s\s*?                  # Match filename tag from solution.
         (?P<filename>.*|$)      # Catch filename.
         ''' % re.escape(FILENAME[Const.SOLUTION]), re.MULTILINE | re.VERBOSE)
-
-    REGEXP['source'] = {}
-    REGEXP['source'][Const.SNIPPET] = re.compile(r'''
-        (?:%s|%s)               # Match snippet or reference source.
-        (?P<source>.*?)         # Catch source.
-        (?:\n{2}|[#]|$)         # Match newlines or next header indicated by hash or end of the string.
-        ''' % (re.escape(SOURCE[Const.SNIPPET]), re.escape(SOURCE[Const.REFERENCE])), re.DOTALL | re.VERBOSE)
-    REGEXP['source'][Const.REFERENCE] = REGEXP['source'][Const.SNIPPET]
-    REGEXP['source'][Const.SOLUTION] = Const.RE_DO_NOT_MATCH_ANYTHING  # There is no source tag in solution content.
 
     def __init__(self, timestamp, text, collection):
         """
@@ -208,17 +208,17 @@ class ContentParserText(ContentParserBase):
         for content in contents:
             category = self._read_category(content)
             resource = self._collection.get_resource(category, self._timestamp)
+            resource.category = category
             resource.data = self._read_data(category, content)
             resource.brief = self._read_brief(category, content)
             resource.description = self._read_description(category, content)
+            resource.name = self._read_name(category, content)
             resource.groups = self._read_groups(category, content)
             resource.tags = self._read_tags(category, content)
             resource.links = self._read_links(category, content)
             resource.versions = self._read_versions(category, content)
-            resource.name = self._read_name(category, content)
             resource.source = self._read_source(category, content)
             resource.filename = self._read_filename(category, content)
-            resource.category = category
             self._collection.migrate(resource)
 
     def _split_contents(self):
@@ -390,6 +390,30 @@ class ContentParserText(ContentParserBase):
 
         return self.format_string(description)
 
+    def _read_name(self, category, text):
+        """Read content name from text string.
+
+        Args:
+            category (str): Content category.
+            text (str): Content text string.
+
+        Returns:
+            str: Utf-8 encoded unicode name string.
+        """
+
+        name = ''
+        if category not in Const.CATEGORIES:
+            return self.format_string(name)
+
+        match = self.REGEXP['name'][category].search(text)
+        if match:
+            name = match.group('name')
+            self._logger.debug('parsed content name: %s', name)
+        else:
+            self._logger.debug('parser did not find content for name: {}'.format(text))
+
+        return self.format_string(name)
+
     def _read_groups(self, category, text):
         """Read content groups from text string.
 
@@ -452,30 +476,6 @@ class ContentParserText(ContentParserBase):
         """
 
         return self.parse_versions(category, self.REGEXP['versions'].get(category, None), text)
-
-    def _read_name(self, category, text):
-        """Read content name from text string.
-
-        Args:
-            category (str): Content category.
-            text (str): Content text string.
-
-        Returns:
-            str: Utf-8 encoded unicode name string.
-        """
-
-        name = ''
-        if category not in Const.CATEGORIES:
-            return self.format_string(name)
-
-        match = self.REGEXP['name'][category].search(text)
-        if match:
-            name = match.group('name')
-            self._logger.debug('parsed content name: %s', name)
-        else:
-            self._logger.debug('parser did not find content for name: {}'.format(text))
-
-        return self.format_string(name)
 
     def _read_source(self, category, text):
         """Read content source from text string.

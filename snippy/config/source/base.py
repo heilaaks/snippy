@@ -41,9 +41,9 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     IMPORT = 'import'
     OPERATIONS = ('create', 'search', 'update', 'delete', 'export', 'import')
 
-    ATTRIBUTES = ('data', 'brief', 'description', 'groups', 'tags', 'links', 'category',
-                  'name', 'filename', 'versions', 'source', 'uuid', 'created', 'updated',
-                  'digest', 'key')
+    ATTRIBUTES = ('category', 'data', 'brief', 'description', 'name', 'groups', 'tags',
+                  'links', 'versions', 'source', 'filename', 'created', 'updated',
+                  'uuid', 'digest')
 
     # Defaults
     DEFAULT_LOG_MSG_MAX = Logger.DEFAULT_LOG_MSG_MAX
@@ -284,6 +284,21 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self._description = Parser.format_string(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
+    def name(self):
+        """Get content name."""
+
+        return self._name
+
+    @name.setter
+    def name(self, value):
+        """Convert content name to utf-8 encoded unicode string."""
+
+        if value is None:
+            self._reset_fields['name'] = 'name'
+
+        self._name = Parser.format_string(value)  # pylint: disable=attribute-defined-outside-init
+
+    @property
     def groups(self):
         """Get content groups."""
 
@@ -329,36 +344,6 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self._links = Parser.format_links(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
-    def filename(self):
-        """Get content filename."""
-
-        return self._filename
-
-    @filename.setter
-    def filename(self, value):
-        """Convert content filename to utf-8 encoded unicode string."""
-
-        if value is None:
-            self._reset_fields['filename'] = 'filename'
-
-        self._filename = Parser.format_string(value)  # pylint: disable=attribute-defined-outside-init
-
-    @property
-    def name(self):
-        """Get content name."""
-
-        return self._name
-
-    @name.setter
-    def name(self, value):
-        """Convert content name to utf-8 encoded unicode string."""
-
-        if value is None:
-            self._reset_fields['name'] = 'name'
-
-        self._name = Parser.format_string(value)  # pylint: disable=attribute-defined-outside-init
-
-    @property
     def versions(self):
         """Get content versions."""
 
@@ -387,6 +372,21 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
             self._reset_fields['source'] = 'source'
 
         self._source = Parser.format_string(value)  # pylint: disable=attribute-defined-outside-init
+
+    @property
+    def filename(self):
+        """Get content filename."""
+
+        return self._filename
+
+    @filename.setter
+    def filename(self, value):
+        """Convert content filename to utf-8 encoded unicode string."""
+
+        if value is None:
+            self._reset_fields['filename'] = 'filename'
+
+        self._filename = Parser.format_string(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
     def sall(self):

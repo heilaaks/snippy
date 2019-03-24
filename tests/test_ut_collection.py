@@ -305,19 +305,19 @@ class TestUtCollection(object):
         collection = Collection()
         collection.load_dict(Helper.EXPORT_TIME, {
             'data': [{
+                'category': Const.SNIPPET,
                 'data': [
                     'tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./',
                     'tar xfO mytar.tar.gz manifest.json# Cat file in compressed tar.'],
                 'brief': None,
                 'description': None,
+                'name': None,
                 'groups': None,
                 'tags': None,
                 'links': None,
-                'category': Const.SNIPPET,
-                'name': None,
-                'filename': None,
                 'versions': None,
                 'source': None,
+                'filename': None
             }]
         })
         resource = next(collection.resources())

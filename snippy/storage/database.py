@@ -176,20 +176,20 @@ class Database(object):
             INSERT INTO contents
                       (
                                 id
+                              , category
                               , data
                               , brief
                               , description
+                              , name
                               , groups
                               , tags
                               , links
-                              , category
-                              , name
-                              , filename
                               , versions
                               , source
-                              , uuid
+                              , filename
                               , created
                               , updated
+                              , uuid
                               , digest
                       )
                       VALUES
@@ -363,20 +363,20 @@ class Database(object):
             UPDATE
                           contents
             SET           id          = {0}
+                        , category    = {0}
                         , data        = {0}
                         , brief       = {0}
                         , description = {0}
+                        , name        = {0}
                         , groups      = {0}
                         , tags        = {0}
                         , links       = {0}
-                        , category    = {0}
-                        , name        = {0}
-                        , filename    = {0}
                         , versions    = {0}
                         , source      = {0}
-                        , uuid        = {0}
+                        , filename    = {0}
                         , created     = {0}
                         , updated     = {0}
+                        , uuid        = {0}
                         , digest      = {0}
             WHERE
                         digest LIKE     {0}

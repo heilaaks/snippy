@@ -375,21 +375,21 @@ class TestCliCreateSnippet(object):
 
         content = {
             'data': [{
-                'brief': 'Brief from cli',
                 'category': 'snippet',
-                'created': '2017-10-14T19:56:31.000001+00:00',
                 'data': ('docker rm --volumes $(docker ps --all --quiet)', ),
+                'brief': 'Brief from cli',
                 'description': '',
-                'digest': 'a020eb12a278e4426169360af1e124fb989747fd8a9192c293c938cea05798fa',
-                'filename': '',
-                'groups': ('default', ),
-                'links': (),
                 'name': '',
-                'source': '',
+                'groups': ('default', ),
                 'tags': ('cli', 'from', 'tags'),
+                'links': (),
+                'versions': (),
+                'source': '',
+                'filename': '',
+                'created': '2017-10-14T19:56:31.000001+00:00',
                 'updated': '2017-10-14T19:56:31.000001+00:00',
                 'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
-                'versions': (),
+                'digest': 'a020eb12a278e4426169360af1e124fb989747fd8a9192c293c938cea05798fa'
             }]
         }
         template = (

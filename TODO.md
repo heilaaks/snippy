@@ -1,10 +1,13 @@
 ## WORKING
    - [ ] Change property order: [category, data, brief, description, name, groups, tags, links, versions, source, filename, created, updated, uuid, digest]
+   - [ ] Move source after links. It is logically a link.
+   - [ ] Change template order to match content order (name after description)
    - [ ] Post references with data must be automatically set to links. Data is only mandatory in API specs. Not easy (?) to add conditional mandatory fields in OAS.
    - [ ] scat also supports plurals: [snippets, solutions, references]
    - [ ] change basepath to /api/snippy/v1. It does not make sense to do auth in application. If yes, it can be /api/snippy/v1/users.
    - [ ] Test export/import Mkdn snippet with partial comments. The export must have the <not documented> tag and import must remove it.
    - [ ] Use "resource attribute" (resource attribute) in user documents like api specs. This is perhaps more clearer and better than "resource field". 
+   - [ ] Fix digest computation once things are setling down. Changing this forces changes to all tests and code that rely on digest.
    - [ ] Fix cli -f file to see if this goes ot content filename attribute. Should not. -f|--file and content.filename are not the same.
    - [ ] Fix help text to use import --all instead of content specific commands. Or keep?
    - [ ] Starting the server again and import the default content again with --defaults causes server internal erro 500 because of UUID. The 500 should not be here because this is not internal error. Fix?

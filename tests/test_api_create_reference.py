@@ -448,20 +448,20 @@ class TestApiCreateReference(object):
 
         content = {
             'data': [{
+                'category': 'reference',
                 'data': (),
                 'brief': 'short brief',
                 'description': 'longer description',
+                'name': 'short name',
                 'groups': ('python',),
                 'tags': ('spaces', 'tabs'),
                 'links': ('link1', 'link2'),
-                'category': 'reference',
-                'name': 'short name',
-                'filename': 'shortfilename.yaml',
                 'versions': ('kafka=1.0.0',),
                 'source': 'short source link',
-                'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'filename': 'shortfilename.yaml',
                 'created': Content.REGEXP_TIME,
                 'updated': Content.REGEXP_TIME,
+                'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
                 'digest': '08083cf156f5f0e69cd8a1081634021141bc42aeb395d0d150fe3eb049e7f643'
             }]
         }
@@ -472,13 +472,13 @@ class TestApiCreateReference(object):
                     'data': ['     first row   ', '   second row  '],
                     'brief': ' short brief  ',
                     'description': ' longer description  ',
+                    'name': '  short name   ',
                     'groups': ['    python   ',],
                     'tags': ['  spaces   ', '  tabs    '],
                     'links': ['  link1  ', '    link2   '],
-                    'name': '  short name   ',
-                    'filename': '  shortfilename.yaml   ',
                     'versions': ['  kafka=1.0.0   '],
-                    'source': '  short source link   '
+                    'source': '  short source link   ',
+                    'filename': '  shortfilename.yaml   '
                 }
             }]
         }
@@ -511,20 +511,20 @@ class TestApiCreateReference(object):
 
         content = {
             'data': [{
+                'category': 'reference',
                 'data': (),
                 'brief': '',
                 'description': '',
+                'name': '',
                 'groups': ('default', ),
                 'tags': (),
                 'links': ('link1', 'link2'),
-                'category': 'reference',
-                'name': '',
-                'filename': '',
                 'versions': (),
                 'source': '',
-                'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'filename': '',
                 'created': Content.REGEXP_TIME,
                 'updated': Content.REGEXP_TIME,
+                'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
                 'digest': 'b978df98e539644f9861a13803c19345d286544302ccedfd98c36cf16724eb80'
             }]
         }
@@ -571,20 +571,20 @@ class TestApiCreateReference(object):
 
         content = {
             'data': [{
+                'category': 'reference',
                 'data': (),
                 'brief': 'short brief',
                 'description': '',
+                'name': '',
                 'groups': ('docker', 'python'),
                 'tags': ('pypy', 'swarm'),
                 'links': ('http://www.dot.com/link2', 'http://www.dot.com/link1'),
-                'category': 'reference',
-                'name': '',
-                'filename': '',
                 'versions': (),
                 'source': '',
-                'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'filename': '',
                 'created': '2018-06-22T13:11:13.678729+00:00',
                 'updated': '2018-06-22T13:11:13.678729+00:00',
+                'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
                 'digest': 'aa6aa8c9a94f1959c9935d7bc6aca060edd5369ae5a24d26ce2960852751d09d'
             }]
         }

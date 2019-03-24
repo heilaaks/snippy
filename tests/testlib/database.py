@@ -232,20 +232,20 @@ class Database(object):
             INSERT INTO contents
                       (
                                 id
+                              , category
                               , data
                               , brief
                               , description
+                              , name
                               , groups
                               , tags
                               , links
-                              , category
-                              , name
-                              , filename
                               , versions
                               , source
-                              , uuid
+                              , filename
                               , created
                               , updated
+                              , uuid
                               , digest
                       )
                       VALUES
@@ -255,20 +255,20 @@ class Database(object):
         '''.format(cls._PLACEHOLDER)
         qargs = (
             content.get('id', Database.VALID_UUID),
+            content.get('category', ''),
             Const.DELIMITER_DATA.join(map(Const.TEXT_TYPE, content.get('data', ()))),
             content.get('brief', ''),
             content.get('description', ''),
+            content.get('name', ''),
             Const.DELIMITER_GROUPS.join(map(Const.TEXT_TYPE, sorted(content.get('groups', ('default',))))),
             Const.DELIMITER_TAGS.join(map(Const.TEXT_TYPE, sorted(content.get('tags', ())))),
             Const.DELIMITER_LINKS.join(map(Const.TEXT_TYPE, content.get('links', ()))),
-            content.get('category', ''),
-            content.get('name', ''),
-            content.get('filename', ''),
             content.get('versions', ''),
             content.get('source', ''),
-            content.get('uuid', Database.VALID_UUID),
+            content.get('filename', ''),
             content.get('created', Helper.IMPORT_TIME),
             content.get('updated', Helper.IMPORT_TIME),
+            content.get('uuid', Database.VALID_UUID),
             content.get('digest', '')
         )
         try:

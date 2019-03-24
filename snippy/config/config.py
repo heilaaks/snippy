@@ -185,13 +185,13 @@ class Config(object):
         cls.content_data = cls.source.data
         cls.content_brief = cls.source.brief
         cls.content_description = cls.source.description
+        cls.content_name = cls.source.name
         cls.content_groups = cls.source.groups
         cls.content_tags = cls.source.tags
         cls.content_links = cls.source.links
-        cls.content_name = cls.source.name
-        cls.content_filename = cls.source.filename
         cls.content_versions = cls.source.versions
         cls.content_source = cls.source.source
+        cls.content_filename = cls.source.filename
 
         # search
         cls.search_cat_kws = cls.source.scat
@@ -323,13 +323,13 @@ class Config(object):
         config.data = cls.content_data
         config.brief = cls.content_brief
         config.description = cls.content_description
+        config.name = cls.content_name
         config.groups = cls.content_groups
         config.tags = cls.content_tags
         config.links = cls.content_links
-        config.name = cls.content_name
-        config.filename = cls.content_filename
         config.versions = cls.content_versions
         config.source = cls.content_source
+        config.filename = cls.content_filename
 
         if updates:
             if merge:

@@ -41,23 +41,25 @@ class TestUtContentParserDict(object):
         be trimmed.
         """
 
-        dictionary = {'data': [{
-            'data': ['docker rm $(docker ps --all -q -f status=exited)'],
-            'brief': ' strip spaces   ',
-            'description': ' strip spaces   ',
-            'groups': 'default',
-            'tags': 'tag2,tag1',
-            'links': [],
-            'category': 'snippet',
-            'name': '',
-            'filename': '',
-            'versions': [],
-            'source': '',
-            'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
-            'created': '2015-10-14T19:56:31.000001+00:00',
-            'updated': '2016-10-14T19:56:31.000001+00:00',
-            'digest': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd'
-        }]}
+        dictionary = {
+            'data': [{
+                'category': 'snippet',
+                'data': ['docker rm $(docker ps --all -q -f status=exited)'],
+                'brief': ' strip spaces   ',
+                'description': ' strip spaces   ',
+                'name': '',
+                'groups': 'default',
+                'tags': 'tag2,tag1',
+                'links': [],
+                'versions': [],
+                'source': '',
+                'filename': '',
+                'created': '2015-10-14T19:56:31.000001+00:00',
+                'updated': '2016-10-14T19:56:31.000001+00:00',
+                'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'digest': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd'
+            }]
+        }
         collection = Collection()
         Parser(self.TIMESTAMP, dictionary, collection).read_collection()
         resource = next(collection.resources())
@@ -83,23 +85,25 @@ class TestUtContentParserDict(object):
         In this case the content category is incorrect.
         """
 
-        dictionary = {'data': [{
-            'data': ['ls -al .'],
-            'brief': ' strip spaces   ',
-            'description': ' strip spaces   ',
-            'groups': 'default',
-            'tags': 'tag2,tag1',
-            'links': [],
-            'category': 'failure',
-            'name': '',
-            'filename': '',
-            'versions': (),
-            'source': '',
-            'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
-            'created': '2015-10-14T19:56:31.000001+00:00',
-            'updated': '2016-10-14T19:56:31.000001+00:00',
-            'digest': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd'
-        }]}
+        dictionary = {
+            'data': [{
+                'category': 'failure',
+                'data': ['ls -al .'],
+                'brief': ' strip spaces   ',
+                'description': ' strip spaces   ',
+                'name': '',
+                'groups': 'default',
+                'tags': 'tag2,tag1',
+                'links': [],
+                'versions': (),
+                'source': '',
+                'filename': '',
+                'created': '2015-10-14T19:56:31.000001+00:00',
+                'updated': '2016-10-14T19:56:31.000001+00:00',
+                'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'digest': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd'
+            }]
+        }
         collection = Collection()
         Parser(self.TIMESTAMP, dictionary, collection).read_collection()
         assert not collection
@@ -110,23 +114,25 @@ class TestUtContentParserDict(object):
         In this case the dictionay does not contain mandatory data key.
         """
 
-        dictionary = {'failure': [{
-            'data': ['ls -al .'],
-            'brief': ' strip spaces   ',
-            'description': ' strip spaces   ',
-            'groups': 'default',
-            'tags': 'tag2,tag1',
-            'links': [],
-            'category': 'failure',
-            'name': '',
-            'filename': '',
-            'versions': (),
-            'source': '',
-            'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
-            'created': '2015-10-14T19:56:31.000001+00:00',
-            'updated': '2016-10-14T19:56:31.000001+00:00',
-            'digest': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd'
-        }]}
+        dictionary = {
+            'failure': [{
+                'category': 'failure',
+                'data': ['ls -al .'],
+                'brief': ' strip spaces   ',
+                'description': ' strip spaces   ',
+                'name': '',
+                'groups': 'default',
+                'tags': 'tag2,tag1',
+                'links': [],
+                'versions': (),
+                'source': '',
+                'filename': '',
+                'created': '2015-10-14T19:56:31.000001+00:00',
+                'updated': '2016-10-14T19:56:31.000001+00:00',
+                'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'digest': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd'
+            }]
+        }
         collection = Collection()
         Parser(self.TIMESTAMP, dictionary, collection).read_collection()
         assert not collection

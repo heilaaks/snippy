@@ -235,8 +235,8 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             ]
         }
         content['data'][0]['links'] = ('https://updated-link.html',)
-        content['data'][0]['digest'] = 'fafd46eca7ca239bcbff8f1ba3e8cf806cadfbc9e267cdf6ccd3e23e356f9f8d'
         content['data'][0]['updated'] = Content.PYTEST_TIME
+        content['data'][0]['digest'] = 'fafd46eca7ca239bcbff8f1ba3e8cf806cadfbc9e267cdf6ccd3e23e356f9f8d'
         file_content = Content.get_file_content(Content.YAML, content)
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             yaml.safe_load.return_value = file_content
@@ -260,8 +260,8 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             ]
         }
         content['data'][0]['links'] = ('https://updated-link.html',)
-        content['data'][0]['digest'] = 'fafd46eca7ca239bcbff8f1ba3e8cf806cadfbc9e267cdf6ccd3e23e356f9f8d'
         content['data'][0]['updated'] = Content.PYTEST_TIME
+        content['data'][0]['digest'] = 'fafd46eca7ca239bcbff8f1ba3e8cf806cadfbc9e267cdf6ccd3e23e356f9f8d'
         file_content = Content.get_file_content(Content.YAML, content)
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             yaml.safe_load.return_value = file_content
@@ -285,8 +285,8 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             ]
         }
         content['data'][0]['links'] = ('https://updated-link.html',)
-        content['data'][0]['digest'] = 'fafd46eca7ca239bcbff8f1ba3e8cf806cadfbc9e267cdf6ccd3e23e356f9f8d'
         content['data'][0]['updated'] = Content.PYTEST_TIME
+        content['data'][0]['digest'] = 'fafd46eca7ca239bcbff8f1ba3e8cf806cadfbc9e267cdf6ccd3e23e356f9f8d'
         file_content = Content.get_file_content(Content.TEXT, content)
         with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--snippet', '-d', '5c2071094dbfaa33', '-f', 'one-reference.text'])
@@ -332,8 +332,8 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             ]
         }
         content['data'][0]['links'] = ('https://updated-link.html',)
-        content['data'][0]['digest'] = 'fafd46eca7ca239bcbff8f1ba3e8cf806cadfbc9e267cdf6ccd3e23e356f9f8d'
         content['data'][0]['updated'] = Content.PYTEST_TIME
+        content['data'][0]['digest'] = 'fafd46eca7ca239bcbff8f1ba3e8cf806cadfbc9e267cdf6ccd3e23e356f9f8d'
         file_content = Content.get_file_content(Content.YAML, content)
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             yaml.safe_load.return_value = file_content

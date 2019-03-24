@@ -230,9 +230,10 @@ class ContentParserBase(object):
         #           5. -t docker–testing', container-managemenet', cleanup_testing
         #           6. --sall '.'
         #           7. kafka=1.0.0
-        #           8. kafka>=1.0.0
-        #           9. kafka<=1.0.0
-        #          10. kafka!=1.0.0
+        #           8. kafka~1.0.0
+        #           9. kafka>=1.0.0
+        #          10. kafka<=1.0.0
+        #          11. kafka!=1.0.0
         list_ = []
         keywords = cls._to_list(keywords)
         for tag in keywords:

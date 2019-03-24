@@ -282,9 +282,9 @@ class TestCliUpdateSnippet(object):
             ]
         }
         content['data'][0]['brief'] = 'brief cli'
+        content['data'][0]['groups'] = ('cli-group',)
         content['data'][0]['tags'] = ('cli-tag',)
         content['data'][0]['links'] = ('https://cli-link',)
-        content['data'][0]['groups'] = ('cli-group',)
         content['data'][0]['digest'] = '613e163028a17645a7dfabbe159f05d14db7588259229dd8d08e949cdc668373'
         template = (
             '# brief cli @cli-group',
@@ -330,9 +330,9 @@ class TestCliUpdateSnippet(object):
             ]
         }
         content['data'][0]['brief'] = 'brief cli'
+        content['data'][0]['groups'] = ('cli-group',)
         content['data'][0]['tags'] = ('cli-tag',)
         content['data'][0]['links'] = ('https://cli-link',)
-        content['data'][0]['groups'] = ('cli-group',)
         content['data'][0]['digest'] = '613e163028a17645a7dfabbe159f05d14db7588259229dd8d08e949cdc668373'
         cause = snippy.run(['snippy', 'update', '-d', '54e41e9b52a02b63', '-t', 'cli-tag', '-b', 'brief cli', '-g', 'cli-group', '-l', 'https://cli-link', '--no-editor'])  # pylint: disable=line-too-long
         assert cause == Cause.ALL_OK
@@ -436,6 +436,7 @@ class TestCliUpdateSnippet(object):
         """
 
         Content.store({
+            'category': Content.SNIPPET,
             'data': [
                 "find . -iregex '.*\\(py\\|robot\\)'  #  Find files.",
                 "find . -iregex '.*\\(py\\|robot\\)' -print0 | wc -l --files0-from=-  #  Find files and count lines.",
@@ -447,31 +448,30 @@ class TestCliUpdateSnippet(object):
             'description': 'Find files with or without regexp pattern and count lines.',
             'groups': ['linux'],
             'tags': ['find', 'linux', 'regexp'],
-            'category': Content.SNIPPET,
             'digest': 'dae4e22c3c3858b5616a29be11916112a16994e30bc3e4b93b069bc9a772d889'
         })
         content = {
             'data': [{
-                'brief': 'Find files and count lines',
                 'category': 'snippet',
-                'created': '2018-03-02T02:02:02.000001+00:00',
                 'data': ("find . -iregex '.*\\(py\\|robot\\)'  #  Find files.",
                          "find . -iregex '.*\\(py\\|robot\\)' -print0 | wc -l --files0-from=-  #  Find files and count lines.",
                          "find . -iregex '.*\\(py\\|robot\\)' -print0 | wc -l --files0-from=- | tail -n 1",
                          "find . -name '*.py' -print0 | wc -l --files0-from=-  #  Find files and count lines.",
                          "find . -name '*.py' -print0 | wc -l --files0-from=- | tail -n 1",
                          "find . -name '*.py' -exec cat {} + | wc -l  #  Find files and count lines."),
+                'brief': 'Find files and count lines',
                 'description': 'Find files with or without regexp pattern and count lines.',
-                'digest': 'dae4e22c3c3858b5616a29be11916112a16994e30bc3e4b93b069bc9a772d889',
-                'filename': '',
-                'groups': ('linux', ),
-                'links': (),
                 'name': '',
-                'source': '',
+                'groups': ('linux', ),
                 'tags': ('find', 'linux', 'regexp'),
+                'links': (),
+                'versions': (),
+                'source': '',
+                'filename': '',
+                'created': '2018-03-02T02:02:02.000001+00:00',
                 'updated': '2017-10-14T19:56:31.000001+00:00',
                 'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
-                'versions': (),
+                'digest': 'dae4e22c3c3858b5616a29be11916112a16994e30bc3e4b93b069bc9a772d889'
             }]
         }
         template = (

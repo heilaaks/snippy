@@ -76,6 +76,7 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
         )
         assert resource.brief == 'Remove docker image with force'
         assert resource.description == 'Remove all hanging docker images.'
+        assert resource.name == ''
         assert resource.groups == ('docker',)
         assert resource.tags == ('cleanup', 'container', 'docker', 'docker-ce', 'image', 'moby')
         assert resource.links == (
@@ -84,9 +85,8 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
             'https://docs.docker.com/engine/reference/commandline/rmi/'
         )
         assert resource.versions == ()
-        assert resource.name == ''
-        assert resource.filename == ''
         assert resource.source == ''
+        assert resource.filename == ''
 
     def test_parser_snippet_002(self):
         """Test parsing snippet.
@@ -131,6 +131,7 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
         )
         assert resource.brief == 'Remove docker image with force'
         assert resource.description == 'Remove all hanging docker images. This uses force command and it removes all with force.'
+        assert resource.name == ''
         assert resource.groups == ('docker', 'moby')
         assert resource.tags == ('cleanup', 'container', 'docker', 'docker-ce', 'image', 'moby')
         assert resource.links == (
@@ -139,9 +140,8 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
             'https://docs.docker.com/engine/reference/commandline/rmi/'
         )
         assert resource.versions == ()
-        assert resource.name == ''
-        assert resource.filename == ''
         assert resource.source == ''
+        assert resource.filename == ''
 
     def test_parser_snippet_003(self):
         """Test parsing snippet.
@@ -178,6 +178,7 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
         )
         assert resource.brief == 'Remove docker image with force'
         assert resource.description == 'Remove all hanging docker images. This uses force command and it removes all with force.'
+        assert resource.name == ''
         assert resource.groups == ('docker', 'moby')
         assert resource.tags == ('cleanup', 'container', 'docker', 'docker-ce', 'image', 'moby')
         assert resource.links == (
@@ -186,9 +187,8 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
             'https://docs.docker.com/engine/reference/commandline/rmi/'
         )
         assert resource.versions == ()
-        assert resource.name == ''
-        assert resource.filename == ''
         assert resource.source == ''
+        assert resource.filename == ''
 
     def test_parser_snippet_004(self):
         """Test parsing snippet.
@@ -250,13 +250,13 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
         )
         assert resource.brief == ''
         assert resource.description == ''
+        assert resource.name == ''
         assert resource.groups == ('default',)
         assert resource.tags == ()
         assert resource.links == ()
         assert resource.versions == ()
-        assert resource.name == ''
-        assert resource.filename == ''
         assert resource.source == ''
+        assert resource.filename == ''
 
     def test_parser_snippet_006(self):
         """Test parsing snippet.
@@ -305,13 +305,13 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
         )
         assert resource.brief == 'Manipulate compressed tar files'
         assert resource.description == ''
+        assert resource.name == ''
         assert resource.groups == ('linux',)
         assert resource.tags == ('howto', 'linux', 'tar', 'untar')
         assert resource.links == ()
         assert resource.versions == ()
-        assert resource.name == ''
-        assert resource.filename == ''
         assert resource.source == ''
+        assert resource.filename == ''
 
     def test_parser_snippet_007(self):
         """Test parsing snippet.
@@ -359,13 +359,13 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
         )
         assert resource.brief == 'Manipulate compressed tar files'
         assert resource.description == ''
+        assert resource.name == ''
         assert resource.groups == ('linux',)
         assert resource.tags == ('howto', 'linux', 'tar', 'untar')
         assert resource.links == ()
         assert resource.versions == ()
-        assert resource.name == ''
-        assert resource.filename == ''
         assert resource.source == ''
+        assert resource.filename == ''
 
     def test_parser_snippet_008(self):
         """Test parsing snippet.
@@ -416,13 +416,13 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
         assert resource.data == ('tar tvf mytar.tar.gz',)
         assert resource.brief == 'Manipulate compressed tar files'
         assert resource.description == ''
+        assert resource.name == ''
         assert resource.groups == ('linux',)
         assert resource.tags == ('howto', 'linux', 'tar', 'untar')
         assert resource.links == ()
         assert resource.versions == ()
-        assert resource.name == ''
-        assert resource.filename == ''
         assert resource.source == ''
+        assert resource.filename == ''
 
     def test_parser_snippet_009(self):
         """Test parsing snippet.
@@ -474,13 +474,13 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
         assert resource.data == ('tar tvf mytar.tar.gz',)
         assert resource.brief == 'Manipulate compressed tar files'
         assert resource.description == 'short description'
+        assert resource.name == 'manage tar files'
         assert resource.groups == ('linux',)
         assert resource.tags == ('howto', 'linux', 'tar', 'untar')
         assert resource.links == ('https://alpinelinux.org/',)
         assert resource.versions == ('alpine=3.9', 'linux~4.9', 'python=3.7.0')
-        assert resource.name == 'manage tar files'
-        assert resource.filename == 'tar-file-operations.mkdn'
         assert resource.source == 'https://github.com/tldr-pages/tldr/blob/master/pages/linux/alpine.md'
+        assert resource.filename == 'tar-file-operations.mkdn'
 
     def test_parser_snippet_010(self):
         """Test parsing snippet.
@@ -524,13 +524,13 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
         assert resource.data == ('tar tvf mytar.tar.gz',)
         assert resource.brief == ''
         assert resource.description == ''
+        assert resource.name == ''
         assert resource.groups == ('default',)
         assert resource.tags == ()
         assert resource.links == ()
         assert resource.versions == ('alpine!=3.9',)
-        assert resource.name == ''
-        assert resource.filename == ''
         assert resource.source == ''
+        assert resource.filename == ''
 
     def test_parser_solution_001(self):
         """Test parsing solution.
@@ -658,6 +658,7 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
         assert resource.data == tuple(text.split(Const.DELIMITER_DATA))
         assert resource.brief == 'Testing docker log drivers'
         assert resource.description == 'This is a one line solution description.'
+        assert resource.name == ''
         assert resource.groups == ('docker',)
         assert resource.tags == ('docker', 'driver', 'kafka', 'kubernetes', 'logging', 'logs2kafka', 'moby', 'plugin')
         assert resource.links == (
@@ -666,9 +667,8 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
             'https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ'
         )
         assert resource.versions == ()
-        assert resource.name == ''
-        assert resource.filename == 'kubernetes-docker-log-driver-kafka.txt'
         assert resource.source == ''
+        assert resource.filename == 'kubernetes-docker-log-driver-kafka.txt'
 
     def test_parser_solution_002(self):
         """Test parsing solution.
@@ -728,6 +728,7 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
         assert resource.data == tuple(text.split(Const.DELIMITER_DATA))
         assert resource.brief == 'Testing docker log drivers'
         assert resource.description == 'This is two line solution description.'
+        assert resource.name == ''
         assert resource.groups == ('docker',)
         assert resource.tags == ('docker', 'driver', 'kafka', 'kubernetes', 'logging', 'logs2kafka', 'moby', 'plugin')
         assert resource.links == (
@@ -736,9 +737,8 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
             'https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ'
         )
         assert resource.versions == ()
-        assert resource.name == ''
-        assert resource.filename == 'kubernetes-docker-log-driver-kafka.txt'
         assert resource.source == ''
+        assert resource.filename == 'kubernetes-docker-log-driver-kafka.txt'
 
     def test_parser_solution_003(self):
         """Test parsing solution.
@@ -797,6 +797,7 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
         assert resource.data == tuple(text.split(Const.DELIMITER_DATA))
         assert resource.brief == 'Testing docker log drivers'
         assert resource.description == 'This is two line solution description without newline before next header.'
+        assert resource.name == ''
         assert resource.groups == ('docker',)
         assert resource.tags == ('docker', 'driver', 'kafka', 'kubernetes', 'logging', 'logs2kafka', 'moby', 'plugin')
         assert resource.links == (
@@ -805,9 +806,8 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
             'https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ'
         )
         assert resource.versions == ()
-        assert resource.name == ''
-        assert resource.filename == 'kubernetes-docker-log-driver-kafka.txt'
         assert resource.source == ''
+        assert resource.filename == 'kubernetes-docker-log-driver-kafka.txt'
 
     def test_parser_solution_004(self):
         """Test parsing solution.
@@ -864,6 +864,7 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
         assert resource.data == tuple(text.split(Const.DELIMITER_DATA))
         assert resource.brief == 'Testing docker log drivers'
         assert resource.description == ''
+        assert resource.name == ''
         assert resource.groups == ('docker',)
         assert resource.tags == ('docker', 'driver', 'kafka', 'kubernetes', 'logging', 'logs2kafka', 'moby', 'plugin')
         assert resource.links == (
@@ -872,9 +873,8 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
             'https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ'
         )
         assert resource.versions == ()
-        assert resource.name == ''
-        assert resource.filename == 'kubernetes-docker-log-driver-kafka.txt'
         assert resource.source == ''
+        assert resource.filename == 'kubernetes-docker-log-driver-kafka.txt'
 
     def test_parser_solution_005(self):
         """Test parsing solution.
@@ -962,13 +962,13 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
         assert resource.data == links
         assert resource.brief == 'How to write commit messages'
         assert resource.description == 'How to write git commit.'
+        assert resource.name == ''
         assert resource.groups == ('git',)
         assert resource.tags == ('commit', 'git', 'howto', 'message', 'scm')
         assert resource.links == links
         assert resource.versions == ()
-        assert resource.name == ''
-        assert resource.filename == ''
         assert resource.source == ''
+        assert resource.filename == ''
 
     def test_parser_reference_002(self):
         """Test parsing reference.
@@ -1008,13 +1008,13 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
         assert resource.data == links
         assert resource.brief == 'How to write commit messages'
         assert resource.description == 'How to write git commit.'
+        assert resource.name == ''
         assert resource.groups == ('git',)
         assert resource.tags == ('commit', 'git', 'howto', 'message', 'scm')
         assert resource.links == links
         assert resource.versions == ()
-        assert resource.name == ''
-        assert resource.filename == ''
         assert resource.source == ''
+        assert resource.filename == ''
 
     def test_parser_reference_003(self):
         """Test parsing reference.
@@ -1049,13 +1049,13 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
         assert resource.data == links
         assert resource.brief == 'How to write commit messages'
         assert resource.description == 'How to write git commit.'
+        assert resource.name == ''
         assert resource.groups == ('git', 'moby')
         assert resource.tags == ('commit', 'git', 'howto', 'message', 'scm')
         assert resource.links == links
         assert resource.versions == ()
-        assert resource.name == ''
-        assert resource.filename == ''
         assert resource.source == ''
+        assert resource.filename == ''
 
     def test_parser_reference_004(self):
         """Test parsing reference.
@@ -1118,6 +1118,7 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
         assert resource.data == data
         assert resource.brief == 'Remove docker image with force'
         assert resource.description == 'Remove docker image.'
+        assert resource.name == ''
         assert resource.groups == ('docker',)
         assert resource.tags == ('cleanup', 'container', 'docker', 'docker-ce', 'image', 'moby')
         assert resource.links == (
@@ -1126,9 +1127,8 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
             'https://docs.docker.com/engine/reference/commandline/rmi/'
         )
         assert resource.versions == ()
-        assert resource.name == ''
-        assert resource.filename == ''
         assert resource.source == ''
+        assert resource.filename == ''
 
     def test_parser_reference_006(self):
         """Test parsing reference.
@@ -1182,13 +1182,13 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
         assert resource.data == links
         assert resource.brief == 'How to write commit messages'
         assert resource.description == 'How to write git commit'
+        assert resource.name == ''
         assert resource.groups == ('git',)
         assert resource.tags == ('commit', 'git', 'howto', 'message', 'scm')
         assert resource.links == links
         assert resource.versions == ()
-        assert resource.name == ''
-        assert resource.filename == ''
         assert resource.source == ''
+        assert resource.filename == ''
 
     def test_parser_reference_007(self):
         """Test parsing reference.
@@ -1242,13 +1242,13 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
         assert resource.data == links
         assert resource.brief == 'How to write commit messages'
         assert resource.description == 'How to write git commit'
+        assert resource.name == 'git-help-text'
         assert resource.groups == ('git',)
         assert resource.tags == ('commit', 'git', 'howto', 'message', 'scm')
         assert resource.links == links
         assert resource.versions == ('git<=1.1.1', 'python>=2.7.0')
-        assert resource.name == 'git-help-text'
-        assert resource.filename == 'git.mkdn'
         assert resource.source == 'https://github.com/'
+        assert resource.filename == 'git.mkdn'
 
     def test_parser_unknown_001(self):
         """Test parsing unidentified content.

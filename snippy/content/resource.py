@@ -37,20 +37,20 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
 
     # Database column numbers.
     _ID = 0
-    DATA = 1
-    BRIEF = 2
-    DESCRIPTION = 3
-    GROUPS = 4
-    TAGS = 5
-    LINKS = 6
-    CATEGORY = 7
-    NAME = 8
-    FILENAME = 9
-    VERSIONS = 10
-    SOURCE = 11
-    UUID = 12
-    CREATED = 13
-    UPDATED = 14
+    CATEGORY = 1
+    DATA = 2
+    BRIEF = 3
+    DESCRIPTION = 4
+    NAME = 5
+    GROUPS = 6
+    TAGS = 7
+    LINKS = 8
+    VERSIONS = 9
+    SOURCE = 10
+    FILENAME = 11
+    CREATED = 12
+    UPDATED = 13
+    UUID = 14
     DIGEST = 15
 
     SNIPPET_TEMPLATE = 'b4bedc2603e3b9ea95bcf53cb7b8aa6efa31eabb788eed60fccf3d8029a6a6cc'
@@ -67,20 +67,20 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     def __init__(self, category='', timestamp=''):
         self._logger = Logger.get_logger(__name__)
         self._id = self._get_internal_uuid()
+        self._category = category
         self._data = ()
         self._brief = ''
         self._description = ''
+        self._name = ''
         self._groups = Const.DEFAULT_GROUPS
         self._tags = ()
         self._links = ()
-        self._category = category
-        self._name = ''
-        self._filename = ''
         self._versions = ()
         self._source = ''
-        self._uuid = self._get_external_uuid()
+        self._filename = ''
         self._created = timestamp
         self._updated = timestamp
+        self._uuid = self._get_external_uuid()
         self._digest = self._compute_digest()
 
     def __str__(self):
@@ -95,20 +95,20 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             # The comparison checks only publicly visible resource fields.
             # Internal field ID is not compared since it is always unique
             # ID used for database primary key.
-            return self.data == resource.data and \
+            return self.category == resource.category and \
+                   self.data == resource.data and \
                    self.brief == resource.brief and \
                    self.description == resource.description and \
+                   self.name == resource.name and \
                    self.groups == resource.groups and \
                    self.tags == resource.tags and \
                    self.links == resource.links and \
-                   self.category == resource.category and \
-                   self.name == resource.name and \
-                   self.filename == resource.filename and \
                    self.versions == resource.versions and \
                    self.source == resource.source and \
-                   self.uuid == resource.uuid and \
+                   self.filename == resource.filename and \
                    self.created == resource.created and \
                    self.updated == resource.updated and \
+                   self.uuid == resource.uuid and \
                    self.digest == resource.digest
 
         return False
@@ -117,6 +117,18 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         """Compare resources if they are not equal."""
 
         return not self == resource
+
+    @property
+    def category(self):
+        """Get resource category."""
+
+        return self._category
+
+    @category.setter
+    def category(self, value):
+        """Resource category."""
+
+        self._category = value
 
     @property
     def data(self):
@@ -155,6 +167,18 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self._description = Parser.format_string(value)
 
     @property
+    def name(self):
+        """Get resource name."""
+
+        return self._name
+
+    @name.setter
+    def name(self, value):
+        """Resource name."""
+
+        self._name = Parser.format_string(value)
+
+    @property
     def groups(self):
         """Get resource groups."""
 
@@ -191,42 +215,6 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self._links = Parser.format_links(value)
 
     @property
-    def category(self):
-        """Get resource category."""
-
-        return self._category
-
-    @category.setter
-    def category(self, value):
-        """Resource category."""
-
-        self._category = value
-
-    @property
-    def filename(self):
-        """Get resource filename."""
-
-        return self._filename
-
-    @filename.setter
-    def filename(self, value):
-        """Resource filename."""
-
-        self._filename = Parser.format_string(value)
-
-    @property
-    def name(self):
-        """Get resource name."""
-
-        return self._name
-
-    @name.setter
-    def name(self, value):
-        """Resource name."""
-
-        self._name = Parser.format_string(value)
-
-    @property
     def versions(self):
         """Get resource versions."""
 
@@ -251,16 +239,16 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self._source = Parser.format_string(value)
 
     @property
-    def uuid(self):
-        """Get resource uuid."""
+    def filename(self):
+        """Get resource filename."""
 
-        return self._uuid
+        return self._filename
 
-    @uuid.setter
-    def uuid(self, value):
-        """Resource uuid."""
+    @filename.setter
+    def filename(self, value):
+        """Resource filename."""
 
-        self._uuid = value
+        self._filename = Parser.format_string(value)
 
     @property
     def created(self):
@@ -285,6 +273,18 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         """Resource updated."""
 
         self._updated = value
+
+    @property
+    def uuid(self):
+        """Get resource uuid."""
+
+        return self._uuid
+
+    @uuid.setter
+    def uuid(self, value):
+        """Resource uuid."""
+
+        self._uuid = value
 
     @property
     def digest(self):
@@ -356,6 +356,8 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
                 self.brief = Parser.EXAMPLE_BRIEF
             if not self.description:
                 self.description = Parser.EXAMPLE_DESCRIPTION
+            if not self.name:
+                self.name = Parser.EXAMPLE_NAME
             if Const.DEFAULT_GROUPS == self.groups:
                 self.groups = (Parser.EXAMPLE_GROUPS.split(Const.DELIMITER_GROUPS))
             if not self.tags:
@@ -364,12 +366,10 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
                 self.links = (Parser.EXAMPLE_LINKS.split(Const.DELIMITER_LINKS))
             if not self.versions:
                 self.versions = (Parser.EXAMPLE_VERSIONS.split(Const.DELIMITER_VERSIONS))
-            if not self.name:
-                self.name = Parser.EXAMPLE_NAME
-            if not self.filename:
-                self.filename = Parser.EXAMPLE_FILENAME
             if not self.source:
                 self.source = Parser.EXAMPLE_SOURCE
+            if not self.filename:
+                self.filename = Parser.EXAMPLE_FILENAME
 
             # In order to match is_template before and after parsing, reference
             # data must be set to links. This is done automatically after the
@@ -464,13 +464,13 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self.data = source.data
         self.brief = source.brief
         self.description = source.description
+        self.name = source.name
         self.groups = source.groups
         self.tags = source.tags
         self.links = source.links
-        self.name = source.name
-        self.filename = source.filename
         self.versions = source.versions
         self.source = source.source
+        self.filename = source.filename
 
         return self.seal(validate)
 
@@ -500,20 +500,20 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             self.brief = source.brief
         if source.description:
             self.description = source.description
+        if source.name:
+            self.name = source.name
         if source.groups and Const.DEFAULT_GROUPS != source.groups:
             self.groups = source.groups
         if source.tags:
             self.tags = source.tags
         if source.links:
             self.links = source.links
-        if source.name:
-            self.name = source.name
-        if source.filename:
-            self.filename = source.filename
         if source.versions:
             self.versions = source.versions
         if source.source:
             self.source = source.source
+        if source.filename:
+            self.filename = source.filename
 
         return self.seal(validate)
 
@@ -521,20 +521,20 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         """Convert database row into resource."""
 
         self._id = row[Resource._ID]
+        self.category = row[Resource.CATEGORY]
         self.data = tuple(row[Resource.DATA].split(Const.DELIMITER_DATA))
         self.brief = row[Resource.BRIEF]
         self.description = row[Resource.DESCRIPTION]
+        self.name = row[Resource.NAME]
         self.groups = tuple(row[Resource.GROUPS].split(Const.DELIMITER_GROUPS) if row[Resource.GROUPS] else [])
         self.tags = tuple(row[Resource.TAGS].split(Const.DELIMITER_TAGS) if row[Resource.TAGS] else [])
         self.links = tuple(row[Resource.LINKS].split(Const.DELIMITER_LINKS) if row[Resource.LINKS] else [])
-        self.category = row[Resource.CATEGORY]
-        self.name = row[Resource.NAME]
-        self.filename = row[Resource.FILENAME]
         self.versions = tuple(row[Resource.VERSIONS].split(Const.DELIMITER_VERSIONS) if row[Resource.VERSIONS] else [])
         self.source = row[Resource.SOURCE]
-        self.uuid = row[Resource.UUID]
+        self.filename = row[Resource.FILENAME]
         self.created = row[Resource.CREATED]
         self.updated = row[Resource.UPDATED]
+        self.uuid = row[Resource.UUID]
         self.digest = row[Resource.DIGEST]
 
     def _is_template(self):
@@ -603,20 +603,20 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
 
         qargs = (
             self._id,
+            self.category,
             Const.DELIMITER_DATA.join(map(Const.TEXT_TYPE, self.data)),
             self.brief,
             self.description,
+            self.name,
             Const.DELIMITER_GROUPS.join(map(Const.TEXT_TYPE, sorted(self.groups))),
             Const.DELIMITER_TAGS.join(map(Const.TEXT_TYPE, sorted(self.tags))),
             Const.DELIMITER_LINKS.join(map(Const.TEXT_TYPE, self.links)),
-            self.category,
-            self.name,
-            self.filename,
             Const.DELIMITER_VERSIONS.join(map(Const.TEXT_TYPE, sorted(self.versions))),
             self.source,
-            self.uuid,
+            self.filename,
             self.created,
             self.updated,
+            self.uuid,
             self.digest
         )
 
@@ -626,20 +626,20 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         """Convert resource to dictionary."""
 
         data = {
+            'category': self.category,
             'data': self.data,
             'brief': self.brief,
             'description': self.description,
+            'name': self.name,
             'groups': self.groups,
             'tags': self.tags,
             'links': self.links,
-            'category': self.category,
-            'name': self.name,
-            'filename': self.filename,
             'versions': self.versions,
             'source': self.source,
-            'uuid': self.uuid,
+            'filename': self.filename,
             'created': self.created,
             'updated': self.updated,
+            'uuid': self.uuid,
             'digest': self.digest,
         }
 
@@ -675,13 +675,13 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             text = text.lstrip()
         text = text.replace('<brief>', self.brief)
         text = text.replace('<description>', self.description)
+        text = text.replace('<name>', self.name)
         text = text.replace('<groups>', Const.DELIMITER_GROUPS.join(self.groups))
         text = text.replace('<tags>', Const.DELIMITER_TAGS.join(self.tags))
         text = text.replace('<links>', Const.DELIMITER_LINKS.join(self.links))
         text = text.replace('<versions>', Const.DELIMITER_VERSIONS.join(self.versions))
-        text = text.replace('<name>', self.name)
-        text = text.replace('<filename>', self.filename)
         text = text.replace('<source>', self.source)
+        text = text.replace('<filename>', self.filename)
 
         return text
 
@@ -694,20 +694,20 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         """
 
         mkdn = templates['mkdn'][self.category]
+        mkdn = mkdn.replace('<category>', self.category)
         mkdn = mkdn.replace('<data>', self._dump_mkdn_data())
         mkdn = mkdn.replace('<brief>', self.brief)
         mkdn = mkdn.replace('<description>', textwrap.fill(self.description, 88).replace('\n', '  \n'))
+        mkdn = mkdn.replace('<name>', self.name)
         mkdn = mkdn.replace('<groups>', Const.DELIMITER_GROUPS.join(self.groups))
         mkdn = mkdn.replace('<tags>', Const.DELIMITER_TAGS.join(self.tags))
         mkdn = mkdn.replace('<links>', self._dump_mkdn_links())
-        mkdn = mkdn.replace('<category>', self.category)
-        mkdn = mkdn.replace('<name>', self.name)
-        mkdn = mkdn.replace('<filename>', self.filename)
         mkdn = mkdn.replace('<versions>', Const.DELIMITER_VERSIONS.join(self.versions))
         mkdn = mkdn.replace('<source>', self.source)
-        mkdn = mkdn.replace('<uuid>', self.uuid)
+        mkdn = mkdn.replace('<filename>', self.filename)
         mkdn = mkdn.replace('<created>', self.created)
         mkdn = mkdn.replace('<updated>', self.updated)
+        mkdn = mkdn.replace('<uuid>', self.uuid)
         mkdn = mkdn.replace('<digest>', self.digest)
 
         # Beautify metadata line ends with three spaces to include always two

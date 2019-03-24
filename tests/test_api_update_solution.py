@@ -100,20 +100,20 @@ class TestApiUpdateSolution(object):
 
         content = {
             'data': [{
+                'category': 'solution',
                 'data': Solution.NGINX['data'],
                 'brief': '',
                 'description': '',
+                'name': '',
                 'groups': ('default',),
                 'tags': (),
                 'links': (),
-                'category': 'solution',
-                'name': '',
-                'filename': '',
                 'versions': (),
                 'source': '',
-                'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'filename': '',
                 'created': Content.BEATS_TIME,
                 'updated': Content.NGINX_TIME,
+                'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
                 'digest': '6cd48521a898357f5f088c3cd5a8614c6291ef98733cd7e52ab2cdedb146a874'
             }]
         }
@@ -392,20 +392,20 @@ class TestApiUpdateSolution(object):
 
         content = {
             'data': [{
+                'category': 'solution',
                 'data': Solution.NGINX['data'],
                 'brief': '',
                 'description': '',
+                'name': '',
                 'groups': ('default',),
                 'tags': (),
                 'links': (),
-                'category': 'solution',
-                'name': '',
-                'filename': '',
                 'versions': (),
                 'source': '',
-                'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'filename': '',
                 'created': Content.BEATS_TIME,
                 'updated': Content.NGINX_TIME,
+                'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
                 'digest': '6cd48521a898357f5f088c3cd5a8614c6291ef98733cd7e52ab2cdedb146a874'
             }]
         }

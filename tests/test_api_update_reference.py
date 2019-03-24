@@ -99,20 +99,20 @@ class TestApiUpdateReference(object):
 
         content = {
             'data': [{
+                'category': 'reference',
                 'data': (),
                 'brief': '',
                 'description': '',
+                'name': '',
                 'groups': ('default',),
                 'tags': (),
                 'links': Reference.PYTEST['links'],
-                'category': 'reference',
-                'name': '',
-                'filename': '',
                 'versions': (),
                 'source': '',
-                'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'filename': '',
                 'created': Content.GITLOG_TIME,
                 'updated': Content.PYTEST_TIME,
+                'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
                 'digest': '4a868cc74e3d32a4340e1a2fd17d0df815777c67f827aeedbb35869b740dd720'
             }]
         }
@@ -343,20 +343,20 @@ class TestApiUpdateReference(object):
 
         content = {
             'data': [{
+                'category': 'reference',
                 'data': (),
                 'brief': '',
                 'description': '',
+                'name': '',
                 'groups': ('default',),
                 'tags': (),
                 'links': Reference.REGEXP['links'],
-                'category': 'reference',
-                'name': '',
-                'filename': '',
                 'versions': (),
                 'source': '',
-                'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'filename': '',
                 'created': Content.GITLOG_TIME,
                 'updated': Content.REGEXP_TIME,
+                'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
                 'digest': '7e274a3e1266ee4fc0ce8eb7661868825fbcb22e132943f376c1716f26c106fd'
             }]
         }
@@ -453,12 +453,12 @@ class TestApiUpdateReference(object):
         }
         content['data'][0]['brief'] = ''
         content['data'][0]['description'] = ''
+        content['data'][0]['name'] = ''
         content['data'][0]['groups'] = ()
         content['data'][0]['tags'] = ()
-        content['data'][0]['name'] = ''
-        content['data'][0]['filename'] = ''
         content['data'][0]['versions'] = ()
         content['data'][0]['source'] = ''
+        content['data'][0]['filename'] = ''
         content['data'][0]['created'] = Content.GITLOG_TIME
         content['data'][0]['updated'] = Content.PYTEST_TIME
         content['data'][0]['digest'] = '54c493ade0f808e3d1b16bb606484a51bb0f7eb9c0592c46aea5196bd891881c'
@@ -469,12 +469,12 @@ class TestApiUpdateReference(object):
                     'links': content['data'][0]['links'],
                     'brief': '',
                     'description': '',
+                    'name': '',
                     'groups': (),
                     'tags': (),
-                    'name': '',
-                    'filename': '',
                     'versions': (),
-                    'source': ''
+                    'source': '',
+                    'filename': ''
                 }
             }
         }
@@ -517,12 +517,12 @@ class TestApiUpdateReference(object):
         }
         content['data'][0]['brief'] = ''
         content['data'][0]['description'] = ''
+        content['data'][0]['name'] = ''
         content['data'][0]['groups'] = ()
         content['data'][0]['tags'] = ()
-        content['data'][0]['name'] = ''
-        content['data'][0]['filename'] = ''
         content['data'][0]['versions'] = ()
         content['data'][0]['source'] = ''
+        content['data'][0]['filename'] = ''
         content['data'][0]['created'] = Content.GITLOG_TIME
         content['data'][0]['updated'] = Content.PYTEST_TIME
         content['data'][0]['digest'] = '54c493ade0f808e3d1b16bb606484a51bb0f7eb9c0592c46aea5196bd891881c'
@@ -532,12 +532,12 @@ class TestApiUpdateReference(object):
                 'attributes': {
                     'brief': None,
                     'description': None,
+                    'name': None,
                     'groups': None,
                     'tags': None,
-                    'name': None,
-                    'filename': None,
                     'versions': None,
-                    'source': None
+                    'source': None,
+                    'filename': None
                 }
             }
         }

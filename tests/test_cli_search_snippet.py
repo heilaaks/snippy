@@ -1041,6 +1041,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         """
 
         Content.store({
+            'category': Const.SNIPPET,
             'data': [
                 'tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./  #  Compress folder excluding the tar.',
                 'tar tvf mytar.tar.gz  #  List content of compressed tar.',
@@ -1049,8 +1050,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
                 'tar -xf mytar.tar.gz manifest.json  #  Extract only one file.'],
             'brief': 'Manipulate compressed tar files',
             'groups': ['linux'],
-            'tags': ['howto', 'linux', 'tar', 'untar'],
-            'category': Const.SNIPPET,
+            'tags': ['howto', 'linux', 'tar', 'untar']
         })
         output = (
             '1. Manipulate compressed tar files @linux [61014e2d1ec56a9a]',
@@ -1081,6 +1081,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         """
 
         Content.store({
+            'category': Const.SNIPPET,
             'data': [
                 'tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./',
                 'tar tvf mytar.tar.gz  #  List content of compressed tar.',
@@ -1089,8 +1090,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
                 'tar -xf mytar.tar.gz manifest.json'],
             'brief': 'Manipulate compressed tar files',
             'groups': ['linux'],
-            'tags': ['howto', 'linux', 'tar', 'untar'],
-            'category': Const.SNIPPET,
+            'tags': ['howto', 'linux', 'tar', 'untar']
         })
         output = (
             '1. Manipulate compressed tar files @linux [c1b9987e1dbfd51d]',
@@ -1123,6 +1123,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         """
 
         Content.store({
+            'category': Const.SNIPPET,
             'data': [
                 'tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./',
                 'tar tvf mytar.tar.gz # List content of compressed tar.',
@@ -1132,8 +1133,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
                 'tar -xf mytar.tar.gz manifest.json'],
             'brief': 'Manipulate compressed tar files',
             'groups': ['linux'],
-            'tags': ['howto', 'linux', 'tar', 'untar'],
-            'category': Const.SNIPPET,
+            'tags': ['howto', 'linux', 'tar', 'untar']
         })
         output = (
             '1. Manipulate compressed tar files @linux [0897e0e180afa68f]',

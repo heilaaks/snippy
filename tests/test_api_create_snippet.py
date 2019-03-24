@@ -269,20 +269,20 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [{
+                'category': 'snippet',
                 'data': ('docker rm $(docker ps --all -q -f status=exited)',),
                 'brief': '',
                 'description': '',
+                'name': '',
                 'groups': ('default',),
                 'tags': (),
                 'links': (),
-                'category': 'snippet',
-                'name': '',
-                'filename': '',
                 'versions': (),
                 'source': '',
-                'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'filename': '',
                 'created': '2017-10-14T19:56:31.000001+00:00',
                 'updated': '2017-10-14T19:56:31.000001+00:00',
+                'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
                 'digest': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd'
             }]
         }
@@ -403,16 +403,16 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                 'type': 'snippe',
                 'id': '1',
                 'attributes': {
+                    'category': 'snippet',
                     'data': ['docker rm $(docker ps --all -q -f status=exited)'],
                     'brief': '',
+                    'name': '',
                     'groups': ['default'],
                     'tags': [],
                     'links': [],
-                    'category': 'snippet',
-                    'name': '',
-                    'filename': '',
                     'versions': (),
-                    'utc': '2017-10-14T19:56:31.000001+00:00',
+                    'filename': '',
+                    'created': '2017-10-14T19:56:31.000001+00:00',
                     'digest': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd'}}]}
         expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '584'}
         expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '586'}
@@ -654,20 +654,20 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [{
+                'category': 'snippet',
                 'data': ('data row1', 'data row2'),
                 'brief': 'brief description',
                 'description': 'long description',
+                'name': 'runme',
                 'groups': ('solution',),
                 'tags': ('tag1', 'tag2'),
                 'links': ('link1', 'link2'),
-                'category': 'snippet',
-                'name': 'runme',
-                'filename': 'filename.txt',
                 'versions': ('version=1.1',),
                 'source': 'http://testing/snippets.html',
-                'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'filename': 'filename.txt',
                 'created': Content.FORCED_TIME,
                 'updated': Content.EXITED_TIME,
+                'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
                 'digest': 'a488856d2c0156328afa398458a4f991b2ee3c5bb4dd010f7b740777c015ae83'
             }]
         }
@@ -675,19 +675,20 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             'data': {
                 'type': 'snippet',
                 'attributes': {
+                    'categeory': 'solution',
                     'data': 'data row1\ndata row2',
                     'brief': 'brief description',
                     'description': 'long description',
+                    'name': 'runme',
                     'groups': 'solution',
                     'tags': 'tag1,tag2',
                     'links': 'link1\nlink2',
-                    'categeory': 'solution',
-                    'name': 'runme',
-                    'filename': 'filename.txt',
                     'versions': 'version=1.1',
                     'source': 'http://testing/snippets.html',
+                    'filename': 'filename.txt',
                     'created': 'invalid time',
                     'updated': 'invalid time',
+                    'uuid': 'invalid uuid',
                     'digest': 'invalid digest'
                 }
             }
@@ -834,20 +835,20 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [{
+                'category': 'snippet',
                 'data': (u'Sîne klâwen durh die wolken sint geslagen', u'er stîget ûf mit grôzer kraft'),
                 'brief': u'Tagelied of Wolfram von Eschenbach Sîne klâwen',
                 'description': u'Tagelied of Wolfram von Eschenbach Sîne klâwen',
+                'name': '',
                 'groups': (u'Düsseldorf',),
                 'tags': (u'έδωσαν', u'γλώσσα', u'ελληνική'),
                 'links': (u'http://www.чухонца.edu/~fdc/utf8/',),
-                'category': 'snippet',
-                'name': '',
-                'filename': '',
                 'versions': (),
                 'source': '',
-                'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'filename': '',
                 'created': '2017-10-14T19:56:31.000001+00:00',
                 'updated': '2017-10-14T19:56:31.000001+00:00',
+                'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
                 'digest': 'c267233096b6977ea4dd9ef41faa1559d3886ad550d8932ddb4513eae5b84fbf'
             }]
         }
@@ -920,20 +921,20 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [{
+                'category': 'snippet',
                 'data': ('first row', 'second row'),
                 'brief': 'short brief',
                 'description': 'long description',
+                'name': 'short name',
                 'groups': ('python',),
                 'tags': ('spaces', 'tabs'),
                 'links': ('link1', 'link2'),
-                'category': 'snippet',
-                'name': 'short name',
-                'filename': 'shortfilename.yaml',
                 'versions': ('version=1.1.1',),
                 'source': 'short source link',
-                'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'filename': 'shortfilename.yaml',
                 'created': Content.REGEXP_TIME,
                 'updated': Content.REGEXP_TIME,
+                'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
                 'digest': '9551cc17fe962ceee85cca9d22b2c2d0694970898c3e7c7a8a6ec162a5b438e7'
             }]
         }
@@ -944,13 +945,13 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                     'data': ['     first row   ', '   second row  '],
                     'brief': ' short brief  ',
                     'description': ' long description  ',
+                    'name': '  short name   ',
                     'groups': ['    python   ',],
                     'tags': ['  tabs   ', '  spaces    '],
                     'links': ['  link2  ', '    link1   '],
-                    'name': '  short name   ',
-                    'filename': '  shortfilename.yaml   ',
                     'versions': ['  version=1.1.1   '],
-                    'source': '  short source link   '
+                    'source': '  short source link   ',
+                    'filename': '  shortfilename.yaml   '
                 }
             }]
         }
@@ -984,20 +985,20 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [{
+                'category': 'snippet',
                 'data': ('docker rm $(docker\\nps \\n --all -q -f status=exited)',),
                 'brief': '',
                 'description': '',
+                'name': '',
                 'groups': ('default',),
                 'tags': (),
                 'links': (),
-                'category': 'snippet',
-                'name': '',
-                'filename': '',
                 'versions': (),
                 'source': '',
-                'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'filename': '',
                 'created': '2017-10-14T19:56:31.000001+00:00',
                 'updated': '2017-10-14T19:56:31.000001+00:00',
+                'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
                 'digest': 'c10b8614d264ed75ad3b671526efb9718895974291627b4fd21307051c6928c1'
             }]
         }
@@ -1040,20 +1041,20 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [{
+                'category': 'snippet',
                 'data': ('duplicated field values', ),
                 'brief': 'short brief',
                 'description': '',
+                'name': '',
                 'groups': ('docker', 'python'),
                 'tags': ('pypy', 'swarm'),
                 'links': ('http://www.dot.com/link1', 'http://www.dot.com/link2'),
-                'category': 'snippet',
-                'name': '',
-                'filename': '',
                 'versions': ('docker-ce>17.09.2',),
                 'source': '',
-                'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'filename': '',
                 'created': '2017-10-14T19:56:31.000001+00:00',
                 'updated': '2017-10-14T19:56:31.000001+00:00',
+                'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
                 'digest': '800af62696ab9592c23dd5674642b91854e73a0c23f7659ac553de7fc66400d5'
             }]
         }
@@ -1102,20 +1103,20 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [{
+                'category': 'snippet',
                 'data': ('test',),
                 'brief': '',
                 'description': '',
+                'name': '',
                 'groups': ('default',),
                 'tags': (),
                 'links': (),
-                'category': 'snippet',
-                'name': '',
-                'filename': '',
                 'versions': (),
                 'source': '',
-                'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'filename': '',
                 'created': '2017-10-14T19:56:31.000001+00:00',
                 'updated': '2017-10-14T19:56:31.000001+00:00',
+                'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
                 'digest': '4531ade7232dda7debd7ec3a20b2669afb57d665bd058184155442de203c76af',
             }]
         }

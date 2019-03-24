@@ -382,20 +382,20 @@ class TestApiCreateSolution(object):
 
         content = {
             'data': [{
+                'category': 'solution',
                 'data': ('     first row   ', '   second row  ', ''),
                 'brief': 'short brief',
                 'description': 'long description',
+                'name': 'short name',
                 'groups': ('python',),
                 'tags': ('atabs', 'bspaces'),
                 'links': ('alink2', 'blink1'),
-                'category': 'solution',
-                'name': 'short name',
-                'filename': 'shortfilename.yaml',
                 'versions': ('versions=1.1-alpha',),
                 'source': 'short source link',
-                'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'filename': 'shortfilename.yaml',
                 'created': Content.REGEXP_TIME,
                 'updated': Content.REGEXP_TIME,
+                'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
                 'digest': 'f797b9a49e526e32b728ab5f94dc62762d50bf04ceea8919591a5bce3422d73b'
             }]
         }
@@ -406,13 +406,13 @@ class TestApiCreateSolution(object):
                     'data': ['     first row   ', '   second row  ', '', '', ''],
                     'brief': ' short brief  ',
                     'description': ' long description  ',
+                    'name': '  short name   ',
                     'groups': ['    python   ',],
                     'tags': ['  bspaces   ', '  atabs    '],
                     'links': ['  blink1  ', '    alink2   '],
-                    'name': '  short name   ',
-                    'filename': '  shortfilename.yaml   ',
                     'versions': ['  versions=1.1-alpha   '],
-                    'source': '  short source link   '
+                    'source': '  short source link   ',
+                    'filename': '  shortfilename.yaml   '
                 }
             }]
         }

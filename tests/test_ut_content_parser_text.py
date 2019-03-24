@@ -84,8 +84,8 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
             'https://docs.docker.com/engine/reference/commandline/rm/',
             'https://docs.docker.com/engine/reference/commandline/rmi/'
         )
-        assert resource.versions == ()
         assert resource.source == ''
+        assert resource.versions == ()
         assert resource.filename == ''
 
     def test_parser_snippet_002(self):
@@ -139,8 +139,8 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
             'https://docs.docker.com/engine/reference/commandline/rm/',
             'https://docs.docker.com/engine/reference/commandline/rmi/'
         )
-        assert resource.versions == ()
         assert resource.source == ''
+        assert resource.versions == ()
         assert resource.filename == ''
 
     def test_parser_snippet_003(self):
@@ -186,8 +186,8 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
             'https://docs.docker.com/engine/reference/commandline/rm/',
             'https://docs.docker.com/engine/reference/commandline/rmi/'
         )
-        assert resource.versions == ()
         assert resource.source == ''
+        assert resource.versions == ()
         assert resource.filename == ''
 
     def test_parser_snippet_004(self):
@@ -254,8 +254,8 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
         assert resource.groups == ('default',)
         assert resource.tags == ()
         assert resource.links == ()
-        assert resource.versions == ()
         assert resource.source == ''
+        assert resource.versions == ()
         assert resource.filename == ''
 
     def test_parser_snippet_006(self):
@@ -309,8 +309,8 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
         assert resource.groups == ('linux',)
         assert resource.tags == ('howto', 'linux', 'tar', 'untar')
         assert resource.links == ()
-        assert resource.versions == ()
         assert resource.source == ''
+        assert resource.versions == ()
         assert resource.filename == ''
 
     def test_parser_snippet_007(self):
@@ -363,8 +363,8 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
         assert resource.groups == ('linux',)
         assert resource.tags == ('howto', 'linux', 'tar', 'untar')
         assert resource.links == ()
-        assert resource.versions == ()
         assert resource.source == ''
+        assert resource.versions == ()
         assert resource.filename == ''
 
     def test_parser_snippet_008(self):
@@ -420,8 +420,8 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
         assert resource.groups == ('linux',)
         assert resource.tags == ('howto', 'linux', 'tar', 'untar')
         assert resource.links == ()
-        assert resource.versions == ()
         assert resource.source == ''
+        assert resource.versions == ()
         assert resource.filename == ''
 
     def test_parser_snippet_009(self):
@@ -478,8 +478,8 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
         assert resource.groups == ('linux',)
         assert resource.tags == ('howto', 'linux', 'tar', 'untar')
         assert resource.links == ('https://alpinelinux.org/',)
-        assert resource.versions == ('alpine=3.9', 'linux~4.9', 'python=3.7.0')
         assert resource.source == 'https://github.com/tldr-pages/tldr/blob/master/pages/linux/alpine.md'
+        assert resource.versions == ('alpine=3.9', 'linux~4.9', 'python=3.7.0')
         assert resource.filename == 'tar-file-operations.mkdn'
 
     def test_parser_snippet_010(self):
@@ -528,8 +528,8 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
         assert resource.groups == ('default',)
         assert resource.tags == ()
         assert resource.links == ()
-        assert resource.versions == ('alpine!=3.9',)
         assert resource.source == ''
+        assert resource.versions == ('alpine!=3.9',)
         assert resource.filename == ''
 
     def test_parser_solution_001(self):
@@ -666,8 +666,8 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
             'https://github.com/garo/logs2kafka',
             'https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ'
         )
-        assert resource.versions == ()
         assert resource.source == ''
+        assert resource.versions == ()
         assert resource.filename == 'kubernetes-docker-log-driver-kafka.txt'
 
     def test_parser_solution_002(self):
@@ -736,8 +736,8 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
             'https://github.com/garo/logs2kafka',
             'https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ'
         )
-        assert resource.versions == ()
         assert resource.source == ''
+        assert resource.versions == ()
         assert resource.filename == 'kubernetes-docker-log-driver-kafka.txt'
 
     def test_parser_solution_003(self):
@@ -805,8 +805,8 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
             'https://github.com/garo/logs2kafka',
             'https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ'
         )
-        assert resource.versions == ()
         assert resource.source == ''
+        assert resource.versions == ()
         assert resource.filename == 'kubernetes-docker-log-driver-kafka.txt'
 
     def test_parser_solution_004(self):
@@ -872,8 +872,8 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
             'https://github.com/garo/logs2kafka',
             'https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ'
         )
-        assert resource.versions == ()
         assert resource.source == ''
+        assert resource.versions == ()
         assert resource.filename == 'kubernetes-docker-log-driver-kafka.txt'
 
     def test_parser_solution_005(self):
@@ -966,8 +966,8 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
         assert resource.groups == ('git',)
         assert resource.tags == ('commit', 'git', 'howto', 'message', 'scm')
         assert resource.links == links
-        assert resource.versions == ()
         assert resource.source == ''
+        assert resource.versions == ()
         assert resource.filename == ''
 
     def test_parser_reference_002(self):
@@ -1012,8 +1012,8 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
         assert resource.groups == ('git',)
         assert resource.tags == ('commit', 'git', 'howto', 'message', 'scm')
         assert resource.links == links
-        assert resource.versions == ()
         assert resource.source == ''
+        assert resource.versions == ()
         assert resource.filename == ''
 
     def test_parser_reference_003(self):
@@ -1053,8 +1053,8 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
         assert resource.groups == ('git', 'moby')
         assert resource.tags == ('commit', 'git', 'howto', 'message', 'scm')
         assert resource.links == links
-        assert resource.versions == ()
         assert resource.source == ''
+        assert resource.versions == ()
         assert resource.filename == ''
 
     def test_parser_reference_004(self):
@@ -1126,8 +1126,8 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
             'https://docs.docker.com/engine/reference/commandline/rm/',
             'https://docs.docker.com/engine/reference/commandline/rmi/'
         )
-        assert resource.versions == ()
         assert resource.source == ''
+        assert resource.versions == ()
         assert resource.filename == ''
 
     def test_parser_reference_006(self):
@@ -1186,8 +1186,8 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
         assert resource.groups == ('git',)
         assert resource.tags == ('commit', 'git', 'howto', 'message', 'scm')
         assert resource.links == links
-        assert resource.versions == ()
         assert resource.source == ''
+        assert resource.versions == ()
         assert resource.filename == ''
 
     def test_parser_reference_007(self):
@@ -1246,8 +1246,8 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
         assert resource.groups == ('git',)
         assert resource.tags == ('commit', 'git', 'howto', 'message', 'scm')
         assert resource.links == links
-        assert resource.versions == ('git<=1.1.1', 'python>=2.7.0')
         assert resource.source == 'https://github.com/'
+        assert resource.versions == ('git<=1.1.1', 'python>=2.7.0')
         assert resource.filename == 'git.mkdn'
 
     def test_parser_unknown_001(self):

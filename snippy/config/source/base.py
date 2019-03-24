@@ -42,7 +42,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     OPERATIONS = ('create', 'search', 'update', 'delete', 'export', 'import')
 
     ATTRIBUTES = ('category', 'data', 'brief', 'description', 'name', 'groups', 'tags',
-                  'links', 'versions', 'source', 'filename', 'created', 'updated',
+                  'links', 'source', 'versions', 'filename', 'created', 'updated',
                   'uuid', 'digest')
 
     # Defaults
@@ -344,21 +344,6 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self._links = Parser.format_links(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
-    def versions(self):
-        """Get content versions."""
-
-        return self._versions
-
-    @versions.setter
-    def versions(self, value):
-        """Convert content versions to tuple of utf-8 encoded unicode strings."""
-
-        if value is None:
-            self._reset_fields['versions'] = 'versions'
-
-        self._versions = Parser.format_versions(value)  # pylint: disable=attribute-defined-outside-init
-
-    @property
     def source(self):
         """Get content source."""
 
@@ -372,6 +357,21 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
             self._reset_fields['source'] = 'source'
 
         self._source = Parser.format_string(value)  # pylint: disable=attribute-defined-outside-init
+
+    @property
+    def versions(self):
+        """Get content versions."""
+
+        return self._versions
+
+    @versions.setter
+    def versions(self, value):
+        """Convert content versions to tuple of utf-8 encoded unicode strings."""
+
+        if value is None:
+            self._reset_fields['versions'] = 'versions'
+
+        self._versions = Parser.format_versions(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
     def filename(self):

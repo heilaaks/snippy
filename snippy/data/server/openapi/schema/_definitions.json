@@ -7,29 +7,29 @@
         "solution",
         "reference"
       ],
-      "description": "# Brief\n  \nAutomatically assigned resource category.\n"
+      "description": "# Brief\n\nAutomatically assigned resource category.\n"
     },
     "attributeData": {
       "type": "array",
       "items": {
         "type": "string"
       },
-      "description": "# Brief\n \nResource data attribute.\n"
+      "description": "# Brief\n\nResource data attribute.\n"
     },
     "attributeBrief": {
       "type": "string",
       "default": "",
-      "description": "# Brief\n  \nOptional brief description of the resource.\n"
+      "description": "# Brief\n\nOptional brief description of the resource.\n"
     },
     "attributeDescription": {
       "type": "string",
       "default": "",
-      "description": "# Brief\n  \nOptional long description of the resource.\n"
+      "description": "# Brief\n\nOptional long description of the resource.\n"
     },
     "attributeName": {
       "type": "string",
       "default": "",
-      "description": "# Brief\n  \nOptional name for the resource.\n"
+      "description": "# Brief\n\nOptional name for the resource.\n"
     },
     "attributeGroups": {
       "type": "array",
@@ -39,7 +39,7 @@
       "default": [
         "default"
       ],
-      "description": "# Brief\n  \nOptional list of groups to which the resource belongs.\n"
+      "description": "# Brief\n\nOptional list of groups to which the resource belongs.\n"
     },
     "attributeTags": {
       "type": "array",
@@ -55,7 +55,12 @@
         "type": "string"
       },
       "default": [],
-      "description": "# Brief\n  \nOptional list of links.\n"
+      "description": "# Brief\n\nOptional list of links.\n"
+    },
+    "attributeSource": {
+      "type": "string",
+      "default": "",
+      "description": "# Brief\n\nOptional external source for the resource.\"\n"
     },
     "attributeVersions": {
       "type": "array",
@@ -63,12 +68,7 @@
         "type": "string"
       },
       "default": [],
-      "description": "# Brief\n  \nOptional list of services and versions related to the resource.\n"
-    },
-    "attributeSource": {
-      "type": "string",
-      "default": "",
-      "description": "# Brief\n\nOptional external source for the resource.\"\n"
+      "description": "# Brief\n\nOptional list of services and versions related to the resource.\n"
     },
     "attributeFilename": {
       "type": "string",
@@ -115,11 +115,11 @@
         "links": {
           "$ref": "#/definitions/attributeLinks"
         },
-        "versions": {
-          "$ref": "#/definitions/attributeVersions"
-        },
         "source": {
           "$ref": "#/definitions/attributeSource"
+        },
+        "versions": {
+          "$ref": "#/definitions/attributeVersions"
         },
         "filename": {
           "$ref": "#/definitions/attributeFilename"
@@ -156,11 +156,11 @@
         "links": {
           "$ref": "#/definitions/attributeLinks"
         },
-        "versions": {
-          "$ref": "#/definitions/attributeVersions"
-        },
         "source": {
           "$ref": "#/definitions/attributeSource"
+        },
+        "versions": {
+          "$ref": "#/definitions/attributeVersions"
         },
         "filename": {
           "$ref": "#/definitions/attributeFilename"

@@ -28,8 +28,8 @@ CREATE TABLE IF NOT EXISTS contents
                   , groups      text DEFAULT ''
                   , tags        text DEFAULT ''
                   , links       text DEFAULT ''
-                  , versions    text DEFAULT ''
                   , source      text DEFAULT ''
+                  , versions    text DEFAULT ''
                   , filename    text DEFAULT ''
                   , created     TIMESTAMP WITH TIME ZONE
                   , updated     TIMESTAMP WITH TIME ZONE

@@ -5,6 +5,6 @@
     "solution",
     "reference"
   ],
-  "description": "# Brief\n  \nAutomatically assigned resource category.\n",
+  "description": "# Brief\n\nAutomatically assigned resource category.\n",
   "$schema": "http://json-schema.org/schema#"
 }

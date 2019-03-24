@@ -63,13 +63,13 @@ class ContentParserText(ContentParserBase):
     LINKS[Const.SNIPPET] = '# Add optional links below one link per line.\n'
     LINKS[Const.REFERENCE] = '# Add mandatory links below one link per line.\n'
 
-    VERSIONS = {}
-    VERSIONS[Const.SNIPPET] = '# Add optional comma separated list of key=value versions below.\n'
-    VERSIONS[Const.REFERENCE] = VERSIONS[Const.SNIPPET]
-
     SOURCE = {}
     SOURCE[Const.SNIPPET] = '# Add optional source reference below.\n'
     SOURCE[Const.REFERENCE] = SOURCE[Const.SNIPPET]
+
+    VERSIONS = {}
+    VERSIONS[Const.SNIPPET] = '# Add optional comma separated list of key=value versions below.\n'
+    VERSIONS[Const.REFERENCE] = VERSIONS[Const.SNIPPET]
 
     FILENAME = {}
     FILENAME[Const.SNIPPET] = '# Add optional filename below.\n'
@@ -158,15 +158,6 @@ class ContentParserText(ContentParserBase):
         (?P<links>http.*)       # Catch link.
         ''', re.MULTILINE | re.VERBOSE)
 
-    REGEXP['versions'] = {}
-    REGEXP['versions'][Const.SNIPPET] = re.compile(r'''
-        (?:%s|%s)               # Match snippet or reference versions.
-        (?P<versions>.*?)       # Catch versions.
-        (?:\n{2}|[#]|$)         # Match newlines or next header indicated by hash or end of the string.
-        ''' % (re.escape(VERSIONS[Const.SNIPPET]), re.escape(VERSIONS[Const.REFERENCE])), re.DOTALL | re.VERBOSE)
-    REGEXP['versions'][Const.REFERENCE] = REGEXP['versions'][Const.SNIPPET]
-    REGEXP['versions'][Const.SOLUTION] = Const.RE_DO_NOT_MATCH_ANYTHING  # There is no versions tag in solution content.
-
     REGEXP['source'] = {}
     REGEXP['source'][Const.SNIPPET] = re.compile(r'''
         (?:%s|%s)               # Match snippet or reference source.
@@ -175,6 +166,15 @@ class ContentParserText(ContentParserBase):
         ''' % (re.escape(SOURCE[Const.SNIPPET]), re.escape(SOURCE[Const.REFERENCE])), re.DOTALL | re.VERBOSE)
     REGEXP['source'][Const.REFERENCE] = REGEXP['source'][Const.SNIPPET]
     REGEXP['source'][Const.SOLUTION] = Const.RE_DO_NOT_MATCH_ANYTHING  # There is no source tag in solution content.
+
+    REGEXP['versions'] = {}
+    REGEXP['versions'][Const.SNIPPET] = re.compile(r'''
+        (?:%s|%s)               # Match snippet or reference versions.
+        (?P<versions>.*?)       # Catch versions.
+        (?:\n{2}|[#]|$)         # Match newlines or next header indicated by hash or end of the string.
+        ''' % (re.escape(VERSIONS[Const.SNIPPET]), re.escape(VERSIONS[Const.REFERENCE])), re.DOTALL | re.VERBOSE)
+    REGEXP['versions'][Const.REFERENCE] = REGEXP['versions'][Const.SNIPPET]
+    REGEXP['versions'][Const.SOLUTION] = Const.RE_DO_NOT_MATCH_ANYTHING  # There is no versions tag in solution content.
 
     REGEXP['filename'] = {}
     REGEXP['filename'][Const.SNIPPET] = re.compile(r'''
@@ -216,8 +216,8 @@ class ContentParserText(ContentParserBase):
             resource.groups = self._read_groups(category, content)
             resource.tags = self._read_tags(category, content)
             resource.links = self._read_links(category, content)
-            resource.versions = self._read_versions(category, content)
             resource.source = self._read_source(category, content)
+            resource.versions = self._read_versions(category, content)
             resource.filename = self._read_filename(category, content)
             self._collection.migrate(resource)
 
@@ -464,19 +464,6 @@ class ContentParserText(ContentParserBase):
 
         return self.parse_links(category, self.REGEXP['links'].get(category, None), text)
 
-    def _read_versions(self, category, text):
-        """Read content versions from text string.
-
-        Args:
-            category (str): Content category.
-            text (str): Content text string.
-
-        Returns:
-            tuple: Tuple of utf-8 encoded versions.
-        """
-
-        return self.parse_versions(category, self.REGEXP['versions'].get(category, None), text)
-
     def _read_source(self, category, text):
         """Read content source from text string.
 
@@ -500,6 +487,19 @@ class ContentParserText(ContentParserBase):
             self._logger.debug('parser did not find content for source: {}'.format(text))
 
         return self.format_string(source)
+
+    def _read_versions(self, category, text):
+        """Read content versions from text string.
+
+        Args:
+            category (str): Content category.
+            text (str): Content text string.
+
+        Returns:
+            tuple: Tuple of utf-8 encoded versions.
+        """
+
+        return self.parse_versions(category, self.REGEXP['versions'].get(category, None), text)
 
     def _read_filename(self, category, text):
         """Read content filename from text string.

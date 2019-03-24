@@ -315,24 +315,24 @@ class TestUtCollection(object):
                 'groups': None,
                 'tags': None,
                 'links': None,
-                'versions': None,
                 'source': None,
+                'versions': None,
                 'filename': None
             }]
         })
         resource = next(collection.resources())
+        assert resource.category == Const.SNIPPET
         assert resource.data == (
             'tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./',
             'tar xfO mytar.tar.gz manifest.json# Cat file in compressed tar.'
         )
         assert resource.brief == ''
         assert resource.description == ''
+        assert resource.name == ''
         assert resource.groups == ()
         assert resource.tags == ()
         assert resource.links == ()
-        assert resource.category == Const.SNIPPET
-        assert resource.name == ''
-        assert resource.filename == ''
-        assert resource.versions == ()
         assert resource.source == ''
+        assert resource.versions == ()
+        assert resource.filename == ''
         assert resource.digest == '6dae3799010719ca694b86514ec404cd6b6047a2979b3dbaf75fa51576ad269c'

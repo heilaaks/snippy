@@ -151,17 +151,17 @@ class TestCliCreateSnippet(object):
 
         content = {
             'data': [{
+                'category': 'snippet',
                 'data': (u'Sîne klâwen durh die wolken sint geslagen', u'er stîget ûf mit grôzer kraft'),
                 'brief': u'Tagelied of Wolfram von Eschenbach Sîne klâwen',
                 'description': '',
+                'name': '',
                 'groups': (u'Düsseldorf',),
                 'tags': (u'έδωσαν', u'γλώσσα', u'ελληνική'),
                 'links': (u'http://www.чухонца.edu/~fdc/utf8/',),
-                'category': 'snippet',
-                'name': '',
-                'filename': '',
-                'versions': (),
                 'source': '',
+                'versions': (),
+                'filename': '',
                 'created': Content.REMOVE_TIME,
                 'updated': Content.REMOVE_TIME,
                 'digest': 'a74d83df95d5729aceffc472433fea4d5e3fd2d87b510112fac264c741f20438'
@@ -383,8 +383,8 @@ class TestCliCreateSnippet(object):
                 'groups': ('default', ),
                 'tags': ('cli', 'from', 'tags'),
                 'links': (),
-                'versions': (),
                 'source': '',
+                'versions': (),
                 'filename': '',
                 'created': '2017-10-14T19:56:31.000001+00:00',
                 'updated': '2017-10-14T19:56:31.000001+00:00',

@@ -25,10 +25,10 @@
       "$ref": "_definitions.json#/definitions/attributeLinks"
     },
     {
-      "$ref": "_definitions.json#/definitions/attributeVersions"
+      "$ref": "_definitions.json#/definitions/attributeSource"
     },
     {
-      "$ref": "_definitions.json#/definitions/attributeSource"
+      "$ref": "_definitions.json#/definitions/attributeVersions"
     },
     {
       "$ref": "_definitions.json#/definitions/attributeFilename"

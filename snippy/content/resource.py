@@ -45,8 +45,8 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     GROUPS = 6
     TAGS = 7
     LINKS = 8
-    VERSIONS = 9
-    SOURCE = 10
+    SOURCE = 9
+    VERSIONS = 10
     FILENAME = 11
     CREATED = 12
     UPDATED = 13
@@ -75,8 +75,8 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self._groups = Const.DEFAULT_GROUPS
         self._tags = ()
         self._links = ()
-        self._versions = ()
         self._source = ''
+        self._versions = ()
         self._filename = ''
         self._created = timestamp
         self._updated = timestamp
@@ -103,8 +103,8 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
                    self.groups == resource.groups and \
                    self.tags == resource.tags and \
                    self.links == resource.links and \
-                   self.versions == resource.versions and \
                    self.source == resource.source and \
+                   self.versions == resource.versions and \
                    self.filename == resource.filename and \
                    self.created == resource.created and \
                    self.updated == resource.updated and \
@@ -215,18 +215,6 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self._links = Parser.format_links(value)
 
     @property
-    def versions(self):
-        """Get resource versions."""
-
-        return self._versions
-
-    @versions.setter
-    def versions(self, value):
-        """Resource versions."""
-
-        self._versions = Parser.format_list(value)
-
-    @property
     def source(self):
         """Get resource source."""
 
@@ -237,6 +225,18 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         """Resource source."""
 
         self._source = Parser.format_string(value)
+
+    @property
+    def versions(self):
+        """Get resource versions."""
+
+        return self._versions
+
+    @versions.setter
+    def versions(self, value):
+        """Resource versions."""
+
+        self._versions = Parser.format_list(value)
 
     @property
     def filename(self):
@@ -364,10 +364,10 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
                 self.tags = (Parser.EXAMPLE_TAGS.split(Const.DELIMITER_TAGS))
             if not self.links and category == Const.SNIPPET:
                 self.links = (Parser.EXAMPLE_LINKS.split(Const.DELIMITER_LINKS))
-            if not self.versions:
-                self.versions = (Parser.EXAMPLE_VERSIONS.split(Const.DELIMITER_VERSIONS))
             if not self.source:
                 self.source = Parser.EXAMPLE_SOURCE
+            if not self.versions:
+                self.versions = (Parser.EXAMPLE_VERSIONS.split(Const.DELIMITER_VERSIONS))
             if not self.filename:
                 self.filename = Parser.EXAMPLE_FILENAME
 
@@ -468,8 +468,8 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self.groups = source.groups
         self.tags = source.tags
         self.links = source.links
-        self.versions = source.versions
         self.source = source.source
+        self.versions = source.versions
         self.filename = source.filename
 
         return self.seal(validate)
@@ -508,10 +508,10 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             self.tags = source.tags
         if source.links:
             self.links = source.links
-        if source.versions:
-            self.versions = source.versions
         if source.source:
             self.source = source.source
+        if source.versions:
+            self.versions = source.versions
         if source.filename:
             self.filename = source.filename
 
@@ -529,8 +529,8 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self.groups = tuple(row[Resource.GROUPS].split(Const.DELIMITER_GROUPS) if row[Resource.GROUPS] else [])
         self.tags = tuple(row[Resource.TAGS].split(Const.DELIMITER_TAGS) if row[Resource.TAGS] else [])
         self.links = tuple(row[Resource.LINKS].split(Const.DELIMITER_LINKS) if row[Resource.LINKS] else [])
-        self.versions = tuple(row[Resource.VERSIONS].split(Const.DELIMITER_VERSIONS) if row[Resource.VERSIONS] else [])
         self.source = row[Resource.SOURCE]
+        self.versions = tuple(row[Resource.VERSIONS].split(Const.DELIMITER_VERSIONS) if row[Resource.VERSIONS] else [])
         self.filename = row[Resource.FILENAME]
         self.created = row[Resource.CREATED]
         self.updated = row[Resource.UPDATED]
@@ -611,8 +611,8 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             Const.DELIMITER_GROUPS.join(map(Const.TEXT_TYPE, sorted(self.groups))),
             Const.DELIMITER_TAGS.join(map(Const.TEXT_TYPE, sorted(self.tags))),
             Const.DELIMITER_LINKS.join(map(Const.TEXT_TYPE, self.links)),
-            Const.DELIMITER_VERSIONS.join(map(Const.TEXT_TYPE, sorted(self.versions))),
             self.source,
+            Const.DELIMITER_VERSIONS.join(map(Const.TEXT_TYPE, sorted(self.versions))),
             self.filename,
             self.created,
             self.updated,
@@ -634,8 +634,8 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             'groups': self.groups,
             'tags': self.tags,
             'links': self.links,
-            'versions': self.versions,
             'source': self.source,
+            'versions': self.versions,
             'filename': self.filename,
             'created': self.created,
             'updated': self.updated,
@@ -679,8 +679,8 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         text = text.replace('<groups>', Const.DELIMITER_GROUPS.join(self.groups))
         text = text.replace('<tags>', Const.DELIMITER_TAGS.join(self.tags))
         text = text.replace('<links>', Const.DELIMITER_LINKS.join(self.links))
-        text = text.replace('<versions>', Const.DELIMITER_VERSIONS.join(self.versions))
         text = text.replace('<source>', self.source)
+        text = text.replace('<versions>', Const.DELIMITER_VERSIONS.join(self.versions))
         text = text.replace('<filename>', self.filename)
 
         return text
@@ -702,8 +702,8 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         mkdn = mkdn.replace('<groups>', Const.DELIMITER_GROUPS.join(self.groups))
         mkdn = mkdn.replace('<tags>', Const.DELIMITER_TAGS.join(self.tags))
         mkdn = mkdn.replace('<links>', self._dump_mkdn_links())
-        mkdn = mkdn.replace('<versions>', Const.DELIMITER_VERSIONS.join(self.versions))
         mkdn = mkdn.replace('<source>', self.source)
+        mkdn = mkdn.replace('<versions>', Const.DELIMITER_VERSIONS.join(self.versions))
         mkdn = mkdn.replace('<filename>', self.filename)
         mkdn = mkdn.replace('<created>', self.created)
         mkdn = mkdn.replace('<updated>', self.updated)

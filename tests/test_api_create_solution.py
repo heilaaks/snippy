@@ -390,8 +390,8 @@ class TestApiCreateSolution(object):
                 'groups': ('python',),
                 'tags': ('atabs', 'bspaces'),
                 'links': ('alink2', 'blink1'),
-                'versions': ('versions=1.1-alpha',),
                 'source': 'short source link',
+                'versions': ('versions=1.1-alpha',),
                 'filename': 'shortfilename.yaml',
                 'created': Content.REGEXP_TIME,
                 'updated': Content.REGEXP_TIME,
@@ -410,8 +410,8 @@ class TestApiCreateSolution(object):
                     'groups': ['    python   ',],
                     'tags': ['  bspaces   ', '  atabs    '],
                     'links': ['  blink1  ', '    alink2   '],
-                    'versions': ['  versions=1.1-alpha   '],
                     'source': '  short source link   ',
+                    'versions': ['  versions=1.1-alpha   '],
                     'filename': '  shortfilename.yaml   '
                 }
             }]

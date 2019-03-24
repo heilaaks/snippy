@@ -107,8 +107,8 @@ class TestApiUpdateReference(object):
                 'groups': ('default',),
                 'tags': (),
                 'links': Reference.PYTEST['links'],
-                'versions': (),
                 'source': '',
+                'versions': (),
                 'filename': '',
                 'created': Content.GITLOG_TIME,
                 'updated': Content.PYTEST_TIME,
@@ -351,8 +351,8 @@ class TestApiUpdateReference(object):
                 'groups': ('default',),
                 'tags': (),
                 'links': Reference.REGEXP['links'],
-                'versions': (),
                 'source': '',
+                'versions': (),
                 'filename': '',
                 'created': Content.GITLOG_TIME,
                 'updated': Content.REGEXP_TIME,
@@ -456,8 +456,8 @@ class TestApiUpdateReference(object):
         content['data'][0]['name'] = ''
         content['data'][0]['groups'] = ()
         content['data'][0]['tags'] = ()
-        content['data'][0]['versions'] = ()
         content['data'][0]['source'] = ''
+        content['data'][0]['versions'] = ()
         content['data'][0]['filename'] = ''
         content['data'][0]['created'] = Content.GITLOG_TIME
         content['data'][0]['updated'] = Content.PYTEST_TIME
@@ -472,8 +472,8 @@ class TestApiUpdateReference(object):
                     'name': '',
                     'groups': (),
                     'tags': (),
-                    'versions': (),
                     'source': '',
+                    'versions': (),
                     'filename': ''
                 }
             }
@@ -520,8 +520,8 @@ class TestApiUpdateReference(object):
         content['data'][0]['name'] = ''
         content['data'][0]['groups'] = ()
         content['data'][0]['tags'] = ()
-        content['data'][0]['versions'] = ()
         content['data'][0]['source'] = ''
+        content['data'][0]['versions'] = ()
         content['data'][0]['filename'] = ''
         content['data'][0]['created'] = Content.GITLOG_TIME
         content['data'][0]['updated'] = Content.PYTEST_TIME
@@ -535,8 +535,8 @@ class TestApiUpdateReference(object):
                     'name': None,
                     'groups': None,
                     'tags': None,
-                    'versions': None,
                     'source': None,
+                    'versions': None,
                     'filename': None
                 }
             }

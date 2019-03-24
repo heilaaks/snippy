@@ -51,8 +51,8 @@ class TestUtContentParserDict(object):
                 'groups': 'default',
                 'tags': 'tag2,tag1',
                 'links': [],
-                'versions': [],
                 'source': '',
+                'versions': [],
                 'filename': '',
                 'created': '2015-10-14T19:56:31.000001+00:00',
                 'updated': '2016-10-14T19:56:31.000001+00:00',
@@ -67,16 +67,16 @@ class TestUtContentParserDict(object):
         assert resource.data == ('docker rm $(docker ps --all -q -f status=exited)',)
         assert resource.brief == 'strip spaces'
         assert resource.description == 'strip spaces'
+        assert resource.name == ''
         assert resource.groups == ('default',)
         assert resource.tags == ('tag1', 'tag2')
         assert resource.links == ()
-        assert resource.filename == ''
-        assert resource.name == ''
-        assert resource.versions == ()
         assert resource.source == ''
-        assert resource.uuid == '11cd5827-b6ef-4067-b5ac-3ceac07dde9f'
+        assert resource.versions == ()
+        assert resource.filename == ''
         assert resource.created == '2015-10-14T19:56:31.000001+00:00'
         assert resource.updated == '2016-10-14T19:56:31.000001+00:00'
+        assert resource.uuid == '11cd5827-b6ef-4067-b5ac-3ceac07dde9f'
         assert resource.digest == '76257166ef4499ffbbf4036accd161184e9b91f326b0b6f3d5e7a1333b516713'
 
     def test_parser_snippet_002(self):
@@ -95,8 +95,8 @@ class TestUtContentParserDict(object):
                 'groups': 'default',
                 'tags': 'tag2,tag1',
                 'links': [],
-                'versions': (),
                 'source': '',
+                'versions': (),
                 'filename': '',
                 'created': '2015-10-14T19:56:31.000001+00:00',
                 'updated': '2016-10-14T19:56:31.000001+00:00',
@@ -124,8 +124,8 @@ class TestUtContentParserDict(object):
                 'groups': 'default',
                 'tags': 'tag2,tag1',
                 'links': [],
-                'versions': (),
                 'source': '',
+                'versions': (),
                 'filename': '',
                 'created': '2015-10-14T19:56:31.000001+00:00',
                 'updated': '2016-10-14T19:56:31.000001+00:00',

@@ -87,8 +87,8 @@ class TestUtContentParserMkdn(object):
             'https://docs.docker.com/engine/reference/commandline/images/',
             'https://docs.docker.com/engine/reference/commandline/rm/'
         )
-        assert resource.versions == ('git<=1.1.1', 'python>=2.7.0')
         assert resource.source == 'https://www.random.org/'
+        assert resource.versions == ('git<=1.1.1', 'python>=2.7.0')
         assert resource.filename == 'snippet.txt'
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
@@ -185,8 +185,8 @@ class TestUtContentParserMkdn(object):
             'https://docs.docker.com/engine/reference/commandline/images/',
             'https://docs.docker.com/engine/reference/commandline/rm/'
         )
-        assert resource.versions == ()
         assert resource.source == ''
+        assert resource.versions == ()
         assert resource.filename == ''
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
@@ -207,11 +207,9 @@ class TestUtContentParserMkdn(object):
         assert resource.name == ''
         assert resource.groups == ('docker', 'python')
         assert resource.tags == ()
-        assert resource.links == (
-            'https://github.com/moby/moby/issues/23302',
-        )
-        assert resource.versions == ()
+        assert resource.links == ('https://github.com/moby/moby/issues/23302',)
         assert resource.source == ''
+        assert resource.versions == ()
         assert resource.filename == ''
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
@@ -268,8 +266,8 @@ class TestUtContentParserMkdn(object):
         assert resource.groups == ('default',)
         assert resource.tags == ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
         assert resource.links == ()
-        assert resource.versions == ()
         assert resource.source == ''
+        assert resource.versions == ()
         assert resource.filename == ''
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
@@ -340,8 +338,8 @@ class TestUtContentParserMkdn(object):
         assert resource.groups == ('linux',)
         assert resource.tags == ('howto', 'linux', 'tar', 'untar')
         assert resource.links == ()
-        assert resource.versions == ()
         assert resource.source == ''
+        assert resource.versions == ()
         assert resource.filename == ''
         assert resource.created == '2018-05-07T11:13:17.000001+00:00'
         assert resource.updated == '2018-05-07T11:13:17.000001+00:00'
@@ -410,8 +408,8 @@ class TestUtContentParserMkdn(object):
             'https://docs.docker.com/engine/reference/commandline/rm/',
             'https://docs.docker.com/engine/reference/commandline/test/'
         )
-        assert resource.versions == ()
         assert resource.source == ''
+        assert resource.versions == ()
         assert resource.filename == ''
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
@@ -477,8 +475,8 @@ class TestUtContentParserMkdn(object):
             'https://docs.docker.com/engine/reference/commandline/rm/',
             'https://docs.docker.com/engine/reference/commandline/test/'
         )
-        assert resource.versions == ()
         assert resource.source == ''
+        assert resource.versions == ()
         assert resource.filename == ''
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
@@ -556,8 +554,8 @@ class TestUtContentParserMkdn(object):
         assert resource.groups == ('docker',)
         assert resource.tags == ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
         assert resource.links == ()
-        assert resource.versions == ('docker=1.1.1', 'moby!=2.7.0')
         assert resource.source == ''
+        assert resource.versions == ('docker=1.1.1', 'moby!=2.7.0')
         assert resource.filename == ''
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
@@ -648,8 +646,8 @@ class TestUtContentParserMkdn(object):
         assert resource.groups == ('docker',)
         assert resource.tags == ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
         assert resource.links == ()
-        assert resource.versions == ()
         assert resource.source == ''
+        assert resource.versions == ()
         assert resource.filename == ''
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
@@ -739,8 +737,8 @@ class TestUtContentParserMkdn(object):
         assert resource.groups == ('docker',)
         assert resource.tags == ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
         assert resource.links == ()
-        assert resource.versions == ()
         assert resource.source == ''
+        assert resource.versions == ()
         assert resource.filename == ''
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
@@ -814,8 +812,8 @@ class TestUtContentParserMkdn(object):
         assert resource.groups == ('default',)
         assert resource.tags == ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
         assert resource.links == ()
-        assert resource.versions == ()
         assert resource.source == ''
+        assert resource.versions == ()
         assert resource.filename == ''
         assert resource.uuid == 'f21c6318-8830-11e8-a114-2c4d54508088'
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
@@ -897,8 +895,8 @@ class TestUtContentParserMkdn(object):
         assert resource.groups == ('default',)
         assert resource.tags == ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
         assert resource.links == ()
-        assert resource.versions == ()
         assert resource.source == ''
+        assert resource.versions == ()
         assert resource.filename == ''
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
@@ -992,8 +990,8 @@ class TestUtContentParserMkdn(object):
             'https://github.com/MickayG/moby-kafka-logdriver',
             'https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ'
         )
-        assert resource.versions == ()
         assert resource.source == ''
+        assert resource.versions == ()
         assert resource.filename == 'docker-example.txt'
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.uuid == 'f21c6318-8830-11e8-a114-2c4d54508088'
@@ -1059,8 +1057,8 @@ class TestUtContentParserMkdn(object):
         assert resource.groups == ('docker',)
         assert resource.tags == ('docker', 'driver', 'kafka', 'kubernetes', 'logging', 'logs2kafka', 'moby', 'plugin')
         assert resource.links == ()
-        assert resource.versions == ()
         assert resource.source == ''
+        assert resource.versions == ()
         assert resource.filename == 'kubernetes-docker-log-driver-kafka.mkdn'
         assert resource.created == '2019-01-04T10:54:49.265512+00:00'
         assert resource.uuid == '24cd5827-b6ef-4067-b5ac-3ceac07dde9f'
@@ -1113,8 +1111,8 @@ class TestUtContentParserMkdn(object):
         assert resource.groups == ('docker',)
         assert resource.tags == ('cleanup', 'container', 'docker-ce', 'moby', 'python')
         assert resource.links == links
-        assert resource.versions == ('docker-ce<1.1.1', 'docker-ce=1.1.1', 'moby!=2.7.0', 'moby>2.6.0')
         assert resource.source == ''
+        assert resource.versions == ('docker-ce<1.1.1', 'docker-ce=1.1.1', 'moby!=2.7.0', 'moby>2.6.0')
         assert resource.filename == ''
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.updated == '2018-10-12T11:52:11.000001+00:00'
@@ -1161,8 +1159,8 @@ class TestUtContentParserMkdn(object):
         assert resource.groups == ('default',)
         assert resource.tags == ('cleanup', 'container', 'docker-ce', 'moby', 'python')
         assert resource.links == links
-        assert resource.versions == ('docker_ce=1.1.1', 'moby!=2.7.0')
         assert resource.source == ''
+        assert resource.versions == ('docker_ce=1.1.1', 'moby!=2.7.0')
         assert resource.filename == ''
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.updated == '2018-10-12T11:52:11.000001+00:00'
@@ -1209,8 +1207,8 @@ class TestUtContentParserMkdn(object):
         assert resource.groups == ('default',)
         assert resource.tags == ('cleanup', 'container', 'docker-ce', 'moby', 'python')
         assert resource.links == links
-        assert resource.versions == ('docker_ce=1.1.1', 'moby!=2.7.0')
         assert resource.source == ''
+        assert resource.versions == ('docker_ce=1.1.1', 'moby!=2.7.0')
         assert resource.filename == ''
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.updated == '2018-10-12T11:52:11.000001+00:00'

@@ -4,6 +4,6 @@
     "type": "string"
   },
   "default": [],
-  "description": "# Brief\n  \nOptional list of links.\n",
+  "description": "# Brief\n\nOptional list of links.\n",
   "$schema": "http://json-schema.org/schema#"
 }

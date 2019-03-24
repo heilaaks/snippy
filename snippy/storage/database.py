@@ -184,8 +184,8 @@ class Database(object):
                               , groups
                               , tags
                               , links
-                              , versions
                               , source
+                              , versions
                               , filename
                               , created
                               , updated
@@ -371,8 +371,8 @@ class Database(object):
                         , groups      = {0}
                         , tags        = {0}
                         , links       = {0}
-                        , versions    = {0}
                         , source      = {0}
+                        , versions    = {0}
                         , filename    = {0}
                         , created     = {0}
                         , updated     = {0}

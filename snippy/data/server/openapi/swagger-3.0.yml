@@ -132,8 +132,8 @@ paths:
             - groups
             - tags
             - links
-            - versions
             - source
+            - versions
             - filename
             - created
             - updated
@@ -149,20 +149,20 @@ paths:
           type: string
           default: brief
           enum:
+          - category
           - data
           - brief
           - description
+          - name
           - groups
           - tags
           - links
-          - category
-          - name
-          - filename
-          - versions
           - source
-          - uuid
+          - versions
+          - filename
           - created
           - updated
+          - uuid
           - digest
       - name: offset
         in: query
@@ -616,8 +616,8 @@ paths:
           - groups
           - tags
           - links
-          - versions
           - source
+          - versions
           - filename
           - created
           - updated
@@ -722,8 +722,8 @@ paths:
             - groups
             - tags
             - links
-            - versions
             - source
+            - versions
             - filename
             - created
             - updated
@@ -739,20 +739,20 @@ paths:
           type: string
           default: brief
           enum:
+          - category
           - data
           - brief
           - description
+          - name
           - groups
           - tags
           - links
-          - category
-          - name
-          - filename
-          - versions
           - source
-          - uuid
+          - versions
+          - filename
           - created
           - updated
+          - uuid
           - digest
       - name: offset
         in: query
@@ -789,7 +789,10 @@ components:
   schemas:
     attributeBrief:
       type: string
-      description: "# Brief\n  \nOptional brief description of the resource.\n"
+      description: |
+        # Brief
+
+        Optional brief description of the resource.
       default: ""
     requestResource:
       required:
@@ -817,10 +820,10 @@ components:
           $ref: '#/components/schemas/attributeTags'
         links:
           $ref: '#/components/schemas/attributeLinks'
-        versions:
-          $ref: '#/components/schemas/attributeVersions'
         source:
           $ref: '#/components/schemas/attributeSource'
+        versions:
+          $ref: '#/components/schemas/attributeVersions'
         filename:
           $ref: '#/components/schemas/attributeFilename'
     requestCollection:
@@ -881,10 +884,10 @@ components:
           $ref: '#/components/schemas/attributeTags'
         links:
           $ref: '#/components/schemas/attributeLinks'
-        versions:
-          $ref: '#/components/schemas/attributeVersions'
         source:
           $ref: '#/components/schemas/attributeSource'
+        versions:
+          $ref: '#/components/schemas/attributeVersions'
         filename:
           $ref: '#/components/schemas/attributeFilename'
         created:
@@ -897,7 +900,10 @@ components:
           $ref: '#/components/schemas/attributeDigest'
     attributeDescription:
       type: string
-      description: "# Brief\n  \nOptional long description of the resource.\n"
+      description: |
+        # Brief
+
+        Optional long description of the resource.
       default: ""
     responseData:
       required:
@@ -989,7 +995,10 @@ components:
           format: uri
     attributeName:
       type: string
-      description: "# Brief\n  \nOptional name for the resource.\n"
+      description: |
+        # Brief
+
+        Optional name for the resource.
       default: ""
     requestData:
       required:
@@ -1007,7 +1016,10 @@ components:
           $ref: '#/components/schemas/requestAttributes'
     attributeGroups:
       type: array
-      description: "# Brief\n  \nOptional list of groups to which the resource belongs.\n"
+      description: |
+        # Brief
+
+        Optional list of groups to which the resource belongs.
       items:
         type: string
     attributeUpdated:
@@ -1028,8 +1040,10 @@ components:
           $ref: '#/components/schemas/resourceLink'
     attributeVersions:
       type: array
-      description: "# Brief\n  \nOptional list of services and versions related to\
-        \ the resource.\n"
+      description: |
+        # Brief
+
+        Optional list of services and versions related to the resource.
       items:
         type: string
     attributeDigest:
@@ -1054,7 +1068,10 @@ components:
           $ref: '#/components/schemas/responseLinks'
     attributeCategory:
       type: string
-      description: "# Brief\n  \nAutomatically assigned resource category.\n"
+      description: |
+        # Brief
+
+        Automatically assigned resource category.
       enum:
       - snippet
       - solution
@@ -1085,7 +1102,10 @@ components:
             $ref: '#/components/schemas/responseData'
     attributeLinks:
       type: array
-      description: "# Brief\n  \nOptional list of links.\n"
+      description: |
+        # Brief
+
+        Optional list of links.
       items:
         type: string
     resourceLink:
@@ -1108,7 +1128,10 @@ components:
             $ref: '#/components/schemas/error'
     attributeData:
       type: array
-      description: "# Brief\n \nResource data attribute.\n"
+      description: |
+        # Brief
+
+        Resource data attribute.
       items:
         type: string
   responses:
@@ -1195,20 +1218,20 @@ components:
         type: string
         default: brief
         enum:
+        - category
         - data
         - brief
         - description
+        - name
         - groups
         - tags
         - links
-        - category
-        - name
-        - filename
-        - versions
         - source
-        - uuid
+        - versions
+        - filename
         - created
         - updated
+        - uuid
         - digest
     x-http-method-override:
       name: X-HTTP-Method-Override
@@ -1286,8 +1309,8 @@ components:
         - groups
         - tags
         - links
-        - versions
         - source
+        - versions
         - filename
         - created
         - updated
@@ -1410,8 +1433,8 @@ components:
           - groups
           - tags
           - links
-          - versions
           - source
+          - versions
           - filename
           - created
           - updated

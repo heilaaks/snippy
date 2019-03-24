@@ -240,8 +240,8 @@ class Database(object):
                               , groups
                               , tags
                               , links
-                              , versions
                               , source
+                              , versions
                               , filename
                               , created
                               , updated
@@ -263,8 +263,8 @@ class Database(object):
             Const.DELIMITER_GROUPS.join(map(Const.TEXT_TYPE, sorted(content.get('groups', ('default',))))),
             Const.DELIMITER_TAGS.join(map(Const.TEXT_TYPE, sorted(content.get('tags', ())))),
             Const.DELIMITER_LINKS.join(map(Const.TEXT_TYPE, content.get('links', ()))),
-            content.get('versions', ''),
             content.get('source', ''),
+            Const.DELIMITER_VERSIONS.join(map(Const.TEXT_TYPE, content.get('versions', ()))),
             content.get('filename', ''),
             content.get('created', Helper.IMPORT_TIME),
             content.get('updated', Helper.IMPORT_TIME),

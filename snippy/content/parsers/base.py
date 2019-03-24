@@ -34,36 +34,36 @@ class ContentParserBase(object):
     TEXT_TAG_DATA = '<data>'
     TEXT_TAG_BRIEF = '<brief>'
     TEXT_TAG_DESCRIPTION = '<description>'
+    TEXT_TAG_NAME = '<name>'
     TEXT_TAG_GROUPS = '<groups>'
     TEXT_TAG_TAGS = '<tags>'
     TEXT_TAG_LINKS = '<links>'
-    TEXT_TAG_VERSIONS = '<versions>'
-    TEXT_TAG_NAME = '<name>'
-    TEXT_TAG_FILENAME = '<filename>'
     TEXT_TAG_SOURCE = '<source>'
+    TEXT_TAG_VERSIONS = '<versions>'
+    TEXT_TAG_FILENAME = '<filename>'
 
     # Match content template tags.
     RE_MATCH_TEMPLATE_TAGS = re.compile(r'''
          %s  # Match content data.
         |%s  # Match brief.
         |%s  # Match description.
+        |%s  # Match name.
         |%s  # Match groups.
         |%s  # Match tags.
         |%s  # Match links.
-        |%s  # Match versions.
-        |%s  # Match name.
-        |%s  # Match filename.
         |%s  # Match source.
+        |%s  # Match versions.
+        |%s  # Match filename.
         ''' % (re.escape(TEXT_TAG_DATA),
                re.escape(TEXT_TAG_BRIEF),
                re.escape(TEXT_TAG_DESCRIPTION),
+               re.escape(TEXT_TAG_NAME),
                re.escape(TEXT_TAG_GROUPS),
                re.escape(TEXT_TAG_TAGS),
                re.escape(TEXT_TAG_LINKS),
+               re.escape(TEXT_TAG_SOURCE),
                re.escape(TEXT_TAG_VERSIONS),
-               re.escape(TEXT_TAG_NAME),
-               re.escape(TEXT_TAG_FILENAME),
-               re.escape(TEXT_TAG_SOURCE)
+               re.escape(TEXT_TAG_FILENAME)
                ), re.VERBOSE)
 
     # Content template example content.
@@ -74,34 +74,34 @@ class ContentParserBase(object):
     EXAMPLE_DATA = 'Markdown commands are defined between backtics and prefixed by a dollar sign'  # Used only with Markdown template.
     EXAMPLE_BRIEF = 'Add brief title for content'
     EXAMPLE_DESCRIPTION = 'Add a description that defines the content in one chapter.'
+    EXAMPLE_NAME = 'example content handle'
     EXAMPLE_GROUPS = 'groups'
     EXAMPLE_TAGS = 'example,tags'
     EXAMPLE_LINKS = 'https://www.example.com/add-links-here.html'
-    EXAMPLE_VERSIONS = 'example=3.9.0,python=3'
-    EXAMPLE_NAME = 'example content handle'
-    EXAMPLE_FILENAME = 'example-content.md'
     EXAMPLE_SOURCE = 'https://www.example.com/source.md'
+    EXAMPLE_VERSIONS = 'example=3.9.0,python=3'
+    EXAMPLE_FILENAME = 'example-content.md'
 
     # Match content template texamples with the exception of groups.
     RE_MATCH_TEMPLATE_EXAMPLES = re.compile(r'''
         [`$\s]{3}%s[`]{1}\n    # Match data in Markdown surrounded by `$ `.
         |%s                    # Match brief.
         |%s                    # Match description.
+        |%s                    # Match name.
         |%s                    # Match tags.
         |(?:[\[\d\]\s]{4})?%s  # Match links that are optionally prefixed by '[1] ' in case of Markdown template.
-        |%s                    # Match versions.
-        |%s                    # Match name.
-        |%s                    # Match filename.
         |%s                    # Match source.
+        |%s                    # Match versions.
+        |%s                    # Match filename.
         ''' % (re.escape(EXAMPLE_DATA),
                re.escape(EXAMPLE_BRIEF),
                re.escape(EXAMPLE_DESCRIPTION),
+               re.escape(EXAMPLE_NAME),
                re.escape(EXAMPLE_TAGS),
                re.escape(EXAMPLE_LINKS),
+               re.escape(EXAMPLE_SOURCE),
                re.escape(EXAMPLE_VERSIONS),
-               re.escape(EXAMPLE_NAME),
-               re.escape(EXAMPLE_FILENAME),
-               re.escape(EXAMPLE_SOURCE)
+               re.escape(EXAMPLE_FILENAME)
                ), re.VERBOSE)
 
     TITLE_TEXT_GROUPS = '# Add optional comma separated list of groups below.\n'

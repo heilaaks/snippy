@@ -189,8 +189,8 @@ class Config(object):
         cls.content_groups = cls.source.groups
         cls.content_tags = cls.source.tags
         cls.content_links = cls.source.links
-        cls.content_versions = cls.source.versions
         cls.content_source = cls.source.source
+        cls.content_versions = cls.source.versions
         cls.content_filename = cls.source.filename
 
         # search
@@ -327,8 +327,8 @@ class Config(object):
         config.groups = cls.content_groups
         config.tags = cls.content_tags
         config.links = cls.content_links
-        config.versions = cls.content_versions
         config.source = cls.content_source
+        config.versions = cls.content_versions
         config.filename = cls.content_filename
 
         if updates:

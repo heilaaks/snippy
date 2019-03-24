@@ -22,11 +22,11 @@
     "links": {
       "$ref": "#/definitions/attributeLinks"
     },
-    "versions": {
-      "$ref": "#/definitions/attributeVersions"
-    },
     "source": {
       "$ref": "#/definitions/attributeSource"
+    },
+    "versions": {
+      "$ref": "#/definitions/attributeVersions"
     },
     "filename": {
       "$ref": "#/definitions/attributeFilename"

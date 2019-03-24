@@ -3,6 +3,6 @@
   "items": {
     "type": "string"
   },
-  "description": "# Brief\n \nResource data attribute.\n",
+  "description": "# Brief\n\nResource data attribute.\n",
   "$schema": "http://json-schema.org/schema#"
 }

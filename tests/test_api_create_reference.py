@@ -456,8 +456,8 @@ class TestApiCreateReference(object):
                 'groups': ('python',),
                 'tags': ('spaces', 'tabs'),
                 'links': ('link1', 'link2'),
-                'versions': ('kafka=1.0.0',),
                 'source': 'short source link',
+                'versions': ('kafka=1.0.0',),
                 'filename': 'shortfilename.yaml',
                 'created': Content.REGEXP_TIME,
                 'updated': Content.REGEXP_TIME,
@@ -476,8 +476,8 @@ class TestApiCreateReference(object):
                     'groups': ['    python   ',],
                     'tags': ['  spaces   ', '  tabs    '],
                     'links': ['  link1  ', '    link2   '],
-                    'versions': ['  kafka=1.0.0   '],
                     'source': '  short source link   ',
+                    'versions': ['  kafka=1.0.0   '],
                     'filename': '  shortfilename.yaml   '
                 }
             }]
@@ -519,8 +519,8 @@ class TestApiCreateReference(object):
                 'groups': ('default', ),
                 'tags': (),
                 'links': ('link1', 'link2'),
-                'versions': (),
                 'source': '',
+                'versions': (),
                 'filename': '',
                 'created': Content.REGEXP_TIME,
                 'updated': Content.REGEXP_TIME,
@@ -579,8 +579,8 @@ class TestApiCreateReference(object):
                 'groups': ('docker', 'python'),
                 'tags': ('pypy', 'swarm'),
                 'links': ('http://www.dot.com/link2', 'http://www.dot.com/link1'),
-                'versions': (),
                 'source': '',
+                'versions': (),
                 'filename': '',
                 'created': '2018-06-22T13:11:13.678729+00:00',
                 'updated': '2018-06-22T13:11:13.678729+00:00',
@@ -616,7 +616,6 @@ class TestApiCreateReference(object):
             path='/snippy/api/app/v1/references',
             headers={'accept': 'application/vnd.api+json', 'content-type': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body, ensure_ascii=False))
-        print(result.json)
         assert result.status == falcon.HTTP_201
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)

@@ -1,10 +1,10 @@
 ## WORKING
-   - [ ] Change property order: [category, data, brief, description, name, groups, tags, links, versions, source, filename, created, updated, uuid, digest]
-   - [ ] Change = to == based on https://en.wikipedia.org/wiki/Relational_operator mathematical
-   - [ ] Change Mkdn and Text template order to match the content order.
+   - [ ] Add multicore support for lint.
+   - [ ] Support uuid or digest in API ID.
+   - [ ] Change (?) = to == based on https://en.wikipedia.org/wiki/Relational_operator mathematical
    - [ ] Post references with data must be automatically set to links. Data is only mandatory in API specs. Not easy (?) to add conditional mandatory fields in OAS.
-   - [ ] scat also supports plurals: [snippets, solutions, references]
-   - [ ] change basepath to /api/snippy/v1. It does not make sense to do auth in application. If yes, it can be /api/snippy/v1/users.
+   - [ ] change basepath to /api/snippy/v1. It does not make sense to do auth in application. If yes, it can be /api/snippy/v1/users.
+   - [ ] Refere auth and non used paths from code.
    - [ ] Test export/import Mkdn snippet with partial comments. The export must have the <not documented> tag and import must remove it.
    - [ ] Use "resource attribute" (resource attribute) in user documents like api specs. This is perhaps more clearer and better than "resource field". 
    - [ ] Fix digest computation once things are setling down. Changing this forces changes to all tests and code that rely on digest.

@@ -732,14 +732,13 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         """Export all solutions.
 
         Try to export content only from solution and reference categories. The
-        solution category name is not correctly spelled.
+        solution category name is not correctly spelled which must faile the
+        operation.
         """
 
-        p2_cause = 'NOK: search categories [\'solutions,reference\'] are not a subset of (\'snippet\', \'solution\', \'reference\')'
-        p3_cause = 'NOK: search categories [u\'solutions,reference\'] are not a subset of (\'snippet\', \'solution\', \'reference\')'
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--scat', 'solutions,reference'])
-            assert cause in (p2_cause, p3_cause)
+            assert cause == "NOK: search categories ('reference', 'solutions') are not a subset of ('snippet', 'solution', 'reference')"
             mock_file.assert_not_called()
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_not_called()

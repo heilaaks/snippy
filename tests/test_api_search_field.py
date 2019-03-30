@@ -225,13 +225,9 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
     def test_api_search_groups_004(self, server):
         """Get specific content based on group field.
 
-        Try to call GET /v1/groups/docker,python and limit the search to
-        content categories defined in plural form. This should not work even
-        though this works from the CLI. The reasoning being used is that this
-        enforces strict format for the API and it allows more straightforward
-        implementation. If the plural forms would be accepted, then question
-        would be for example is the result JSON data.type also in plural form
-        in this case?
+        Try to call GET /v1/groups/docker,python and limit search to content
+        categories defined in plural form. This must not work because only
+        singular formas for search category ``scat`` is supported.
         """
 
         expect_headers = {
@@ -244,7 +240,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
                 'status': '400',
                 'statusString': '400 Bad Request',
                 'module': 'snippy.testing.testing:123',
-                'title': "search categories: ['snippets', 'solutions'] :are not a subset of: ('snippet', 'solution', 'reference')"
+                'title': "search categories: ('snippets', 'solutions') :are not a subset of: ('snippet', 'solution', 'reference')"
             }, {
                 'status': '404',
                 'statusString': '404 Not Found',
@@ -366,7 +362,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
                 'status': '400',
                 'statusString': '400 Bad Request',
                 'module': 'snippy.testing.testing:123',
-                'title': "search categories: ['snippet', 'solutions', 'reference'] :are not a subset of: ('snippet', 'solution', 'reference')"
+                'title': "search categories: ('reference', 'snippet', 'solutions') :are not a subset of: ('snippet', 'solution', 'reference')"
             }, {
                 'status': '404',
                 'statusString': '404 Not Found',

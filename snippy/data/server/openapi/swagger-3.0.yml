@@ -1331,12 +1331,12 @@ components:
         items:
           type: string
           enum:
-          - snippets
-          - solutions
-          - references
+          - snippet
+          - solution
+          - reference
       example:
-      - snippets
-      - snippets,solutions
+      - snippet
+      - snippet,solution
     digest:
       name: digest
       in: query

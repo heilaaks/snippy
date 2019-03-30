@@ -434,7 +434,11 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
             else:
                 scat = (self.category,)
         elif not set(scat).issubset(Const.CATEGORIES):
-            Cause.push(Cause.HTTP_BAD_REQUEST, 'search categories: {} :are not a subset of: {}'.format(value, Const.CATEGORIES))
+            # The below formatting removes unicode string prefix u'' in case
+            # of Python 2. The formatting also prints a beautified list of
+            # invalid categories in the same format as the valid categories.
+            categories = '({})'.format(', '.join('\'{0}\''.format(w) for w in scat))
+            Cause.push(Cause.HTTP_BAD_REQUEST, 'search categories: {} :are not a subset of: {}'.format(categories, Const.CATEGORIES))
             scat = (Const.UNKNOWN_CATEGORY,)
         self._scat = scat  # pylint: disable=attribute-defined-outside-init
 

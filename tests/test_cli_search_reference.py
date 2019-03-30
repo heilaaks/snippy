@@ -237,7 +237,7 @@ class TestCliSearchReference(object):
 
     @pytest.mark.usefixtures('default-references', 'import-remove', 'import-beats')
     def test_cli_search_reference_011(self, snippy, capsys):
-        """Search references with ``sall`` option.
+        """Search references with ``sall`` and ``sall`` options.
 
         Search content from all fields. Search category defines that the
         search must be made from snippets, solutions and references.
@@ -367,6 +367,54 @@ class TestCliSearchReference(object):
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
+        assert not err
+
+    @pytest.mark.usefixtures('default-references', 'import-remove', 'import-beats')
+    def test_cli_search_reference_015(self, snippy, capsys):
+        """Search references with ``scat`` and ``stag`` options.
+
+        In this case the search category is defined explicitly. The search
+        result must contain only resources within selected category and with
+        defined tag. This test must not find resource from reference category
+        which also contains the howto tag.
+        """
+
+        output = (
+            '1. Debugging Elastic Beats @beats [db712a82662d6932]',
+            Const.NEWLINE.join(Solution.BEATS_OUTPUT),
+            '   :',
+            '',
+            'OK',
+            ''
+        )
+        cause = snippy.run(['snippy', 'search', '--scat', 'solution', '--stag', 'howto', '--no-ansi'])
+        out, err = capsys.readouterr()
+        assert cause == Cause.ALL_OK
+        assert out == Const.NEWLINE.join(output)
+        assert not err
+
+    @pytest.mark.usefixtures('default-references')
+    def test_cli_search_reference_016(self, snippy, capsys):
+        """Search references with ``scat`` and ``stag`` options.
+
+        Try to define search category ``scat`` option in plural form. This
+        must not work because only singular forms in the search category
+        ``scat`` option are supported.
+
+        It is possible to define the content category with content catefory
+        option long format like ``--snippets`` in plural form from command
+        line. But this is not supported for the ``scat`` option which is also
+        used in the REST API.
+
+        This limits the supported values in the REST API and thus it makes
+        error handling simpler.
+        """
+
+        output = "NOK: search categories ('solutions') are not a subset of ('snippet', 'solution', 'reference')\n"
+        cause = snippy.run(['snippy', 'search', '--scat', 'solutions', '--stag', 'howto', '--no-ansi'])
+        out, err = capsys.readouterr()
+        assert cause == "NOK: search categories ('solutions') are not a subset of ('snippet', 'solution', 'reference')"
+        assert out == output
         assert not err
 
     @classmethod

@@ -482,6 +482,20 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(None)
             mock_file.assert_called_once_with('./snippet-template.mkdn', 'r')
 
+    def test_cli_import_snippet_022(self, snippy):
+        """Import all snippets.
+
+        Try to import snippet from file which file format is not supported.
+        In this case supported file extension is part of the filename when
+        the file is in unknown format.
+        """
+
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'import', '-f', '.text.bar'])
+            assert cause == 'NOK: cannot identify file format for file: .text.bar'
+            Content.assert_storage(None)
+            mock_file.assert_not_called()
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

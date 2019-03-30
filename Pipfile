@@ -4,22 +4,22 @@ verify_ssl = true
 name = "pypi"
 
 [dev-packages]
-flake8 = "==3.5.0"
 mock = "==2.0.0"
 "openapi2jsonschema" = "==0.8.0"
 pprintpp = "==0.4.0"
 pylint = "==2.3.1"
 pytest-cov = "==2.6.1"
-pytest-mock = "==1.10.1"
+pytest-mock = "==1.10.2"
 sphinx-autobuild = "==0.7.1"
 sphinxcontrib-openapi = "==0.4.0"
-tox = "==3.5.3"
-pyflakes = "==1.6.0"
+tox = "==3.8.3"
+pyflakes = "==2.1.1"
 logging-tree = "==1.8"
 pytest-xdist = "==1.27.0"
 sphinx-rtd-theme = "==0.4.3"
-sphinx = "==1.8.5"
+sphinx = "==2.0.0"
 pytest = "==4.3.1"
+flake8 = "==3.7.7"
 
 [packages]
 PyYAML = ">=3.12"

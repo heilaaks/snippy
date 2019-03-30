@@ -33,7 +33,8 @@ extras_dev = (
     'openapi2jsonschema==0.8.0'
 )
 extras_docs = (
-    'sphinx==1.8.5',
+    'sphinx==1.8.5 ; python_version=="2.7.*"',
+    'sphinx==2.0.0 ; python_version>"2.7"',
     'sphinxcontrib-openapi==0.4.0',
     'sphinx_rtd_theme==0.4.3',
     'sphinx-autobuild==0.7.1'
@@ -58,18 +59,18 @@ extras_server_pypy = (
 )
 extras_tests = (
     'codecov==2.0.15',
-    'flake8==3.5.0',
+    'flake8==3.7.7',
     'logging_tree==1.8',
     'mock==2.0.0',
     'pprintpp==0.4.0',
-    'pyflakes==1.6.0',
+    'pyflakes==2.1.1',
     'pylint==1.9.4 ; python_version=="2.7.*"',
     'pylint==2.3.1 ; python_version>"2.7"',
     'pytest==4.3.1',
     'pytest-cov==2.6.1',
-    'pytest-mock==1.10.1',
+    'pytest-mock==1.10.2',
     'pytest-xdist==1.27.0',
-    'tox==3.5.3'
+    'tox==3.8.3'
 )
 
 meta = {}

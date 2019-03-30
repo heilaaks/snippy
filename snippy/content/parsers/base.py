@@ -64,7 +64,7 @@ class ContentParserBase(object):
                re.escape(TEXT_TAG_SOURCE),
                re.escape(TEXT_TAG_VERSIONS),
                re.escape(TEXT_TAG_FILENAME)
-               ), re.VERBOSE)
+               ), re.VERBOSE)  # pylint: disable=bad-continuation
 
     # Content template example content.
     #
@@ -102,7 +102,7 @@ class ContentParserBase(object):
                re.escape(EXAMPLE_SOURCE),
                re.escape(EXAMPLE_VERSIONS),
                re.escape(EXAMPLE_FILENAME)
-               ), re.VERBOSE)
+               ), re.VERBOSE)  # pylint: disable=bad-continuation
 
     TITLE_TEXT_GROUPS = '# Add optional comma separated list of groups below.\n'
     RE_MATCH_TEXT_GROUPS_EXAMPLES = re.compile(r'''
@@ -110,7 +110,7 @@ class ContentParserBase(object):
         %s  # Match example groups.
         ''' % (re.escape(TITLE_TEXT_GROUPS),
                re.escape(EXAMPLE_GROUPS)
-               ), re.VERBOSE)
+               ), re.VERBOSE)  # pylint: disable=bad-continuation
     RE_MATCH_MKDN_GROUPS_EXAMPLES = re.compile(r'''
         @groups$
         ''', re.MULTILINE | re.VERBOSE)

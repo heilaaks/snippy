@@ -559,11 +559,11 @@ class Config(object):
         name, extension = os.path.splitext(filename)
         if name and extension == '.json':
             file_format = Const.CONTENT_FORMAT_JSON
-        elif name and (extension == '.md' or extension == '.mkdn'):  # pylint: disable=consider-using-in
+        elif name and extension in ('.md', '.mkdn'):
             file_format = Const.CONTENT_FORMAT_MKDN
-        elif name and (extension == '.text' or extension == '.txt'):  # pylint: disable=consider-using-in
+        elif name and extension in ('.text', '.txt'):
             file_format = Const.CONTENT_FORMAT_TEXT
-        elif name and (extension == '.yaml' or extension == '.yml'):  # pylint: disable=consider-using-in
+        elif name and extension in ('.yaml', '.yml'):
             file_format = Const.CONTENT_FORMAT_YAML
         else:
             Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot identify file format for file: {}'.format(filename))

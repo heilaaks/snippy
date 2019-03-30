@@ -1,5 +1,6 @@
 ## WORKING
    - [ ] Change property order: [category, data, brief, description, name, groups, tags, links, versions, source, filename, created, updated, uuid, digest]
+   - [ ] Change = to == based on https://en.wikipedia.org/wiki/Relational_operator mathematical
    - [ ] Change Mkdn and Text template order to match the content order.
    - [ ] Post references with data must be automatically set to links. Data is only mandatory in API specs. Not easy (?) to add conditional mandatory fields in OAS.
    - [ ] scat also supports plurals: [snippets, solutions, references]

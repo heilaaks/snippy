@@ -122,14 +122,14 @@ class TestCliCreateReferece(object):
             '',
             '> category : reference  ',
             'created  : 2018-06-22T13:11:13.678729+00:00  ',
-            'digest   : 0cba049de5098ccdfec00258e77fa3c355149a347625c4f405f3e835d45d77fe  ',
+            'digest   : bb4c2540fab3a12b051b77b6902f426812ec95f8a1fa9e07ca1b7dc3cca0cc0d  ',
             'filename : example-content.md  ',
             'name     : example content handle  ',
             'source   : https://www.example.com/source.md  ',
             'tags     : example,tags  ',
             'updated  : 2018-06-22T13:11:13.678729+00:00  ',
             'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
-            'versions : example=3.9.0,python=3  ',
+            'versions : example=3.9.0,python>=3  ',
             ''
         )
         edited = (
@@ -145,7 +145,7 @@ class TestCliCreateReferece(object):
             '',
             '> category : reference  ',
             'created  : 2018-06-22T13:11:13.678729+00:00  ',
-            'digest   : 0cba049de5098ccdfec00258e77fa3c355149a347625c4f405f3e835d45d77fe  ',
+            'digest   : bb4c2540fab3a12b051b77b6902f426812ec95f8a1fa9e07ca1b7dc3cca0cc0d  ',
             'filename :  ',
             'name     :  ',
             'source   :  ',
@@ -180,14 +180,14 @@ class TestCliCreateReferece(object):
             '',
             '> category : reference  ',
             'created  : 2018-06-22T13:11:13.678729+00:00  ',
-            'digest   : 0cba049de5098ccdfec00258e77fa3c355149a347625c4f405f3e835d45d77fe  ',
+            'digest   : bb4c2540fab3a12b051b77b6902f426812ec95f8a1fa9e07ca1b7dc3cca0cc0d  ',
             'filename : example-content.md  ',
             'name     : example content handle  ',
             'source   : https://www.example.com/source.md  ',
             'tags     : example,tags  ',
             'updated  : 2018-06-22T13:11:13.678729+00:00  ',
             'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
-            'versions : example=3.9.0,python=3  ',
+            'versions : example=3.9.0,python>=3  ',
             ''
         )
         edited = template

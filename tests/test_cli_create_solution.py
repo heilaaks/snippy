@@ -168,14 +168,14 @@ class TestCliCreateSolution(object):
             '',
             '> category : solution  ',
             'created  : 2019-01-04T10:54:49.265512+00:00  ',
-            'digest   : 9108157db7d397dad4f96674893253128e1549e40d4003507a9f661f62380e8a  ',
+            'digest   : a6617fdf3a067ede0dafe09fa30045a1134436e6254117f70c5134c2658fe263  ',
             'filename : example-content.md  ',
             'name     : example content handle  ',
             'source   : https://www.example.com/source.md  ',
             'tags     : example,tags  ',
             'updated  : 2019-01-04T10:54:49.265512+00:00  ',
             'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
-            'versions : example=3.9.0,python=3  ',
+            'versions : example=3.9.0,python>=3  ',
             ''
         )
         edited = (
@@ -259,14 +259,14 @@ class TestCliCreateSolution(object):
             '',
             '> category : solution  ',
             'created  : 2019-01-04T10:54:49.265512+00:00  ',
-            'digest   : 9108157db7d397dad4f96674893253128e1549e40d4003507a9f661f62380e8a  ',
+            'digest   : a6617fdf3a067ede0dafe09fa30045a1134436e6254117f70c5134c2658fe263  ',
             'filename : example-content.md  ',
             'name     : example content handle  ',
             'source   : https://www.example.com/source.md  ',
             'tags     : example,tags  ',
             'updated  : 2019-01-04T10:54:49.265512+00:00  ',
             'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
-            'versions : example=3.9.0,python=3  ',
+            'versions : example=3.9.0,python>=3  ',
             ''
         )
         edited = template

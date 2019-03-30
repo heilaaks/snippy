@@ -266,14 +266,14 @@ class TestCliCreateSnippet(object):
             '',
             '> category : snippet  ',
             'created  : 2017-10-14T19:56:31.000001+00:00  ',
-            'digest   : 2bffd4a833596915ba2e20b4c948439fd8f94dc2ea81b4d74ed36b00f26e9780  ',
+            'digest   : 8d5193fea452d0334378a73ded829cfa27debea7ee87714d64b1b492d1a4601a  ',
             'filename : example-content.md  ',
             'name     : example content handle  ',
             'source   : https://www.example.com/source.md  ',
             'tags     : example,tags  ',
             'updated  : 2017-10-14T19:56:31.000001+00:00  ',
             'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
-            'versions : example=3.9.0,python=3  ',
+            'versions : example=3.9.0,python>=3  ',
             ''
         )
         edited = (
@@ -326,14 +326,14 @@ class TestCliCreateSnippet(object):
             '',
             '> category : snippet  ',
             'created  : 2017-10-14T19:56:31.000001+00:00  ',
-            'digest   : 2bffd4a833596915ba2e20b4c948439fd8f94dc2ea81b4d74ed36b00f26e9780  ',
+            'digest   : 8d5193fea452d0334378a73ded829cfa27debea7ee87714d64b1b492d1a4601a  ',
             'filename : example-content.md  ',
             'name     : example content handle  ',
             'source   : https://www.example.com/source.md  ',
             'tags     : example,tags  ',
             'updated  : 2017-10-14T19:56:31.000001+00:00  ',
             'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
-            'versions : example=3.9.0,python=3  ',
+            'versions : example=3.9.0,python>=3  ',
             ''
         )
         edited = template
@@ -405,14 +405,14 @@ class TestCliCreateSnippet(object):
             '',
             '> category : snippet  ',
             'created  : 2017-10-14T19:56:31.000001+00:00  ',
-            'digest   : 27ed3bfa699ab5de455bd3d5eb007b5c3edc42ebcf6a84de80adc37650197391  ',
+            'digest   : 023dc3bf754064bc5c3692cf535a769f402b187e14ebfb7e64273f6caf03ec6e  ',
             'filename : example-content.md  ',
             'name     : example content handle  ',
             'source   : https://www.example.com/source.md  ',
             'tags     : cli,from,tags  ',
             'updated  : 2017-10-14T19:56:31.000001+00:00  ',
             'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
-            'versions : example=3.9.0,python=3  ',
+            'versions : example=3.9.0,python>=3  ',
             ''
         )
         edited = (

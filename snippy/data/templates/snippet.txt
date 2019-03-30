@@ -9,6 +9,9 @@
 # Add optional description below.
 <description>
 
+# Add optional name below.
+<name>
+
 # Add optional comma separated list of groups below.
 <groups>
 
@@ -18,14 +21,11 @@
 # Add optional links below one link per line.
 <links>
 
-# Add optional comma separated list of key=value versions below.
-<versions>
+# Add optional source reference below.
+<source>
 
-# Add optional name below.
-<name>
+# Add optional comma separated list of key-value versions below.
+<versions>
 
 # Add optional filename below.
 <filename>
-
-# Add optional source reference below.
-<source>

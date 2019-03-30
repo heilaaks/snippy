@@ -79,7 +79,7 @@ class ContentParserBase(object):
     EXAMPLE_TAGS = 'example,tags'
     EXAMPLE_LINKS = 'https://www.example.com/add-links-here.html'
     EXAMPLE_SOURCE = 'https://www.example.com/source.md'
-    EXAMPLE_VERSIONS = 'example=3.9.0,python=3'
+    EXAMPLE_VERSIONS = 'example=3.9.0,python>=3'
     EXAMPLE_FILENAME = 'example-content.md'
 
     # Match content template texamples with the exception of groups.

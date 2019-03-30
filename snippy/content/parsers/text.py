@@ -68,7 +68,7 @@ class ContentParserText(ContentParserBase):
     SOURCE[Const.REFERENCE] = SOURCE[Const.SNIPPET]
 
     VERSIONS = {}
-    VERSIONS[Const.SNIPPET] = '# Add optional comma separated list of key=value versions below.\n'
+    VERSIONS[Const.SNIPPET] = '# Add optional comma separated list of key-value versions below.\n'
     VERSIONS[Const.REFERENCE] = VERSIONS[Const.SNIPPET]
 
     FILENAME = {}

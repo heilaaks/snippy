@@ -10,6 +10,7 @@ Breaking changes
 ~~~~~~~~~~~~~~~~
 
 * Change REST API endpoints `[2019.03.24]`_.
+* Change server base path command line option name `[2019.03.31]`_.
 
 New features
 ~~~~~~~~~~~~
@@ -128,4 +129,5 @@ Security
 .. _`[2018.09.08]`: https://github.com/heilaaks/snippy/commit/8d9b0558809e56ce40798f61c8636e04307743ed
 .. _`[2018.08.09]`: https://github.com/heilaaks/snippy/commit/9e7e9f90e5df54f9930371617114d34e791be2ac
 .. _`[2019.01.29]`: https://github.com/heilaaks/snippy/commit/6e60886d5f78d49952cd6b977db3a9b6f803f092
-.. _`[2019.03.24]`: https://app.swaggerhub.com/apis/heilaaks/snippy/1.0
+.. _`[2019.03.24]`: https://github.com/heilaaks/snippy/commit/063426d8c7bee05b620fa85cbf6ca81b1e96f45b
+.. _`[2019.03.31]`: https://github.com/heilaaks/snippy/commit/4b65ffa15e614a1715b8c5586563c8de093c7a34

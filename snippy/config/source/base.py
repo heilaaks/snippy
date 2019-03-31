@@ -50,10 +50,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     LIMIT_DEFAULT_API = 20
     LIMIT_DEFAULT_CLI = 99
     OFFSET_DEFAULT = 0
-    SERVER_BASE_PATH = '/snippy/api'
-    SERVER_APP_BASE_PATH = SERVER_BASE_PATH + '/app/v1/'
-    SERVER_ADMIN_BASE_PATH = SERVER_BASE_PATH + '/admin/v1/'
-    SERVER_AUTH_BASE_PATH = SERVER_BASE_PATH + '/auth/v1/'
+    SERVER_BASE_PATH = '/snippy/api/app/v1/'
 
     def __init__(self, derived, parameters=None):
         self._logger = Logger.get_logger(__name__)
@@ -107,7 +104,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         namespace.append('search_filter={}'.format(self.search_filter))
         namespace.append('search_limit={}'.format(self.search_limit))
         namespace.append('search_offset={}'.format(self.search_offset))
-        namespace.append('server_app_base_path={}'.format(self.server_app_base_path))
+        namespace.append('server_base_path={}'.format(self.server_base_path))
         namespace.append('server_host={}'.format(self.server_host))
         namespace.append('server_minify_json={}'.format(self.server_minify_json))
         namespace.append('sgrp={}'.format(self.sgrp))
@@ -205,7 +202,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self.search_filter = parameters.get('search_filter', None)
         self.search_limit = parameters.get('limit', self.LIMIT_DEFAULT_API)
         self.search_offset = parameters.get('offset', self.OFFSET_DEFAULT)
-        self.server_app_base_path = parameters.get(*self.read_env('server_app_base_path', self.SERVER_APP_BASE_PATH))
+        self.server_base_path = parameters.get(*self.read_env('server_base_path', self.SERVER_BASE_PATH))
         self.server_host = parameters.get(*self.read_env('server_host', Const.EMPTY))
         self.server_minify_json = parameters.get(*self.read_env('server_minify_json', False))
         self.server_ssl_ca_cert = parameters.get(*self.read_env('server_ssl_ca_cert', None))
@@ -598,14 +595,25 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         return tuple(self._reset_fields.keys())
 
     @property
-    def server_app_base_path(self):
-        """Get REST application base path."""
+    def server_base_path(self):
+        """Get REST API base path."""
 
-        return self._server_app_base_path
+        return self._server_base_path
 
-    @server_app_base_path.setter
-    def server_app_base_path(self, value):
-        """Make sure that REST application base path ends with slash."""
+    @server_base_path.setter
+    def server_base_path(self, value):
+        """Validate server API base path.
+
+        Checking the base path is far from complete and it is not known how
+        to do it to be absolutely certain that it works without copying all
+        the same checks as used server. Therefore this is just a portion of
+        checks for possible failure cases.
+
+        Make sure that REST API base path ends with slash.
+
+        Args:
+            value (str): REST API base path.
+        """
 
         # Joining base path URL always assumes that the base path starts
         # and ends with slash. The os.path cannot be used because it
@@ -615,15 +623,11 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         if not value.endswith('/'):
             value = value + '/'
 
-        # Checking the base path is far from complete and it is not known
-        # how to do it to be absolutely certain that it works without
-        # copying all the same checks as used server. Therefore this is
-        # just a portion of checks for possible failure cases.
         if '//' in value:
             self._logger.debug('{}: use default base path because invalid configuration: {}'.format(self._derived, value))
-            value = self.SERVER_APP_BASE_PATH
+            value = self.SERVER_BASE_PATH
 
-        self._server_app_base_path = value  # pylint: disable=attribute-defined-outside-init
+        self._server_base_path = value  # pylint: disable=attribute-defined-outside-init
 
     @property
     def identity(self):
@@ -666,7 +670,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         command line option is ``SNIPPY_SERVER_HOST``.
 
         Args:
-            option (string): Command line option.
+            option (str): Command line option.
             default: Default value.
 
         Returns:

@@ -76,7 +76,7 @@ class Server(object):  # pylint: disable=too-few-public-methods
             'ssl_version': ssl.PROTOCOL_TLSv1_2,
             'workers': 1
         }
-        self._logger.debug('run rest api server application with base path: %s', Config.server_app_base_path)
+        self._logger.debug('run rest api server application with base path: %s', Config.server_base_path)
         try:
             self.api = falcon.API(media_type='application/vnd.api+json')
         except AttributeError:
@@ -88,21 +88,21 @@ class Server(object):  # pylint: disable=too-few-public-methods
         self.api.req_options.media_handlers.update({'application/vnd.api+json': falcon.media.JSONHandler()})
         self.api.resp_options.media_handlers.update({'application/vnd.api+json': falcon.media.JSONHandler()})
         self.api.add_route('/snippy', ApiHello())
-        self.api.add_route(Config.server_app_base_path.rstrip('/'), ApiHello())
-        self.api.add_route(urljoin(Config.server_app_base_path, 'hello'), ApiHello())
-        self.api.add_route(urljoin(Config.server_app_base_path, 'snippets'), ApiSnippets(snippet))
-        self.api.add_route(urljoin(Config.server_app_base_path, 'snippets/{identity}'), ApiSnippetsId(snippet))
-        self.api.add_route(urljoin(Config.server_app_base_path, 'snippets/{identity}/{field}'), ApiSnippetsIdField(snippet))
-        self.api.add_route(urljoin(Config.server_app_base_path, 'solutions'), ApiSolutions(solution))
-        self.api.add_route(urljoin(Config.server_app_base_path, 'solutions/{identity}'), ApiSolutionsId(solution))
-        self.api.add_route(urljoin(Config.server_app_base_path, 'solutions/{identity}/{field}'), ApiSolutionsIdField(solution))
-        self.api.add_route(urljoin(Config.server_app_base_path, 'references'), ApiReferences(reference))
-        self.api.add_route(urljoin(Config.server_app_base_path, 'references/{identity}'), ApiReferencesId(reference))
-        self.api.add_route(urljoin(Config.server_app_base_path, 'references/{identity}/{field}'), ApiReferencesIdField(reference))
-        self.api.add_route(urljoin(Config.server_app_base_path, 'groups'), ApiGroups(fields))
-        self.api.add_route(urljoin(Config.server_app_base_path, 'groups/{sgrp}'), ApiGroups(fields))
-        self.api.add_route(urljoin(Config.server_app_base_path, 'tags'), ApiTags(fields))
-        self.api.add_route(urljoin(Config.server_app_base_path, 'tags/{stag}'), ApiTags(fields))
+        self.api.add_route(Config.server_base_path.rstrip('/'), ApiHello())
+        self.api.add_route(urljoin(Config.server_base_path, 'hello'), ApiHello())
+        self.api.add_route(urljoin(Config.server_base_path, 'snippets'), ApiSnippets(snippet))
+        self.api.add_route(urljoin(Config.server_base_path, 'snippets/{identity}'), ApiSnippetsId(snippet))
+        self.api.add_route(urljoin(Config.server_base_path, 'snippets/{identity}/{field}'), ApiSnippetsIdField(snippet))
+        self.api.add_route(urljoin(Config.server_base_path, 'solutions'), ApiSolutions(solution))
+        self.api.add_route(urljoin(Config.server_base_path, 'solutions/{identity}'), ApiSolutionsId(solution))
+        self.api.add_route(urljoin(Config.server_base_path, 'solutions/{identity}/{field}'), ApiSolutionsIdField(solution))
+        self.api.add_route(urljoin(Config.server_base_path, 'references'), ApiReferences(reference))
+        self.api.add_route(urljoin(Config.server_base_path, 'references/{identity}'), ApiReferencesId(reference))
+        self.api.add_route(urljoin(Config.server_base_path, 'references/{identity}/{field}'), ApiReferencesIdField(reference))
+        self.api.add_route(urljoin(Config.server_base_path, 'groups'), ApiGroups(fields))
+        self.api.add_route(urljoin(Config.server_base_path, 'groups/{sgrp}'), ApiGroups(fields))
+        self.api.add_route(urljoin(Config.server_base_path, 'tags'), ApiTags(fields))
+        self.api.add_route(urljoin(Config.server_base_path, 'tags/{stag}'), ApiTags(fields))
 
         # Reset cause just before starting the server. If there are any
         # failures during server statup phase that set a cause, they are

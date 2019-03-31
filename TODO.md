@@ -5,8 +5,7 @@
    - [ ] Partial search with UUID not working? database search always full UUID.
    - [ ] Change (?) = to == based on https://en.wikipedia.org/wiki/Relational_operator mathematical
    - [ ] Post references with data must be automatically set to links. Data is only mandatory in API specs. Not easy (?) to add conditional mandatory fields in OAS.
-   - [ ] change basepath to /api/snippy/v1. It does not make sense to do auth in application. If yes, it can be /api/snippy/v1/users.
-   - [ ] Refere auth and non used paths from code.
+   - [ ] change (?) default basepath to /api/snippy/v1.
    - [ ] Test export/import Mkdn snippet with partial comments. The export must have the <not documented> tag and import must remove it.
    - [ ] Use "resource attribute" (resource attribute) in user documents like api specs. This is perhaps more clearer and better than "resource field". 
    - [ ] Fix digest computation once things are setling down. Changing this forces changes to all tests and code that rely on digest.
@@ -65,7 +64,6 @@
    - [ ] Add Travis CI for PyPy version v6.0 for Python 3 when it comes https://github.com/travis-ci/travis-ci/issues/9542
    - [ ] Add test client to measure performance of the server. The PyPy does not seem to work with api_performance test.
    - [ ] Add user management with a new user table that lins to contents table.
-   - [ ] Add user authentication. Which one: sessionID, OAuth2, JWS? Maybe OAuth2 (corporate integration) or JWS (embedded, no server?).
    - [ ] Add CORS https://stackoverflow.com/a/45183343
    - [ ] Add /snippy/api/admin/v1/settings for log config. Same base /snippy/api/ for all routes.
    - [ ] Add limit to multilevel sort fields to two fields to avoid complex scenarios.
@@ -78,7 +76,6 @@
    - [ ] How to add custom Falcon exception handling through snippy logger?
 
 ## SECURITY
-   - [ ] Add /snippy/api/auth/v1 for login. Same base /snippy/api/ for all routes.
    - [ ] Remove server name and version from HTTP responses. This would require overriding Gunicorn https://stackoverflow.com/a/21294524.
 
 ## FIX

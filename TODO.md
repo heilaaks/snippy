@@ -1,6 +1,5 @@
 ## WORKING
-   - [ ] Add multicore support for lint.
-   - [ ] Support uuid or digest in API ID.
+   - [ ] Partial search with UUID not working? database search always full UUID.
    - [ ] Change (?) = to == based on https://en.wikipedia.org/wiki/Relational_operator mathematical
    - [ ] Post references with data must be automatically set to links. Data is only mandatory in API specs. Not easy (?) to add conditional mandatory fields in OAS.
    - [ ] change basepath to /api/snippy/v1. It does not make sense to do auth in application. If yes, it can be /api/snippy/v1/users.
@@ -11,6 +10,7 @@
    - [ ] Fix cli -f file to see if this goes ot content filename attribute. Should not. -f|--file and content.filename are not the same.
    - [ ] Fix help text to use import --all instead of content specific commands. Or keep?
    - [ ] Starting the server again and import the default content again with --defaults causes server internal erro 500 because of UUID. The 500 should not be here because this is not internal error. Fix?
+   - [ ] Fix it may be possile to validate collections so that it calls resource validatio. This would remove need to repeat the code to reset client UUID and digest in resource and collection validation.
    - [ ] Fix creating/updating resource with invalid versions. The seal() cannot check if Cause not is_is because it generates incorrect error. For example GET ../<valid digest>/error shows error that digest not foind. See test_api_search_reference_field_012.
    - [ ] Fix pinning of yaml that does not install globally. The instructions are to use local but that could contain help to add the ~./local/bin to path.
    - [ ] Fix duplicated paths in swagger specs. This seems to work with OAS3.0 (at least it does not complain) But how to specific this in swagger nicely without duplicated code? // https://en.wikipedia.org/wiki/Percent-encoding and https://stackoverflow.com/questions/44150758/swagger-2-0-multiple-path-objects-with-different-paths-but-same-request-and-res

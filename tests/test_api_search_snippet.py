@@ -413,10 +413,10 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_012(self, server):
         """Search snippet with digets.
 
-        Call GET /v1/snippets/{digest} to get explicit snippet based on
-        digest. In this case the snippet is found. In this case the URI
-        path contains 15 digit digest. The returned self link must contain
-        the default 16 digit digest.
+        Call GET /v1/snippets/{id} to get explicit snippet based on digest.
+        In this case the snippet is found. In this case the URI path contains
+        15 digit digest. The returned self link must contain the default 16
+        digit digest.
         """
 
         expect_headers = {
@@ -450,13 +450,12 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_013(self, server):
         """Search snippet with digets.
 
-        Try to call GET /v1/snippets/{digest} with digest that cannot be
-        found.
+        Try to call GET /v1/snippets/{id} with a digest that is not found.
         """
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '390'
+            'content-length': '392'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -464,12 +463,13 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
                 'status': '404',
                 'statusString': '404 Not Found',
                 'module': 'snippy.testing.testing:123',
-                'title': 'content digest: 101010101010101 was not unique and matched to: 0 resources'
+                'title': 'content identity: 101010101010101 was not unique and matched to: 0 resources'
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/snippets/101010101010101',
             headers={'accept': 'application/json'})
+        print(result.json)
         assert result.status == falcon.HTTP_404
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
@@ -1093,7 +1093,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_field_001(self, server):
         """Get specific snippet field.
 
-        Call GET /v1/snippets/<digest>/data for existing snippet.
+        Call GET /v1/snippets/{id}/data for existing snippet.
         """
 
         expect_headers = {
@@ -1123,9 +1123,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_field_002(self, server):
         """Get specific snippet field.
 
-        Call GET /v1/snippets/<digest>/brief for existing snippet. In this
-        case the URI digest is only 10 octets. The returned link must contain
-        16 octet digest in the link.
+        Call GET /v1/snippets/{id}/brief for existing snippet. In this case
+        the URI digest is only 10 octets. The returned link must contain 16
+        octet digest in the link.
         """
 
         expect_headers = {
@@ -1155,7 +1155,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_field_003(self, server):
         """Get specific snippet field.
 
-        Call GET /v1/snippets/<digest>/groups for existing snippet.
+        Call GET /v1/snippets/{id}/groups for existing snippet.
         """
 
         expect_headers = {
@@ -1185,7 +1185,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_field_004(self, server):
         """Get specific snippet field.
 
-        Call GET /v1/snippets/<digest>/tags for existing snippet.
+        Call GET /v1/snippets/{id}/tags for existing snippet.
         """
 
         expect_headers = {
@@ -1215,7 +1215,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_field_005(self, server):
         """Get specific snippet field.
 
-        Call GET /v1/snippets/<digest>/links for existing snippet.
+        Call GET /v1/snippets/{id}/links for existing snippet.
         """
 
         expect_headers = {
@@ -1246,8 +1246,8 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_field_006(self, server):
         """Get specific snippet field.
 
-        Try to call GET /v1/snippets/<digest>/notexist for existing snippet.
-        In this case the field name does not exist.
+        Try to call GET /v1/snippets/{id}/notexist for existing snippet. In
+        this case the field name does not exist.
         """
 
         expect_headers = {
@@ -1280,7 +1280,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '385'
+            'content-length': '387'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -1288,7 +1288,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
                 'status': '404',
                 'statusString': '404 Not Found',
                 'module': 'snippy.testing.testing:123',
-                'title': 'content digest: 0101010101 was not unique and matched to: 0 resources'
+                'title': 'content identity: 0101010101 was not unique and matched to: 0 resources'
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(

@@ -51,12 +51,12 @@ class Validate(object):  # pylint: disable=too-few-public-methods
     _logger = Logger.get_logger(__name__)
 
     @classmethod
-    def json_object(cls, request, digest=None):
+    def json_object(cls, request, identity=None):
         """Validate JSON API v1.0 object.
 
         Args:
             request (dict): JSON object received from client.
-            digest (str): Message digest or part of it.
+            identity (str): Partial or full message digest or UUID.
 
         Returns:
             tuple: List of validated resources received from client.
@@ -68,17 +68,23 @@ class Validate(object):  # pylint: disable=too-few-public-methods
         if is_collection:
             collection = Validate._collection(request, schema)
         else:
-            collection = Validate._resource(request, digest, schema)
+            collection = Validate._resource(request, identity, schema)
 
         return collection
 
     @classmethod
-    def _resource(cls, request, digest, schema):
+    def _resource(cls, request, identity, schema):
         """Validate JSON API v1.0 resource.
+
+        The identity is always used to find the resource from storage.
+
+        Message digest and UUID received from a client are never used. These
+        resource attributes are always set internally. The validated resource
+        from a client may contain invalid values in these attributes.
 
         Args:
             request (dict): JSON object received from client.
-            digest (str): Message digest or part of it.
+            identity (str): Partial or full message digest or UUID.
             schema (str): JSON schema to validate the request.
 
         Returns:
@@ -89,7 +95,9 @@ class Validate(object):  # pylint: disable=too-few-public-methods
         if JsonSchema.validate(schema, request.media):
             if cls._is_valid_data(request.media['data']):
                 resource_ = request.media['data']['attributes']
-                resource_['digest'] = digest
+                resource_['identity'] = identity
+                resource_['digest'] = None
+                resource_['uuid'] = None
                 if (request.method.lower() == 'patch' or
                         request.get_header('x-http-method-override', default=request.method).lower() == 'patch'):
                     resource_['merge'] = True
@@ -103,6 +111,10 @@ class Validate(object):  # pylint: disable=too-few-public-methods
     def _collection(cls, request, schema):
         """Validate JSON API v1.0 collection.
 
+        Message digest and UUID received from a client are never used. These
+        resource attributes are always set internally. The validated resource
+        from a client may contain invalid values in these attributes.
+
         Args:
             request (dict): JSON object received from client.
 
@@ -114,6 +126,8 @@ class Validate(object):  # pylint: disable=too-few-public-methods
         if JsonSchema.validate(schema, request.media):
             for data in request.media['data']:
                 if cls._is_valid_data(data):
+                    data['digest'] = None
+                    data['uuid'] = None
                     collection.append(data['attributes'])
                 else:
                     collection = []

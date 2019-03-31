@@ -39,9 +39,9 @@ class TestApiUpdateSnippet(object):
     def test_api_update_snippet_001(self, server):
         """Update one snippet with PUT request.
 
-        Call PUT /v1/snippets/<digest> to update existing snippet with
-        specified digest. See 'updating content attributes' for the attribute
-        list that can be changed by user.
+        Call PUT /v1/snippets/{id} to update existing snippet with specified
+        digest. See 'updating content attributes' for the attribute list that
+        can be changed by user.
         """
 
         content = {
@@ -92,9 +92,9 @@ class TestApiUpdateSnippet(object):
     def test_api_update_snippet_002(self, server):
         """Update one snippet with PUT request.
 
-        Call PUT /v1/snippets/<digest> to update existing snippet with
-        specified digest. Only partial set of attributes that can be modified
-        is sent in request.
+        Call PUT /v1/snippets/{id} to update existing snippet with specified
+        digest. Only partial set of attributes that can be modified is sent
+        in request.
         """
 
         content = {
@@ -153,9 +153,9 @@ class TestApiUpdateSnippet(object):
     def test_api_update_snippet_003(self, server):
         """Update one snippet with PUT request.
 
-        Call PUT /v1/snippets/<digest> to update existing snippet with
-        specified digest. The PUT request contains only the mandatory data
-        attribute. All other attributes must be set to their default values.
+        Call PUT /v1/snippets/{id} to update existing snippet with specified
+        digest. The PUT request contains only the mandatory data attribute.
+        All other attributes must be set to their default values.
         """
 
         content = {
@@ -212,8 +212,8 @@ class TestApiUpdateSnippet(object):
     def test_api_update_snippet_004(self, server):
         """Try to update snippet with malformed request.
 
-        Try to call PUT /v1/snippets/<digest> to update snippet with digest
-        that cannot be found.
+        Try to call PUT /v1/snippets/{id} to update snippet with digest that
+        is not found.
         """
 
         content = {
@@ -235,7 +235,7 @@ class TestApiUpdateSnippet(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '372'
+            'content-length': '374'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -243,7 +243,7 @@ class TestApiUpdateSnippet(object):
                 'status': '404',
                 'statusString': '404 Not Found',
                 'module': 'snippy.testing.testing:123',
-                'title': 'cannot find content with message digest: 101010101010101'
+                'title': 'cannot find content with content identity: 101010101010101'
             }]
         }
         result = testing.TestClient(server.server.api).simulate_put(
@@ -259,8 +259,8 @@ class TestApiUpdateSnippet(object):
     def test_api_update_snippet_005(self, server):
         """Try to update snippet with malformed request.
 
-        Try to call PUT /v1/snippets/<digest> to update new snippet with
-        malformed JSON request.
+        Try to call PUT /v1/snippets/{id} to update snippet with malformed
+        JSON request.
         """
 
         content = {
@@ -299,10 +299,9 @@ class TestApiUpdateSnippet(object):
     def test_api_update_snippet_006(self, server):
         """Updated snippet and verify created and updated timestamps.
 
-        Call PUT /v1/snippets/<digest> to update existing snippet with
-        specified digest. This test verifies that the created timestamp does
-        not change and the updated timestamp changes when the content is
-        updated.
+        Call PUT /v1/snippets/{id} to update existing snippet with specified
+        digest. This test verifies that the created timestamp does not change
+        and the updated timestamp changes when the content is updated.
         """
 
         content = {
@@ -353,10 +352,9 @@ class TestApiUpdateSnippet(object):
     def test_api_update_snippet_007(self, server):
         """Update one snippet with PATCH request.
 
-        Call PATCH /v1/snippets/<digest> to update existing snippet with
-        specified digest. The PATCH request contains only mandatory the data
-        attribute. All other attributes must be returned with their previous
-        stored values.
+        Call PATCH /v1/snippets/{id} to update existing snippet with specified
+        digest. The PATCH request contains only mandatory the data attribute.
+        All other attributes must be returned with their previous stored values.
         """
 
         content = {

@@ -39,9 +39,9 @@ class TestApiUpdateReference(object):
     def test_api_update_reference_001(self, server):
         """Update one reference with PUT request.
 
-        Call PUT /v1/references/<digest> to update existing reference with
-        specified digest. See 'updating content attributes' for the attribute
-        list that can be changed by user.
+        Call PUT /v1/references/{id} to update existing reference with digest.
+        See 'updating content attributes' for the attribute list that can be
+        changed by user.
         """
 
         content = {
@@ -92,7 +92,7 @@ class TestApiUpdateReference(object):
     def test_api_update_reference_002(self, server):
         """Update one reference with PUT request.
 
-        Call PUT /v1/references/<digest> to update existing reference. The PUT
+        Call PUT /v1/references/{id} to update existing reference. The PUT
         request contains only the mandatory links attribute. All other
         attributes must be set to their default values.
         """
@@ -151,8 +151,8 @@ class TestApiUpdateReference(object):
     def test_api_update_reference_003(self, server):
         """Update one reference with PUT request.
 
-        Try to call PUT /v1/references/<digest> to update reference with digest
-        that cannot be found.
+        Try to call PUT /v1/references/{id} to update reference with digest
+        that is not found.
         """
 
         content = {
@@ -170,7 +170,7 @@ class TestApiUpdateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '372'
+            'content-length': '374'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -178,7 +178,7 @@ class TestApiUpdateReference(object):
                 'status': '404',
                 'statusString': '404 Not Found',
                 'module': 'snippy.testing.testing:123',
-                'title': 'cannot find content with message digest: 101010101010101'
+                'title': 'cannot find content with content identity: 101010101010101'
             }]
         }
         result = testing.TestClient(server.server.api).simulate_put(
@@ -194,8 +194,8 @@ class TestApiUpdateReference(object):
     def test_api_update_reference_004(self, server):
         """Try to update reference with malformed request.
 
-        Try to call PUT /v1/references/<digest> to update reference with
-        malformed JSON request.
+        Try to call PUT /v1/references/{id} to update reference with malformed
+        JSON request.
         """
 
         content = {
@@ -234,7 +234,7 @@ class TestApiUpdateReference(object):
     def test_api_update_reference_005(self, server):
         """Try to update reference with malformed request.
 
-        Try to call PUT /v1/references/<digest> to update reference with client
+        Try to call PUT /v1/references/{id} to update reference with client
         generated resource ID. In this case the ID looks like a valid message
         digest.
         """
@@ -283,10 +283,10 @@ class TestApiUpdateReference(object):
     def test_api_update_reference_006(self, server):
         """Update one reference with PATCH request.
 
-        Call PATCH /v1/references/<digest> to update existing snippet with
-        specified digest. The PATCH request contains only mandatory links
-        attribute. All other attributes that can be updated must be returned
-        with their previous values.
+        Call PATCH /v1/references/{id} to update existing snippet with digest.
+        The PATCH request contains only mandatory links attribute. All other
+        attributes that can be updated must be returned with their previous
+        values.
 
         The mocked updated timestamp is intentionally the same as with the
         original content to create variation from normal where the timestamp
@@ -337,8 +337,8 @@ class TestApiUpdateReference(object):
     def test_api_update_reference_007(self, server):
         """Update one reference with PUT request.
 
-        Try to update reference uuid by calling PUT /v1/references/<digest>.
-        This must not be done because the uuid is not changed once allocated.
+        Try to update reference uuid by calling PUT /v1/references/{id}. This
+        must not be done because the uuid is not changed once allocated.
         """
 
         content = {
@@ -396,9 +396,9 @@ class TestApiUpdateReference(object):
     def test_api_update_reference_008(self, server):
         """Try to update reference with PUT request.
 
-        Try to call PUT /v1/references/<digest> to replace existing reference
-        with specified digest. The PUT request does not contain the mandatory
-        link field which is why the request must be rejected.
+        Try to call PUT /v1/references/{id} to replace existing reference with
+        specified digest. The PUT request does not contain the mandatory link
+        field which is why the request must be rejected.
         """
 
         content = {
@@ -441,9 +441,8 @@ class TestApiUpdateReference(object):
     def test_api_update_reference_009(self, server):
         """Update reference with PUT request.
 
-        Call PUT /v1/references/<digest> to replace existing reference with
-        specified digest. The PUT sets all but the mandatory links field to
-        empty values.
+        Call PUT /v1/references/{id} to replace existing reference with digest.
+        The PUT sets all but the mandatory links field to empty values.
         """
 
         content = {
@@ -505,9 +504,8 @@ class TestApiUpdateReference(object):
     def test_api_update_reference_010(self, server):
         """Update reference with PATCH request.
 
-        Call PATCH /v1/references/<digest> to update existing reference with
-        specified digest. The PATCH sets all but the mandatory field to empty
-        values.
+        Call PATCH /v1/references/{id} to update existing reference with digest.
+        The PATCH sets all but the mandatory field to empty values.
         """
 
         content = {
@@ -568,7 +566,7 @@ class TestApiUpdateReference(object):
     def test_api_update_reference_011(self, server):
         """Update reference with PATCH request.
 
-        Call PATCH /v1/references/<digest> to update existing reference with
+        Call PATCH /v1/references/{id} to update existing reference with
         specified digest. The PATCH sets the data field empty. This should
         result OK. The data field is not used with references and it cannot
         contain any additional information for the client. From the client

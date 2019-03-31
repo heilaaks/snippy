@@ -78,6 +78,7 @@ class Config(object):
         namespace.append('operation={}'.format(cls.operation))
         namespace.append('operation_uuid={}'.format(cls.operation_uuid))
         namespace.append('operation_digest={}'.format(cls.operation_digest))
+        namespace.append('operation_identity={}'.format(cls.operation_identity))
         namespace.append('operation_filename={}'.format(cls.operation_filename))
         namespace.append('operation_file_format={}'.format(cls.operation_file_format))
         namespace.append('content_category={}'.format(cls.content_category))
@@ -178,6 +179,7 @@ class Config(object):
         cls.operation = cls.source.operation
         cls.operation_digest = cls.source.digest
         cls.operation_uuid = cls.source.uuid
+        cls.operation_identity = cls.source.identity
         cls.merge = cls.source.merge
 
         # content
@@ -574,10 +576,10 @@ class Config(object):
     def validate_search_context(cls, collection, operation):  # pylint: disable=too-many-branches
         """Validate content search context."""
 
-        # Search keys are treated in priority order of 1) digest, 2) uuid,
-        # 3) content data and 4) search keywords. Search keywords are already
-        # validated and invalid keywords are interpreted as 'list all' which
-        # is always correct at this point.
+        # Search keys are treated in priority order of 1) digest, 2) uuid, 3)
+        # unknown identity, 4) content data and 5) search keywords. Search
+        # keywords are already validated and invalid keywords are interpreted
+        # as 'list all' which is always correct at this point.
         cls._logger.debug('validating search context with %d results', len(collection))
         if cls._is_content_digest():
             if cls.operation_digest:
@@ -601,6 +603,17 @@ class Config(object):
                                (cls.operation_uuid, len(collection), operation))
             else:
                 Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot use empty content uuid for: %s :operation' % operation)
+        elif cls._is_content_identity():
+            if cls.operation_identity:
+                if not collection:
+                    Cause.push(Cause.HTTP_NOT_FOUND,
+                               'cannot find content with content identity: %s' % cls.operation_identity)
+                elif len(collection) > 1:
+                    Cause.push(Cause.HTTP_CONFLICT,
+                               'content identity: %.16s :matched: %d :times preventing: %s :operation' %
+                               (cls.operation_identity, len(collection), operation))
+            else:
+                Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot use empty content identity for: %s :operation' % operation)
         elif cls.content_data:
             if any(cls.content_data):
                 data = Const.EMPTY.join(cls.content_data)
@@ -635,22 +648,32 @@ class Config(object):
 
     @classmethod
     def _is_content_digest(cls):
-        """Test if content digest was defined from command line."""
+        """Test if content digest was defined."""
 
         return bool(cls.operation_digest is not None)
 
     @classmethod
     def _is_content_uuid(cls):
-        """Test if content uuid was defined from command line."""
+        """Test if content uuid was defined."""
 
         return bool(cls.operation_uuid is not None)
+
+    @classmethod
+    def _is_content_identity(cls):
+        """Test if content identity was defined."""
+
+        return bool(cls.operation_identity is not None)
 
     @classmethod
     def is_search_criteria(cls):
         """Test if any of the search criterias were used."""
 
         criteria = False
-        if cls._is_search_keywords() or cls._is_content_digest() or cls._is_content_uuid() or cls.content_data:
+        if cls._is_search_keywords()     \
+           or cls._is_content_digest()   \
+           or cls._is_content_uuid()     \
+           or cls._is_content_identity() \
+           or cls.content_data:
             criteria = True
 
         return criteria

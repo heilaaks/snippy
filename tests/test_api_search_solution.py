@@ -427,7 +427,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
     def test_api_search_solution_012(self, server):
         """Search solution with digets.
 
-        Call GET /snippy/api/app/v1/solutions/{digest} to get explicit solution
+        Call GET /snippy/api/app/v1/solutions/{id} to get explicit solution
         based on digest. In this case the solution is found.
         """
 
@@ -462,13 +462,12 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
     def test_api_search_solution_013(self, server):
         """Search solution with digets.
 
-        Try to call GET /v1/solutions/{digest} with digest that cannot be
-        found.
+        Try to call GET /v1/solutions/{id} with digest that cannot be found.
         """
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '390'
+            'content-length': '392'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -476,7 +475,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
                 'status': '404',
                 'statusString': '404 Not Found',
                 'module': 'snippy.testing.testing:123',
-                'title': 'content digest: 101010101010101 was not unique and matched to: 0 resources'
+                'title': 'content identity: 101010101010101 was not unique and matched to: 0 resources'
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -673,7 +672,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
     def test_api_search_solution_field_001(self, server):
         """Get specific solution field.
 
-        Call GET /v1/solutions/<digest>/data for existing solution.
+        Call GET /v1/solutions/{id}/data for existing solution.
         """
 
         expect_headers = {
@@ -703,7 +702,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
     def test_api_search_solution_field_002(self, server):
         """Get specific solution field.
 
-        Call GET /v1/solutions/<digest>/brief for existing solution.
+        Call GET /v1/solutions/{id}/brief for existing solution.
         """
 
         expect_headers = {
@@ -733,7 +732,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
     def test_api_search_solution_field_003(self, server):
         """Get specific solution field.
 
-        Call GET /v1/solutions/<digest>/groups for existing solution.
+        Call GET /v1/solutions/{id}/groups for existing solution.
         """
 
         expect_headers = {
@@ -763,7 +762,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
     def test_api_search_solution_field_004(self, server):
         """Get specific solution field.
 
-        Call GET /v1/solutions/<digest>/tags for existing solution.
+        Call GET /v1/solutions/{id}/tags for existing solution.
         """
 
         expect_headers = {
@@ -793,7 +792,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
     def test_api_search_solution_field_005(self, server):
         """Get specific solution field.
 
-        Call GET /v1/solutions/<digest>/lnks for existing solution.
+        Call GET /v1/solutions/{id}/lnks for existing solution.
         """
 
         expect_headers = {
@@ -823,8 +822,8 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
     def test_api_search_solution_field_006(self, server):
         """Get specific solution field.
 
-        Try to call GET /v1/solutions/<digest>/notexist for existing solution.
-        In this case the field name does not exist.
+        Try to call GET /v1/solutions/{id}/notexist for existing solution. In
+        this case the field name does not exist.
         """
 
         expect_headers = {
@@ -857,7 +856,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '531'
+            'content-length': '533'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -870,7 +869,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
                 'status': '404',
                 'statusString': '404 Not Found',
                 'module': 'snippy.testing.testing:123',
-                'title': 'content digest: 0101010101 was not unique and matched to: 0 resources'
+                'title': 'content identity: 0101010101 was not unique and matched to: 0 resources'
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(

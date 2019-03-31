@@ -20,27 +20,27 @@
 """api_solutions: JSON REST API for Solutions."""
 
 from snippy.constants import Constants as Const
-from snippy.server.rest.base import ApiContentBase
-from snippy.server.rest.base import ApiContentDigestBase
-from snippy.server.rest.base import ApiContentDigestFieldBase
+from snippy.server.rest.base import ApiResource
+from snippy.server.rest.base import ApiResourceId
+from snippy.server.rest.base import ApiResourceIdField
 
 
-class ApiSolutions(ApiContentBase):
+class ApiSolutions(ApiResource):
     """Query solutions."""
 
     def __init__(self, content):
         super(ApiSolutions, self).__init__(content, Const.SOLUTION)
 
 
-class ApiSolutionsDigest(ApiContentDigestBase):
-    """Query solutions based on digest."""
+class ApiSolutionsId(ApiResourceId):
+    """Query solutions based on resource ID."""
 
     def __init__(self, content):
-        super(ApiSolutionsDigest, self).__init__(content, Const.SOLUTION)
+        super(ApiSolutionsId, self).__init__(content, Const.SOLUTION)
 
 
-class ApiSolutionsField(ApiContentDigestFieldBase):
-    """Query solution based on digest and specified field."""
+class ApiSolutionsIdField(ApiResourceIdField):
+    """Query solution with resource ID and attribute."""
 
     def __init__(self, content):
-        super(ApiSolutionsField, self).__init__(content, Const.SOLUTION)
+        super(ApiSolutionsIdField, self).__init__(content, Const.SOLUTION)

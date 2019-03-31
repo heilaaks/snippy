@@ -71,7 +71,7 @@ class TestApiDeleteSolution(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '365'
+            'content-length': '367'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -79,7 +79,7 @@ class TestApiDeleteSolution(object):
                 'status': '404',
                 'statusString': '404 Not Found',
                 'module': 'snippy.testing.testing:123',
-                'title': 'cannot find content with message digest: beefbeef'
+                'title': 'cannot find content with content identity: beefbeef'
             }]
         }
         result = testing.TestClient(server.server.api).simulate_delete(

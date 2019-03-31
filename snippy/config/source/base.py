@@ -89,6 +89,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         namespace.append('failure_message={}'.format(self.failure_message))
         namespace.append('filename={}'.format(self.filename))
         namespace.append('groups={}'.format(self.groups))
+        namespace.append('identity={}'.format(self.identity))
         namespace.append('links={}'.format(self.links))
         namespace.append('log_json={}'.format(self.log_json))
         namespace.append('log_msg_max={}'.format(self.log_msg_max))
@@ -187,6 +188,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self.filename = parameters.get('filename', Const.EMPTY)
         self.template_format = parameters.get('format', Const.CONTENT_FORMAT_MKDN)
         self.groups = parameters.get('groups', Const.DEFAULT_GROUPS)
+        self.identity = parameters.get('identity', None)
         self.links = parameters.get('links', ())
         self.log_json = parameters.get(*self.read_env('log_json', False))
         self.log_msg_max = parameters.get(*self.read_env('log_msg_max', self.DEFAULT_LOG_MSG_MAX))
@@ -622,6 +624,30 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
             value = self.SERVER_APP_BASE_PATH
 
         self._server_app_base_path = value  # pylint: disable=attribute-defined-outside-init
+
+    @property
+    def identity(self):
+        """Get content identity."""
+
+        return self._identity
+
+    @identity.setter
+    def identity(self, value):
+        """Convert content identity to utf-8 encoded unicode string.
+
+        The identity attribute is used when the content identity type is not
+        known. The identity can be either a message digest or UUID.
+
+        There is no failure proof way to tell if the identity string is a
+        Digest or UUID. By creating a third identity field for unidentidied
+        identity type, it quarantees that the digest and UUID attributes
+        always have correctly matching identity against the type.
+        """
+
+        if value is None:
+            self._identity = None  # pylint: disable=attribute-defined-outside-init
+        else:
+            self._identity = Parser.format_string(value)  # pylint: disable=attribute-defined-outside-init
 
     @classmethod
     def read_env(cls, option, default):

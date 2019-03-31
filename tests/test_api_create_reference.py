@@ -168,7 +168,7 @@ class TestApiCreateReference(object):
     def test_api_create_reference_004(self, server):
         """Update reference with POST that maps to PUT.
 
-        Call POST /v1/references/<digest> to update existing reference with
+        Call POST /v1/references/{id} to update existing reference with the
         X-HTTP-Method-Override header that overrides the operation as PUT. In
         this case the created timestamp must remain in initial value and the
         updated timestamp must be updated to reflect the update time.
@@ -214,7 +214,7 @@ class TestApiCreateReference(object):
     def test_api_create_reference_005(self, server):
         """Update reference with POST that maps to PATCH.
 
-        Call POST /v1/references/<digest> to update existing reference with
+        Call POST /v1/references/{id} to update existing reference with the
         X-HTTP-Method-Override header that overrides the operation as PATCH.
         Only the updated attributes must be changed.
         """

@@ -20,27 +20,27 @@
 """api_refenrecens: JSON REST API for References."""
 
 from snippy.constants import Constants as Const
-from snippy.server.rest.base import ApiContentBase
-from snippy.server.rest.base import ApiContentDigestBase
-from snippy.server.rest.base import ApiContentDigestFieldBase
+from snippy.server.rest.base import ApiResource
+from snippy.server.rest.base import ApiResourceId
+from snippy.server.rest.base import ApiResourceIdField
 
 
-class ApiReferences(ApiContentBase):
+class ApiReferences(ApiResource):
     """Query references."""
 
     def __init__(self, content):
         super(ApiReferences, self).__init__(content, Const.REFERENCE)
 
 
-class ApiReferencesDigest(ApiContentDigestBase):
-    """Query references based on digest."""
+class ApiReferencesId(ApiResourceId):
+    """Query references based on resource ID."""
 
     def __init__(self, content):
-        super(ApiReferencesDigest, self).__init__(content, Const.REFERENCE)
+        super(ApiReferencesId, self).__init__(content, Const.REFERENCE)
 
 
-class ApiReferencesField(ApiContentDigestFieldBase):
-    """Query references based on digest and specified field."""
+class ApiReferencesIdField(ApiResourceIdField):
+    """Query references with resource ID and attribute."""
 
     def __init__(self, content):
-        super(ApiReferencesField, self).__init__(content, Const.REFERENCE)
+        super(ApiReferencesIdField, self).__init__(content, Const.REFERENCE)

@@ -44,7 +44,7 @@ class Storage(object):
 
         return collection
 
-    def search(self, scat=(), sall=(), stag=(), sgrp=(), search_filter=None, uuid=None, digest=None, data=None):
+    def search(self, scat=(), sall=(), stag=(), sgrp=(), search_filter=None, uuid=None, digest=None, identity=None, data=None):  # noqa pylint: disable=too-many-arguments
         """Search content.
 
         Args:
@@ -55,6 +55,7 @@ class Storage(object):
             search_filter (str): Regexp filter to limit search results.
             uuid (str): Search specific uuid or part of it.
             digest (str): Search specific digest or part of it.
+            identity (str): Search specific digest or UUID or part of them.
             data (str): Search specific content data or part of it.
 
         Returns:
@@ -62,7 +63,7 @@ class Storage(object):
         """
 
         self._logger.debug('search content')
-        collection = self._database.select(scat, sall, stag, sgrp, search_filter, uuid, digest, data)
+        collection = self._database.select(scat, sall, stag, sgrp, search_filter, uuid, digest, identity, data)
 
         return collection
 

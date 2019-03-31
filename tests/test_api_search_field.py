@@ -514,12 +514,12 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
     def test_api_search_digest_002(self, server):
         """Try to get specific content based on digest.
 
-        Try to call GET /v1/digest/<digest> with a digest that is not found.
+        Try to call GET /v1/digest/{id} with a digest that is not found.
         """
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '383'
+            'content-length': '385'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -527,7 +527,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
                 'status': '404',
                 'statusString': '404 Not Found',
                 'module': 'snippy.testing.testing:123',
-                'title': 'content digest: 01010101 was not unique and matched to: 0 resources'
+                'title': 'content identity: 01010101 was not unique and matched to: 0 resources'
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(

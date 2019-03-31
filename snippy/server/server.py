@@ -47,14 +47,14 @@ from snippy.server.rest.api_fields import ApiUuid
 from snippy.server.rest.api_fields import ApiUuidField
 from snippy.server.rest.api_hello import ApiHello
 from snippy.server.rest.api_references import ApiReferences
-from snippy.server.rest.api_references import ApiReferencesDigest
-from snippy.server.rest.api_references import ApiReferencesField
+from snippy.server.rest.api_references import ApiReferencesId
+from snippy.server.rest.api_references import ApiReferencesIdField
 from snippy.server.rest.api_snippets import ApiSnippets
-from snippy.server.rest.api_snippets import ApiSnippetsDigest
-from snippy.server.rest.api_snippets import ApiSnippetsField
+from snippy.server.rest.api_snippets import ApiSnippetsId
+from snippy.server.rest.api_snippets import ApiSnippetsIdField
 from snippy.server.rest.api_solutions import ApiSolutions
-from snippy.server.rest.api_solutions import ApiSolutionsDigest
-from snippy.server.rest.api_solutions import ApiSolutionsField
+from snippy.server.rest.api_solutions import ApiSolutionsId
+from snippy.server.rest.api_solutions import ApiSolutionsIdField
 
 
 class Server(object):  # pylint: disable=too-few-public-methods
@@ -96,24 +96,24 @@ class Server(object):  # pylint: disable=too-few-public-methods
         self.api.add_route(Config.server_app_base_path.rstrip('/'), ApiHello())
         self.api.add_route(urljoin(Config.server_app_base_path, 'hello'), ApiHello())
         self.api.add_route(urljoin(Config.server_app_base_path, 'snippets'), ApiSnippets(snippet))
-        self.api.add_route(urljoin(Config.server_app_base_path, 'snippets/{digest}'), ApiSnippetsDigest(snippet))
-        self.api.add_route(urljoin(Config.server_app_base_path, 'snippets/{digest}/{field}'), ApiSnippetsField(snippet))
+        self.api.add_route(urljoin(Config.server_app_base_path, 'snippets/{identity}'), ApiSnippetsId(snippet))
+        self.api.add_route(urljoin(Config.server_app_base_path, 'snippets/{identity}/{field}'), ApiSnippetsIdField(snippet))
         self.api.add_route(urljoin(Config.server_app_base_path, 'solutions'), ApiSolutions(solution))
-        self.api.add_route(urljoin(Config.server_app_base_path, 'solutions/{digest}'), ApiSolutionsDigest(solution))
-        self.api.add_route(urljoin(Config.server_app_base_path, 'solutions/{digest}/{field}'), ApiSolutionsField(solution))
+        self.api.add_route(urljoin(Config.server_app_base_path, 'solutions/{identity}'), ApiSolutionsId(solution))
+        self.api.add_route(urljoin(Config.server_app_base_path, 'solutions/{identity}/{field}'), ApiSolutionsIdField(solution))
         self.api.add_route(urljoin(Config.server_app_base_path, 'references'), ApiReferences(reference))
-        self.api.add_route(urljoin(Config.server_app_base_path, 'references/{digest}'), ApiReferencesDigest(reference))
-        self.api.add_route(urljoin(Config.server_app_base_path, 'references/{digest}/{field}'), ApiReferencesField(reference))
+        self.api.add_route(urljoin(Config.server_app_base_path, 'references/{identity}'), ApiReferencesId(reference))
+        self.api.add_route(urljoin(Config.server_app_base_path, 'references/{identity}/{field}'), ApiReferencesIdField(reference))
         self.api.add_route(urljoin(Config.server_app_base_path, 'groups/{sgrp}'), ApiGroups(fields))
         self.api.add_route(urljoin(Config.server_app_base_path, 'tags/{stag}'), ApiTags(fields))
-        self.api.add_route(urljoin(Config.server_app_base_path, 'digest/{digest}'), ApiDigest(fields))
-        self.api.add_route(urljoin(Config.server_app_base_path, 'digest/{digest}/{field}'), ApiDigestField(fields))
+        self.api.add_route(urljoin(Config.server_app_base_path, 'digest/{identity}'), ApiDigest(fields))
+        self.api.add_route(urljoin(Config.server_app_base_path, 'digest/{identity}/{field}'), ApiDigestField(fields))
         self.api.add_route(urljoin(Config.server_app_base_path, 'uuid/{uuid}'), ApiUuid(fields))
         self.api.add_route(urljoin(Config.server_app_base_path, 'uuid/{uuid}/{field}'), ApiUuidField(fields))
         self.api.add_route(urljoin(Config.server_app_base_path, '{sall}'), ApiKeywords(fields))
 
         # Reset cause just before starting the server. If there are any
-        # failures during server statup phase that set a cause they are
+        # failures during server statup phase that set a cause, they are
         # still stored when the server runs. If this is the case, the
         # first response sent by the server will be error response.
         Cause.reset()

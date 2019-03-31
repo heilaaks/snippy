@@ -22,15 +22,15 @@
 from snippy.cause import Cause
 from snippy.constants import Constants as Const
 from snippy.logger import Logger
-from snippy.server.rest.base import ApiContentBase
-from snippy.server.rest.base import ApiContentDigestBase
-from snippy.server.rest.base import ApiContentDigestFieldBase
-from snippy.server.rest.base import ApiContentUuidBase
-from snippy.server.rest.base import ApiContentUuidFieldBase
+from snippy.server.rest.base import ApiResource
+from snippy.server.rest.base import ApiResourceId
+from snippy.server.rest.base import ApiResourceIdField
+from snippy.server.rest.base import ApiContentUuid
+from snippy.server.rest.base import ApiContentUuidField
 from snippy.server.rest.base import ApiNotImplemented
 
 
-class ApiKeywords(ApiContentBase):
+class ApiKeywords(ApiResource):
     """Process content based on given keyword list."""
 
     def __init__(self, fields):
@@ -64,7 +64,7 @@ class ApiKeywords(ApiContentBase):
         response.set_header('Allow', 'GET,OPTIONS')
 
 
-class ApiGroups(ApiContentBase):
+class ApiGroups(ApiResource):
     """Process content based on groups field."""
 
     def __init__(self, fields):
@@ -98,7 +98,7 @@ class ApiGroups(ApiContentBase):
         response.set_header('Allow', 'GET,OPTIONS')
 
 
-class ApiTags(ApiContentBase):
+class ApiTags(ApiResource):
     """Process content based on tags field."""
 
     def __init__(self, fields):
@@ -132,43 +132,43 @@ class ApiTags(ApiContentBase):
         response.set_header('Allow', 'GET,OPTIONS')
 
 
-class ApiDigest(ApiContentDigestBase):
+class ApiDigest(ApiResourceId):
     """Process content based on unique digest."""
 
     def __init__(self, fields):
         super(ApiDigest, self).__init__(fields, Const.ALL_CATEGORIES)
 
-    def on_get(self, request, response, digest):
-        """Search content based on digest."""
+    def on_get(self, request, response, identity):
+        """Search content based on resource ID."""
 
         if 'scat' not in request.params:
             request.params['scat'] = [Const.SNIPPET, Const.SOLUTION, Const.REFERENCE]
-        super(ApiDigest, self).on_get(request, response, digest)
+        super(ApiDigest, self).on_get(request, response, identity)
 
     @staticmethod
     @Logger.timeit(refresh_oid=True)
-    def on_options(_, response, digest):  # pylint: disable=unused-argument
+    def on_options(_, response, identity):  # pylint: disable=unused-argument
         """Respond with allowed methods."""
 
         response.status = Cause.HTTP_200
         response.set_header('Allow', 'GET,OPTIONS')
 
 
-class ApiDigestField(ApiContentDigestFieldBase):
-    """Process content field based on unique digest and specified field."""
+class ApiDigestField(ApiResourceIdField):
+    """Process content field based on unique Resource ID and attribute."""
 
     def __init__(self, fields):
         super(ApiDigestField, self).__init__(fields, Const.ALL_CATEGORIES)
 
-    def on_get(self, request, response, digest, field):
+    def on_get(self, request, response, identity, field):
         """Search content based on uuid."""
 
         if 'scat' not in request.params:
             request.params['scat'] = [Const.SNIPPET, Const.SOLUTION, Const.REFERENCE]
-        super(ApiDigestField, self).on_get(request, response, digest, field)
+        super(ApiDigestField, self).on_get(request, response, identity, field)
 
 
-class ApiUuid(ApiContentUuidBase):
+class ApiUuid(ApiContentUuid):
     """Process content based on unique uuid."""
 
     def __init__(self, fields):
@@ -182,7 +182,7 @@ class ApiUuid(ApiContentUuidBase):
         super(ApiUuid, self).on_get(request, response, uuid)
 
 
-class ApiUuidField(ApiContentUuidFieldBase):
+class ApiUuidField(ApiContentUuidField):
     """Process content field based on unique uuid and specified field."""
 
     def __init__(self, fields):

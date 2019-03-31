@@ -20,27 +20,27 @@
 """api_snippets: JSON REST API for Snippets."""
 
 from snippy.constants import Constants as Const
-from snippy.server.rest.base import ApiContentBase
-from snippy.server.rest.base import ApiContentDigestBase
-from snippy.server.rest.base import ApiContentDigestFieldBase
+from snippy.server.rest.base import ApiResource
+from snippy.server.rest.base import ApiResourceId
+from snippy.server.rest.base import ApiResourceIdField
 
 
-class ApiSnippets(ApiContentBase):
+class ApiSnippets(ApiResource):
     """Query snippets."""
 
     def __init__(self, content):
         super(ApiSnippets, self).__init__(content, Const.SNIPPET)
 
 
-class ApiSnippetsDigest(ApiContentDigestBase):
+class ApiSnippetsId(ApiResourceId):
     """Query snippets based on digest."""
 
     def __init__(self, content):
-        super(ApiSnippetsDigest, self).__init__(content, Const.SNIPPET)
+        super(ApiSnippetsId, self).__init__(content, Const.SNIPPET)
 
 
-class ApiSnippetsField(ApiContentDigestFieldBase):
-    """Query snippets based on digest and specified field."""
+class ApiSnippetsIdField(ApiResourceIdField):
+    """Query snippets with resource ID and attribute."""
 
     def __init__(self, content):
-        super(ApiSnippetsField, self).__init__(content, Const.SNIPPET)
+        super(ApiSnippetsIdField, self).__init__(content, Const.SNIPPET)

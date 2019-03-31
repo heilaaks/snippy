@@ -39,9 +39,9 @@ class TestApiUpdateSolution(object):
     def test_api_update_solution_001(self, server):
         """Update one solution with PUT request.
 
-        Call PUT /v1/solutions/<digest> to update existing solution with
-        specified digest. See 'updating content attributes' for the attribute
-        list that can be changed by user.
+        Call PUT /v1/solutions/{id} to update existing solution with specified
+        digest. See 'updating content attributes' for the attribute list that
+        can be changed by user.
         """
 
         content = {
@@ -93,7 +93,7 @@ class TestApiUpdateSolution(object):
     def test_api_update_solution_002(self, server):
         """Update one solution with PUT request.
 
-        Call PUT /v1/solutions/<digest> to update existing solution. The PUT
+        Call PUT /v1/solutions/{id} to update existing solution. The PUT
         request contains only the mandatory data attribute. All other
         attributes must be set to their default values.
         """
@@ -153,8 +153,8 @@ class TestApiUpdateSolution(object):
     def test_api_update_solution_003(self, server):
         """Update one solution with PUT request.
 
-        Try to call PUT /v1/solutions/<digest> to update solution with digest
-        that cannot be found.
+        Try to call PUT /v1/solutions/{id} to update solution with digest that
+        is not found.
         """
 
         content = {
@@ -176,13 +176,13 @@ class TestApiUpdateSolution(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '372'
+            'content-length': '374'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '404', 'statusString': '404 Not Found', 'module': 'snippy.testing.testing:123',
-                'title': 'cannot find content with message digest: 101010101010101'
+                'title': 'cannot find content with content identity: 101010101010101'
             }]
         }
         result = testing.TestClient(server.server.api).simulate_put(
@@ -198,8 +198,8 @@ class TestApiUpdateSolution(object):
     def test_api_update_solution_004(self, server):
         """Try to update solution with malformed request.
 
-        Try to call PUT /v1/solutions/<digest> to update solution with
-        malformed JSON request.
+        Try to call PUT /v1/solutions/{id} to update solution with malformed
+        JSON request.
         """
 
         content = {
@@ -238,7 +238,7 @@ class TestApiUpdateSolution(object):
     def test_api_update_solution_005(self, server):
         """Try to update solution with malformed request.
 
-        Try to call PUT /v1/solutions/<digest> to update solution with client
+        Try to call PUT /v1/solutions/{id} to update solution with a client
         generated resource ID. In this case the ID looks like a valid message
         digest.
         """
@@ -287,7 +287,7 @@ class TestApiUpdateSolution(object):
     def test_api_update_solution_006(self, server):
         """Try to update solution with malformed request.
 
-        Try to call PUT /v1/solutions/<digest> to update solution with client
+        Try to call PUT /v1/solutions/{id} to update solution with a client
         generated resource ID. In this case the ID is empty string.
         """
 
@@ -335,10 +335,10 @@ class TestApiUpdateSolution(object):
     def test_api_update_solution_007(self, server):
         """Update one solution with PATCH request.
 
-        Call PATCH /v1/solutions/<digest> to update existing solution with
-        specified digest. The PATCH request contains only the mandatory data
-        attribute. All other attributes that can be updated must be returned
-        with their previous values.
+        Call PATCH /v1/solutions/{id} to update existing solution with digest.
+        The PATCH request contains only the mandatory data attribute. All other
+        attributes that can be updated must be returned with their previous
+        values.
         """
 
         content = {

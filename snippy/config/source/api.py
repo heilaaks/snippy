@@ -39,15 +39,29 @@ class Api(ConfigSourceBase):
 
     @staticmethod
     def _set_sall(parameters):
-        """Set 'match any' if search is made without any search criteria."""
+        """Set search all.
+
+        If a search operation is made without any search criteria, the search
+        all is set automatically for the parameter.
+
+        Args:
+            parameters (dict): Configuration parameters.
+        """
 
         if parameters['operation'] == Api.SEARCH:
-            if not any(field in parameters for field in ('sall', 'stag', 'sgrp', 'data', 'uuid', 'digest')):
+            if not any(field in parameters for field in ('sall', 'stag', 'sgrp', 'data', 'uuid', 'digest', 'identity')):
                 parameters['sall'] = ('.')
 
     @staticmethod
     def _validate(parameters):
-        """Validate API configuration parameters."""
+        """Validate API configuration parameters.
+
+        Args:
+            parameters (dict): Configuration parameters.
+
+        Returns:
+            bool: Defines if the parameters are valid.
+        """
 
         valid = True
         for key in sorted(parameters):

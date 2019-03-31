@@ -217,7 +217,7 @@ class Database(object):
 
         return stored
 
-    def select(self, scat=(), sall=(), stag=(), sgrp=(), search_filter=None, uuid=None, digest=None, data=None):
+    def select(self, scat=(), sall=(), stag=(), sgrp=(), search_filter=None, uuid=None, digest=None, identity=None, data=None):  # noqa pylint: disable=too-many-arguments,too-many-locals
         """Select content based on search criteria.
 
         The search filter is applied after the result is received from
@@ -232,6 +232,7 @@ class Database(object):
             search_filter (str): Regexp filter to limit search results.
             uuid (str): Search specific uuid or part of it.
             digest (str): Search specific digest or part of it.
+            identity (str): Search specific digest or UUID or part of them.
             data (str): Search specific content data or part of it.
 
         Returns:
@@ -239,14 +240,14 @@ class Database(object):
         """
 
         collection = Collection()
-        query, qargs = self._get_query(scat, sall, stag, sgrp, uuid, digest, data, Database.QUERY_TYPE_REGEX)
+        query, qargs = self._get_query(scat, sall, stag, sgrp, uuid, digest, identity, data, Database.QUERY_TYPE_REGEX)
         if query:
             rows = self._select(query, qargs)
             self._logger.debug('selected: %d :rows: %s', len(rows), rows)
             if search_filter:
                 rows = [row for row in rows if any(search_filter.search(str(column)) for column in row)]
                 self._logger.debug('regexp filter applied: %s :resulting: %d :rows: %s', search_filter, len(rows), rows)
-            total = self._count_content(scat, sall, stag, sgrp, uuid, digest, data)
+            total = self._count_content(scat, sall, stag, sgrp, uuid, digest, identity, data)
             collection.convert(rows)
             collection.total = total
 
@@ -313,7 +314,7 @@ class Database(object):
 
         return tuple(uniques)
 
-    def _count_content(self, scat=(), sall=(), stag=(), sgrp=(), uuid=None, digest=None, data=None):
+    def _count_content(self, scat=(), sall=(), stag=(), sgrp=(), uuid=None, digest=None, identity=None, data=None):
         """Count content based on search criteria.
 
         Args:
@@ -323,6 +324,7 @@ class Database(object):
             sgrp (tuple): Search group keyword list.
             uuid (str): Search specific uuid or part of it.
             digest (str): Search specific digest or part of it.
+            identity (str): Search specific digest or UUID or part of them.
             data (str): Search specific content data or part of it.
 
         Returns:
@@ -330,7 +332,7 @@ class Database(object):
         """
 
         count = 0
-        query, qargs = self._get_query(scat, sall, stag, sgrp, uuid, digest, data, Database.QUERY_TYPE_TOTAL)
+        query, qargs = self._get_query(scat, sall, stag, sgrp, uuid, digest, identity, data, Database.QUERY_TYPE_TOTAL)
         if query:
             rows = self._select(query, qargs)
             try:
@@ -605,8 +607,8 @@ class Database(object):
 
         return rows
 
-    def _get_query(self, scat, sall, stag, sgrp, suuid, sdigest, sdata, query_type):  # noqa pylint: disable=too-many-arguments,too-many-locals,too-many-branches
-        """Get query based on defined type."""
+    def _get_query(self, scat, sall, stag, sgrp, suuid, sdigest, sidentity, sdata, query_type):  # noqa pylint: disable=too-many-arguments,too-many-locals,too-many-branches
+        """Build SQL query."""
 
         query = ()
         qargs = []
@@ -639,6 +641,12 @@ class Database(object):
             else:
                 query = ('SELECT * FROM contents WHERE uuid = {0}'.format(self._placeholder))
             qargs = [suuid]
+        elif sidentity is not None:
+            if query_type == Database.QUERY_TYPE_TOTAL:
+                query = ('SELECT count(*) FROM contents WHERE digest LIKE {0} or uuid LIKE {0}'.format(self._placeholder))
+            else:
+                query = ('SELECT * FROM contents WHERE digest LIKE {0} or uuid LIKE {0}'.format(self._placeholder))
+            qargs = [sidentity+'%', sidentity+'%']
         elif sdata:
             if query_type == Database.QUERY_TYPE_TOTAL:
                 query = ('SELECT count(*) FROM contents WHERE data LIKE {0}'.format(self._placeholder))

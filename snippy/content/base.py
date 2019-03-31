@@ -68,6 +68,7 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
             search_filter=Config.search_filter,
             uuid=Config.operation_uuid,
             digest=Config.operation_digest,
+            identity=Config.operation_identity,
             data=Config.content_data
         )
         if self._run_cli:
@@ -89,6 +90,7 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
             search_filter=Config.search_filter,
             uuid=Config.operation_uuid,
             digest=Config.operation_digest,
+            identity=Config.operation_identity,
             data=Config.content_data
         )
         if len(collection) == 1:
@@ -115,6 +117,7 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
             search_filter=Config.search_filter,
             uuid=Config.operation_uuid,
             digest=Config.operation_digest,
+            identity=Config.operation_identity,
             data=Config.content_data
         )
         if len(collection) == 1:
@@ -140,6 +143,7 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
                 search_filter=Config.search_filter,
                 uuid=Config.operation_uuid,
                 digest=Config.operation_digest,
+                identity=Config.operation_identity,
                 data=Config.content_data
             )
             if not collection:

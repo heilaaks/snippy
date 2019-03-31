@@ -22,7 +22,7 @@
 import falcon
 
 from snippy.logger import Logger
-from snippy.server.rest.base import ApiContentBase
+from snippy.server.rest.base import ApiResource
 from snippy.server.rest.generate import Generate
 from snippy.meta import __docs__
 from snippy.meta import __homepage__
@@ -30,7 +30,7 @@ from snippy.meta import __openapi__
 from snippy.meta import __version__
 
 
-class ApiHello(ApiContentBase):
+class ApiHello(ApiResource):
     """Hello API."""
 
     @Logger.timeit(refresh_oid=True)
@@ -46,7 +46,7 @@ class ApiHello(ApiContentBase):
             }
         }
         self._logger.debug('run: %s %s', request.method, request.uri)
-        response.content_type = ApiContentBase.MEDIA_JSON_API
+        response.content_type = ApiResource.MEDIA_JSON_API
         response.body = Generate.dumps(hello)
         response.status = falcon.HTTP_200
         self._logger.debug('end: %s %s', request.method, request.uri)

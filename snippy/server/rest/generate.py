@@ -46,7 +46,7 @@ class Generate(object):
     _logger = Logger.get_logger(__name__)
 
     @classmethod
-    def resource(cls, collection, request, response, unique_id, field=Const.EMPTY, pagination=False):
+    def resource(cls, collection, request, response, identity, field=Const.EMPTY, pagination=False):
         """Generate HTTP body with a single resource.
 
         Created body follows the JSON API specification.
@@ -55,7 +55,7 @@ class Generate(object):
             collection (Collection()): Collection that has resources to be send in HTTP response.
             request (object): HTTP request.
             response (object): HTTP response.
-            unique_id (string): Unique ID that is either digest or UUID that identifies the resource.
+            identity (str): Partial or full message digest or UUID.
             field (string): Content field attribute that was used in the HTTP request URL.
             pagination (bool): Define if pagination is used.
 
@@ -78,7 +78,7 @@ class Generate(object):
             # supports only digest, the 16 octet digest is used always in
             # the response.
             uri = list(urlparse(request.uri)[:])
-            uri[2] = uri[2][:uri[2].index(unique_id)]  # Remove all after digest or uuid.
+            uri[2] = uri[2][:uri[2].index(identity)]  # Remove all after digest or uuid.
             uri = urlunparse(uri)
             if 'digest' in uri:
                 uri = urljoin(uri, resource.digest[:16])

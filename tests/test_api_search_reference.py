@@ -280,7 +280,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_008(self, server):
         """Search reference with digets.
 
-        Call GET /snippy/api/app/v1/references/{digest} to get explicit reference
+        Call GET /snippy/api/app/v1/references/{id} to get explicit reference
         based on digest. In this case the reference is found.
         """
 
@@ -315,13 +315,12 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_009(self, server):
         """Search reference with digets.
 
-        Try to call GET /v1/references/{digest} with digest that cannot be
-        found.
+        Try to call GET /v1/references/{id} with digest that is not found.
         """
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '390'
+            'content-length': '392'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -329,7 +328,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
                 'status': '404',
                 'statusString': '404 Not Found',
                 'module': 'snippy.testing.testing:123',
-                'title': 'content digest: 101010101010101 was not unique and matched to: 0 resources'
+                'title': 'content identity: 101010101010101 was not unique and matched to: 0 resources'
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -493,7 +492,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_field_001(self, server):
         """Get specific reference field.
 
-        Call GET /v1/references/<digest>/data for existing reference. In this
+        Call GET /v1/references/́{id}/data for existing reference. In this
         case the digest is shorter than the default 16 octet digest.
         """
 
@@ -524,7 +523,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_field_002(self, server):
         """Get specific reference field.
 
-        Call GET /v1/references/<digest>/brief for existing reference.
+        Call GET /v1/references/{id}/brief for existing reference.
         """
 
         expect_headers = {
@@ -554,7 +553,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_field_003(self, server):
         """Get specific reference field.
 
-        Call GET /v1/references/<digest>/groups for existing reference.
+        Call GET /v1/references/{id}/groups for existing reference.
         """
 
         expect_headers = {
@@ -584,7 +583,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_field_004(self, server):
         """Get specific reference field.
 
-        Call GET /v1/references/<digest>/tags for existing reference.
+        Call GET /v1/references/{id}/tags for existing reference.
         """
 
         expect_headers = {
@@ -614,7 +613,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_field_005(self, server):
         """Get specific reference field.
 
-        Call GET /v1/references/<digest>/links for existing reference.
+        Call GET /v1/references/{id}/links for existing reference.
         """
 
         expect_headers = {
@@ -644,7 +643,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_field_006(self, server):
         """Get specific reference field.
 
-        Call GET /v1/references/<digest>/category for existing reference.
+        Call GET /v1/references/{id}/category for existing reference.
         """
 
         expect_headers = {
@@ -674,7 +673,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_field_007(self, server):
         """Get specific reference field.
 
-        Call GET /v1/references/<digest>/name for existing reference.
+        Call GET /v1/references/{id}/name for existing reference.
         """
 
         expect_headers = {
@@ -704,7 +703,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_field_008(self, server):
         """Get specific reference field.
 
-        Call GET /v1/references/<digest>/filename for existing reference.
+        Call GET /v1/references/{id}/filename for existing reference.
         """
 
         expect_headers = {
@@ -734,7 +733,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_field_009(self, server):
         """Get specific reference field.
 
-        Call GET /v1/references/<digest>/versions for existing reference.
+        Call GET /v1/references/{id}/versions for existing reference.
         """
 
         expect_headers = {
@@ -764,7 +763,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_field_010(self, server):
         """Get specific reference field.
 
-        Call GET /v1/references/<digest>/source for existing reference.
+        Call GET /v1/references/{id}/source for existing reference.
         """
 
         expect_headers = {
@@ -794,7 +793,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_field_011(self, server):
         """Get specific reference field.
 
-        Call GET /v1/references/<digest>/uuid for existing reference.
+        Call GET /v1/references/{id}/uuid for existing reference.
         """
 
         expect_headers = {
@@ -824,7 +823,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_field_012(self, server):
         """Get specific reference field.
 
-        Try to call GET /v1/references/<digest>/notexist for existing reference.
+        Try to call GET /v1/references/{id}/notexist for existing reference.
         In this case the field name does not exist.
         """
 
@@ -858,7 +857,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '531'
+            'content-length': '533'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -871,7 +870,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
                 'status': '404',
                 'statusString': '404 Not Found',
                 'module': 'snippy.testing.testing:123',
-                'title': 'content digest: 0101010101 was not unique and matched to: 0 resources'
+                'title': 'content identity: 0101010101 was not unique and matched to: 0 resources'
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(

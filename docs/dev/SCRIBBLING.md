@@ -1795,6 +1795,7 @@ git update-index --no-assume-unchanged FILE_NAME # change back
 
          - data
          - digest
+         - identity
          - sall
          - scat
          - search_filter

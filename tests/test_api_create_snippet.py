@@ -663,12 +663,12 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                 'tags': ('tag1', 'tag2'),
                 'links': ('link1', 'link2'),
                 'source': 'http://testing/snippets.html',
-                'versions': ('version=1.1',),
+                'versions': ('version==1.1',),
                 'filename': 'filename.txt',
                 'created': Content.FORCED_TIME,
                 'updated': Content.EXITED_TIME,
                 'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
-                'digest': 'a488856d2c0156328afa398458a4f991b2ee3c5bb4dd010f7b740777c015ae83'
+                'digest': '5061cebcd73862862d3bcb720b1cce01a85bf3daff5b5db6d94534515befc280'
             }]
         }
         request_body = {
@@ -684,7 +684,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                     'tags': 'tag1,tag2',
                     'links': 'link1\nlink2',
                     'source': 'http://testing/snippets.html',
-                    'versions': 'version=1.1',
+                    'versions': 'version==1.1',
                     'filename': 'filename.txt',
                     'created': 'invalid time',
                     'updated': 'invalid time',
@@ -695,15 +695,15 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '751'
+            'content-length': '752'
         }
         expect_body = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/a488856d2c015632'
+                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/5061cebcd7386286'
             },
             'data': {
                 'type': 'snippet',
-                'id': 'a488856d2c0156328afa398458a4f991b2ee3c5bb4dd010f7b740777c015ae83',
+                'id': content['data'][0]['digest'],
                 'attributes': content['data'][0]
             }
         }
@@ -930,12 +930,12 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                 'tags': ('spaces', 'tabs'),
                 'links': ('link1', 'link2'),
                 'source': 'short source link',
-                'versions': ('version=1.1.1',),
+                'versions': ('version==1.1.1',),
                 'filename': 'shortfilename.yaml',
                 'created': Content.REGEXP_TIME,
                 'updated': Content.REGEXP_TIME,
                 'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
-                'digest': '9551cc17fe962ceee85cca9d22b2c2d0694970898c3e7c7a8a6ec162a5b438e7'
+                'digest': 'b04d8c1f2913fc3c501e129505265986f1294da0cd3e9f758561cf5443ccf69f'
             }]
         }
         request_body = {
@@ -950,14 +950,14 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                     'tags': ['  tabs   ', '  spaces    '],
                     'links': ['  link2  ', '    link1   '],
                     'source': '  short source link   ',
-                    'versions': ['  version=1.1.1   '],
+                    'versions': ['  version==1.1.1   '],
                     'filename': '  shortfilename.yaml   '
                 }
             }]
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '657'}
+            'content-length': '658'}
         expect_body = {
             'data': [{
                 'type': 'snippet',
@@ -1144,6 +1144,65 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_201
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(content)
+
+    @pytest.mark.usefixtures('create-regexp-utc')
+    def test_api_create_snippet_024(self, server):
+        """Create one snippet from API.
+
+        Call POST /v1/snippets to create new content with invalid version
+        string. The mathematical operator ``=`` is not supported. The equal
+        operation must be ``==``. This causes the version to be stored as
+        empty list.
+        """
+
+        content = {
+            'data': [{
+                'category': 'snippet',
+                'data': ('first row', ),
+                'brief': '',
+                'description': '',
+                'name': '',
+                'groups': ('default',),
+                'tags': (),
+                'links': (),
+                'source': '',
+                'versions': (),
+                'filename': '',
+                'created': '2018-06-22T13:11:13.678729+00:00',
+                'updated': '2018-06-22T13:11:13.678729+00:00',
+                'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'digest': '1ff004f146c8771b93eed01bf65a837ab1617d264495187560cc33347f2cd0a3'
+            }]
+        }
+        request_body = {
+            'data': [{
+                'type': 'snippet',
+                'attributes': {
+                    'data': ['first row'],
+                    'versions': ['version=1.1.1']
+                }
+            }]
+        }
+        expect_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '525'}
+        expect_body = {
+            'data': [{
+                'type': 'snippet',
+                'id': content['data'][0]['digest'],
+                'attributes': content['data'][0]
+            }]
+        }
+        result = testing.TestClient(server.server.api).simulate_post(
+            path='/snippy/api/app/v1/snippets',
+            headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
+            body=json.dumps(request_body))
+        print(result.json)
+        print(result.headers)
+        assert result.status == falcon.HTTP_400
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)

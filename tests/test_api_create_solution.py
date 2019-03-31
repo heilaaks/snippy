@@ -391,12 +391,12 @@ class TestApiCreateSolution(object):
                 'tags': ('atabs', 'bspaces'),
                 'links': ('alink2', 'blink1'),
                 'source': 'short source link',
-                'versions': ('versions=1.1-alpha',),
+                'versions': ('versions==1.1-alpha',),
                 'filename': 'shortfilename.yaml',
                 'created': Content.REGEXP_TIME,
                 'updated': Content.REGEXP_TIME,
                 'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
-                'digest': 'f797b9a49e526e32b728ab5f94dc62762d50bf04ceea8919591a5bce3422d73b'
+                'digest': '2fba73d95146c736a2717e18758fd1871ccb9aa68171614435365f5ad5075ba8'
             }]
         }
         request_body = {
@@ -411,14 +411,14 @@ class TestApiCreateSolution(object):
                     'tags': ['  bspaces   ', '  atabs    '],
                     'links': ['  blink1  ', '    alink2   '],
                     'source': '  short source link   ',
-                    'versions': ['  versions=1.1-alpha   '],
+                    'versions': ['  versions==1.1-alpha   '],
                     'filename': '  shortfilename.yaml   '
                 }
             }]
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '685'}
+            'content-length': '686'}
         expect_body = {
             'data': [{
                 'type': 'solution',

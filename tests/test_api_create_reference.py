@@ -457,12 +457,12 @@ class TestApiCreateReference(object):
                 'tags': ('spaces', 'tabs'),
                 'links': ('link1', 'link2'),
                 'source': 'short source link',
-                'versions': ('kafka=1.0.0',),
+                'versions': ('kafka==1.0.0',),
                 'filename': 'shortfilename.yaml',
                 'created': Content.REGEXP_TIME,
                 'updated': Content.REGEXP_TIME,
                 'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
-                'digest': '08083cf156f5f0e69cd8a1081634021141bc42aeb395d0d150fe3eb049e7f643'
+                'digest': 'f68078e62794f6e1e00ccff301fb83ea01b7587959d6ab7b444c18b637f6e61b'
             }]
         }
         request_body = {
@@ -477,14 +477,14 @@ class TestApiCreateReference(object):
                     'tags': ['  spaces   ', '  tabs    '],
                     'links': ['  link1  ', '    link2   '],
                     'source': '  short source link   ',
-                    'versions': ['  kafka=1.0.0   '],
+                    'versions': ['  kafka==1.0.0   '],
                     'filename': '  shortfilename.yaml   '
                 }
             }]
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '636'}
+            'content-length': '637'}
         expect_body = {
             'data': [{
                 'type': 'reference',

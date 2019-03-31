@@ -229,7 +229,7 @@ class ContentParserBase(object):
         #           4. -t 'docker, container, cleanup'
         #           5. -t docker–testing', container-managemenet', cleanup_testing
         #           6. --sall '.'
-        #           7. kafka=1.0.0
+        #           7. kafka==1.0.0
         #           8. kafka~1.0.0
         #           9. kafka>=1.0.0
         #          10. kafka<=1.0.0
@@ -317,7 +317,7 @@ class ContentParserBase(object):
         # Order of operators matter for the code logic. If operators < or >
         # are before >= and <=, the version is split into three values. Add
         # the longest match first into the operators.
-        operators = ('>=', '<=', '!=', '>', '<', '=', '~')
+        operators = ('>=', '<=', '!=', '==', '>', '<', '~')
         for version in versions:
             value = re.split('|'.join(operators), version)
             if len(value) == 2 and value[0] and value[1]:

@@ -88,12 +88,12 @@ class TestUtContentParserMkdn(object):
             'https://docs.docker.com/engine/reference/commandline/rm/'
         )
         assert resource.source == 'https://www.random.org/'
-        assert resource.versions == ('git<=1.1.1', 'python>=2.7.0')
+        assert resource.versions == ('git<=1.1.1', 'python==3.7.0', 'python>=2.7.0')
         assert resource.filename == 'snippet.txt'
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
         assert resource.uuid == 'f21c6318-8830-11e8-a114-2c4d54508088'
-        assert resource.digest == '30bdd4e9e864093981b5ab6e40ea3b3e2962816908c11c16ca7b7517e28043eb'
+        assert resource.digest == '3306409c0901e27d754a3273a5964652e2e8ea80fe82f3aa80d1aef6e8ab8cef'
 
     def test_parser_snippet_002(self):
         """Test parsing two snippets.
@@ -523,7 +523,7 @@ class TestUtContentParserMkdn(object):
             'tags     : cleanup, container, docker, docker-ce, moby  ',
             'updated  : 2017-10-12T11:52:11.000001+00:00  ',
             'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
-            'versions : docker=1.1.1,moby!=2.7.0',
+            'versions : docker==1.1.1,moby!=2.7.0',
             '',
         ))
         data = (
@@ -555,7 +555,7 @@ class TestUtContentParserMkdn(object):
         assert resource.tags == ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
         assert resource.links == ()
         assert resource.source == ''
-        assert resource.versions == ('docker=1.1.1', 'moby!=2.7.0')
+        assert resource.versions == ('docker==1.1.1', 'moby!=2.7.0')
         assert resource.filename == ''
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
@@ -1090,7 +1090,7 @@ class TestUtContentParserMkdn(object):
             'tags     : cleanup, container, python, docker-ce, moby  ',
             'updated  : 2018-10-12T11:52:11.000001+00:00  ',
             'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
-            'versions : docker-ce=1.1.1,moby!=2.7.0,moby>2.6.0,docker-ce<1.1.1',
+            'versions : docker-ce==1.1.1,moby!=2.7.0,moby>2.6.0,docker-ce<1.1.1',
             '',
         ))
         links = (
@@ -1112,12 +1112,12 @@ class TestUtContentParserMkdn(object):
         assert resource.tags == ('cleanup', 'container', 'docker-ce', 'moby', 'python')
         assert resource.links == links
         assert resource.source == ''
-        assert resource.versions == ('docker-ce<1.1.1', 'docker-ce=1.1.1', 'moby!=2.7.0', 'moby>2.6.0')
+        assert resource.versions == ('docker-ce<1.1.1', 'docker-ce==1.1.1', 'moby!=2.7.0', 'moby>2.6.0')
         assert resource.filename == ''
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.updated == '2018-10-12T11:52:11.000001+00:00'
         assert resource.uuid == 'f21c6318-8830-11e8-a114-2c4d54508088'
-        assert resource.digest == 'ed74eb765e3357bf2b828ef3652348623edce4c2263b02bf2e3a5f28c449c3fd'
+        assert resource.digest == 'dae01bb8ba3cf8c850eabf5ea2abdfe84be14670fc041f6d3ca9c4150c7de1f1'
 
     def test_parser_reference_002(self):
         """Test parsing reference.
@@ -1144,7 +1144,7 @@ class TestUtContentParserMkdn(object):
             'tags     : cleanup, container, python, docker-ce, moby  ',
             'updated  : 2018-10-12T11:52:11.000001+00:00  ',
             'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
-            'versions : docker_ce=1.1.1,moby!=2.7.0',
+            'versions : docker_ce==1.1.1,moby!=2.7.0',
             '',
         ))
         links = ('https://docs.docker.com/engine/reference/commandline/images/',)
@@ -1160,12 +1160,12 @@ class TestUtContentParserMkdn(object):
         assert resource.tags == ('cleanup', 'container', 'docker-ce', 'moby', 'python')
         assert resource.links == links
         assert resource.source == ''
-        assert resource.versions == ('docker_ce=1.1.1', 'moby!=2.7.0')
+        assert resource.versions == ('docker_ce==1.1.1', 'moby!=2.7.0')
         assert resource.filename == ''
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.updated == '2018-10-12T11:52:11.000001+00:00'
         assert resource.uuid == 'f21c6318-8830-11e8-a114-2c4d54508088'
-        assert resource.digest == '8e17edeb07b35d87aecaf26a5b8fa6ab77b9229088b95afabbcea3691b0a15ea'
+        assert resource.digest == '0d1ea43e0200b200175e73b22cb1a9db472251c0250fc2070ea9cc6025ee26f7'
 
     def test_parser_reference_003(self):
         """Test parsing reference.
@@ -1192,7 +1192,7 @@ class TestUtContentParserMkdn(object):
             'tags     : cleanup, container, python, docker-ce, moby  ',
             'updated  : 2018-10-12T11:52:11.000001+00:00  ',
             'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
-            'versions : docker_ce=1.1.1,moby!=2.7.0',
+            'versions : docker_ce==1.1.1,moby!=2.7.0',
             '',
         ))
         links = ('https://docs.docker.com/engine/reference/commandline/images/',)
@@ -1208,9 +1208,9 @@ class TestUtContentParserMkdn(object):
         assert resource.tags == ('cleanup', 'container', 'docker-ce', 'moby', 'python')
         assert resource.links == links
         assert resource.source == ''
-        assert resource.versions == ('docker_ce=1.1.1', 'moby!=2.7.0')
+        assert resource.versions == ('docker_ce==1.1.1', 'moby!=2.7.0')
         assert resource.filename == ''
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.updated == '2018-10-12T11:52:11.000001+00:00'
         assert resource.uuid == 'f21c6318-8830-11e8-a114-2c4d54508088'
-        assert resource.digest == '8e17edeb07b35d87aecaf26a5b8fa6ab77b9229088b95afabbcea3691b0a15ea'
+        assert resource.digest == '0d1ea43e0200b200175e73b22cb1a9db472251c0250fc2070ea9cc6025ee26f7'

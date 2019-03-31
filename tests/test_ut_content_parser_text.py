@@ -460,7 +460,7 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
             'https://github.com/tldr-pages/tldr/blob/master/pages/linux/alpine.md',
             '',
             '# Add optional comma separated list of key-value versions below.',
-            'python=3.7.0,alpine=3.9,linux~4.9',
+            'python==3.7.0,alpine==3.9,linux~4.9',
             '',
             '# Add optional filename below.',
             'tar-file-operations.mkdn',
@@ -479,7 +479,7 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
         assert resource.tags == ('howto', 'linux', 'tar', 'untar')
         assert resource.links == ('https://alpinelinux.org/',)
         assert resource.source == 'https://github.com/tldr-pages/tldr/blob/master/pages/linux/alpine.md'
-        assert resource.versions == ('alpine=3.9', 'linux~4.9', 'python=3.7.0')
+        assert resource.versions == ('alpine==3.9', 'linux~4.9', 'python==3.7.0')
         assert resource.filename == 'tar-file-operations.mkdn'
 
     def test_parser_snippet_010(self):
@@ -1247,7 +1247,7 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
         assert resource.tags == ('commit', 'git', 'howto', 'message', 'scm')
         assert resource.links == links
         assert resource.source == 'https://github.com/'
-        assert resource.versions == ('git<=1.1.1', 'python>=2.7.0')
+        assert resource.versions == ('git<=1.1.1', 'python==3.7.0', 'python>=2.7.0')
         assert resource.filename == 'git.mkdn'
 
     def test_parser_unknown_001(self):

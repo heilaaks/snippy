@@ -1,22 +1,20 @@
 ## WORKING
-   - [ ] Fix JSON API requires links for collection responses too. Individual resource not found or attrbute results null otherwise empty list.
+   - [ ] Document terminology: Use "resource attribute" (resource attribute) in user documents like api specs. This is perhaps more clearer and better than "resource field". 
+   - [ ] Partial search with UUID not working? database search always full UUID.
+   - [ ] Test export/import Mkdn snippet with partial comments. The export must have the <not documented> tag and import must remove it.
+   - [ ] Fix creating/updating resource with invalid versions. Check test_api_create_snippet_024. The seal() cannot check if Cause not is_is because it generates incorrect error. For example GET ../<valid digest>/error shows error that digest not foind. See test_api_search_reference_field_012. move the reast API based empty list check earlier in code to solve this.
+   - [ ] Fix cli -f file to see if this goes ot content filename attribute. Should not. -f|--file and content.filename are not the same.
+   - [ ] Fix pinning of yaml that does not install globally. The instructions are to use local but that could contain help to add the ~./local/bin to path. --> Loose the pinngin only from yaml.
+   - [ ] Fix somehow (?) the python runner search --sall 'test' --filter test -vv | grep --all?
+   - [ ] Fix JSON API v1.x requires links for collection responses too. Individual resource not found or attrbute results null otherwise empty list.
    - [ ] Fix changing URI with digest which may be bad practise?
    - [ ] Design and change /groups and /tags to GET groups and tags not content. Like unique tags and groups.
-   - [ ] Partial search with UUID not working? database search always full UUID.
-   - [ ] Change (?) = to == based on https://en.wikipedia.org/wiki/Relational_operator mathematical
    - [ ] Post references with data must be automatically set to links. Data is only mandatory in API specs. Not easy (?) to add conditional mandatory fields in OAS.
    - [ ] change (?) default basepath to /api/snippy/v1.
-   - [ ] Test export/import Mkdn snippet with partial comments. The export must have the <not documented> tag and import must remove it.
-   - [ ] Use "resource attribute" (resource attribute) in user documents like api specs. This is perhaps more clearer and better than "resource field". 
    - [ ] Fix digest computation once things are setling down. Changing this forces changes to all tests and code that rely on digest.
-   - [ ] Fix cli -f file to see if this goes ot content filename attribute. Should not. -f|--file and content.filename are not the same.
    - [ ] Fix help text to use import --all instead of content specific commands. Or keep?
    - [ ] Starting the server again and import the default content again with --defaults causes server internal erro 500 because of UUID. The 500 should not be here because this is not internal error. Fix?
    - [ ] Fix it may be possile to validate collections so that it calls resource validatio. This would remove need to repeat the code to reset client UUID and digest in resource and collection validation.
-   - [ ] Fix creating/updating resource with invalid versions. The seal() cannot check if Cause not is_is because it generates incorrect error. For example GET ../<valid digest>/error shows error that digest not foind. See test_api_search_reference_field_012.
-   - [ ] Fix pinning of yaml that does not install globally. The instructions are to use local but that could contain help to add the ~./local/bin to path.
-   - [ ] Fix duplicated paths in swagger specs. This seems to work with OAS3.0 (at least it does not complain) But how to specific this in swagger nicely without duplicated code? // https://en.wikipedia.org/wiki/Percent-encoding and https://stackoverflow.com/questions/44150758/swagger-2-0-multiple-path-objects-with-different-paths-but-same-request-and-res
-   - [ ] Fix somehow (?) the python runner search --sall 'test' --filter test -vv | grep --all?
    - [ ] Fix updating content without updates changes the updated timestamp. There is no need to store the content either.
    - [ ] Fix tox which seems to test on latest python 3.6 and not e.g. 3.4. Tox -e py34 // http://notes.webutvikling.org/darn-installation-of-python-3-4/
    - [ ] Add delete for wheel build directory for automation. If the folder exist this is a problem (at least used to be) see how to fail python release/building/something.

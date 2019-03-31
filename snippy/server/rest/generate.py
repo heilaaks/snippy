@@ -47,9 +47,22 @@ class Generate(object):
 
     @classmethod
     def resource(cls, collection, request, response, identity, field=Const.EMPTY, pagination=False):
-        """Generate HTTP body with a single resource.
+        """Create HTTP response body with a resource.
 
-        Created body follows the JSON API specification.
+        The links ``self`` and data ``id`` attributes are always created from
+        the resource digest attribute. The digest is considered as a main ID.
+
+        The ``self`` attribute cannot contain the URI from the request. If
+        content is updated, the request URI is not correct after the resource
+        update when digest in URI is used.
+
+        The resource digest attributes changes when the resource changes. This
+        should work with HTTP caching. The caching works so that the URI and
+        response are cached. If URI contains an UUID which does not change, the
+        cached result could be incorrect. But when the link with digest changes
+        with the content, the cached result should be always correct. [1]
+
+        [1] This is something that the author is not too confident.
 
         Args:
             collection (Collection()): Collection with resources to be send in HTTP response.
@@ -69,23 +82,10 @@ class Generate(object):
             'links': {}
         }
         for resource in collection.resources():
-            # Digest or uuid is used in the response self link based on user
-            # selected. It is assumed that if user selected for example uuid
-            # for the resource request, he/she wants to continue to operate
-            # content based on the selected identity.
-            #
-            # If the request was received through content category API that
-            # supports only digest, the 16 octet digest is used always in
-            # the response.
-            uri = list(urlparse(request.uri)[:])
-            uri[2] = uri[2][:uri[2].index(identity)]  # Remove all after digest or uuid.
+            uri = list(urlparse(request.uri))
+            uri[2] = uri[2][:uri[2].index(identity)]  # Remove everything before resource ID.
             uri = urlunparse(uri)
-            if 'digest' in uri:
-                uri = urljoin(uri, resource.digest[:16])
-            elif 'uuid' in uri:
-                uri = urljoin(uri, resource.uuid)
-            else:
-                uri = urljoin(uri, resource.digest[:16])
+            uri = urljoin(uri, resource.digest[:16])
             if field:
                 uri = urljoin(uri + '/', field)
             data['links'] = {'self': uri}

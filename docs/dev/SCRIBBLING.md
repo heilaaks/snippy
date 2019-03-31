@@ -2238,7 +2238,7 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        - The JSON response fileds are in CamelCase because the expected use
          case is from Javascript that uses CamelCase.
        - If resource is requested, it always results error or an object.
-       - If GET is used to request explitcit digest in query parmater or with
+       - If GET is used to request explicit digest in query parameter or with
          any search keys, the result is always error or list.
 
        /1/ http://jsonapi.org/

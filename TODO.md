@@ -1,4 +1,6 @@
 ## WORKING
+   - [ ] Fix JSON API requires links for collection responses too. Individual resource not found or attrbute results null otherwise empty list.
+   - [ ] Fix changing URI with digest which may be bad practise?
    - [ ] Design and change /groups and /tags to GET groups and tags not content. Like unique tags and groups.
    - [ ] Partial search with UUID not working? database search always full UUID.
    - [ ] Change (?) = to == based on https://en.wikipedia.org/wiki/Relational_operator mathematical

@@ -413,10 +413,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_012(self, server):
         """Search snippet with digets.
 
-        Call GET /v1/snippets/{id} to get explicit snippet based on digest.
-        In this case the snippet is found. In this case the URI path contains
-        15 digit digest. The returned self link must contain the default 16
-        digit digest.
+        Call GET /v1/snippets/{id} to read a snippet based on digest. In this
+        case the snippet is found. In this case the URI path contains 15 digit
+        digest. The returned self link must be the 16 digit link.
         """
 
         expect_headers = {
@@ -1176,6 +1175,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/snippets/54e41e9b52/groups',
             headers={'accept': 'application/vnd.api+json'})
+        print(result.json)
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
@@ -1294,6 +1294,37 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/snippets/0101010101/brief',
             headers={'accept': 'application/vnd.api+json'})
         assert result.status == falcon.HTTP_404
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
+
+    @pytest.mark.usefixtures('default-snippets')
+    def test_api_search_snippet_field_008(self, server):
+        """Get specific snippet field.
+
+        Call GET /v1/snippets/{id}/brief for existing snippet. In this case
+        the URI id is an UUID.
+        """
+
+        expect_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '261'
+        }
+        expect_body = {
+            'data': {
+                'type': 'snippet',
+                'id': Snippet.FORCED['digest'],
+                'attributes': {
+                    'brief': Snippet.FORCED['brief']
+                }
+            },
+            'links': {
+                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/53908d68425c61dc/brief'
+            }
+        }
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/app/v1/snippets/16cd5827-b6ef-4067-b5ac-3ceac07dde9f/brief',
+            headers={'accept': 'application/vnd.api+json'})
+        assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 

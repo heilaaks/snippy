@@ -68,7 +68,7 @@ extras_tests = (
     'pylint==2.3.1 ; python_version>"2.7"',
     'pytest==4.3.1',
     'pytest-cov==2.6.1',
-    'pytest-mock==1.10.2',
+    'pytest-mock==1.10.3',
     'pytest-xdist==1.27.0',
     'tox==3.8.3'
 )

@@ -117,8 +117,8 @@ coverage:
 	$(PYTHON) -m pytest --cov=snippy tests/
 
 lint:
-	-$(PYTHON) -m pylint --rcfile tests/pylint/pylint-snippy-tests.rc tests/ | tee tests/pylint/pylint-snippy-tests.txt
-	-$(PYTHON) -m pylint --rcfile tests/pylint/pylint-snippy.rc snippy/ | tee tests/pylint/pylint-snippy.txt
+	-$(PYTHON) -m pylint --jobs=0 --rcfile tests/pylint/pylint-snippy-tests.rc tests/ | tee tests/pylint/pylint-snippy-tests.txt
+	-$(PYTHON) -m pylint --jobs=0 --rcfile tests/pylint/pylint-snippy.rc snippy/ | tee tests/pylint/pylint-snippy.txt
 	-$(PYTHON) -m flake8 --config tests/flake8/flake8.ini snippy
 
 pyflakes:

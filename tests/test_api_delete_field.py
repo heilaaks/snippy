@@ -36,42 +36,7 @@ class TestApiDeleteField(object):
 
     @pytest.mark.usefixtures('caller')
     def test_api_delete_field_001(self, server):
-        """Try to delete keyword fields from API.
-
-        Try to call not supported DELETE operation for /v1/keywords.
-        """
-
-        request_body = {
-            'data': [{
-                'type': 'reference',
-                'attributes': Reference.GITLOG
-            }]
-        }
-        expect_headers = {
-            'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '367'
-        }
-        expect_body = {
-            'meta': Content.get_api_meta(),
-            'errors': [{
-                'status': '405',
-                'statusString': '405 Method Not Allowed',
-                'module': 'snippy.testing.testing:123',
-                'title': 'fields api does not support method: DELETE'
-            }]
-        }
-        result = testing.TestClient(server.server.api).simulate_delete(
-            path='/snippy/api/app/v1/docs,python',
-            headers={'accept': 'application/json'},
-            body=json.dumps(request_body))
-        assert result.status == falcon.HTTP_405
-        assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(None)
-
-    @pytest.mark.usefixtures('caller')
-    def test_api_delete_field_002(self, server):
-        """Try to delete groups fields from API.
+        """Try to delete ``groups`` attribute from API.
 
         Try to call not supported DELETE operation for /v1/groups.
         """
@@ -105,8 +70,8 @@ class TestApiDeleteField(object):
         Content.assert_storage(None)
 
     @pytest.mark.usefixtures('caller')
-    def test_api_delete_field_003(self, server):
-        """Try to delete tags fields from API.
+    def test_api_delete_field_002(self, server):
+        """Try to delete ``tags`` attribute from API.
 
         Try to call not supported DELETE operation for /v1/tags.
         """

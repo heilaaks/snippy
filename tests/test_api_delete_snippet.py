@@ -36,8 +36,8 @@ class TestApiDeleteSnippet(object):
     def test_api_delete_snippet_001(self, server):
         """Delete snippet with digest.
 
-        Call DELETE /snippets/<digest> to delete one reference. The digest
-        matches to one reference that is deleted.
+        Call DELETE /snippets/{id} to delete one snippet. The digest matches
+        to one snippet that is deleted.
         """
 
         content = {
@@ -123,6 +123,28 @@ class TestApiDeleteSnippet(object):
         assert result.status == falcon.HTTP_404
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(content)
+
+    @pytest.mark.usefixtures('default-snippets')
+    def test_api_delete_snippet_004(self, server):
+        """Delete snippet with UUID.
+
+        Call DELETE /snippets/{id} to delete one snippet. The UUID matches
+        to one snippet that is deleted.
+        """
+
+        content = {
+            'data': [
+                Snippet.REMOVE,
+            ]
+        }
+        expect_headers = {}
+        result = testing.TestClient(server.server.api).simulate_delete(
+            path='/snippy/api/app/v1/snippets/16cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+            headers={'accept': 'application/json'})
+        assert result.status == falcon.HTTP_204
+        assert result.headers == expect_headers
+        assert not result.text
         Content.assert_storage(content)
 
     @classmethod

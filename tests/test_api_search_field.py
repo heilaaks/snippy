@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""test_api_search_field: Test GET /{field} API."""
+"""test_api_search_field: Test GET resource attribute API."""
 
 from falcon import testing
 import falcon
@@ -32,86 +32,11 @@ pytest.importorskip('gunicorn')
 
 
 class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
-    """Test GET /{field} API."""
-
-    @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
-    def test_api_search_keyword_001(self, server):
-        """Get specific content based on given keywords.
-
-        Call GET /v1/docs,python to get content from any category with
-        docs or python keyword.
-        """
-
-        expect_headers = {
-            'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2150'
-        }
-        expect_body = {
-            'meta': {
-                'count': 3,
-                'limit': 20,
-                'offset': 0,
-                'total': 3
-            },
-            'data': [{
-                'type': 'reference',
-                'id': Reference.PYTEST_DIGEST,
-                'attributes': Reference.PYTEST
-            }, {
-                'type': 'snippet',
-                'id': Snippet.REMOVE_DIGEST,
-                'attributes': Snippet.REMOVE
-            }, {
-                'type': 'snippet',
-                'id': Snippet.FORCED_DIGEST,
-                'attributes': Snippet.FORCED
-            }]
-
-        }
-        result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/docs,python',
-            headers={'accept': 'application/vnd.api+json'})
-        assert result.status == falcon.HTTP_200
-        assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_body)
-
-    @pytest.mark.usefixtures('default-references', 'default-snippets', 'import-kafka', 'import-pytest')
-    def test_api_search_keyword_002(self, server):
-        """Get specific content based on given keywords.
-
-        Call GET /v1/doc to get content from references category with doc
-        keyword.
-        """
-
-        expect_headers = {
-            'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '675'
-        }
-        expect_body = {
-            'meta': {
-                'count': 1,
-                'limit': 20,
-                'offset': 0,
-                'total': 1
-            },
-            'data': [{
-                'type': 'reference',
-                'id': Reference.PYTEST_DIGEST,
-                'attributes': Reference.PYTEST
-            }]
-
-        }
-        result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/doc',
-            headers={'accept': 'application/vnd.api+json'},
-            query_string='limit=20&sort=brief&scat=reference')
-        assert result.status == falcon.HTTP_200
-        assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_body)
+    """Test GET resource attribute API."""
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
     def test_api_search_groups_001(self, server):
-        """Get specific content based on group field.
+        """Get specific content based on ``groups`` attribute.
 
         Call GET /v1/groups/docker to get all content from the docker group.
         In this case the query matches to three out of four contents.
@@ -151,7 +76,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
     def test_api_search_groups_002(self, server):
-        """Get specific content based on group field.
+        """Get specific content based on ``groups`` attribute.
 
         Call GET /v1/groups/docker,python to get content from the docker and
         python groups with search all keywords and content limit applied.
@@ -188,7 +113,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
     def test_api_search_groups_003(self, server):
-        """Get specific content based on group field.
+        """Get specific content based on ``groups`` attribute.
 
         Call GET /v1/groups/docker,python to get content from the docker and
         python groups with search all keywords and limit applied. In this case
@@ -223,7 +148,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
     def test_api_search_groups_004(self, server):
-        """Get specific content based on group field.
+        """Get specific content based on ``groups`` attribute.
 
         Try to call GET /v1/groups/docker,python and limit search to content
         categories defined in plural form. This must not work because only
@@ -258,7 +183,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
     def test_api_search_groups_005(self, server):
-        """Try to get specific content based on group field.
+        """Try to get specific content based on ``groups`` attribute.
 
         Try to call GET /v1/groups/missing with a group that is not found.
         """
@@ -285,7 +210,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
     def test_api_search_groups_006(self, server):
-        """Try to get specific content based on group field.
+        """Try to get specific content based on ``groups`` attribute.
 
         Try to call GET /v1/missing/docker with a field name that is not
         found.
@@ -303,7 +228,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
     def test_api_search_groups_007(self, server):
-        """Get specific content based on group field.
+        """Get specific content based on ``groups`` attribute.
 
         Call GET /v1/groups/docker to get all content from the docker group.
         In this case the search query parameter uuid is defined to match
@@ -345,7 +270,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
     def test_api_search_groups_008(self, server):
-        """Get specific content based on group field.
+        """Get specific content based on ``groups`` attribute.
 
         Try to call GET /v1/groups/docker to get all content from the docker
         group. In this case one of the scat search keywords defining the
@@ -380,7 +305,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
     def test_api_search_tags_001(self, server):
-        """Get specific content based on tags field.
+        """Get specific content based on ``tags`` attribute.
 
         Call GET /v1/tags/moby to get all content with a moby tag.
         """
@@ -419,7 +344,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
     def test_api_search_tags_002(self, server):
-        """Get specific content based on tags field.
+        """Get specific content based on ``tags`` attribute.
 
         Call GET /v1/tags/volume,python to get all content with a volume or
         python tag.
@@ -451,7 +376,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
     def test_api_search_tags_003(self, server):
-        """Try to get specific content based on tags field.
+        """Try to get specific content based on ``tags`` attribute.
 
         Try to call GET /v1/tags/missing with a tag that is not found.
         """
@@ -471,272 +396,6 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         }
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/tags/missing',
-            headers={'accept': 'application/vnd.api+json'})
-        assert result.status == falcon.HTTP_404
-        assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_body)
-
-    @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
-    def test_api_search_digest_001(self, server):
-        """Get specific content based on digest.
-
-        Call GET /v1/digest/<digest> to get specific content based on digest.
-        """
-
-        expect_headers = {
-            'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '764'
-        }
-        expect_body = {
-            'meta': {
-                'count': 1,
-                'limit': 20,
-                'offset': 0,
-                'total': 1
-            },
-            'data': {
-                'type': 'reference',
-                'id': Reference.PYTEST_DIGEST,
-                'attributes': Reference.PYTEST
-            },
-            'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/digest/1f9d9496005736ef'
-            }
-        }
-        result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/digest/1f9d949600573',
-            headers={'accept': 'application/vnd.api+json'})
-        assert result.status == falcon.HTTP_200
-        assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_body)
-
-    @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
-    def test_api_search_digest_002(self, server):
-        """Try to get specific content based on digest.
-
-        Try to call GET /v1/digest/{id} with a digest that is not found.
-        """
-
-        expect_headers = {
-            'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '385'
-        }
-        expect_body = {
-            'meta': Content.get_api_meta(),
-            'errors': [{
-                'status': '404',
-                'statusString': '404 Not Found',
-                'module': 'snippy.testing.testing:123',
-                'title': 'content identity: 01010101 was not unique and matched to: 0 resources'
-            }]
-        }
-        result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/digest/01010101',
-            headers={'accept': 'application/vnd.api+json'})
-        assert result.status == falcon.HTTP_404
-        assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_body)
-
-    @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
-    def test_api_search_uuid_001(self, server):
-        """Get specific content based on uuid.
-
-        Call GET /v1/uuid/<uuid> to get specific content based on uuid. The
-        self link must be with the full length UUID because it is assumed
-        that since user requested with UUID, he/she wants to operate content
-        with selected identity.
-        """
-
-        expect_headers = {
-            'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '782'
-        }
-        expect_body = {
-            'meta': {
-                'count': 1,
-                'limit': 20,
-                'offset': 0,
-                'total': 1
-            },
-            'data': {
-                'type': 'reference',
-                'id': Reference.PYTEST_DIGEST,
-                'attributes': Reference.PYTEST
-            },
-            'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/uuid/27cd5827-b6ef-4067-b5ac-3ceac07dde9f'
-            }
-        }
-        result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/uuid/27cd5827-b6ef-4067-b5ac-3ceac07dde9f',
-            headers={'accept': 'application/vnd.api+json'})
-        assert result.status == falcon.HTTP_200
-        assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_body)
-
-    @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
-    def test_api_search_uuid_002(self, server):
-        """Get specific content based on uuid.
-
-        Try to call GET /v1/uuid/<uuid> that is not unique and it could match
-        to multiple contents.
-        """
-
-        expect_headers = {
-            'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '356'
-        }
-        expect_body = {
-            'meta': Content.get_api_meta(),
-            'errors': [{
-                'status': '404',
-                'statusString': '404 Not Found',
-                'module': 'snippy.testing.testing:123',
-                'title': 'unique content uuid: 1 :was not found: 0'
-            }]
-        }
-        result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/uuid/1',
-            headers={'accept': 'application/vnd.api+json'})
-        assert result.status == falcon.HTTP_404
-        assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_body)
-
-    @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
-    def test_api_search_uuid_003(self, server):
-        """Try to get specific content based on uuid.
-
-        Try to call GET /v1/uuid/<uuid> with a uuid that is not found.
-        """
-
-        expect_headers = {
-            'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '363'
-        }
-        expect_body = {
-            'meta': Content.get_api_meta(),
-            'errors': [{
-                'status': '404',
-                'statusString': '404 Not Found',
-                'module': 'snippy.testing.testing:123',
-                'title': 'unique content uuid: 01010101 :was not found: 0'
-            }]
-        }
-        result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/uuid/01010101',
-            headers={'accept': 'application/vnd.api+json'})
-        assert result.status == falcon.HTTP_404
-        assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_body)
-
-    @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
-    def test_api_search_uuid_004(self, server):
-        """Get specific content field based on uuid.
-
-        Call GET /v1/uuid/<uuid>/brief to get specific content field.
-        """
-
-        expect_headers = {
-            'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '272'
-        }
-        expect_body = {
-            'data': {
-                'type': 'reference',
-                'id': Reference.PYTEST_DIGEST,
-                'attributes': {field: Reference.PYTEST[field] for field in ['brief']}
-            },
-            'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/uuid/27cd5827-b6ef-4067-b5ac-3ceac07dde9f/brief'
-            }
-        }
-        result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/uuid/27cd5827-b6ef-4067-b5ac-3ceac07dde9f/brief',
-            headers={'accept': 'application/vnd.api+json'})
-        assert result.status == falcon.HTTP_200
-        assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_body)
-
-    @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
-    def test_api_search_uuid_005(self, server):
-        """Get specific content field based on uuid.
-
-        Call GET /v1/uuid/<uuid>/brief,tags to get specific content fields.
-        """
-
-        expect_headers = {
-            'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '315'
-        }
-        expect_body = {
-            'data': {
-                'type': 'reference',
-                'id': Reference.PYTEST_DIGEST,
-                'attributes': {field: Reference.PYTEST[field] for field in ['brief', 'tags']}
-            },
-            'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/uuid/27cd5827-b6ef-4067-b5ac-3ceac07dde9f/brief,tags'
-            }
-        }
-        result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/uuid/27cd5827-b6ef-4067-b5ac-3ceac07dde9f/brief,tags',
-            headers={'accept': 'application/vnd.api+json'})
-        assert result.status == falcon.HTTP_200
-        assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_body)
-
-    @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
-    def test_api_search_uuid_006(self, server):
-        """Get specific content field based on uuid.
-
-        Try to call GET /v1/uuid/<uuid>/brief to get specific content field
-        with unknown uuid.
-        """
-
-        expect_headers = {
-            'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '409'
-        }
-        expect_body = {
-            'meta': Content.get_api_meta(),
-            'errors': [{
-                'status': '404',
-                'statusString': '404 Not Found',
-                'module': 'snippy.testing.testing:123',
-                'title': 'content uuid: 12345678-b6ef-4067-b5ac-3ceac07dde9f was not unique and matched to: 0 resources'
-            }]
-        }
-        result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/uuid/12345678-b6ef-4067-b5ac-3ceac07dde9f/brief',
-            headers={'accept': 'application/vnd.api+json'})
-        assert result.status == falcon.HTTP_404
-        assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_body)
-
-    @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
-    def test_api_search_uuid_007(self, server):
-        """Get specific content field based on uuid.
-
-        Try to call GET /v1/uuid/<uuid>/brief to get specific content field.
-        In this case the uuid 1 matches to multiple contents and specific
-        field cannot be returned.
-        """
-
-        expect_headers = {
-            'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '374'
-        }
-        expect_body = {
-            'meta': Content.get_api_meta(),
-            'errors': [{
-                'status': '404',
-                'statusString': '404 Not Found',
-                'module': 'snippy.testing.testing:123',
-                'title': 'content uuid: 1 was not unique and matched to: 0 resources'
-            }]
-        }
-        result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/uuid/1/brief',
             headers={'accept': 'application/vnd.api+json'})
         assert result.status == falcon.HTTP_404
         assert result.headers == expect_headers

@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""api_refenrecens: JSON REST API for References."""
+"""api_refenrecens: JSON REST API for ``reference`` category."""
 
 from snippy.constants import Constants as Const
 from snippy.server.rest.base import ApiResource

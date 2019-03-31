@@ -38,13 +38,8 @@ from snippy.content.solution import Solution
 from snippy.logger import CustomGunicornLogger
 from snippy.logger import Logger
 from snippy.server.gunicorn_server import GunicornServer as SnippyServer
-from snippy.server.rest.api_fields import ApiDigest
-from snippy.server.rest.api_fields import ApiDigestField
 from snippy.server.rest.api_fields import ApiGroups
-from snippy.server.rest.api_fields import ApiKeywords
 from snippy.server.rest.api_fields import ApiTags
-from snippy.server.rest.api_fields import ApiUuid
-from snippy.server.rest.api_fields import ApiUuidField
 from snippy.server.rest.api_hello import ApiHello
 from snippy.server.rest.api_references import ApiReferences
 from snippy.server.rest.api_references import ApiReferencesId
@@ -104,13 +99,10 @@ class Server(object):  # pylint: disable=too-few-public-methods
         self.api.add_route(urljoin(Config.server_app_base_path, 'references'), ApiReferences(reference))
         self.api.add_route(urljoin(Config.server_app_base_path, 'references/{identity}'), ApiReferencesId(reference))
         self.api.add_route(urljoin(Config.server_app_base_path, 'references/{identity}/{field}'), ApiReferencesIdField(reference))
+        self.api.add_route(urljoin(Config.server_app_base_path, 'groups'), ApiGroups(fields))
         self.api.add_route(urljoin(Config.server_app_base_path, 'groups/{sgrp}'), ApiGroups(fields))
+        self.api.add_route(urljoin(Config.server_app_base_path, 'tags'), ApiTags(fields))
         self.api.add_route(urljoin(Config.server_app_base_path, 'tags/{stag}'), ApiTags(fields))
-        self.api.add_route(urljoin(Config.server_app_base_path, 'digest/{identity}'), ApiDigest(fields))
-        self.api.add_route(urljoin(Config.server_app_base_path, 'digest/{identity}/{field}'), ApiDigestField(fields))
-        self.api.add_route(urljoin(Config.server_app_base_path, 'uuid/{uuid}'), ApiUuid(fields))
-        self.api.add_route(urljoin(Config.server_app_base_path, 'uuid/{uuid}/{field}'), ApiUuidField(fields))
-        self.api.add_route(urljoin(Config.server_app_base_path, '{sall}'), ApiKeywords(fields))
 
         # Reset cause just before starting the server. If there are any
         # failures during server statup phase that set a cause, they are

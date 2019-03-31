@@ -122,7 +122,7 @@ class TestApiCreateSolution(object):
     def test_api_create_solution_003(self, server):
         """Update solution with POST that maps to PUT.
 
-        Call POST /v1/solutions/<digest> to update existing solution with the
+        Call POST /v1/solutions/[id} to update existing solution with the
         X-HTTP-Method-Override header that overrides the operation as PUT. In
         this case the created timestamp must remain in initial value and the
         updated timestamp must be updated to reflect the update time.
@@ -252,7 +252,7 @@ class TestApiCreateSolution(object):
     def test_api_create_solution_006(self, server):
         """Try to create solution with resource id.
 
-        Try to call POST /v1/solutions/<digest> to create new solution with
+        Try to call POST /v1/solutions/{id} to create new solution with
         resource ID in URL. The POST method is not overriden with custom
         X-HTTP-Method-Override header.
         """

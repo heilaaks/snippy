@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""base: Base class for content APIs."""
+"""base: Base class for the resource API endpoints."""
 
 from snippy.cause import Cause
 from snippy.config.config import Config
@@ -27,12 +27,12 @@ from snippy.server.rest.generate import Generate
 from snippy.server.rest.validate import Validate
 
 
-class ApiResource(object):  # pylint: disable=too-many-instance-attributes
-    """Base class for resource APIs."""
+class ApiResource(object):
+    """Base class for the resource API endpoints."""
 
-    # JSON API v1.0 media header. The character set is deviation from the
-    # specification but it was considered very useful so that user always
-    # knows how to decode the characters.
+    # JSON API v1.0 specification media header. Additional character set is a
+    # deviation from the specification. It is considered very useful so that
+    # client always knows explicitly how to decode HTTP responses.
     MEDIA_JSON_API = 'application/vnd.api+json; charset=UTF-8'
 
     def __init__(self, content=None, category=None):
@@ -42,7 +42,12 @@ class ApiResource(object):  # pylint: disable=too-many-instance-attributes
 
     @Logger.timeit(refresh_oid=True)
     def on_post(self, request, response, **kwargs):  # pylint: disable=unused-argument
-        """Create new content."""
+        """Create new resource.
+
+        Args:
+            request (object): Falcon Request.
+            response (object): Falcon Response.
+        """
 
         self._logger.debug('run: %s %s', request.method, request.uri)
         collection = Validate.json_object(request)
@@ -64,13 +69,26 @@ class ApiResource(object):  # pylint: disable=too-many-instance-attributes
 
     @Logger.timeit(refresh_oid=True)
     def on_put(self, request, response, **kwargs):  # pylint: disable=unused-argument,no-self-use
-        """Update content."""
+        """Update content.
+
+        Args:
+            request (object): Falcon Request.
+            response (object): Falcon Response.
+        """
 
         ApiNotImplemented.send(request, response)
 
     @Logger.timeit(refresh_oid=True)
     def on_get(self, request, response, sall=None, stag=None, sgrp=None):
-        """Search content based on query parameters."""
+        """Search resources.
+
+        Args:
+            request (object): Falcon Request.
+            response (object): Falcon Response.
+            sall (str): Search all ``sall`` path parameter.
+            stag (str): Search tags ``stag`` path parameter.
+            sgrp (str): Search groups ``sgrp`` path parameter.
+        """
 
         self._logger.debug('run: %s %s', request.method, request.uri)
         if sall:
@@ -98,7 +116,12 @@ class ApiResource(object):  # pylint: disable=too-many-instance-attributes
 
     @Logger.timeit(refresh_oid=True)
     def on_delete(self, request, response, **kwargs):  # pylint: disable=unused-argument
-        """Deleting content without resource is not supported."""
+        """Delete resource.
+
+        Args:
+            request (object): Falcon Request.
+            response (object): Falcon Response.
+        """
 
         self._logger.debug('run: %s %s', request.method, request.uri)
         Cause.push(Cause.HTTP_NOT_FOUND, 'cannot delete content without identified resource')
@@ -112,7 +135,15 @@ class ApiResource(object):  # pylint: disable=too-many-instance-attributes
     @staticmethod
     @Logger.timeit(refresh_oid=True)
     def on_options(_, response, sall=None, stag=None, sgrp=None):  # pylint: disable=unused-argument
-        """Respond with allowed methods."""
+        """Respond with allowed methods.
+
+        Args:
+            request (object): Falcon Request.
+            response (object): Falcon Response.
+            sall (str): Search all ``sall`` path parameter.
+            stag (str): Search tags ``stag`` path parameter.
+            sgrp (str): Search groups ``sgrp`` path parameter.
+        """
 
         response.status = Cause.HTTP_200
         response.set_header('Allow', 'DELETE,GET,OPTIONS,POST')
@@ -128,7 +159,13 @@ class ApiResourceId(object):
 
     @Logger.timeit(refresh_oid=True)
     def on_post(self, request, response, identity):
-        """Update resource."""
+        """Update resource.
+
+        Args:
+            request (object): Falcon Request.
+            response (object): Falcon Response.
+            identity (str): Partial or full message digest or UUID.
+        """
 
         self._logger.debug('run: %s %s', request.method, request.uri)
         if request.get_header('x-http-method-override', default='post').lower() == 'put':
@@ -153,6 +190,11 @@ class ApiResourceId(object):
         If the given uuid matches to multiple resources or no resources at
         all, an error is returned. This conflicts against the JSON API v1.0
         specifications. See the Snippy documentation for more information.
+
+        Args:
+            request (object): Falcon Request.
+            response (object): Falcon Response.
+            identity (str): Partial or full message digest or UUID.
         """
 
         self._logger.debug('run: %s %s', request.method, request.uri)
@@ -177,7 +219,13 @@ class ApiResourceId(object):
 
     @Logger.timeit(refresh_oid=True)
     def on_delete(self, request, response, identity):
-        """Delete resource based on the resource ID."""
+        """Delete resource based on the resource ID.
+
+        Args:
+            request (object): Falcon Request.
+            response (object): Falcon Response.
+            identity (str): Partial or full message digest or UUID.
+        """
 
         self._logger.debug('run: %s %s', request.method, request.uri)
         local_params = {'identity': identity}
@@ -196,7 +244,13 @@ class ApiResourceId(object):
 
     @Logger.timeit(refresh_oid=True)
     def on_put(self, request, response, identity):
-        """Update resource based on the resource ID."""
+        """Update resource based on the resource ID.
+
+        Args:
+            request (object): Falcon Request.
+            response (object): Falcon Response.
+            identity (str): Partial or full message digest or UUID.
+        """
 
         self._logger.debug('run: %s %s', request.method, request.uri)
         collection = Validate.json_object(request, identity)
@@ -218,7 +272,13 @@ class ApiResourceId(object):
 
     @Logger.timeit(refresh_oid=True)
     def on_patch(self, request, response, identity):
-        """Update partial resource based on resource ID."""
+        """Update partial resource based on resource ID.
+
+        Args:
+            request (object): Falcon Request.
+            response (object): Falcon Response.
+            identity (str): Partial or full message digest or UUID.
+        """
 
         self._logger.debug('run: %s %s', request.method, request.uri)
         self.on_put(request, response, identity)
@@ -228,7 +288,13 @@ class ApiResourceId(object):
     @staticmethod
     @Logger.timeit(refresh_oid=True)
     def on_options(_, response, identity):  # pylint: disable=unused-argument
-        """Respond with allowed methods."""
+        """Respond with allowed methods.
+
+        Args:
+            request (object): Falcon Request.
+            response (object): Falcon Response.
+            identity (str): Partial or full message digest or UUID.
+        """
 
         response.status = Cause.HTTP_200
         response.set_header('Allow', 'DELETE,GET,OPTIONS,PATCH,POST,PUT')
@@ -249,6 +315,12 @@ class ApiResourceIdField(object):
         If the given uuid matches to multiple resources or no resources at
         all, an error is returned. This conflicts against the JSON API v1.0
         specifications. See the Snippy documentation for more information.
+
+        Args:
+            request (object): Falcon Request.
+            response (object): Falcon Response.
+            identity (str): Partial or full message digest or UUID.
+            field (str): Resource attribute.
         """
 
         self._logger.debug('run: %s %s', request.method, request.uri)
@@ -274,110 +346,30 @@ class ApiResourceIdField(object):
     @staticmethod
     @Logger.timeit(refresh_oid=True)
     def on_options(_, response, identity, field):  # pylint: disable=unused-argument
-        """Respond with allowed methods."""
+        """Respond with allowed methods.
 
-        response.status = Cause.HTTP_200
-        response.set_header('Allow', 'GET,OPTIONS')
-
-
-class ApiContentUuid(object):
-    """Process content based on uuid."""
-
-    def __init__(self, content, category):
-        self._logger = Logger.get_logger(__name__)
-        self._category = category
-        self._content = content
-
-    @Logger.timeit(refresh_oid=True)
-    def on_get(self, request, response, uuid):
-        """Search content based on uuid.
-
-        If the given uuid matches to multiple resources or no resources at
-        all, an error is returned. This conflicts against the JSON API v1.0
-        specifications. See the Snippy documentation for more information.
+        Args:
+            request (object): Falcon Request.
+            response (object): Falcon Response.
+            identity (str): Partial or full message digest or UUID.
+            field (str): Resource attribute.
         """
-
-        self._logger.debug('run: %s %s', request.method, request.uri)
-        local_params = {'uuid': uuid}
-        api = Api(self._category, Api.SEARCH, local_params)
-        Config.load(api)
-        self._content.run()
-        if len(self._content.collection) != 1:
-            Cause.push(Cause.HTTP_NOT_FOUND, 'unique content uuid: %s :was not found: %d' %
-                       (uuid, len(self._content.collection)))
-        if Cause.is_ok():
-            response.content_type = ApiResource.MEDIA_JSON_API
-            response.body = Generate.resource(self._content.collection, request, response, uuid, pagination=True)
-            response.status = Cause.http_status()
-        else:
-            response.content_type = ApiResource.MEDIA_JSON_API
-            response.body = Generate.error(Cause.json_message())
-            response.status = Cause.http_status()
-
-        Cause.reset()
-        self._logger.debug('end: %s %s', request.method, request.uri)
-
-    @staticmethod
-    @Logger.timeit(refresh_oid=True)
-    def on_options(_, response, uuid):  # pylint: disable=unused-argument
-        """Respond with allowed methods."""
-
-        response.status = Cause.HTTP_200
-        response.set_header('Allow', 'GET,OPTIONS')
-
-
-class ApiContentUuidField(object):
-    """Process content based on uuid resource ID and specified field."""
-
-    def __init__(self, content, category):
-        self._logger = Logger.get_logger(__name__)
-        self._category = category
-        self._content = content
-
-    @Logger.timeit(refresh_oid=True)
-    def on_get(self, request, response, uuid, field):
-        """Get defined content field based on uuid.
-
-        If the given uuid matches to multiple resources or no resources at
-        all, an error is returned. This conflicts against the JSON API v1.0
-        specifications. See the Snippy documentation for more information.
-        """
-
-        self._logger.debug('run: %s %s', request.method, request.uri)
-        local_params = {'uuid': uuid, 'fields': field}
-        api = Api(self._category, Api.SEARCH, local_params)
-        Config.load(api)
-        self._content.run()
-        if len(self._content.collection) != 1:
-            Cause.push(Cause.HTTP_NOT_FOUND, 'content uuid: %s was not unique and matched to: %d resources' %
-                       (uuid, len(self._content.collection)))
-        if Cause.is_ok():
-            response.content_type = ApiResource.MEDIA_JSON_API
-            response.body = Generate.resource(self._content.collection, request, response, uuid, field=field, pagination=False)
-            response.status = Cause.http_status()
-        else:
-            response.content_type = ApiResource.MEDIA_JSON_API
-            response.body = Generate.error(Cause.json_message())
-            response.status = Cause.http_status()
-
-        Cause.reset()
-        self._logger.debug('end: %s %s', request.method, request.uri)
-
-    @staticmethod
-    @Logger.timeit(refresh_oid=True)
-    def on_options(_, response, uuid, field):  # pylint: disable=unused-argument
-        """Respond with allowed methods."""
 
         response.status = Cause.HTTP_200
         response.set_header('Allow', 'GET,OPTIONS')
 
 
 class ApiNotImplemented(object):  # pylint: disable=too-few-public-methods
-    """Stanrard response for not allowed HTTP method."""
+    """Stanrard response for not allowed HTTP methods."""
 
     @classmethod
     def send(cls, request, response):
-        """Send standard 405 Not Allowed response."""
+        """Send standard 405 Not Allowed HTTP response.
+
+        Args:
+            request (object): Falcon Request.
+            response (object): Falcon Response.
+        """
 
         Cause.push(Cause.HTTP_METHOD_NOT_ALLOWED, 'fields api does not support method: {}'.format(request.method))
         response.content_type = ApiResource.MEDIA_JSON_API

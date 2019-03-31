@@ -242,7 +242,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
     def test_api_hello_api_011(self, server):
         """Test snippets digest API with OPTIONS.
 
-        Call OPTIONS /v1/snippets/<digest> to get allowed methods.
+        Call OPTIONS /v1/snippets/{id} to get allowed methods.
         """
 
         expect_headers = {
@@ -259,7 +259,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
     def test_api_hello_api_012(self, server):
         """Test snippets field API with OPTIONS.
 
-        Call OPTIONS /v1/snippets/<digest>/<field> to get allowed methods.
+        Call OPTIONS /v1/snippets/{id}/{field} to get allowed methods.
         """
 
         expect_headers = {
@@ -308,57 +308,6 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('mock-server')
     def test_api_hello_api_015(self, server):
-        """Test fields tags API with OPTIONS.
-
-        Call OPTIONS /v1/digest/<digest> to get allowed methods.
-        """
-
-        expect_headers = {
-            'allow': 'GET,OPTIONS',
-            'content-length': '0',
-            'content-type': 'application/vnd.api+json'
-        }
-        result = testing.TestClient(server.server.api).simulate_options('/snippy/api/app/v1/digest/01010101')
-        assert result.status == falcon.HTTP_200
-        assert result.headers == expect_headers
-        assert not result.text
-
-    @pytest.mark.usefixtures('mock-server')
-    def test_api_hello_api_016(self, server):
-        """Test fields uuid API with OPTIONS.
-
-        Call OPTIONS /v1/uuid/<uuid> to get allowed methods.
-        """
-
-        expect_headers = {
-            'allow': 'GET,OPTIONS',
-            'content-length': '0',
-            'content-type': 'application/vnd.api+json'
-        }
-        result = testing.TestClient(server.server.api).simulate_options('/snippy/api/app/v1/uuid/27cd5827')
-        assert result.status == falcon.HTTP_200
-        assert result.headers == expect_headers
-        assert not result.text
-
-    @pytest.mark.usefixtures('mock-server')
-    def test_api_hello_api_017(self, server):
-        """Test fields uuid API with OPTIONS.
-
-        Call OPTIONS /v1/uuid/<uuid>/<field> to get allowed methods.
-        """
-
-        expect_headers = {
-            'allow': 'GET,OPTIONS',
-            'content-length': '0',
-            'content-type': 'application/vnd.api+json'
-        }
-        result = testing.TestClient(server.server.api).simulate_options('/snippy/api/app/v1/uuid/27cd5827-b6ef-4067-b5ac-3ceac07dde9f/brief')
-        assert result.status == falcon.HTTP_200
-        assert result.headers == expect_headers
-        assert not result.text
-
-    @pytest.mark.usefixtures('mock-server')
-    def test_api_hello_api_018(self, server):
         """Test fields keywords API with OPTIONS.
 
         Call OPTIONS /v1/groups to get allowed methods for keywords API. Note
@@ -378,7 +327,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
         assert not result.text
 
     @pytest.mark.usefixtures('mock-server')
-    def test_api_hello_api_019(self, caplog, osenviron):
+    def test_api_hello_api_016(self, caplog, osenviron):
         """Test server startup with environment variable configuration.
 
         Call GET /api/app/v1 to get Hello response. In this case the server
@@ -419,7 +368,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
         Content.delete()
 
     @pytest.mark.usefixtures('mock-server')
-    def test_api_hello_api_020(self, caplog, osenviron):
+    def test_api_hello_api_017(self, caplog, osenviron):
         """Test server startup with environment and command line config.
 
         Call GET /api/app/v1 to get Hello response. In this case the server

@@ -52,11 +52,11 @@ class Generate(object):
         Created body follows the JSON API specification.
 
         Args:
-            collection (Collection()): Collection that has resources to be send in HTTP response.
+            collection (Collection()): Collection with resources to be send in HTTP response.
             request (object): HTTP request.
             response (object): HTTP response.
             identity (str): Partial or full message digest or UUID.
-            field (string): Content field attribute that was used in the HTTP request URL.
+            field (str): Content field attribute that was used in the HTTP request URL.
             pagination (bool): Define if pagination is used.
 
         Returns:
@@ -282,7 +282,7 @@ class Generate(object):
         Args:
             request (object): Received HTTP request.
             response (object): HTTP response which headers may be updated.
-            body (string): String presentation from HTTP response body.
+            body (str): String presentation from HTTP response body.
 
         Returns:
             string|bytes: Body compressed to bytes or original JSON string.

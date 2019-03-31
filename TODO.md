@@ -1,4 +1,5 @@
 ## WORKING
+   - [ ] Design and change /groups and /tags to GET groups and tags not content. Like unique tags and groups.
    - [ ] Partial search with UUID not working? database search always full UUID.
    - [ ] Change (?) = to == based on https://en.wikipedia.org/wiki/Relational_operator mathematical
    - [ ] Post references with data must be automatically set to links. Data is only mandatory in API specs. Not easy (?) to add conditional mandatory fields in OAS.

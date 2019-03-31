@@ -469,7 +469,6 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/snippets/101010101010101',
             headers={'accept': 'application/json'})
-        print(result.json)
         assert result.status == falcon.HTTP_404
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)

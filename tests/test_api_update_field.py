@@ -36,46 +36,6 @@ class TestApiCreateField(object):
 
     @pytest.mark.usefixtures('caller')
     def test_api_update_field_001(self, server):
-        """Try to update keyword fields from API.
-
-        Try to call not supported PUT operation for /v1/keywords.
-        """
-
-        content = {
-            'data': [
-                Reference.GITLOG
-            ]
-        }
-        request_body = {
-            'data': [{
-                'type': 'reference',
-                'attributes': content['data'][0]
-            }]
-        }
-        expect_headers = {
-            'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '364'
-        }
-        expect_body = {
-            'meta': Content.get_api_meta(),
-            'errors': [{
-                'status': '405',
-                'statusString': '405 Method Not Allowed',
-                'module': 'snippy.testing.testing:123',
-                'title': 'fields api does not support method: PUT'
-            }]
-        }
-        result = testing.TestClient(server.server.api).simulate_put(
-            path='/snippy/api/app/v1/docs,python',
-            headers={'accept': 'application/json'},
-            body=json.dumps(request_body))
-        assert result.status == falcon.HTTP_405
-        assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(None)
-
-    @pytest.mark.usefixtures('caller')
-    def test_api_update_field_002(self, server):
         """Try to update groups fields from API.
 
         Try to call not supported PUT operation for /v1/groups.
@@ -115,7 +75,7 @@ class TestApiCreateField(object):
         Content.assert_storage(None)
 
     @pytest.mark.usefixtures('caller')
-    def test_api_update_field_003(self, server):
+    def test_api_update_field_002(self, server):
         """Try to update tags fields from API.
 
         Try to call not supported PUT operation for /v1/tags.

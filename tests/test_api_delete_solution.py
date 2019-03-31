@@ -36,8 +36,8 @@ class TestApiDeleteSolution(object):
     def test_api_delete_solution_001(self, server):
         """Delete solution with digest.
 
-        Call DELETE /solutions/<digest> to delete one reference. The digest
-        matches to one reference that is deleted.
+        Call DELETE /solutions/{id} to delete one reference. The digest matches
+        to one reference that is deleted.
         """
 
         content = {

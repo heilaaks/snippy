@@ -824,7 +824,33 @@ data:
   updated: '2019-03-14T11:22:03.966913+00:00'
   uuid: 58e26441-2ece-45e2-9d0f-cd6fb8716743
   versions: []
+- brief: Git rebase local branch with remote master
+  category: snippet
+  created: '2019-04-02T06:03:13.923840+00:00'
+  data:
+  - git stash
+  - git stash pop
+  - git pull --rebase origin master
+  - git pull --rebase --autostash origin master
+  description: ''
+  digest: 2d6aa41a0cecdcd02766a542d12c3be83f580a4f6248d8d775da41c2fcf1990f
+  filename: git-rebase-master.md
+  groups:
+  - git
+  links:
+  - https://github.com/git/git/tree/master/Documentation/RelNotes
+  - https://stackoverflow.com/a/43262939
+  - https://stackoverflow.com/a/4675513
+  name: Git rebase master
+  source: ''
+  tags:
+  - git
+  - rebase
+  updated: '2019-04-02T06:03:13.923840+00:00'
+  uuid: 1cc165f0-32d5-4431-b374-42d2a5ed0680
+  versions:
+  - git>=2.9.0
 meta:
   homepage: https://github.com/heilaaks/snippy
-  updated: '2019-03-24T14:10:34.495169+00:00'
+  updated: '2019-04-02T06:13:21.888677+00:00'
   version: 0.10a0

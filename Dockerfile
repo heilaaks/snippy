@@ -1,4 +1,4 @@
-FROM alpine:3.9 as base
+FROM alpine:3.9
 LABEL maintainer "laaksonen.heikki.j@gmail.com"
 
 ENV LANG C.UTF-8

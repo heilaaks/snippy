@@ -116,22 +116,17 @@ class TestCliSearchReference(object):
     def test_cli_search_reference_005(self, snippy, capsys):
         """Search references with ``uuid`` option.
 
-        Search reference by explicitly defining content uuid.
+        Try to search reference by using resource uuid in short form that
+        does not have the last digit. The short form must not be accepted
+        and no results must be returned. The UUID is intended to be used
+        as fully matching identity.
         """
 
-        output = (
-            '1. How to write commit messages @git [5c2071094dbfaa33]',
-            '',
-            '   > https://chris.beams.io/posts/git-commit/',
-            '   # commit,git,howto',
-            '',
-            'OK',
-            ''
-        )
-        cause = snippy.run(['snippy', 'search', '--reference', '--uuid', '12cd5827-b6ef-4067-b5ac-3ceac07dde9f', '--no-ansi'])
+        output = 'NOK: cannot find content with given search criteria\n'
+        cause = snippy.run(['snippy', 'search', '--reference', '--uuid', '12cd5827-b6ef-4067-b5ac-3ceac07dde9', '--no-ansi'])
         out, err = capsys.readouterr()
-        assert cause == Cause.ALL_OK
-        assert out == Const.NEWLINE.join(output)
+        assert cause == 'NOK: cannot find content with given search criteria'
+        assert out == output
         assert not err
 
     @pytest.mark.usefixtures('default-references')

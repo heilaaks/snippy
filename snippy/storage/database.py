@@ -643,10 +643,10 @@ class Database(object):
             qargs = [suuid]
         elif sidentity is not None:
             if query_type == Database.QUERY_TYPE_TOTAL:
-                query = ('SELECT count(*) FROM contents WHERE (digest LIKE {0} OR CAST(uuid AS text) LIKE {0})'.format(self._placeholder))
+                query = ('SELECT count(*) FROM contents WHERE (digest LIKE {0} OR CAST(uuid AS text) = {0})'.format(self._placeholder))
             else:
-                query = ('SELECT * FROM contents WHERE (digest LIKE {0} OR CAST(uuid AS text) LIKE {0})'.format(self._placeholder))
-            qargs = [sidentity+'%', sidentity+'%']
+                query = ('SELECT * FROM contents WHERE (digest LIKE {0} OR CAST(uuid AS text) = {0})'.format(self._placeholder))
+            qargs = [sidentity+'%', sidentity]
         elif sdata:
             if query_type == Database.QUERY_TYPE_TOTAL:
                 query = ('SELECT count(*) FROM contents WHERE data LIKE {0}'.format(self._placeholder))

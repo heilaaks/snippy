@@ -586,6 +586,35 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @pytest.mark.usefixtures('default-snippets', 'caller')
+    def test_api_search_snippet_field_017(self, server):
+        """Get specific snippet field.
+
+        Try to call GET /v1/snippets/{id} for existing snippet with short form
+        from UUID. The short form must not be accepted and no results must be
+        returned. The UUID is intended to be used as fully matching identity.
+        """
+
+        expect_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '413'
+        }
+        expect_body = {
+            'meta': Content.get_api_meta(),
+            'errors': [{
+                'status': '404',
+                'statusString': '404 Not Found',
+                'module': 'snippy.testing.testing:123',
+                'title': 'content identity: 116cd5827-b6ef-4067-b5ac-3ceac07dde9 was not unique and matched to: 0 resources'
+            }]
+        }
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/app/v1/snippets/116cd5827-b6ef-4067-b5ac-3ceac07dde9',
+            headers={'accept': 'application/vnd.api+json'})
+        assert result.status == falcon.HTTP_404
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
+
     @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited')
     def test_api_search_snippet_paginate_001(self, server):
         """Search snippets with GET.
@@ -1302,7 +1331,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         """Get specific snippet field.
 
         Call GET /v1/snippets/{id}/brief for existing snippet. In this case
-        the URI id is an UUID.
+        the URI id is full length UUID that must be found.
         """
 
         expect_headers = {
@@ -1324,6 +1353,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/snippets/16cd5827-b6ef-4067-b5ac-3ceac07dde9f/brief',
             headers={'accept': 'application/vnd.api+json'})
+        print(Content.output())
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)

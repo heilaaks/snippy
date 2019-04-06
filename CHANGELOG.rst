@@ -10,6 +10,7 @@ Breaking changes
 ~~~~~~~~~~~~~~~~
 
 * Change REST API endpoints `[2019.03.24]`_.
+* Change REST API id attribute and queries with UUID. `[2019.04.06]`_.
 * Change server base path command line option name `[2019.03.31]`_.
 
 New features
@@ -131,3 +132,4 @@ Security
 .. _`[2019.01.29]`: https://github.com/heilaaks/snippy/commit/6e60886d5f78d49952cd6b977db3a9b6f803f092
 .. _`[2019.03.24]`: https://github.com/heilaaks/snippy/commit/063426d8c7bee05b620fa85cbf6ca81b1e96f45b
 .. _`[2019.03.31]`: https://github.com/heilaaks/snippy/commit/4b65ffa15e614a1715b8c5586563c8de093c7a34
+.. _`[2019.04.06]`: https://github.com/heilaaks/snippy/commit/4b65ffa15e614a1715b8c5586563c8de093c7a34

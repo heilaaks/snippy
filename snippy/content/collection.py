@@ -201,16 +201,18 @@ class Collection(object):  # pylint: disable=too-many-public-methods
 
         return digest
 
-    def convert(self, rows):
-        """Convert database rows into collection.
+    def convert(self, resources):
+        """Convert resources into a Resource objects.
 
         Args:
-            rows (tuple): List of database rows to me migrated to collection.
+            resource (list): List of resources
         """
 
-        for row in rows:
-            resource = Resource()
-            resource.convert(row)
+        for resource in resources:
+            if isinstance(resource, (list, tuple)):
+                resource = Resource(list_=resource)
+            elif isinstance(resource, dict):
+                resource = Resource(dict_=resource)
             self.migrate(resource)
 
     def load(self, content_format, timestamp, content):

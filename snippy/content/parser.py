@@ -67,7 +67,7 @@ class Parser(ContentParserBase):
 
         parser = None
         if self._filetype == Const.CONTENT_FORMAT_DICT:
-            parser = Dict(self._timestamp, self._source, self._collection)
+            parser = Dict(self._source, self._collection)
         elif self._filetype == Const.CONTENT_FORMAT_TEXT:
             parser = Text(self._timestamp, self._source, self._collection)
         elif self._filetype == Const.CONTENT_FORMAT_MKDN:

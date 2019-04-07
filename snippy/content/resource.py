@@ -64,9 +64,10 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         REFERENCE_TEMPLATE,
     )
 
-    def __init__(self, category='', timestamp=''):
+    def __init__(self, category='', timestamp='', list_=None, dict_=None):
         self._logger = Logger.get_logger(__name__)
-        self._id = self._get_internal_uuid()
+
+        self._id = ''
         self._category = category
         self._data = ()
         self._brief = ''
@@ -80,8 +81,14 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self._filename = ''
         self._created = timestamp
         self._updated = timestamp
-        self._uuid = self._get_external_uuid()
-        self._digest = self._compute_digest()
+        self._uuid = ''
+        self._digest = ''
+        if list_ or dict_:
+            self.convert(list_, dict_)
+        else:
+            self._id = self._get_internal_uuid()
+            self._uuid = self._get_external_uuid()
+            self._digest = self._compute_digest()
 
     def __str__(self):
         """Format string from the class object."""
@@ -128,7 +135,10 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     def category(self, value):
         """Resource category."""
 
-        self._category = value
+        if value in Const.CATEGORIES:
+            self._category = value
+        else:
+            self._logger.debug('resource category not identified: {}'.format(value))
 
     @property
     def data(self):
@@ -140,7 +150,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     def data(self, value):
         """Resource data is stored as a tuple with one line per element."""
 
-        self._data = value
+        self._data = Parser.format_data(self.category, value)
 
     @property
     def brief(self):
@@ -517,25 +527,51 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
 
         return self.seal(validate)
 
-    def convert(self, row):
-        """Convert database row into resource."""
+    def convert(self, list_=None, dict_=None):
+        """Convert give data into a resource.
 
-        self._id = row[Resource._ID]
-        self.category = row[Resource.CATEGORY]
-        self.data = tuple(row[Resource.DATA].split(Const.DELIMITER_DATA))
-        self.brief = row[Resource.BRIEF]
-        self.description = row[Resource.DESCRIPTION]
-        self.name = row[Resource.NAME]
-        self.groups = tuple(row[Resource.GROUPS].split(Const.DELIMITER_GROUPS) if row[Resource.GROUPS] else [])
-        self.tags = tuple(row[Resource.TAGS].split(Const.DELIMITER_TAGS) if row[Resource.TAGS] else [])
-        self.links = tuple(row[Resource.LINKS].split(Const.DELIMITER_LINKS) if row[Resource.LINKS] else [])
-        self.source = row[Resource.SOURCE]
-        self.versions = tuple(row[Resource.VERSIONS].split(Const.DELIMITER_VERSIONS) if row[Resource.VERSIONS] else [])
-        self.filename = row[Resource.FILENAME]
-        self.created = row[Resource.CREATED]
-        self.updated = row[Resource.UPDATED]
-        self.uuid = row[Resource.UUID]
-        self.digest = row[Resource.DIGEST]
+        Resource source can be database which stores that resources as a list
+        of attributes or a dictionary.
+
+        Args:
+            list_ (list): Resource attributes in list or tuple.
+            dict_ (dict): Resource attributes in dict.
+        """
+
+        if list_:
+            self._id = list_[Resource._ID]
+            self.category = list_[Resource.CATEGORY]
+            self.data = tuple(list_[Resource.DATA].split(Const.DELIMITER_DATA))
+            self.brief = list_[Resource.BRIEF]
+            self.description = list_[Resource.DESCRIPTION]
+            self.name = list_[Resource.NAME]
+            self.groups = tuple(list_[Resource.GROUPS].split(Const.DELIMITER_GROUPS) if list_[Resource.GROUPS] else [])
+            self.tags = tuple(list_[Resource.TAGS].split(Const.DELIMITER_TAGS) if list_[Resource.TAGS] else [])
+            self.links = tuple(list_[Resource.LINKS].split(Const.DELIMITER_LINKS) if list_[Resource.LINKS] else [])
+            self.source = list_[Resource.SOURCE]
+            self.versions = tuple(list_[Resource.VERSIONS].split(Const.DELIMITER_VERSIONS) if list_[Resource.VERSIONS] else [])
+            self.filename = list_[Resource.FILENAME]
+            self.created = list_[Resource.CREATED]
+            self.updated = list_[Resource.UPDATED]
+            self.uuid = list_[Resource.UUID]
+            self.digest = list_[Resource.DIGEST]
+        elif dict_:
+            self._id = self._get_internal_uuid()
+            self.category = dict_.get('category')
+            self.data = dict_.get('data', self.data)
+            self.brief = dict_.get('brief', self.brief)
+            self.description = dict_.get('description', self.description)
+            self.name = dict_.get('name', self.name)
+            self.groups = dict_.get('groups', self.groups)
+            self.tags = dict_.get('tags', self.tags)
+            self.links = dict_.get('links', self.links)
+            self.source = dict_.get('source', self.source)
+            self.versions = dict_.get('versions', self.versions)
+            self.filename = dict_.get('filename', self.filename)
+            self.created = dict_.get('created', self.created)
+            self.updated = dict_.get('updated', self.updated)
+            self.uuid = dict_.get('uuid', self.uuid)
+            self.digest = dict_.get('digest', self.digest)
 
     def _is_template(self):
         """Test if resource data is empty template."""

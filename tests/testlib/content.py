@@ -23,7 +23,6 @@ from __future__ import print_function
 
 import copy
 import datetime
-import re
 import traceback
 
 import json
@@ -76,6 +75,10 @@ class Content(object):  # pylint: disable=too-many-public-methods
     MKDN = Const.CONTENT_FORMAT_MKDN
     TEXT = Const.CONTENT_FORMAT_TEXT
     YAML = Const.CONTENT_FORMAT_YAML
+
+    # Mocked UUID's
+    UUID1 = Database.TEST_UUIDS_STR[0]
+    UUID2 = Database.TEST_UUIDS_STR[1]
 
     @staticmethod
     def store(content):
@@ -212,10 +215,6 @@ class Content(object):  # pylint: disable=too-many-public-methods
         The comparison tests all but the key attribute between references
         stored in collection. The key attribute is an index in database and
         it cannot be compared.
-
-        The content UUID must be unique for the database. UUID's are allocated
-        in order where content is stored which can be random between different
-        tests. Because of this, the content UUID is always masked away.
 
         Text formatted content does not have all fields. For example created
         and updated fields are missing and cannot be compared. Because of this,
@@ -490,8 +489,6 @@ class Content(object):  # pylint: disable=too-many-public-methods
                 content['links'] = list(content['links'])
             if 'versions' in content:
                 content['versions'] = list(content['versions'])
-            if 'uuid' in content:
-                content['uuid'] = Database.VALID_UUID
 
         if 'data' not in expect:
             return expect
@@ -531,17 +528,6 @@ class Content(object):  # pylint: disable=too-many-public-methods
         """
 
         try:
-            if isinstance(result['data'], list):
-                for data in result['data']:
-                    if 'uuid' in data['attributes']:
-                        data['attributes']['uuid'] = Database.VALID_UUID
-            else:
-                if 'uuid' in result['data']['attributes']:
-                    result['data']['attributes']['uuid'] = Database.VALID_UUID
-        except KeyError:
-            pass
-
-        try:
             for error in result['errors']:
                 if 'json media validation failed' in error['title']:
                     error['title'] = 'json media validation failed'
@@ -560,11 +546,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
             Collection(): Comparable collection from database.
         """
 
-        collection = Database.get_collection()
-        for digest in collection.keys():
-            collection[digest].uuid = Database.VALID_UUID
-
-        return collection
+        return Database.get_collection()
 
     @classmethod
     def _get_db_dictionary(cls, collection):
@@ -594,10 +576,6 @@ class Content(object):  # pylint: disable=too-many-public-methods
             content (dict): Comparable reference content.
         """
 
-        content = copy.deepcopy(content)
-        for data in content['data']:
-            data['uuid'] = Database.VALID_UUID
-
         return content
 
     @staticmethod
@@ -623,9 +601,6 @@ class Content(object):  # pylint: disable=too-many-public-methods
                     dictionary = call[1][0]
                 else:
                     dictionary['data'].append(call[1][0]['data'][0])
-
-        for data in dictionary['data']:
-            data['uuid'] = Database.VALID_UUID
 
         return dictionary
 
@@ -655,9 +630,6 @@ class Content(object):  # pylint: disable=too-many-public-methods
             for call in mock_object.safe_dump.mock_calls:
                 collection.load_dict(Content.IMPORT_TIME, call[1][0])
 
-        for digest in collection.keys():
-            collection[digest].uuid = Database.VALID_UUID
-
         return collection
 
     @staticmethod
@@ -676,9 +648,6 @@ class Content(object):  # pylint: disable=too-many-public-methods
 
         references = Collection()
         references.load_dict(Content.IMPORT_TIME, {'data': content['data']})
-
-        for digest in references.keys():
-            references[digest].uuid = Database.VALID_UUID
 
         if content_format == Const.CONTENT_FORMAT_TEXT:
             for digest in references.keys():
@@ -706,8 +675,6 @@ class Content(object):  # pylint: disable=too-many-public-methods
             handle = mock_object.return_value.__enter__.return_value
             for call in handle.write.mock_calls:
                 text = text + call[1][0]
-
-            text = re.sub(r'uuid     : \S+', 'uuid     : ' + Database.VALID_UUID, text)
 
         return text
 

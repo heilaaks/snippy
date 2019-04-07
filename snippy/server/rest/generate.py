@@ -85,13 +85,13 @@ class Generate(object):
             uri = list(urlparse(request.uri))
             uri[2] = uri[2][:uri[2].index(identity)]  # Remove everything before resource ID.
             uri = urlunparse(uri)
-            uri = urljoin(uri, resource.digest[:16])
+            uri = urljoin(uri, resource.uuid)
             if field:
                 uri = urljoin(uri + '/', field)
             data['links'] = {'self': uri}
             data['data'] = {
                 'type': resource.category,
-                'id': resource.digest,
+                'id': resource.uuid,
                 'attributes': resource.dump_dict(Config.remove_fields)
             }
 
@@ -132,7 +132,7 @@ class Generate(object):
         for resource in collection.resources():
             data['data'].append({
                 'type': resource.category,
-                'id': resource.digest,
+                'id': resource.uuid,
                 'attributes': resource.dump_dict(Config.remove_fields)
             })
         if pagination:

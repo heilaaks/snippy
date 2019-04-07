@@ -135,6 +135,26 @@ class Database(object):
         cls._assert_database_connection()
 
     @staticmethod
+    def get_count():
+        """Get the total number of contents.
+
+        Returns:
+            int: Number of all rows in database.
+        """
+
+        total = 0
+        try:
+            connection = Database._connect()
+            with closing(connection.cursor()) as cursor:
+                cursor.execute('SELECT count(*) FROM contents')
+                total = cursor.fetchone()
+            connection.close()
+        except (sqlite3.Error, psycopg2.Error) as error:
+            print('database helper select exception: {}'.format(error))
+
+        return total[0]
+
+    @staticmethod
     def get_collection():
         """Return database rows as collection.
 

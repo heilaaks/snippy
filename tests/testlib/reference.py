@@ -101,6 +101,9 @@ class Reference(object):  # pylint: disable=too-few-public-methods
     GITLOG_DIGEST = _DEFAULTS[_GITLOG]['digest']
     REGEXP_DIGEST = _DEFAULTS[_REGEXP]['digest']
     PYTEST_DIGEST = _DEFAULTS[_PYTEST]['digest']
+    GITLOG_UUID = _DEFAULTS[_GITLOG]['uuid']
+    REGEXP_UUID = _DEFAULTS[_REGEXP]['uuid']
+    PYTEST_UUID = _DEFAULTS[_PYTEST]['uuid']
 
     GITLOG = _DEFAULTS[_GITLOG]
     REGEXP = _DEFAULTS[_REGEXP]

@@ -59,15 +59,16 @@ class TestApiCreateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '608'
+            'content-length': '580'
         }
         expect_body = {
             'data': [{
                 'type': 'reference',
-                'id': Reference.GITLOG_DIGEST,
+                'id': Content.UUID1,
                 'attributes': content['data'][0]
             }]
         }
+        expect_body['data'][0]['attributes']['uuid'] = Content.UUID1
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/references',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
@@ -81,10 +82,10 @@ class TestApiCreateReference(object):
     def test_api_create_reference_002(self, server):
         """Create one reference from API.
 
-        Call POST /v1/references to create new reference. The created reference
-        is sent in the POST request 'data' attribute as a plain object. The
-        response that contains the created reference must be received as a list
-        of reference objects.
+        Call POST /v1/references to create new reference. The reference is sent
+        in the POST request 'data' attribute as a object. the HTTP esponse that
+        contains the created reference must be received with a list of resource
+        objects.
         """
 
         content = {
@@ -100,15 +101,16 @@ class TestApiCreateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '608'
+            'content-length': '580'
         }
         expect_body = {
             'data': [{
                 'type': 'reference',
-                'id': Reference.GITLOG_DIGEST,
+                'id': Content.UUID1,
                 'attributes': content['data'][0]
             }]
         }
+        expect_body['data'][0]['attributes']['uuid'] = Content.UUID1
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/references',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
@@ -122,7 +124,11 @@ class TestApiCreateReference(object):
     def test_api_create_reference_003(self, server):
         """Create multiple references from API.
 
-        Call POST /v1/references in list context to create new references.
+        Call POST /v1/references in a list context to create new resources.
+        The external UUID must not be created from the resource sent by the
+        client. The Snippy server must allocate new UUID that is a resource
+        identity. This resource identity is used also in the URI and it is
+        immutable.
         """
 
         content = {
@@ -142,19 +148,21 @@ class TestApiCreateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1213'
+            'content-length': '1157'
         }
         expect_body = {
             'data': [{
                 'type': 'reference',
-                'id': Reference.PYTEST_DIGEST,
+                'id': Content.UUID1,
                 'attributes': content['data'][0]
             }, {
                 'type': 'reference',
-                'id': Reference.GITLOG_DIGEST,
+                'id': Content.UUID2,
                 'attributes': content['data'][1]
             }]
         }
+        expect_body['data'][0]['attributes']['uuid'] = Content.UUID1
+        expect_body['data'][1]['attributes']['uuid'] = Content.UUID2
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/references',
             headers={'accept': 'application/json'},
@@ -169,9 +177,13 @@ class TestApiCreateReference(object):
         """Update reference with POST that maps to PUT.
 
         Call POST /v1/references/{id} to update existing reference with the
-        X-HTTP-Method-Override header that overrides the operation as PUT. In
-        this case the created timestamp must remain in initial value and the
-        updated timestamp must be updated to reflect the update time.
+        X-HTTP-Method-Override header that overrides the operation as PUT.
+
+        In this case the created timestamp must remain in initial value and
+        the updated timestamp must be updated to reflect the update time.
+
+        The UUID must not be changed when the resource is updated because it
+        is immutable resource identity used in resource URI.
         """
 
         content = {
@@ -187,20 +199,21 @@ class TestApiCreateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '769'
+            'content-length': '761'
         }
         expect_body = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/references/cb9225a81eab8ced'
+                'self': 'http://falconframework.org/snippy/api/app/v1/references/' + Reference.GITLOG_UUID
             },
             'data': {
                 'type': 'reference',
-                'id': Reference.REGEXP_DIGEST,
+                'id': Reference.GITLOG_UUID,
                 'attributes': content['data'][0]
             }
         }
         expect_body['data']['attributes']['created'] = Content.GITLOG_TIME
         expect_body['data']['attributes']['updated'] = Content.REGEXP_TIME
+        expect_body['data']['attributes']['uuid'] = Reference.GITLOG_UUID
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/references/5c2071094dbfaa33',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8', 'X-HTTP-Method-Override': 'PUT'},

@@ -10,7 +10,7 @@
       ]
     },
     "attributes": {
-      "$ref": "#/definitions/requestAttributes"
+      "$ref": "_definitions.json#/definitions/requestAttributes"
     }
   },
   "required": [

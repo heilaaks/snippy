@@ -4,7 +4,7 @@
     "data": {
       "type": "array",
       "items": {
-        "$ref": "#/definitions/requestData"
+        "$ref": "_definitions.json#/definitions/requestData"
       }
     }
   },

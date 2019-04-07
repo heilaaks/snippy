@@ -2,34 +2,34 @@
   "type": "object",
   "properties": {
     "data": {
-      "$ref": "#/definitions/attributeData"
+      "$ref": "_definitions.json#/definitions/attributeData"
     },
     "brief": {
-      "$ref": "#/definitions/attributeBrief"
+      "$ref": "_definitions.json#/definitions/attributeBrief"
     },
     "description": {
-      "$ref": "#/definitions/attributeDescription"
+      "$ref": "_definitions.json#/definitions/attributeDescription"
     },
     "name": {
-      "$ref": "#/definitions/attributeName"
+      "$ref": "_definitions.json#/definitions/attributeName"
     },
     "groups": {
-      "$ref": "#/definitions/attributeGroups"
+      "$ref": "_definitions.json#/definitions/attributeGroups"
     },
     "tags": {
-      "$ref": "#/definitions/attributeTags"
+      "$ref": "_definitions.json#/definitions/attributeTags"
     },
     "links": {
-      "$ref": "#/definitions/attributeLinks"
+      "$ref": "_definitions.json#/definitions/attributeLinks"
     },
     "source": {
-      "$ref": "#/definitions/attributeSource"
+      "$ref": "_definitions.json#/definitions/attributeSource"
     },
     "versions": {
-      "$ref": "#/definitions/attributeVersions"
+      "$ref": "_definitions.json#/definitions/attributeVersions"
     },
     "filename": {
-      "$ref": "#/definitions/attributeFilename"
+      "$ref": "_definitions.json#/definitions/attributeFilename"
     }
   },
   "required": [

@@ -2,7 +2,7 @@
   "type": "object",
   "properties": {
     "data": {
-      "$ref": "#/definitions/requestData"
+      "$ref": "_definitions.json#/definitions/requestData"
     }
   },
   "required": [

@@ -29,7 +29,7 @@ requires = (
 )
 extras_dev = (
     'logging_tree==1.8',
-    'openapi2jsonschema==0.8.0'
+    'openapi2jsonschema==0.9.0'
 )
 extras_docs = (
     'sphinx==1.8.5 ; python_version=="2.7.*"',
@@ -65,11 +65,11 @@ extras_tests = (
     'pyflakes==2.1.1',
     'pylint==1.9.4 ; python_version=="2.7.*"',
     'pylint==2.3.1 ; python_version>"2.7"',
-    'pytest==4.3.1',
+    'pytest==4.4.0',
     'pytest-cov==2.6.1',
     'pytest-mock==1.10.3',
-    'pytest-xdist==1.27.0',
-    'tox==3.8.3'
+    'pytest-xdist==1.28.0',
+    'tox==3.8.6'
 )
 
 meta = {}

@@ -2,16 +2,16 @@
   "type": "object",
   "properties": {
     "meta": {
-      "$ref": "#/definitions/metaResponse"
+      "$ref": "_definitions.json#/definitions/metaResponse"
     },
     "data": {
       "type": "array",
       "items": {
-        "$ref": "#/definitions/responseData"
+        "$ref": "_definitions.json#/definitions/responseData"
       }
     },
     "links": {
-      "$ref": "#/definitions/responseLinks"
+      "$ref": "_definitions.json#/definitions/responseLinks"
     }
   },
   "required": [

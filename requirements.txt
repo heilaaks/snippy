@@ -3,7 +3,7 @@ attrs==19.1.0
 falcon==1.4.1
 gunicorn==19.9.0
 jsonschema==3.0.1
-psycopg2-binary==2.7.7
+psycopg2-binary==2.8.1
 pyrsistent==0.14.11
 python-mimeparse==1.6.0
 pyyaml==3.13

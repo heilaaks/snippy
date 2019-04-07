@@ -26,6 +26,6 @@ PyYAML = ">=3.12"
 falcon = "==1.4.1"
 gunicorn = "==19.9.0"
 jsonschema = "==3.0.1"
-psycopg2-binary = "==2.7.7"
+psycopg2-binary = "==2.8.1"
 
 [requires]

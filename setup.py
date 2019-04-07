@@ -25,8 +25,7 @@ from setuptools import setup, find_packages
 
 
 requires = (
-    'pyyaml>=3.12,<4 ; python_version<="3.6"',
-    'pyyaml>=3.13,<4 ; python_version>="3.7"'
+    'pyyaml'
 )
 extras_dev = (
     'logging_tree==1.8',

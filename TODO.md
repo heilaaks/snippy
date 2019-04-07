@@ -5,7 +5,7 @@
    - [ ] Test export/import Mkdn snippet with partial comments. The export must have the <not documented> tag and import must remove it.
    - [ ] Fix creating/updating resource with invalid versions. Check test_api_create_snippet_024. The seal() cannot check if Cause not is_is because it generates incorrect error. For example GET ../<valid digest>/error shows error that digest not foind. See test_api_search_reference_field_012. move the reast API based empty list check earlier in code to solve this.
    - [ ] Fix cli -f file to see if this goes ot content filename attribute. Should not. -f|--file and content.filename are not the same.
-   - [ ] Fix pinning of yaml that does not install globally. The instructions are to use local but that could contain help to add the ~./local/bin to path. --> Loose the pinngin only from yaml.
+   - [ ] Add instructions to use local install dir and the export path for local bin if needed (add the ~./local/bin to path)
    - [ ] Fix somehow (?) the python runner search --sall 'test' --filter test -vv | grep --all?
    - [ ] Fix JSON API v1.x requires links for collection responses too. Individual resource not found or attrbute results null otherwise empty list.
    - [ ] Fix changing URI with digest which may be bad practise?

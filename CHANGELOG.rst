@@ -10,7 +10,7 @@ Breaking changes
 ~~~~~~~~~~~~~~~~
 
 * Change REST API endpoints `[2019.03.24]`_.
-* Change REST API id attribute and queries with UUID. `[2019.04.06]`_.
+* Change REST API id attribute and queries with UUID `[2019.04.06]`_.
 * Change server base path command line option name `[2019.03.31]`_.
 
 New features
@@ -24,6 +24,7 @@ New features
 Bugfixes
 ~~~~~~~~
 
+* Fix install requirement for PyYAML version.
 * Fix creating new content with prefilled templates.
 * Fix exporting and importing content template.
 * Fix error when content matching to a text template is saved.
@@ -33,6 +34,8 @@ Bugfixes
 
 Security
 ~~~~~~~~
+
+* -
 
 0.9.0 (2019-02-02)
 ------------------

@@ -6,5 +6,5 @@ jsonschema==3.0.1
 psycopg2-binary==2.8.1
 pyrsistent==0.14.11
 python-mimeparse==1.6.0
-pyyaml==3.13
+pyyaml
 six==1.12.0

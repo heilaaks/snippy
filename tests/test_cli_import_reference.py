@@ -135,14 +135,17 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Reference.GITLOG,
-                Reference.REGEXP
+                Content.deepcopy(Reference.GITLOG),
+                Content.deepcopy(Reference.REGEXP)
             ]
         }
+        content['data'][0]['uuid'] = Content.UUID1
+        content['data'][1]['uuid'] = Content.UUID2
         file_content = Content.get_file_content(Content.TEXT, content)
         with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--reference', '-f', './all-references.txt'])
             assert cause == Cause.ALL_OK
+            print(Content.output())
             Content.assert_storage(content)
             mock_file.assert_called_once_with('./all-references.txt', 'r')
 

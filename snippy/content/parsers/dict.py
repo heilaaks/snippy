@@ -25,14 +25,16 @@ from snippy.logger import Logger
 class ContentParserDict(object):  # pylint: disable=too-few-public-methods
     """Parse content from dictionary."""
 
-    def __init__(self, dictionary, collection):
+    def __init__(self, timestamp, dictionary, collection):
         """
         Args:
+            timestamp (str): IS8601 timestamp used with created resources.
             dictionary (dict): Dictionary where the content is read.
             collection (Collection()): Collection where the content is stored.
         """
 
         self._logger = Logger.get_logger(__name__)
+        self._timestamp = timestamp
         self._dictionary = dictionary
         self._collection = collection
 
@@ -40,6 +42,6 @@ class ContentParserDict(object):  # pylint: disable=too-few-public-methods
         """Read collection from the given dictionary source."""
 
         if 'data' in self._dictionary:
-            self._collection.convert(self._dictionary['data'])
+            self._collection.convert(self._dictionary['data'], self._timestamp)
         else:
             self._logger.debug('structured content format not indentified: %s', self._dictionary)

@@ -201,18 +201,19 @@ class Collection(object):  # pylint: disable=too-many-public-methods
 
         return digest
 
-    def convert(self, resources):
+    def convert(self, resources, timestamp=''):
         """Convert resources into a Resource objects.
 
         Args:
             resource (list): List of resources
+            timestamp (str): Optional IS8601 timestamp used with conversion.
         """
 
         for resource in resources:
             if isinstance(resource, (list, tuple)):
-                resource = Resource(list_=resource)
+                resource = Resource(timestamp=timestamp, list_=resource)
             elif isinstance(resource, dict):
-                resource = Resource(dict_=resource)
+                resource = Resource(timestamp=timestamp, dict_=resource)
             self.migrate(resource)
 
     def load(self, content_format, timestamp, content):

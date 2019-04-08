@@ -204,22 +204,24 @@ class ContentParserText(ContentParserBase):
     def read_collection(self):
         """Read collection from the given text source."""
 
+        resources = []
         contents = self._split_contents()
         for content in contents:
             category = self._read_category(content)
-            resource = self._collection.get_resource(category, self._timestamp)
-            resource.category = category
-            resource.data = self._read_data(category, content)
-            resource.brief = self._read_brief(category, content)
-            resource.description = self._read_description(category, content)
-            resource.name = self._read_name(category, content)
-            resource.groups = self._read_groups(category, content)
-            resource.tags = self._read_tags(category, content)
-            resource.links = self._read_links(category, content)
-            resource.source = self._read_source(category, content)
-            resource.versions = self._read_versions(category, content)
-            resource.filename = self._read_filename(category, content)
-            self._collection.migrate(resource)
+            resources.append({
+                'category': category,
+                'data': self._read_data(category, content),
+                'brief': self._read_brief(category, content),
+                'description': self._read_description(category, content),
+                'name': self._read_name(category, content),
+                'groups': self._read_groups(category, content),
+                'tags': self._read_tags(category, content),
+                'links': self._read_links(category, content),
+                'source': self._read_source(category, content),
+                'versions': self._read_versions(category, content),
+                'filename': self._read_filename(category, content),
+            })
+        self._collection.convert(resources, self._timestamp)
 
     def _split_contents(self):
         """Split source text to multiple contents.

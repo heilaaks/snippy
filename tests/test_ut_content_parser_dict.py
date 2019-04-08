@@ -27,6 +27,8 @@ from snippy.content.parsers.dict import ContentParserDict as Parser
 class TestUtContentParserDict(object):
     """Test ContentParserDict() class."""
 
+    TIMESTAMP = '2018-09-09T14:44:00.000001+00:00'
+
     def test_parser_snippet_001(self):
         """Test parsing snippet.
 
@@ -59,7 +61,7 @@ class TestUtContentParserDict(object):
             }]
         }
         collection = Collection()
-        Parser(dictionary, collection).read_collection()
+        Parser(self.TIMESTAMP, dictionary, collection).read_collection()
         resource = next(collection.resources())
         assert resource.category == Const.SNIPPET
         assert resource.data == ('docker rm $(docker ps --all -q -f status=exited)',)
@@ -103,7 +105,7 @@ class TestUtContentParserDict(object):
             }]
         }
         collection = Collection()
-        Parser(dictionary, collection).read_collection()
+        Parser(self.TIMESTAMP, dictionary, collection).read_collection()
         assert not collection
 
     def test_parser_snippet_003(self):
@@ -132,5 +134,5 @@ class TestUtContentParserDict(object):
             }]
         }
         collection = Collection()
-        Parser(dictionary, collection).read_collection()
+        Parser(self.TIMESTAMP, dictionary, collection).read_collection()
         assert not collection

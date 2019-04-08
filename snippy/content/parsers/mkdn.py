@@ -118,27 +118,29 @@ class ContentParserMkdn(ContentParserBase):
     def read_collection(self):
         """Read collection from the given Markdown source."""
 
+        resources = []
         contents = self._text.split('---')
         for content in contents:
             content = self.remove_template_fillers(content)
             category = self._read_category(content)
-            resource = self._collection.get_resource(category, self._timestamp)
-            resource.category = category
-            resource.data = self._read_data(category, content)
-            resource.brief = self._read_brief(category, content)
-            resource.description = self._read_description(category, content)
-            resource.name = self._read_meta_value(category, 'name', content)
-            resource.groups = self._read_groups(category, content)
-            resource.tags = self._read_tags(category, content)
-            resource.links = self._read_links(category, content)
-            resource.source = self._read_meta_value(category, 'source', content)
-            resource.versions = self._read_versions(category, content)
-            resource.filename = self._read_meta_value(category, 'filename', content)
-            resource.created = self._read_meta_value(category, 'created', content)
-            resource.updated = self._read_meta_value(category, 'updated', content)
-            resource.uuid = self._read_meta_value(category, 'uuid', content)
-            resource.digest = self._read_meta_value(category, 'digest', content)
-            self._collection.migrate(resource)
+            resources.append({
+                'category': category,
+                'data': self._read_data(category, content),
+                'brief': self._read_brief(category, content),
+                'description': self._read_description(category, content),
+                'name': self._read_meta_value(category, 'name', content),
+                'groups': self._read_groups(category, content),
+                'tags': self._read_tags(category, content),
+                'links': self._read_links(category, content),
+                'source': self._read_meta_value(category, 'source', content),
+                'versions': self._read_versions(category, content),
+                'filename': self._read_meta_value(category, 'filename', content),
+                'created': self._read_meta_value(category, 'created', content),
+                'updated': self._read_meta_value(category, 'updated', content),
+                'uuid': self._read_meta_value(category, 'uuid', content),
+                'digest': self._read_meta_value(category, 'digest', content),
+            })
+        self._collection.convert(resources, self._timestamp)
 
     def _read_category(self, text):
         """Read content category from text string.

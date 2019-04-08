@@ -85,10 +85,12 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self._digest = ''
         if list_ or dict_:
             self.convert(list_, dict_)
-        else:
+
+        if not self._id:
             self._id = self._get_internal_uuid()
+        if not self._uuid:
             self._uuid = self._get_external_uuid()
-            self._digest = self._compute_digest()
+        self._digest = self._compute_digest()
 
     def __str__(self):
         """Format string from the class object."""
@@ -530,8 +532,10 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     def convert(self, list_=None, dict_=None):
         """Convert give data into a resource.
 
-        Resource source can be database which stores that resources as a list
-        of attributes or a dictionary.
+        Resource source can be database which stores resources as a list
+        of attributes or a dictionary. In case of dictionary, the source
+        is JSON or YAML file which do not store the internal ID that must
+        be generated in case of dictionary source.
 
         Args:
             list_ (list): Resource attributes in list or tuple.

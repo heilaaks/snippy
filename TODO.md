@@ -1,9 +1,8 @@
 ## WORKING
-   - [ ] Update tests. UUID check must be valid in tests. See API referecens tests 1-4.
+   - [ ] Update tests. UUID check must be valid in tests. See API referecens tests 1-4, test_cli_import_reference_005/020, test_ut*
    - [ ] Remove UUID VALID from test helpers because it is not longer needed- The UUID must be correct and not incremented randomly (from test point of view) to use it in URL.
-   - [ ] Dict parser can be removed. Use Collection.convert with dict.
    - [ ] Do not use UUID from client when new resource is created. This must be always allocated by the server. Test. Update swagger to not include UUID in HTTP requests. Reject with error?
-   - [ ] Config.get_resource creates exter UUID usage when e.g resource is updated. Mkdn, Text and Config use get_resources. Get rid of this (somehow) after UUID refactoring.
+   - [ ] Config.get_resource creates exter UUID usage when e.g resource is updated. Get rid of this (somehow) after UUID refactoring.
    - [ ] PUT can be like POST if not resource: https://stackoverflow.com/a/35845343. Test and fix PUT to new resource.
    - [ ] Fix resource queries to be with UUID and with full length of the ID. https://stackoverflow.com/a/35845343
    - [ ] Change the http response ID and LINKS to use UUID instead of digest. This moves towards using static URI.
@@ -57,6 +56,7 @@
    - [x] Fix (optimize) digest computation for Resource.
    - [ ] Fix (optimize) POST API with multiple contents. Now each content in collection is *.run with own resources. The create supports collection so this should work.
    - [ ] Fix (optimize) the order of SQL columns. Fixed length columns first. This should ? allow database to optimize the length of data. Is this the case?
+   - [ ] Fix (optimize) the Mkdn and Text parsing. The parsers and Resource() do the input data formatting. Parsers when data read and Resource() when set. This is good now to avoid data format problems.
 
 ## FEATURES
    - [ ] Add decsription, name, versions and source to CLI? Or does this make the CLI too bloated? These can be updated via editor or REST API.

@@ -48,9 +48,10 @@ class TestApiCreateReference(object):
 
         content = {
             'data': [
-                Reference.GITLOG
+                Content.deepcopy(Reference.GITLOG)
             ]
         }
+        content['data'][0]['uuid'] = Content.UUID1
         request_body = {
             'data': [{
                 'type': 'reference',
@@ -68,7 +69,6 @@ class TestApiCreateReference(object):
                 'attributes': content['data'][0]
             }]
         }
-        expect_body['data'][0]['attributes']['uuid'] = Content.UUID1
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/references',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
@@ -83,16 +83,17 @@ class TestApiCreateReference(object):
         """Create one reference from API.
 
         Call POST /v1/references to create new reference. The reference is sent
-        in the POST request 'data' attribute as a object. the HTTP esponse that
+        in the POST request 'data' attribute as a object. The HTTP esponse that
         contains the created reference must be received with a list of resource
         objects.
         """
 
         content = {
             'data': [
-                Reference.GITLOG
+                Content.deepcopy(Reference.GITLOG)
             ]
         }
+        content['data'][0]['uuid'] = Content.UUID1
         request_body = {
             'data': {
                 'type': 'reference',
@@ -110,7 +111,6 @@ class TestApiCreateReference(object):
                 'attributes': content['data'][0]
             }]
         }
-        expect_body['data'][0]['attributes']['uuid'] = Content.UUID1
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/references',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
@@ -133,10 +133,12 @@ class TestApiCreateReference(object):
 
         content = {
             'data': [
-                Reference.PYTEST,
-                Reference.GITLOG
+                Content.deepcopy(Reference.PYTEST),
+                Content.deepcopy(Reference.GITLOG)
             ]
         }
+        content['data'][0]['uuid'] = Content.UUID1
+        content['data'][1]['uuid'] = Content.UUID2
         request_body = {
             'data': [{
                 'type': 'reference',
@@ -161,8 +163,6 @@ class TestApiCreateReference(object):
                 'attributes': content['data'][1]
             }]
         }
-        expect_body['data'][0]['attributes']['uuid'] = Content.UUID1
-        expect_body['data'][1]['attributes']['uuid'] = Content.UUID2
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/references',
             headers={'accept': 'application/json'},
@@ -230,6 +230,9 @@ class TestApiCreateReference(object):
         Call POST /v1/references/{id} to update existing reference with the
         X-HTTP-Method-Override header that overrides the operation as PATCH.
         Only the updated attributes must be changed.
+
+        The UUID must not be changed when the resource is updated because it
+        is immutable resource identity used in resource URI.
         """
 
         content = {
@@ -253,15 +256,15 @@ class TestApiCreateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '753'
+            'content-length': '745'
         }
         expect_body = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/references/ee4a072a5a7a661a'
+                'self': 'http://falconframework.org/snippy/api/app/v1/references/' + Reference.GITLOG_UUID
             },
             'data': {
                 'type': 'reference',
-                'id': content['data'][0]['digest'],
+                'id': content['data'][0]['uuid'],
                 'attributes': content['data'][0]
             }
         }
@@ -301,8 +304,9 @@ class TestApiCreateReference(object):
     def test_api_create_reference_007(self, server):
         """Create one reference from API.
 
-        Try to call POST /v1/references to create new solutuon with empty
-        content links. The links are mandatory in case of reference content.
+        Try to call POST /v1/references to create a new reference with empty
+        content links. The links are mandatory in case of reference content
+        and the request must be rejected with error.
         """
 
         request_body = {
@@ -350,10 +354,12 @@ class TestApiCreateReference(object):
         """Try to create reference.
 
         Try to POST new reference when database throws an integrity error from
-        UUID column's unique constraint violation. In this case there is no
-        stored content and the digest in generated error message cannot filled
-        based on database content. Database tries to insert the content twice
-        and both of the inserts result same unique constraint violation.
+        UUID column's unique constraint violation.
+
+        Internally in this case there is are no stored content and the digest
+        in generated error message cannot filled based on database content.
+        Database tries to insert the content twice and both of the inserts
+        result same unique constraint violation.
         """
 
         content = {
@@ -424,6 +430,7 @@ class TestApiCreateReference(object):
             ]
         }
         content['data'][0]['groups'] = ('python', 'regexp')
+        content['data'][0]['uuid'] = Content.UUID1
         content['data'][0]['digest'] = 'e5a94aae97e43273b37142d242e9669b97a899a44b6d73b340b191d3fee4b58a'
         request_body = {
             'data': [{
@@ -433,11 +440,11 @@ class TestApiCreateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '686'}
+            'content-length': '658'}
         expect_body = {
             'data': [{
                 'type': 'reference',
-                'id': content['data'][0]['digest'],
+                'id': Content.UUID1,
                 'attributes': content['data'][0]
             }]
         }
@@ -497,11 +504,11 @@ class TestApiCreateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '637'}
+            'content-length': '609'}
         expect_body = {
             'data': [{
                 'type': 'reference',
-                'id': content['data'][0]['digest'],
+                'id': content['data'][0]['uuid'],
                 'attributes': content['data'][0]
             }]
         }
@@ -551,11 +558,11 @@ class TestApiCreateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '534'}
+            'content-length': '506'}
         expect_body = {
             'data': [{
                 'type': 'reference',
-                'id': content['data'][0]['digest'],
+                'id': content['data'][0]['uuid'],
                 'attributes': content['data'][0]
             }]
         }
@@ -573,8 +580,8 @@ class TestApiCreateReference(object):
         """Create new reference with duplicated content field values.
 
         Call POST /v1/references to create new reference. In this case content
-        fields contain duplicated values. For example there are tag 'python'
-        added twice. Only unique values must be added.
+        fields contain duplicated values. For example there is a tag 'python'
+        included twice. Only unique values must be added.
 
         Links are not sorted because the order is assumed to convey relevant
         information related to link importance in case of reference content.
@@ -616,12 +623,12 @@ class TestApiCreateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '607'
+            'content-length': '579'
         }
         expect_body = {
             'data': [{
                 'type': 'reference',
-                'id': content['data'][0]['digest'],
+                'id': content['data'][0]['uuid'],
                 'attributes': content['data'][0]
             }]
         }

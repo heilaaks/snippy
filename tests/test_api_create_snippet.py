@@ -41,14 +41,15 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         """Create one snippet with POST.
 
         Call POST /v1/snippets to create new snippet. The created snippet is
-        sent in the POST request 'data' attribute as a list of snippet objects.
+        sent in the POST request 'data' attribute as a list of objects.
         """
 
         content = {
             'data': [
-                Snippet.REMOVE
+                Content.deepcopy(Snippet.REMOVE)
             ]
         }
+        content['data'][0]['uuid'] = Content.UUID1
         request_body = {
             'data': [{
                 'type': 'snippet',
@@ -57,12 +58,12 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '713'
+            'content-length': '685'
         }
         expect_body = {
             'data': [{
                 'type': 'snippet',
-                'id': Snippet.REMOVE_DIGEST,
+                'id': Content.UUID1,
                 'attributes': content['data'][0]
             }]
         }
@@ -80,16 +81,17 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         """Create one snippet with POST.
 
         Call POST /v1/snippets to create new snippet. The created snippet is
-        sent in the POST request 'data' attribute as a plain object. The
+        sent in the POST request 'data' attribute as a plain object. The HTTP
         response that contains the created snippet must be received as a list
         of snippet objects.
         """
 
         content = {
             'data': [
-                Snippet.REMOVE
+                Content.deepcopy(Snippet.REMOVE)
             ]
         }
+        content['data'][0]['uuid'] = Content.UUID1
         request_body = {
             'data': {
                 'type': 'snippet',
@@ -98,12 +100,12 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '713'
+            'content-length': '685'
         }
         expect_body = {
             'data': [{
                 'type': 'snippet',
-                'id': Snippet.REMOVE_DIGEST,
+                'id': Content.UUID1,
                 'attributes': content['data'][0]
             }]
         }
@@ -128,9 +130,10 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Snippet.REMOVE
+                Content.deepcopy(Snippet.REMOVE)
             ]
         }
+        content['data'][0]['uuid'] = Content.UUID1
         request_body = {
             'data': [{
                 'type': 'snippet',
@@ -145,12 +148,12 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '713'
+            'content-length': '685'
         }
         expect_body = {
             'data': [{
                 'type': 'snippet',
-                'id': Snippet.REMOVE_DIGEST,
+                'id': Content.UUID1,
                 'attributes': content['data'][0]
             }]
         }
@@ -174,9 +177,10 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Snippet.EXITED
+                Content.deepcopy(Snippet.EXITED)
             ]
         }
+        content['data'][0]['uuid'] = Content.UUID1
         request_body = {
             'data': [{
                 'type': 'snippet',
@@ -191,12 +195,12 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '918'
+            'content-length': '890'
         }
         expect_body = {
             'data': [{
                 'type': 'snippet',
-                'id': Snippet.EXITED_DIGEST,
+                'id': Content.UUID1,
                 'attributes': content['data'][0]
             }]
         }
@@ -222,9 +226,10 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Snippet.EXITED
+                Content.deepcopy(Snippet.EXITED)
             ]
         }
+        content['data'][0]['uuid'] = Content.UUID1
         request_body = {
             'data': [{
                 'type': 'snippet',
@@ -242,12 +247,12 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '918'
+            'content-length': '890'
         }
         expect_body = {
             'data': [{
                 'type': 'snippet',
-                'id': Snippet.EXITED_DIGEST,
+                'id': Content.UUID1,
                 'attributes': content['data'][0]
             }]
         }
@@ -296,12 +301,12 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '564'
+            'content-length': '536'
         }
         expect_body = {
             'data': [{
                 'type': 'snippet',
-                'id': content['data'][0]['digest'],
+                'id': content['data'][0]['uuid'],
                 'attributes': content['data'][0]
             }]
         }
@@ -323,10 +328,12 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Snippet.REMOVE,
-                Snippet.FORCED
+                Content.deepcopy(Snippet.REMOVE),
+                Content.deepcopy(Snippet.FORCED)
             ]
         }
+        content['data'][0]['uuid'] = Content.UUID1
+        content['data'][1]['uuid'] = Content.UUID2
         request_body = {
             'data': [{
                 'type': 'snippet',
@@ -338,16 +345,16 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1485'
+            'content-length': '1429'
         }
         expect_body = {
             'data': [{
                 'type': 'snippet',
-                'id': Snippet.REMOVE_DIGEST,
+                'id': Content.UUID1,
                 'attributes': content['data'][0]
             }, {
                 'type': 'snippet',
-                'id': Snippet.FORCED_DIGEST,
+                'id': Content.UUID2,
                 'attributes': content['data'][1]
             }]
         }
@@ -1200,8 +1207,6 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
-        print(result.json)
-        print(result.headers)
         assert result.status == falcon.HTTP_400
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)

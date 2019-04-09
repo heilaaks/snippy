@@ -31,8 +31,9 @@ from snippy.constants import Constants as Const
 class TestUtConfig(object):  # pylint: disable=too-many-public-methods
     """Test Config() class."""
 
+    @staticmethod
     @mock.patch.object(Config, 'utcnow')
-    def test_config_create_001(self, mock_utcnow):
+    def test_config_create_001(mock_utcnow):
         """Create new snippet.
 
         Test default values when only mandatory arguments are used.
@@ -96,7 +97,8 @@ class TestUtConfig(object):  # pylint: disable=too-many-public-methods
         assert not Config.is_operation_file_text
         assert Config.use_ansi
 
-    def test_config_create_002(self):
+    @staticmethod
+    def test_config_create_002():
         """Test that new snippet can be created without optional arguments."""
 
         content = 'docker rm $(docker ps -a -q)'
@@ -109,7 +111,8 @@ class TestUtConfig(object):  # pylint: disable=too-many-public-methods
         assert not Config.content_brief
         assert not Config.content_tags
 
-    def test_config_create_003(self):
+    @staticmethod
+    def test_config_create_003():
         """Test that new snippet can be created with brief description but
         no tags."""
 
@@ -124,7 +127,8 @@ class TestUtConfig(object):  # pylint: disable=too-many-public-methods
         assert Config.content_brief == brief
         assert not Config.content_tags
 
-    def test_config_create_004(self):
+    @staticmethod
+    def test_config_create_004():
         """Test that new snippet can be created with a single tag."""
 
         content = 'docker rm $(docker ps -a -q)'
@@ -138,7 +142,8 @@ class TestUtConfig(object):  # pylint: disable=too-many-public-methods
         assert not Config.content_brief
         assert Config.content_tags == tags
 
-    def test_config_create_005(self):
+    @staticmethod
+    def test_config_create_005():
         """Test that tags can be added inside quotes separated by comma and
         without spaces."""
 
@@ -153,7 +158,8 @@ class TestUtConfig(object):  # pylint: disable=too-many-public-methods
         assert not Config.content_brief
         assert Config.content_tags == tags
 
-    def test_config_create_006(self):
+    @staticmethod
+    def test_config_create_006():
         """Test that tags can be added inside quotes separated by comma and
         space after comma."""
 
@@ -176,7 +182,8 @@ class TestUtConfig(object):  # pylint: disable=too-many-public-methods
         assert Config.content_tags == tags
         assert Config.content_links == links
 
-    def test_config_create_007(self):
+    @staticmethod
+    def test_config_create_007():
         """Test that tags can be added so that they are separated by spaces
         before and after the words."""
 
@@ -190,7 +197,8 @@ class TestUtConfig(object):  # pylint: disable=too-many-public-methods
         assert Config.content_data == tuple([content])
         assert Config.content_tags == tags
 
-    def test_config_create_008(self):
+    @staticmethod
+    def test_config_create_008():
         """Test that tags can be added so that they are separated by spaces
         before and after the words like in '-t docker container cleanup'."""
 
@@ -204,7 +212,8 @@ class TestUtConfig(object):  # pylint: disable=too-many-public-methods
         assert Config.content_data == tuple([content])
         assert Config.content_tags == tags
 
-    def test_config_create_009(self):
+    @staticmethod
+    def test_config_create_009():
         """Test that tags can be added so that they are separated by comma
         after the words like in '-t docker, container, cleanup'."""
 
@@ -218,7 +227,8 @@ class TestUtConfig(object):  # pylint: disable=too-many-public-methods
         assert Config.content_data == tuple([content])
         assert Config.content_tags == tags
 
-    def test_config_create_010(self):
+    @staticmethod
+    def test_config_create_010():
         """Test that tags are accepted if they contain special characters."""
 
         content = 'docker rm $(docker ps -a -q)'
@@ -232,7 +242,8 @@ class TestUtConfig(object):  # pylint: disable=too-many-public-methods
         assert Config.content_tags == tags
         assert len(Config.content_tags) == 3
 
-    def test_config_create_011(self):
+    @staticmethod
+    def test_config_create_011():
         """Test that tags are accepted if the tags are elements in a list.
         This might not be realistic case since user might not be able to
         reproduce this?"""
@@ -247,7 +258,8 @@ class TestUtConfig(object):  # pylint: disable=too-many-public-methods
         assert Config.content_data == tuple([content])
         assert Config.content_tags == tags
 
-    def test_config_create_012(self):
+    @staticmethod
+    def test_config_create_012():
         """Test that multiple links can be added by separating them with
         space."""
 
@@ -267,7 +279,8 @@ class TestUtConfig(object):  # pylint: disable=too-many-public-methods
         assert Config.content_tags == tags
         assert Config.content_links == links
 
-    def test_config_create_013(self):
+    @staticmethod
+    def test_config_create_013():
         """Test that multiple links can be added by separating them with
         bar."""
 
@@ -287,7 +300,8 @@ class TestUtConfig(object):  # pylint: disable=too-many-public-methods
         assert Config.content_tags == tags
         assert Config.content_links == links
 
-    def test_config_search_001(self):
+    @staticmethod
+    def test_config_search_001():
         """Test that search can be used with one keyword."""
 
         search_kw = ('docker',)
@@ -296,7 +310,8 @@ class TestUtConfig(object):  # pylint: disable=too-many-public-methods
         assert isinstance(Config.search_all_kws, tuple)
         assert Config.search_all_kws == search_kw
 
-    def test_config_search_002(self):
+    @staticmethod
+    def test_config_search_002():
         """Test that search keywords can be added inside quotes separated by
         comma and without spaces."""
 
@@ -306,7 +321,8 @@ class TestUtConfig(object):  # pylint: disable=too-many-public-methods
         assert isinstance(Config.search_all_kws, tuple)
         assert Config.search_all_kws == search_kw
 
-    def test_config_search_003(self):
+    @staticmethod
+    def test_config_search_003():
         """Test that search keywords can be added inside quotes separated by
         comma and spaces after comma."""
 
@@ -316,7 +332,8 @@ class TestUtConfig(object):  # pylint: disable=too-many-public-methods
         assert isinstance(Config.search_all_kws, tuple)
         assert Config.search_all_kws == search_kw
 
-    def test_config_search_004(self):
+    @staticmethod
+    def test_config_search_004():
         """Test that search keywords can be added so that they are separated
         by spaces before and after the words."""
 
@@ -326,7 +343,8 @@ class TestUtConfig(object):  # pylint: disable=too-many-public-methods
         assert isinstance(Config.search_all_kws, tuple)
         assert Config.search_all_kws == search_kw
 
-    def test_config_search_005(self):
+    @staticmethod
+    def test_config_search_005():
         """Test that search keywords can be added so that they are separated
         by spaces before and after the words like in '-t docker container
         cleanup'."""
@@ -337,7 +355,8 @@ class TestUtConfig(object):  # pylint: disable=too-many-public-methods
         assert isinstance(Config.search_all_kws, tuple)
         assert Config.search_all_kws == search_kw
 
-    def test_config_search_006(self):
+    @staticmethod
+    def test_config_search_006():
         """Test that search keywords can be added so that they are separated
         by comma after the words like in '-t docker, container, cleanup'."""
 
@@ -347,7 +366,8 @@ class TestUtConfig(object):  # pylint: disable=too-many-public-methods
         assert isinstance(Config.search_all_kws, tuple)
         assert Config.search_all_kws == search_kw
 
-    def test_config_search_007(self):
+    @staticmethod
+    def test_config_search_007():
         """Test that search keywords are accepted if they contain special
         characters."""
 

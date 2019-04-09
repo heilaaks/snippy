@@ -28,7 +28,8 @@ from snippy.constants import Constants as Const
 class TestUtCli(object):
     """Test Cli() class."""
 
-    def test_cli_create_001(self):
+    @staticmethod
+    def test_cli_create_001():
         """Create new snippet.
 
         Test default values when only mandatory arguments are used.
@@ -80,7 +81,8 @@ class TestUtCli(object):
         assert cli.versions == ()   # Content versions
         assert not cli.very_verbose
 
-    def test_cli_create_002(self):
+    @staticmethod
+    def test_cli_create_002():
         """Test that new snippet can be created without optional arguments."""
 
         content = 'docker rm $(docker ps -a -q)'
@@ -89,7 +91,8 @@ class TestUtCli(object):
         assert obj.brief == ''
         assert obj.tags == ()
 
-    def test_cli_create_003(self):
+    @staticmethod
+    def test_cli_create_003():
         """Test that new snippet can be created with brief description but
         no tags."""
 
@@ -100,7 +103,8 @@ class TestUtCli(object):
         assert obj.brief == brief
         assert obj.tags == ()
 
-    def test_cli_create_004(self):
+    @staticmethod
+    def test_cli_create_004():
         """Test that new snippet can be created with a single tag."""
 
         content = 'docker rm $(docker ps -a -q)'
@@ -110,7 +114,8 @@ class TestUtCli(object):
         assert obj.brief == ''
         assert obj.tags == tuple(tags,)
 
-    def test_cli_create_005(self):
+    @staticmethod
+    def test_cli_create_005():
         """Test that tags can be added inside quotes separated by comma and
         without spaces."""
 
@@ -120,7 +125,8 @@ class TestUtCli(object):
         assert obj.brief == ''
         assert obj.tags == ('cleanup', 'container', 'docker')
 
-    def test_cli_create_006(self):
+    @staticmethod
+    def test_cli_create_006():
         """Test that tags can be added inside quotes separated by comma and
         spaces after comma."""
 
@@ -136,7 +142,8 @@ class TestUtCli(object):
         assert obj.tags == ('cleanup', 'container', 'docker')
         assert obj.links == (links,)
 
-    def test_cli_create_007(self):
+    @staticmethod
+    def test_cli_create_007():
         """Test that tags can be added so that they are separated by spaces
         before and after the words."""
 
@@ -146,7 +153,8 @@ class TestUtCli(object):
         assert obj.brief == ''
         assert obj.tags == ('cleanup', 'container', 'docker')
 
-    def test_cli_create_008(self):
+    @staticmethod
+    def test_cli_create_008():
         """Test that tags can be added so that they are separated by spaces
         before and after the words like in '-t docker container cleanup'."""
 
@@ -156,7 +164,8 @@ class TestUtCli(object):
         assert obj.brief == ''
         assert obj.tags == ('cleanup', 'container', 'docker')
 
-    def test_cli_create_009(self):
+    @staticmethod
+    def test_cli_create_009():
         """Test that tags can be added so that they are separated by comma
         after the words like in '-t docker, container, cleanup'."""
 
@@ -166,7 +175,8 @@ class TestUtCli(object):
         assert obj.brief == ''
         assert obj.tags == ('cleanup', 'container', 'docker')
 
-    def test_cli_create_010(self):
+    @staticmethod
+    def test_cli_create_010():
         """Test that tags are accepted if they contain special characters."""
 
         content = 'docker rm $(docker ps -a -q)'
@@ -175,7 +185,8 @@ class TestUtCli(object):
         assert obj.brief == ''
         assert obj.tags == (u'cleanup_testing', u'container-managemenet', u'docker–testing')
 
-    def test_cli_create_011(self):
+    @staticmethod
+    def test_cli_create_011():
         """Test that tags are accepted if the tags are elements in a list.
         This might not be realistic case since user might not be able to
         reproduce this?"""
@@ -186,7 +197,8 @@ class TestUtCli(object):
         assert obj.brief == ''
         assert obj.tags == ('cleanup', 'container', 'docker')
 
-    def test_cli_create_012(self):
+    @staticmethod
+    def test_cli_create_012():
         """Test that multiple links can be added by separating them with
         space."""
 
@@ -201,34 +213,39 @@ class TestUtCli(object):
         assert obj.tags == ('cleanup', 'container', 'docker')
         assert obj.links == tuple(links.split())
 
-    def test_cli_search_001(self):
+    @staticmethod
+    def test_cli_search_001():
         """Test that search can be used with one keyword."""
 
         obj = Cli(['snippy', 'search', '--sall', 'docker'])
         assert obj.sall == ('docker',)
 
-    def test_cli_search_002(self):
+    @staticmethod
+    def test_cli_search_002():
         """Test that keywords can be added inside quotes separated by
         comma and without spaces."""
 
         obj = Cli(['snippy', 'search', '--sall', 'docker,container,cleanup'])
         assert obj.sall == ('cleanup', 'container', 'docker')
 
-    def test_cli_search_003(self):
+    @staticmethod
+    def test_cli_search_003():
         """Test that search keywords can be added inside quotes separated
         by comma and spaces after comma."""
 
         obj = Cli(['snippy', 'search', '--sall', 'docker, container, cleanup'])
         assert obj.sall == ('cleanup', 'container', 'docker')
 
-    def test_cli_search_004(self):
+    @staticmethod
+    def test_cli_search_004():
         """Test that search keywords can be added so that they are separated
         by spaces before and after the words."""
 
         obj = Cli(['snippy', 'search', '--sall', 'docker container cleanup'])
         assert obj.sall == ('cleanup', 'container', 'docker')
 
-    def test_cli_search_005(self):
+    @staticmethod
+    def test_cli_search_005():
         """Test that search keywords can be added so that they are separated
         by spaces before and after the words like in '-t docker container
         cleanup'."""
@@ -236,14 +253,16 @@ class TestUtCli(object):
         obj = Cli(['snippy', 'search', '--sall', 'docker ', 'container ', 'cleanup'])
         assert obj.sall == ('cleanup', 'container', 'docker')
 
-    def test_cli_search_006(self):
+    @staticmethod
+    def test_cli_search_006():
         """Test that search keywords can be added so that they are separated
         by comma after the words like in '-t docker, container, cleanup'."""
 
         obj = Cli(['snippy', 'search', '--sall', 'docker,', 'container,', 'cleanup'])
         assert obj.sall == ('cleanup', 'container', 'docker')
 
-    def test_cli_search_007(self):
+    @staticmethod
+    def test_cli_search_007():
         """Test that search keywords are accepted if they contain special
         characters."""
 

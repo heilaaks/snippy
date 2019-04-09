@@ -29,8 +29,9 @@ from tests.testlib.solution import Solution
 class TestCliUpdateSolution(object):
     """Test workflows for updating solutions."""
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions')
-    def test_cli_update_solution_001(self, snippy, edited_beats):
+    def test_cli_update_solution_001(snippy, edited_beats):
         """Update solution with ``digest`` option.
 
         Update solution based on short message digest. Only content data
@@ -52,8 +53,9 @@ class TestCliUpdateSolution(object):
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions')
-    def test_cli_update_solution_002(self, snippy, edited_beats):
+    def test_cli_update_solution_002(snippy, edited_beats):
         """Update solution with ``digest`` option.
 
         Update solution based on very short message digest. This must match
@@ -74,8 +76,9 @@ class TestCliUpdateSolution(object):
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions')
-    def test_cli_update_solution_003(self, snippy, edited_beats):
+    def test_cli_update_solution_003(snippy, edited_beats):
         """Update solution with ``digest`` option.
 
         Update solution based on long message digest. Only the content data
@@ -96,8 +99,9 @@ class TestCliUpdateSolution(object):
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions')
-    def test_cli_update_solution_004(self, snippy, edited_beats):
+    def test_cli_update_solution_004(snippy, edited_beats):
         """Update solution with ``digest`` option.
 
         Update solution based on message digest and accidentally define
@@ -119,8 +123,9 @@ class TestCliUpdateSolution(object):
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions')
-    def test_cli_update_solution_005(self, snippy, edited_beats):
+    def test_cli_update_solution_005(snippy, edited_beats):
         """Update solution with ``digest`` option.
 
         Update solution based on message digest and accidentally implicitly
@@ -143,8 +148,9 @@ class TestCliUpdateSolution(object):
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions')
-    def test_cli_update_solution_006(self, snippy):
+    def test_cli_update_solution_006(snippy):
         """Update solution with ``digest`` option.
 
         Try to update solution with message digest that cannot be found. No
@@ -161,8 +167,9 @@ class TestCliUpdateSolution(object):
         assert cause == 'NOK: cannot find content with message digest: 123456789abcdef0'
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions')
-    def test_cli_update_solution_007(self, snippy):
+    def test_cli_update_solution_007(snippy):
         """Update solution with ``digest`` option.
 
         Try to update solution with empty message digest. Nothing should be
@@ -180,8 +187,9 @@ class TestCliUpdateSolution(object):
         assert cause == 'NOK: cannot use empty message digest for update operation'
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions')
-    def test_cli_update_solution_008(self, snippy, edited_beats):
+    def test_cli_update_solution_008(snippy, edited_beats):
         """Update solution with ``content`` option.
 
         Update solution based on content data.
@@ -202,8 +210,9 @@ class TestCliUpdateSolution(object):
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions')
-    def test_cli_update_solution_009(self, snippy):
+    def test_cli_update_solution_009(snippy):
         """Update solution with ``content`` option.
 
         Try to update solution based on content data that is not found.
@@ -219,8 +228,9 @@ class TestCliUpdateSolution(object):
         assert cause == 'NOK: cannot find content with content data: solution not existing'
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions')
-    def test_cli_update_solution_010(self, snippy):
+    def test_cli_update_solution_010(snippy):
         """Update solution with ``content`` option.
 
         Try to update solution with empty content data. Nothing must be
@@ -237,8 +247,9 @@ class TestCliUpdateSolution(object):
         assert cause == 'NOK: cannot use empty content data for update operation'
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('import-nginx', 'update-beats-utc')
-    def test_cli_update_solution_011(self, snippy, edited_beats):
+    def test_cli_update_solution_011(snippy, edited_beats):
         """Update solution with editor.
 
         Update existing solution by defining all values from editor. In this
@@ -259,8 +270,9 @@ class TestCliUpdateSolution(object):
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('import-kafka-mkdn', 'update-beats-utc')
-    def test_cli_update_solution_012(self, snippy, editor_data):
+    def test_cli_update_solution_012(snippy, editor_data):
         """Update solution with editor.
 
         Update existing Markdown native solution. Editor must show existing
@@ -330,8 +342,9 @@ class TestCliUpdateSolution(object):
         assert cause == Cause.ALL_OK
         Content.assert_storage(updates)
 
+    @staticmethod
     @pytest.mark.usefixtures('import-kafka', 'update-kafka-utc')
-    def test_cli_update_solution_013(self, snippy, editor_data):
+    def test_cli_update_solution_013(snippy, editor_data):
         """Update solution with editor.
 
         Update existing solution by explicitly defining content format as
@@ -353,8 +366,9 @@ class TestCliUpdateSolution(object):
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('import-kafka-mkdn', 'update-kafka-mkdn-utc')
-    def test_cli_update_solution_014(self, snippy, editor_data):
+    def test_cli_update_solution_014(snippy, editor_data):
         """Update solution with editor.
 
         Update existing solution by explicitly defining content format as

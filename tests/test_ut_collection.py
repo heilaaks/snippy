@@ -31,7 +31,8 @@ from tests.testlib.helper import Helper
 class TestUtCollection(object):
     """Test Collection() class."""
 
-    def test_collection_operations_001(self, capsys):
+    @staticmethod
+    def test_collection_operations_001(capsys):
         """Test collection data class operations.
 
         Verify that collection class implements data class methods correctly.
@@ -109,8 +110,9 @@ class TestUtCollection(object):
         with pytest.raises(KeyError):
             del collection[0]
 
+    @staticmethod
     @pytest.mark.usefixtures('uuid')
-    def test_collection_operations_002(self, capsys):  # pylint: disable=too-many-branches
+    def test_collection_operations_002(capsys):  # pylint: disable=too-many-branches
         """Test collection data class operations.
 
         Verify that collection class implements data class methods correctly.

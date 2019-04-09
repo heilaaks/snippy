@@ -35,8 +35,9 @@ pytest.importorskip('gunicorn')
 class TestApiUpdateReference(object):
     """Test PUT /references/{digest} API."""
 
+    @staticmethod
     @pytest.mark.usefixtures('import-gitlog', 'update-pytest-utc')
-    def test_api_update_reference_001(self, server):
+    def test_api_update_reference_001(server):
         """Update one reference with PUT request.
 
         Call PUT /v1/references/{id} to update existing reference with digest.
@@ -88,8 +89,9 @@ class TestApiUpdateReference(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('import-gitlog', 'update-pytest-utc')
-    def test_api_update_reference_002(self, server):
+    def test_api_update_reference_002(server):
         """Update one reference with PUT request.
 
         Call PUT /v1/references/{id} to update existing reference. The PUT
@@ -147,8 +149,9 @@ class TestApiUpdateReference(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('import-gitlog', 'caller')
-    def test_api_update_reference_003(self, server):
+    def test_api_update_reference_003(server):
         """Update one reference with PUT request.
 
         Try to call PUT /v1/references/{id} to update reference with digest
@@ -190,8 +193,9 @@ class TestApiUpdateReference(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('import-gitlog', 'caller')
-    def test_api_update_reference_004(self, server):
+    def test_api_update_reference_004(server):
         """Try to update reference with malformed request.
 
         Try to call PUT /v1/references/{id} to update reference with malformed
@@ -230,8 +234,9 @@ class TestApiUpdateReference(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('import-gitlog', 'caller')
-    def test_api_update_reference_005(self, server):
+    def test_api_update_reference_005(server):
         """Try to update reference with malformed request.
 
         Try to call PUT /v1/references/{id} to update reference with client
@@ -279,8 +284,9 @@ class TestApiUpdateReference(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('import-gitlog', 'update-regexp-utc')
-    def test_api_update_reference_006(self, server):
+    def test_api_update_reference_006(server):
         """Update one reference with PATCH request.
 
         Call PATCH /v1/references/{id} to update existing snippet with digest.
@@ -333,8 +339,9 @@ class TestApiUpdateReference(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('import-gitlog', 'update-regexp-utc')
-    def test_api_update_reference_007(self, server):
+    def test_api_update_reference_007(server):
         """Update one reference with PUT request.
 
         Try to update reference uuid by calling PUT /v1/references/{id}. This
@@ -392,8 +399,9 @@ class TestApiUpdateReference(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('import-gitlog', 'caller')
-    def test_api_update_reference_008(self, server):
+    def test_api_update_reference_008(server):
         """Try to update reference with PUT request.
 
         Try to call PUT /v1/references/{id} to replace existing reference with
@@ -437,8 +445,9 @@ class TestApiUpdateReference(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('import-gitlog', 'update-pytest-utc')
-    def test_api_update_reference_009(self, server):
+    def test_api_update_reference_009(server):
         """Update reference with PUT request.
 
         Call PUT /v1/references/{id} to replace existing reference with digest.
@@ -500,8 +509,9 @@ class TestApiUpdateReference(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('import-gitlog', 'update-pytest-utc')
-    def test_api_update_reference_010(self, server):
+    def test_api_update_reference_010(server):
         """Update reference with PATCH request.
 
         Call PATCH /v1/references/{id} to update existing reference with digest.
@@ -562,8 +572,9 @@ class TestApiUpdateReference(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('import-gitlog', 'update-pytest-utc')
-    def test_api_update_reference_011(self, server):
+    def test_api_update_reference_011(server):
         """Update reference with PATCH request.
 
         Call PATCH /v1/references/{id} to update existing reference with

@@ -32,8 +32,9 @@ pytest.importorskip('gunicorn')
 class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     """Test GET /snippets API."""
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_api_search_snippet_001(self, server):
+    def test_api_search_snippet_001(server):
         """Search snippets with GET.
 
         Call GET /v1/snippets and search keywords from all fields. The search
@@ -71,8 +72,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited')
-    def test_api_search_snippet_002(self, server):
+    def test_api_search_snippet_002(server):
         """Search snippets with GET.
 
         Call GET /v1/snippets and search keywords from all fields. The search
@@ -110,8 +112,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_api_search_snippet_003(self, server):
+    def test_api_search_snippet_003(server):
         """Search snippets with GET.
 
         Call GET /v1/snippets and search keywords from all fields. The search
@@ -146,8 +149,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_api_search_snippet_004(self, server):
+    def test_api_search_snippet_004(server):
         """Search snippets with GET.
 
         Call GET /v1/snippets and search keywords from all fields but return
@@ -182,8 +186,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited')
-    def test_api_search_snippet_005(self, server):
+    def test_api_search_snippet_005(server):
         """Search snippets with GET.
 
         Call GET /v1/snippets and search keywords from all fields. The search
@@ -220,8 +225,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited')
-    def test_api_search_snippet_006(self, server):
+    def test_api_search_snippet_006(server):
         """Search snippets with GET.
 
         Call GET /v1/snippets and search keywords from all fields sorted with
@@ -259,8 +265,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'caller')
-    def test_api_search_snippet_007(self, server):
+    def test_api_search_snippet_007(server):
         """Search snippets with GET.
 
         Try to call GET /v1/snippets with sort parameter set to field name
@@ -289,8 +296,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_api_search_snippet_008(self, server):
+    def test_api_search_snippet_008(server):
         """Search snippets with GET.
 
         Call GET /v1/snippets to return only defined fields. In this case the
@@ -322,8 +330,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'caller')
-    def test_api_search_snippet_009(self, server):
+    def test_api_search_snippet_009(server):
         """Search snippets with GET.
 
         Try to call GET /v1/snippets with search keywords that do not result
@@ -351,8 +360,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'caller')
-    def test_api_search_snippet_010(self, server):
+    def test_api_search_snippet_010(server):
         """Search snippets with GET from tag fields.
 
         Try to call GET /v1/snippets with search tag keywords that do not
@@ -380,8 +390,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'caller')
-    def test_api_search_snippet_011(self, server):
+    def test_api_search_snippet_011(server):
         """Search snippet from groups fields.
 
         Try to call GET /v1/snippets with search groups keywords that do not
@@ -409,8 +420,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_api_search_snippet_012(self, server):
+    def test_api_search_snippet_012(server):
         """Search snippet with digets.
 
         Call GET /v1/snippets/{id} to read a snippet based on digest. In this
@@ -445,8 +457,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'caller')
-    def test_api_search_snippet_013(self, server):
+    def test_api_search_snippet_013(server):
         """Search snippet with digets.
 
         Try to call GET /v1/snippets/{id} with a digest that is not found.
@@ -472,8 +485,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_api_search_snippet_014(self, server):
+    def test_api_search_snippet_014(server):
         """Search snippet without search parameters.
 
         Call GET /v1/snippets without defining search parameters. In this
@@ -509,8 +523,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_api_search_snippet_015(self, server):
+    def test_api_search_snippet_015(server):
         """Search snippet without search parameters.
 
         Call GET /v1/snippets without defining search parameters. In this
@@ -544,9 +559,10 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.parametrize('server', [['--server-host', 'localhost:8080', '-q']], indirect=True)
     @pytest.mark.usefixtures('default-snippets')
-    def test_api_search_snippet_016(self, server):
+    def test_api_search_snippet_016(server):
         """Search snippets with GET.
 
         Call GET /v1/snippets and search keywords from all attributes. The
@@ -586,8 +602,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'caller')
-    def test_api_search_snippet_field_017(self, server):
+    def test_api_search_snippet_field_017(server):
         """Get specific snippet field.
 
         Try to call GET /v1/snippets/{id} for existing snippet with short form
@@ -615,8 +632,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited')
-    def test_api_search_snippet_paginate_001(self, server):
+    def test_api_search_snippet_paginate_001(server):
         """Search snippets with GET.
 
         Call GET /v1/snippets so that pagination is applied. The offset is
@@ -668,8 +686,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited')
-    def test_api_search_snippet_paginate_002(self, server):
+    def test_api_search_snippet_paginate_002(server):
         """Search snippets with GET.
 
         Call GET /v1/snippets so that pagination is applied. The offset is
@@ -713,8 +732,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited')
-    def test_api_search_snippet_paginate_003(self, server):
+    def test_api_search_snippet_paginate_003(server):
         """Search snippets with GET.
 
         Call GET /v1/snippets so that pagination is applied. The offset is
@@ -757,8 +777,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited')
-    def test_api_search_snippet_paginate_004(self, server):
+    def test_api_search_snippet_paginate_004(server):
         """Search snippets with GET.
 
         Call GET /v1/snippets so that pagination is applied. The offset is
@@ -800,8 +821,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited')
-    def test_api_search_snippet_paginate_005(self, server):
+    def test_api_search_snippet_paginate_005(server):
         """Search snippets with GET.
 
         Call GET /v1/snippets so that pagination is applied. The offset is
@@ -848,8 +870,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited')
-    def test_api_search_snippet_paginate_006(self, server):
+    def test_api_search_snippet_paginate_006(server):
         """Search snippets with GET.
 
         Call GET /v1/snippets so that pagination is applied. The offset is
@@ -890,8 +913,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited', 'import-umount')
-    def test_api_search_snippet_paginate_007(self, server):
+    def test_api_search_snippet_paginate_007(server):
         """Search snippets with GET.
 
         Call GET /v1/snippets so that pagination is applied. The offset and
@@ -934,8 +958,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited', 'caller')
-    def test_api_search_snippet_paginate_008(self, server):
+    def test_api_search_snippet_paginate_008(server):
         """Search snippets with GET.
 
         Try to call GET /v1/snippets with pagination offset that is the same
@@ -963,8 +988,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited', 'caller')
-    def test_api_search_snippet_paginate_009(self, server):
+    def test_api_search_snippet_paginate_009(server):
         """Search snippets with GET.
 
         Try to call GET /v1/snippets with pagination offset that is one bigger
@@ -992,8 +1018,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited')
-    def test_api_search_snippet_paginate_010(self, server):
+    def test_api_search_snippet_paginate_010(server):
         """Search snippets with GET.
 
         Call GET /v1/snippets so that pagination is applied with limit zero.
@@ -1022,8 +1049,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited', 'caller')
-    def test_api_search_snippet_paginate_011(self, server):
+    def test_api_search_snippet_paginate_011(server):
         """Search snippets with GET.
 
         Try to call GET /v1/snippets with negative offset.
@@ -1050,8 +1078,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited', 'caller')
-    def test_api_search_snippet_paginate_012(self, server):
+    def test_api_search_snippet_paginate_012(server):
         """Search snippets with GET.
 
         Try to call GET /v1/snippets with negative offset and limit.
@@ -1083,8 +1112,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited', 'caller')
-    def test_api_search_snippet_paginate_013(self, server):
+    def test_api_search_snippet_paginate_013(server):
         """Search snippets with GET.
 
         Try to call GET /v1/snippets when offset and limit are not numbers.
@@ -1116,8 +1146,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_api_search_snippet_field_001(self, server):
+    def test_api_search_snippet_field_001(server):
         """Get specific snippet field.
 
         Call GET /v1/snippets/{id}/data for existing snippet.
@@ -1146,8 +1177,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_api_search_snippet_field_002(self, server):
+    def test_api_search_snippet_field_002(server):
         """Get specific snippet field.
 
         Call GET /v1/snippets/{id}/brief for existing snippet. In this case
@@ -1178,8 +1210,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_api_search_snippet_field_003(self, server):
+    def test_api_search_snippet_field_003(server):
         """Get specific snippet field.
 
         Call GET /v1/snippets/{id}/groups for existing snippet.
@@ -1209,8 +1242,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_api_search_snippet_field_004(self, server):
+    def test_api_search_snippet_field_004(server):
         """Get specific snippet field.
 
         Call GET /v1/snippets/{id}/tags for existing snippet.
@@ -1239,8 +1273,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_api_search_snippet_field_005(self, server):
+    def test_api_search_snippet_field_005(server):
         """Get specific snippet field.
 
         Call GET /v1/snippets/{id}/links for existing snippet.
@@ -1269,9 +1304,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
-
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'caller')
-    def test_api_search_snippet_field_006(self, server):
+    def test_api_search_snippet_field_006(server):
         """Get specific snippet field.
 
         Try to call GET /v1/snippets/{id}/notexist for existing snippet. In
@@ -1298,8 +1333,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'caller')
-    def test_api_search_snippet_field_007(self, server):
+    def test_api_search_snippet_field_007(server):
         """Get specific snippet field.
 
         Try to call GET /v1/snippets/0101010101/brief for non existing
@@ -1326,8 +1362,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_api_search_snippet_field_008(self, server):
+    def test_api_search_snippet_field_008(server):
         """Get specific snippet field.
 
         Call GET /v1/snippets/{id}/brief for existing snippet. In this case
@@ -1358,8 +1395,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_pytest_fixtures(self, server):
+    def test_pytest_fixtures(server):
         """Test pytest fixtures with pytest specific mocking.
 
         Call GET /v1/snippets and search keywords from all fields. The search
@@ -1397,8 +1435,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('import-remove', 'import-forced', 'import-exited', 'import-netcat')
-    def test_pytest_fixtures2(self, server):
+    def test_pytest_fixtures2(server):
         """Test pytest fixtures with pytest specific mocking.
 
         Call GET /v1/snippets and search keywords from all fields. The search

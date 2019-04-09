@@ -29,8 +29,9 @@ from tests.testlib.snippet import Snippet
 class TestCliUpdateSnippet(object):
     """Test workflows for updating snippets."""
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_update_snippet_001(self, snippy, edited_remove):
+    def test_cli_update_snippet_001(snippy, edited_remove):
         """Update snippet with ``digest`` option.
 
         Update snippet based on short message digest. Only the content data
@@ -50,8 +51,9 @@ class TestCliUpdateSnippet(object):
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_update_snippet_002(self, snippy, edited_remove):
+    def test_cli_update_snippet_002(snippy, edited_remove):
         """Update snippet with ``digest`` option.
 
         Update snippet based on very short message digest. This must match to
@@ -71,8 +73,9 @@ class TestCliUpdateSnippet(object):
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_update_snippet_003(self, snippy, edited_remove):
+    def test_cli_update_snippet_003(snippy, edited_remove):
         """Update snippet with ``digest`` option.
 
         Update snippet based on long message digest. Only the content data is
@@ -92,8 +95,9 @@ class TestCliUpdateSnippet(object):
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_update_snippet_004(self, snippy, edited_remove):
+    def test_cli_update_snippet_004(snippy, edited_remove):
         """Update snippet with ``digest`` option.
 
         Update snippet based on message digest and explicitly define the
@@ -113,8 +117,9 @@ class TestCliUpdateSnippet(object):
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_update_snippet_005(self, snippy, edited_remove):
+    def test_cli_update_snippet_005(snippy, edited_remove):
         """Update snippet with ``digest`` option.
 
         Update snippet based on message digest and accidentally define
@@ -135,8 +140,9 @@ class TestCliUpdateSnippet(object):
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_update_snippet_006(self, snippy):
+    def test_cli_update_snippet_006(snippy):
         """Update snippet with ``digest`` option.
 
         Try to update snippet with message digest that cannot be found. No
@@ -153,8 +159,9 @@ class TestCliUpdateSnippet(object):
         assert cause == 'NOK: cannot find content with message digest: 123456789abcdef0'
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_update_snippet_007(self, snippy):
+    def test_cli_update_snippet_007(snippy):
         """Update snippet with ``digest`` option.
 
         Try to update snippet with empty message digest. Nothing should be
@@ -172,8 +179,9 @@ class TestCliUpdateSnippet(object):
         assert cause == 'NOK: cannot use empty message digest for update operation'
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_update_snippet_008(self, snippy):
+    def test_cli_update_snippet_008(snippy):
         """Update snippet with ``digest`` option.
 
         Try to update snippet with one digit digest that matches two snippets.
@@ -193,8 +201,9 @@ class TestCliUpdateSnippet(object):
         assert cause == 'NOK: content digest 5 matched 2 times preventing update operation'
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_update_snippet_009(self, snippy, edited_remove):
+    def test_cli_update_snippet_009(snippy, edited_remove):
         """Update snippet with ``content`` option.
 
         Update snippet based on content data.
@@ -213,8 +222,9 @@ class TestCliUpdateSnippet(object):
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_update_snippet_010(self, snippy):
+    def test_cli_update_snippet_010(snippy):
         """Update snippet with ``content`` option.
 
         Try to update snippet based on content data that is not found.
@@ -230,8 +240,9 @@ class TestCliUpdateSnippet(object):
         assert cause == 'NOK: cannot find content with content data: snippet not existing'
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_update_snippet_011(self, snippy):
+    def test_cli_update_snippet_011(snippy):
         """Update snippet with ``content`` option.
 
         Try to update snippet with empty content data. Nothing must be updated
@@ -248,8 +259,9 @@ class TestCliUpdateSnippet(object):
         assert cause == 'NOK: cannot use empty content data for update operation'
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_update_snippet_012(self, snippy):
+    def test_cli_update_snippet_012(snippy):
         """Update snippet with ``content`` option.
 
         Try to update snippet with content data that matches to two different
@@ -267,8 +279,9 @@ class TestCliUpdateSnippet(object):
         assert cause == 'NOK: content data docker matched 2 times preventing update operation'
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('import-remove', 'update-forced-utc')
-    def test_cli_update_snippet_013(self, snippy, editor_data):
+    def test_cli_update_snippet_013(snippy, editor_data):
         """Update snippet with editor.
 
         Update existing snippet from editor so that content fields are given
@@ -315,8 +328,9 @@ class TestCliUpdateSnippet(object):
         editor_data.assert_called_with('\n'.join(template))
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('import-remove', 'update-forced-utc')
-    def test_cli_update_snippet_014(self, snippy, editor_data):
+    def test_cli_update_snippet_014(snippy, editor_data):
         """Update snippet from command line.
 
         Update existing snippet directly from command line. In this case,
@@ -339,8 +353,9 @@ class TestCliUpdateSnippet(object):
         editor_data.assert_not_called()
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('import-remove', 'update-remove-utc')
-    def test_cli_update_snippet_015(self, snippy, editor_data):
+    def test_cli_update_snippet_015(snippy, editor_data):
         """Update snippet with editor.
 
         Update existing snippet by explicitly defining content format as
@@ -381,8 +396,9 @@ class TestCliUpdateSnippet(object):
         editor_data.assert_called_with('\n'.join(template))
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('import-remove', 'update-remove-utc')
-    def test_cli_update_snippet_016(self, snippy, editor_data):
+    def test_cli_update_snippet_016(snippy, editor_data):
         """Update snippet from command line.
 
         Update existing snippet directly from command line. In this case the
@@ -424,8 +440,9 @@ class TestCliUpdateSnippet(object):
         editor_data.assert_called_with('\n'.join(template))
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('update-remove-utc')
-    def test_cli_update_snippet_017(self, snippy, editor_data):
+    def test_cli_update_snippet_017(snippy, editor_data):
         """Update snippet with editor.
 
         Update existing snippet directly from command line. In this case the

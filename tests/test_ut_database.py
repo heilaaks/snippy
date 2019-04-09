@@ -28,7 +28,8 @@ from tests.testlib.snippet import Snippet
 class TestUtDatabase(object):
     """Test Database() class."""
 
-    def test_database_insert_001(self, database, cause):
+    @staticmethod
+    def test_database_insert_001(database, cause):
         """Test database basic insert.
 
         Insert one Snippet resource into the database.
@@ -40,7 +41,8 @@ class TestUtDatabase(object):
         assert collection == TDatabase.get_snippets()
         assert len(TDatabase.get_snippets()) == 1
 
-    def test_database_insert_002(self, database, cause):
+    @staticmethod
+    def test_database_insert_002(database, cause):
         """Test SqliteDb basic insert.
 
         Insert four Snippet resources into the database. This verifies with
@@ -56,7 +58,8 @@ class TestUtDatabase(object):
         assert collection == TDatabase.get_snippets()
         assert len(TDatabase.get_snippets()) == 4
 
-    def test_database_select_001(self, database, cause):
+    @staticmethod
+    def test_database_select_001(database, cause):
         """Test database basic select.
 
         Select content with regexp stored into database. In this case the last
@@ -71,7 +74,8 @@ class TestUtDatabase(object):
         cause.assert_called_once_with('201 Created', 'content created')
         assert collection == Content.get_collection(Snippet.FORCED)
 
-    def test_database_delete_002(self, database, cause, mocker):
+    @staticmethod
+    def test_database_delete_002(database, cause, mocker):
         """Test database basic delete.
 
         Delete one row from database with short digest.
@@ -88,7 +92,8 @@ class TestUtDatabase(object):
         assert TDatabase.get_snippets() == Content.get_collection(Snippet.REMOVE)
         assert len(TDatabase.get_snippets()) == 1
 
-    def test_database_delete_001(self, database, cause, mocker):
+    @staticmethod
+    def test_database_delete_001(database, cause, mocker):
         """Test database basic delete.
 
         Delete one row from database with long digest.

@@ -29,8 +29,9 @@ from tests.testlib.reference import Reference
 class TestCliUpdateReference(object):
     """Test workflows for updating references."""
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references')
-    def test_cli_update_reference_001(self, snippy, edited_gitlog):
+    def test_cli_update_reference_001(snippy, edited_gitlog):
         """Update reference with ``digest`` option.
 
         Update reference based on short message digest. Only content links
@@ -50,8 +51,9 @@ class TestCliUpdateReference(object):
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references')
-    def test_cli_update_reference_002(self, snippy, edited_gitlog):
+    def test_cli_update_reference_002(snippy, edited_gitlog):
         """Update reference with ``digest`` option.
 
         Update reference based on very short message digest. This must match
@@ -71,8 +73,9 @@ class TestCliUpdateReference(object):
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references')
-    def test_cli_update_reference_003(self, snippy, edited_gitlog):
+    def test_cli_update_reference_003(snippy, edited_gitlog):
         """Update reference with ``digest`` option.
 
         Update reference based on message digest and accidentally define
@@ -93,8 +96,9 @@ class TestCliUpdateReference(object):
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references')
-    def test_cli_update_reference_004(self, snippy, edited_gitlog):
+    def test_cli_update_reference_004(snippy, edited_gitlog):
         """Update reference with ``digest`` option.
 
         Update reference based on message digest and accidentally implicitly
@@ -116,8 +120,9 @@ class TestCliUpdateReference(object):
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references')
-    def test_cli_update_reference_005(self, snippy):
+    def test_cli_update_reference_005(snippy):
         """Update reference with ``digest`` option.
 
         Try to update reference with message digest that cannot be found. No
@@ -134,8 +139,9 @@ class TestCliUpdateReference(object):
         assert cause == 'NOK: cannot find content with message digest: 123456789abcdef0'
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references')
-    def test_cli_update_reference_006(self, snippy):
+    def test_cli_update_reference_006(snippy):
         """Update reference with ``digest`` option.
 
         Try to update reference with empty message digest. Nothing should be
@@ -153,8 +159,9 @@ class TestCliUpdateReference(object):
         assert cause == 'NOK: cannot use empty message digest for update operation'
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references')
-    def test_cli_update_reference_007(self, snippy, edited_gitlog):
+    def test_cli_update_reference_007(snippy, edited_gitlog):
         """Update reference with ``uuid`` option.
 
         Update reference based on uuid. The content must be updated so that
@@ -174,8 +181,9 @@ class TestCliUpdateReference(object):
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references')
-    def test_cli_update_reference_008(self, snippy):
+    def test_cli_update_reference_008(snippy):
         """Update reference with ``uuid`` option.
 
         Try to update reference based on uuid that cannot be found.
@@ -191,9 +199,10 @@ class TestCliUpdateReference(object):
         assert cause == 'NOK: cannot find content with content uuid: 9999994'
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.skip(reason='not supported yet')
     @pytest.mark.usefixtures('default-references')
-    def test_cli_update_reference_009(self, snippy, edited_gitlog):
+    def test_cli_update_reference_009(snippy, edited_gitlog):
         """Update reference with ``content`` option.
 
         Update reference based on content links.
@@ -212,9 +221,10 @@ class TestCliUpdateReference(object):
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.skip(reason='not supported yet')
     @pytest.mark.usefixtures('default-references')
-    def test_cli_update_reference_010(self, snippy):
+    def test_cli_update_reference_010(snippy):
         """Update reference with ``content`` option.
 
         Try to update reference based on content links that is not found.
@@ -230,8 +240,9 @@ class TestCliUpdateReference(object):
         assert cause == 'NOK: cannot find content with content data: reference not existing'
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references')
-    def test_cli_update_reference_011(self, snippy, edited_gitlog):
+    def test_cli_update_reference_011(snippy, edited_gitlog):
         """Update reference with ``content`` option.
 
         Try to update reference with empty content links. Nothing must be
@@ -252,8 +263,9 @@ class TestCliUpdateReference(object):
         assert cause == 'NOK: content was not stored because mandatory content field links is empty'
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('import-regexp', 'update-gitlog-utc')
-    def test_cli_update_reference_012(self, snippy, edited_gitlog):
+    def test_cli_update_reference_012(snippy, edited_gitlog):
         """Update reference with editor.
 
         Update existing reference by defining all values from editor. In this
@@ -274,8 +286,9 @@ class TestCliUpdateReference(object):
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references')
-    def test_cli_update_reference_013(self, snippy, edited_gitlog):
+    def test_cli_update_reference_013(snippy, edited_gitlog):
         """Update reference with ``digest`` option.
 
         Try to update reference with empty string read from editor.
@@ -292,8 +305,9 @@ class TestCliUpdateReference(object):
         assert cause == 'NOK: could not identify content category - please keep template tags in place'
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('import-regexp', 'update-regexp-utc')
-    def test_cli_update_reference_014(self, snippy, editor_data):
+    def test_cli_update_reference_014(snippy, editor_data):
         """Update reference with editor.
 
         Update existing reference by explicitly defining content format as

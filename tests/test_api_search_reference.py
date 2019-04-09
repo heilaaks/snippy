@@ -32,8 +32,9 @@ pytest.importorskip('gunicorn')
 class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     """Test GET /references API."""
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references')
-    def test_api_search_reference_001(self, server):
+    def test_api_search_reference_001(server):
         """Search reference with GET.
 
         Call GET /v1/references and search keywords from all attributes. The
@@ -71,8 +72,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references', 'import-pytest')
-    def test_api_search_reference_002(self, server):
+    def test_api_search_reference_002(server):
         """Search reference with GET.
 
         Call GET /v1/references and search keywords from all attributes. The
@@ -113,8 +115,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references')
-    def test_api_search_reference_003(self, server):
+    def test_api_search_reference_003(server):
         """Search reference with GET.
 
         Call GET /v1/references and search keywords from all attributes. The
@@ -149,8 +152,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references')
-    def test_api_search_reference_004(self, server):
+    def test_api_search_reference_004(server):
         """Search reference with GET.
 
         Call GET /v1/references and search keywords from all attributes but
@@ -184,8 +188,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references')
-    def test_api_search_reference_005(self, server):
+    def test_api_search_reference_005(server):
         """Search reference with GET.
 
         Call GET /v1/references to return only defined attributes. In this case
@@ -218,8 +223,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references', 'caller')
-    def test_api_search_reference_006(self, server):
+    def test_api_search_reference_006(server):
         """Search reference with GET.
 
         Try to call GET /v1/references with search keywords that do not result
@@ -247,8 +253,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references', 'caller')
-    def test_api_search_reference_007(self, server):
+    def test_api_search_reference_007(server):
         """Search reference from tag fields.
 
         Try to call GET /v1/references with search tag keywords that do not
@@ -276,8 +283,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references')
-    def test_api_search_reference_008(self, server):
+    def test_api_search_reference_008(server):
         """Search reference with digets.
 
         Call GET /snippy/api/app/v1/references/{id} to get explicit reference
@@ -311,8 +319,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references', 'caller')
-    def test_api_search_reference_009(self, server):
+    def test_api_search_reference_009(server):
         """Search reference with digets.
 
         Try to call GET /v1/references/{id} with digest that is not found.
@@ -338,8 +347,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references')
-    def test_api_search_reference_010(self, server):
+    def test_api_search_reference_010(server):
         """Search reference without search parameters.
 
         Call GET /v1/references without defining search keywords. In this case
@@ -375,8 +385,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references')
-    def test_api_search_reference_011(self, server):
+    def test_api_search_reference_011(server):
         """Search reference without search parameters.
 
         Call GET /v1/references without defining search parameters.
@@ -410,9 +421,10 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.parametrize('server', [['--server-host', 'localhost:8080', '-q']], indirect=True)
     @pytest.mark.usefixtures('default-references')
-    def test_api_search_reference_012(self, server):
+    def test_api_search_reference_012(server):
         """Search reference with GET.
 
         Call GET /v1/references and search keywords from all attributes. The
@@ -455,8 +467,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references', 'import-pytest')
-    def test_api_search_reference_paginate_001(self, server):
+    def test_api_search_reference_paginate_001(server):
         """Search reference with GET.
 
         Call GET /v1/reference so that pagination is applied with limit zero.
@@ -488,8 +501,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references')
-    def test_api_search_reference_field_001(self, server):
+    def test_api_search_reference_field_001(server):
         """Get specific reference field.
 
         Call GET /v1/references/́{id}/data for existing reference. In this
@@ -519,8 +533,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references')
-    def test_api_search_reference_field_002(self, server):
+    def test_api_search_reference_field_002(server):
         """Get specific reference field.
 
         Call GET /v1/references/{id}/brief for existing reference.
@@ -549,8 +564,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references')
-    def test_api_search_reference_field_003(self, server):
+    def test_api_search_reference_field_003(server):
         """Get specific reference field.
 
         Call GET /v1/references/{id}/groups for existing reference.
@@ -579,8 +595,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references')
-    def test_api_search_reference_field_004(self, server):
+    def test_api_search_reference_field_004(server):
         """Get specific reference field.
 
         Call GET /v1/references/{id}/tags for existing reference.
@@ -609,8 +626,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references')
-    def test_api_search_reference_field_005(self, server):
+    def test_api_search_reference_field_005(server):
         """Get specific reference field.
 
         Call GET /v1/references/{id}/links for existing reference.
@@ -639,8 +657,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references')
-    def test_api_search_reference_field_006(self, server):
+    def test_api_search_reference_field_006(server):
         """Get specific reference field.
 
         Call GET /v1/references/{id}/category for existing reference.
@@ -669,8 +688,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references')
-    def test_api_search_reference_field_007(self, server):
+    def test_api_search_reference_field_007(server):
         """Get specific reference field.
 
         Call GET /v1/references/{id}/name for existing reference.
@@ -699,8 +719,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references')
-    def test_api_search_reference_field_008(self, server):
+    def test_api_search_reference_field_008(server):
         """Get specific reference field.
 
         Call GET /v1/references/{id}/filename for existing reference.
@@ -729,8 +750,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references')
-    def test_api_search_reference_field_009(self, server):
+    def test_api_search_reference_field_009(server):
         """Get specific reference field.
 
         Call GET /v1/references/{id}/versions for existing reference.
@@ -759,8 +781,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references')
-    def test_api_search_reference_field_010(self, server):
+    def test_api_search_reference_field_010(server):
         """Get specific reference field.
 
         Call GET /v1/references/{id}/source for existing reference.
@@ -789,8 +812,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references')
-    def test_api_search_reference_field_011(self, server):
+    def test_api_search_reference_field_011(server):
         """Get specific reference field.
 
         Call GET /v1/references/{id}/uuid for existing reference.
@@ -819,8 +843,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references', 'caller')
-    def test_api_search_reference_field_012(self, server):
+    def test_api_search_reference_field_012(server):
         """Get specific reference field.
 
         Try to call GET /v1/references/{id}/notexist for existing reference.
@@ -847,8 +872,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references', 'caller')
-    def test_api_search_reference_field_013(self, server):
+    def test_api_search_reference_field_013(server):
         """Get specific reference field.
 
         Try to call GET /v1/snippets/0101010101/notexist for non existing

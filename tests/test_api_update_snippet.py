@@ -35,8 +35,9 @@ pytest.importorskip('gunicorn')
 class TestApiUpdateSnippet(object):
     """Test PUT /snippets/{digest} API."""
 
+    @staticmethod
     @pytest.mark.usefixtures('import-forced', 'update-exited-utc')
-    def test_api_update_snippet_001(self, server):
+    def test_api_update_snippet_001(server):
         """Update one snippet with PUT request.
 
         Call PUT /v1/snippets/{id} to update existing snippet with specified
@@ -88,8 +89,9 @@ class TestApiUpdateSnippet(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('import-forced', 'update-remove-utc')
-    def test_api_update_snippet_002(self, server):
+    def test_api_update_snippet_002(server):
         """Update one snippet with PUT request.
 
         Call PUT /v1/snippets/{id} to update existing snippet with specified
@@ -149,8 +151,9 @@ class TestApiUpdateSnippet(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('import-forced', 'update-remove-utc')
-    def test_api_update_snippet_003(self, server):
+    def test_api_update_snippet_003(server):
         """Update one snippet with PUT request.
 
         Call PUT /v1/snippets/{id} to update existing snippet with specified
@@ -208,8 +211,9 @@ class TestApiUpdateSnippet(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('import-forced', 'caller')
-    def test_api_update_snippet_004(self, server):
+    def test_api_update_snippet_004(server):
         """Try to update snippet with malformed request.
 
         Try to call PUT /v1/snippets/{id} to update snippet with digest that
@@ -255,8 +259,9 @@ class TestApiUpdateSnippet(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('import-forced', 'caller')
-    def test_api_update_snippet_005(self, server):
+    def test_api_update_snippet_005(server):
         """Try to update snippet with malformed request.
 
         Try to call PUT /v1/snippets/{id} to update snippet with malformed
@@ -295,8 +300,9 @@ class TestApiUpdateSnippet(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('import-forced', 'update-netcat-utc')
-    def test_api_update_snippet_006(self, server):
+    def test_api_update_snippet_006(server):
         """Updated snippet and verify created and updated timestamps.
 
         Call PUT /v1/snippets/{id} to update existing snippet with specified
@@ -348,8 +354,9 @@ class TestApiUpdateSnippet(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('import-forced', 'update-remove-utc')
-    def test_api_update_snippet_007(self, server):
+    def test_api_update_snippet_007(server):
         """Update one snippet with PATCH request.
 
         Call PATCH /v1/snippets/{id} to update existing snippet with specified

@@ -35,8 +35,9 @@ pytest.importorskip('gunicorn')
 class TestApiUpdateSolution(object):
     """Test PUT /solutions/{digest} API."""
 
+    @staticmethod
     @pytest.mark.usefixtures('import-beats', 'update-kafka-utc')
-    def test_api_update_solution_001(self, server):
+    def test_api_update_solution_001(server):
         """Update one solution with PUT request.
 
         Call PUT /v1/solutions/{id} to update existing solution with specified
@@ -89,8 +90,9 @@ class TestApiUpdateSolution(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('import-beats', 'update-nginx-utc')
-    def test_api_update_solution_002(self, server):
+    def test_api_update_solution_002(server):
         """Update one solution with PUT request.
 
         Call PUT /v1/solutions/{id} to update existing solution. The PUT
@@ -149,8 +151,9 @@ class TestApiUpdateSolution(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('import-beats', 'caller')
-    def test_api_update_solution_003(self, server):
+    def test_api_update_solution_003(server):
         """Update one solution with PUT request.
 
         Try to call PUT /v1/solutions/{id} to update solution with digest that
@@ -194,8 +197,9 @@ class TestApiUpdateSolution(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('import-beats', 'caller')
-    def test_api_update_solution_004(self, server):
+    def test_api_update_solution_004(server):
         """Try to update solution with malformed request.
 
         Try to call PUT /v1/solutions/{id} to update solution with malformed
@@ -234,8 +238,9 @@ class TestApiUpdateSolution(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('import-beats', 'caller')
-    def test_api_update_solution_005(self, server):
+    def test_api_update_solution_005(server):
         """Try to update solution with malformed request.
 
         Try to call PUT /v1/solutions/{id} to update solution with a client
@@ -283,8 +288,9 @@ class TestApiUpdateSolution(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('import-beats', 'caller')
-    def test_api_update_solution_006(self, server):
+    def test_api_update_solution_006(server):
         """Try to update solution with malformed request.
 
         Try to call PUT /v1/solutions/{id} to update solution with a client
@@ -331,8 +337,9 @@ class TestApiUpdateSolution(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('import-beats', 'update-kafka-utc')
-    def test_api_update_solution_007(self, server):
+    def test_api_update_solution_007(server):
         """Update one solution with PATCH request.
 
         Call PATCH /v1/solutions/{id} to update existing solution with digest.
@@ -381,8 +388,9 @@ class TestApiUpdateSolution(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('import-beats', 'update-nginx-utc')
-    def test_api_update_solution_008(self, server):
+    def test_api_update_solution_008(server):
         """Update one solution with PUT request.
 
         Try to update solution uuid by calling PUT /v1/solutions. This must

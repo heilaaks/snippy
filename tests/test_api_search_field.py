@@ -34,8 +34,9 @@ pytest.importorskip('gunicorn')
 class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
     """Test GET resource attribute API."""
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
-    def test_api_search_groups_001(self, server):
+    def test_api_search_groups_001(server):
         """Get specific content based on ``groups`` attribute.
 
         Call GET /v1/groups/docker to get all content from the docker group.
@@ -74,8 +75,9 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
-    def test_api_search_groups_002(self, server):
+    def test_api_search_groups_002(server):
         """Get specific content based on ``groups`` attribute.
 
         Call GET /v1/groups/docker,python to get content from the docker and
@@ -111,8 +113,9 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
-    def test_api_search_groups_003(self, server):
+    def test_api_search_groups_003(server):
         """Get specific content based on ``groups`` attribute.
 
         Call GET /v1/groups/docker,python to get content from the docker and
@@ -146,8 +149,9 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
-    def test_api_search_groups_004(self, server):
+    def test_api_search_groups_004(server):
         """Get specific content based on ``groups`` attribute.
 
         Try to call GET /v1/groups/docker,python and limit search to content
@@ -181,8 +185,9 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
-    def test_api_search_groups_005(self, server):
+    def test_api_search_groups_005(server):
         """Try to get specific content based on ``groups`` attribute.
 
         Try to call GET /v1/groups/missing with a group that is not found.
@@ -208,8 +213,9 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
-    def test_api_search_groups_006(self, server):
+    def test_api_search_groups_006(server):
         """Try to get specific content based on ``groups`` attribute.
 
         Try to call GET /v1/missing/docker with a field name that is not
@@ -226,8 +232,9 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         assert result.status == falcon.HTTP_404
         assert result.headers == expect_headers
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
-    def test_api_search_groups_007(self, server):
+    def test_api_search_groups_007(server):
         """Get specific content based on ``groups`` attribute.
 
         Call GET /v1/groups/docker to get all content from the docker group.
@@ -268,8 +275,9 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
-    def test_api_search_groups_008(self, server):
+    def test_api_search_groups_008(server):
         """Get specific content based on ``groups`` attribute.
 
         Try to call GET /v1/groups/docker to get all content from the docker
@@ -303,8 +311,9 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
-    def test_api_search_tags_001(self, server):
+    def test_api_search_tags_001(server):
         """Get specific content based on ``tags`` attribute.
 
         Call GET /v1/tags/moby to get all content with a moby tag.
@@ -342,8 +351,9 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
-    def test_api_search_tags_002(self, server):
+    def test_api_search_tags_002(server):
         """Get specific content based on ``tags`` attribute.
 
         Call GET /v1/tags/volume,python to get all content with a volume or
@@ -374,8 +384,9 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
-    def test_api_search_tags_003(self, server):
+    def test_api_search_tags_003(server):
         """Try to get specific content based on ``tags`` attribute.
 
         Try to call GET /v1/tags/missing with a tag that is not found.

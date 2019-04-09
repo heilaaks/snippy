@@ -35,8 +35,9 @@ pytest.importorskip('gunicorn')
 class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
     """Test GET /snippy/api/solutions API."""
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions')
-    def test_api_search_solution_001(self, server):
+    def test_api_search_solution_001(server):
         """Search solution with GET.
 
         Call GET /v1/solutions and search keywords from all attributes. The
@@ -74,8 +75,9 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions', 'import-kafka')
-    def test_api_search_solution_002(self, server):
+    def test_api_search_solution_002(server):
         """Search solution with GET.
 
         Call GET /v1/solutions and search keywords from all attributes. The
@@ -116,8 +118,9 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions')
-    def test_api_search_solution_003(self, server):
+    def test_api_search_solution_003(server):
         """Search solution with GET.
 
         Call GET /v1/solutions and search keywords from all attributes. The
@@ -152,8 +155,9 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions')
-    def test_api_search_solution_004(self, server):
+    def test_api_search_solution_004(server):
         """Search solution with GET.
 
         Call GET /v1/solutions and search keywords from all attributes but
@@ -187,8 +191,9 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions', 'import-kafka')
-    def test_api_search_solution_005(self, server):
+    def test_api_search_solution_005(server):
         """Search solution with GET.
 
         Call GET /v1/solutions and search keywords from all attributes. The
@@ -233,8 +238,9 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         assert result.status == falcon.HTTP_200
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions', 'import-kafka')
-    def test_api_search_solution_006(self, server):
+    def test_api_search_solution_006(server):
         """Search solution with GET.
 
         Call GET /v1/solutions and search keywords from all attributes sorted
@@ -273,8 +279,9 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions', 'caller')
-    def test_api_search_solution_007(self, server):
+    def test_api_search_solution_007(server):
         """Search solution with GET.
 
         Try to call GET /v1/solutions with sort parameter set to attribute
@@ -302,8 +309,9 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions')
-    def test_api_search_solution_008(self, server):
+    def test_api_search_solution_008(server):
         """Search solution with GET.
 
         Call GET /v1/solutions to return only defined attributes. In this case
@@ -336,8 +344,9 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions', 'caller')
-    def test_api_search_solution_009(self, server):
+    def test_api_search_solution_009(server):
         """Search solution with GET.
 
         Try to call GET /v1/solutions with search keywords that do not result
@@ -365,8 +374,9 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions', 'caller')
-    def test_api_search_solution_010(self, server):
+    def test_api_search_solution_010(server):
         """Search solution from tag fields.
 
         Try to call GET /v1/solutions with search tag keywords that do not
@@ -394,8 +404,9 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions', 'caller')
-    def test_api_search_solution_011(self, server):
+    def test_api_search_solution_011(server):
         """Search solution from group fields.
 
         Try to call GET /v1/solutions with search group keywords that do not
@@ -423,8 +434,9 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions')
-    def test_api_search_solution_012(self, server):
+    def test_api_search_solution_012(server):
         """Search solution with digets.
 
         Call GET /snippy/api/app/v1/solutions/{id} to get explicit solution
@@ -458,8 +470,9 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions', 'caller')
-    def test_api_search_solution_013(self, server):
+    def test_api_search_solution_013(server):
         """Search solution with digets.
 
         Try to call GET /v1/solutions/{id} with digest that cannot be found.
@@ -485,8 +498,9 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions')
-    def test_api_search_solution_014(self, server):
+    def test_api_search_solution_014(server):
         """Search solution without search parameters.
 
         Call GET /v1/solutions without defining search parameters. In this
@@ -522,8 +536,9 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions')
-    def test_api_search_solution_015(self, server):
+    def test_api_search_solution_015(server):
         """Search solution without search parameters.
 
         Call GET /v1/solutions without defining search parameters. In this
@@ -557,9 +572,10 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.parametrize('server', [['--server-host', 'localhost:8080', '-q']], indirect=True)
     @pytest.mark.usefixtures('default-solutions')
-    def test_api_search_solution_016(self, server):
+    def test_api_search_solution_016(server):
         """Search solution with GET.
 
         Call GET /v1/solutions and search keywords from all attributes. The
@@ -596,8 +612,9 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions')
-    def test_api_search_solution_017(self, server):
+    def test_api_search_solution_017(server):
         """Search solution with GET.
 
         Search solutions and accept gzip compressed response. Note that the
@@ -635,8 +652,9 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         assert int(result.headers['content-length']) < len(result_body)
         Content.assert_restapi(json.loads(result_body), expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions', 'import-kafka')
-    def test_api_search_solution_paginate_001(self, server):
+    def test_api_search_solution_paginate_001(server):
         """Search solution with GET.
 
         Call GET /v1/solution so that pagination is applied with limit zero.
@@ -668,8 +686,9 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions')
-    def test_api_search_solution_field_001(self, server):
+    def test_api_search_solution_field_001(server):
         """Get specific solution field.
 
         Call GET /v1/solutions/{id}/data for existing solution.
@@ -698,8 +717,9 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions')
-    def test_api_search_solution_field_002(self, server):
+    def test_api_search_solution_field_002(server):
         """Get specific solution field.
 
         Call GET /v1/solutions/{id}/brief for existing solution.
@@ -728,8 +748,9 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions')
-    def test_api_search_solution_field_003(self, server):
+    def test_api_search_solution_field_003(server):
         """Get specific solution field.
 
         Call GET /v1/solutions/{id}/groups for existing solution.
@@ -758,8 +779,9 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions')
-    def test_api_search_solution_field_004(self, server):
+    def test_api_search_solution_field_004(server):
         """Get specific solution field.
 
         Call GET /v1/solutions/{id}/tags for existing solution.
@@ -788,8 +810,9 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions')
-    def test_api_search_solution_field_005(self, server):
+    def test_api_search_solution_field_005(server):
         """Get specific solution field.
 
         Call GET /v1/solutions/{id}/lnks for existing solution.
@@ -818,8 +841,9 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions', 'caller')
-    def test_api_search_solution_field_006(self, server):
+    def test_api_search_solution_field_006(server):
         """Get specific solution field.
 
         Try to call GET /v1/solutions/{id}/notexist for existing solution. In
@@ -846,8 +870,9 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions', 'caller')
-    def test_api_search_solution_field_007(self, server):
+    def test_api_search_solution_field_007(server):
         """Get specific solution field.
 
         Try to call GET /v1/snippets/0101010101/notexist for non existing

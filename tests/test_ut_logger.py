@@ -30,7 +30,8 @@ from tests.testlib.content import Field
 class TestUtLogger(object):
     """Test Logger() class."""
 
-    def test_logger_001(self, logger, caplog, capsys):
+    @staticmethod
+    def test_logger_001(logger, caplog, capsys):
         """Test logger basic usage.
 
         Test case verifies that default log configuration is working.
@@ -60,7 +61,8 @@ class TestUtLogger(object):
         with pytest.raises(Exception):
             json.loads(out)
 
-    def test_logger_002(self, logger, caplog, capsys):
+    @staticmethod
+    def test_logger_002(logger, caplog, capsys):
         """Test logger basic usage.
 
         Test case verifies that debug configuration is working. In
@@ -105,7 +107,8 @@ class TestUtLogger(object):
         with pytest.raises(Exception):
             json.loads(out)
 
-    def test_logger_003(self, capsys, caplog):
+    @staticmethod
+    def test_logger_003(capsys, caplog):
         """Test logger basic usage.
 
         Test case verifies that very verbose option works for text logs.
@@ -139,7 +142,8 @@ class TestUtLogger(object):
         assert caplog.records[1].msg.islower()
         assert caplog.records[2].msg.islower()
 
-    def test_logger_004(self, capsys, caplog):
+    @staticmethod
+    def test_logger_004(capsys, caplog):
         """Test logger basic usage.
 
         Test case verifies that debug option works with json logs.
@@ -167,7 +171,8 @@ class TestUtLogger(object):
         assert Field.is_iso8601(json.loads(out.splitlines()[0])['asctime'])
         assert Field.is_iso8601(json.loads(out.splitlines()[1])['asctime'])
 
-    def test_logger_005(self, capsys, caplog):
+    @staticmethod
+    def test_logger_005(capsys, caplog):
         """Test logger basic usage.
 
         Test case verifies that very verbose option works with json logs.
@@ -195,7 +200,8 @@ class TestUtLogger(object):
         assert Field.is_iso8601(json.loads(out.splitlines()[0])['asctime'])
         assert Field.is_iso8601(json.loads(out.splitlines()[1])['asctime'])
 
-    def test_logger_006(self, capsys, caplog):
+    @staticmethod
+    def test_logger_006(capsys, caplog):
         """Test logger basic usage.
 
         Test case verifies that quiet option works with different logger
@@ -268,7 +274,8 @@ class TestUtLogger(object):
         assert 'NOK: exit cause' in out
         assert caplog.records[0].msg == 'NOK: exit cause'
 
-    def test_logger_007(self, capsys):
+    @staticmethod
+    def test_logger_007(capsys):
         """Test operation ID (OID).
 
         Test case verifies that operation ID (OID) refresh works.
@@ -292,7 +299,8 @@ class TestUtLogger(object):
         assert not err
         assert json.loads(out.splitlines()[0])['oid'] != json.loads(out.splitlines()[1])['oid']
 
-    def test_logger_008(self, capsys):
+    @staticmethod
+    def test_logger_008(capsys):
         """Test Logger debugging.
 
         Test case verifies that debug methods works.
@@ -314,7 +322,8 @@ class TestUtLogger(object):
         assert not err
         assert 'snippy.tests.test_ut_logger' in out
 
-    def test_logger_009(self, capsys):
+    @staticmethod
+    def test_logger_009(capsys):
         """Test removing snippy Logger handlers.
 
         Test case verifies that Logger.remove() does not delete other than
@@ -338,7 +347,8 @@ class TestUtLogger(object):
         assert not err
         assert 'Handler Stream' in out
 
-    def test_logger_010(self, capsys, caplog):
+    @staticmethod
+    def test_logger_010(capsys, caplog):
         """Test logger advanced configuration.
 
         Test case verifies that log maximum message lenght can be configred
@@ -389,7 +399,8 @@ class TestUtLogger(object):
         assert caplog.records[0].appname == 'snippy'
         assert caplog.records[1].appname == 'snippy'
 
-    def test_logger_011(self, logger, caplog, capsys):
+    @staticmethod
+    def test_logger_011(logger, caplog, capsys):
         """Test logger security.
 
         Test case verifies that debug configuration is not printing extremely
@@ -414,7 +425,8 @@ class TestUtLogger(object):
         assert 'variableaaaaaaaa' in out
         assert len(max(caplog.text.split(), key=len)) == len('variable' + 'a'*Logger.SECURITY_LOG_MSG_MAX) - len('variable')
 
-    def test_logger_012(self, capsys, caplog):
+    @staticmethod
+    def test_logger_012(capsys, caplog):
         """Test custom security level.
 
         Test case verifies that custom security level is working.
@@ -441,7 +453,8 @@ class TestUtLogger(object):
         assert caplog.records[0].levelno == Logger.SECURITY
         assert hasattr(caplog.records[0], 'oid')
 
-    def test_logger_013(self, capsys, caplog):
+    @staticmethod
+    def test_logger_013(capsys, caplog):
         """Test failure handling.
 
         Test case verifies that log message length cannot exceed safety limits

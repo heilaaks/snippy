@@ -33,7 +33,7 @@ extras_dev = (
 )
 extras_docs = (
     'sphinx==1.8.5 ; python_version=="2.7.*"',
-    'sphinx==2.0.0 ; python_version>"2.7"',
+    'sphinx==2.0.1 ; python_version>"2.7"',
     'sphinxcontrib-openapi==0.4.0',
     'sphinx_rtd_theme==0.4.3',
     'sphinx-autobuild==0.7.1'

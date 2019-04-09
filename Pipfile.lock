@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "fbc63ce44877124f065882661a22f24e5f68f20c91cc833d72dc841db3e2f007"
+            "sha256": "38b56ef656b7af66f2ac08212500002a99ac5b07e592b7dc9c09a5e39cdf7457"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -284,10 +284,10 @@
         },
         "isort": {
             "hashes": [
-                "sha256:08f8e3f0f0b7249e9fad7e5c41e2113aba44969798a26452ee790c06f155d4ec",
-                "sha256:4e9e9c4bd1acd66cf6c36973f29b031ec752cbfd991c69695e4e259f9a756927"
+                "sha256:01cb7e1ca5e6c5b3f235f0385057f70558b70d2f00320208825fa62887292f43",
+                "sha256:268067462aed7eb2a1e237fcb287852f22077de3fb07964e87e00f829eea2d1a"
             ],
-            "version": "==4.3.16"
+            "version": "==4.3.17"
         },
         "jinja2": {
             "hashes": [
@@ -503,10 +503,10 @@
         },
         "pyparsing": {
             "hashes": [
-                "sha256:66c9268862641abcac4a96ba74506e594c884e3f57690a696d21ad8210ed667a",
-                "sha256:f6c5ef0d7480ad048c054c37632c67fca55299990fff127850181659eea33fc3"
+                "sha256:1873c03321fc118f4e9746baf201ff990ceb915f433f23b395f5580d1840cb2a",
+                "sha256:9b6323ef4ab914af344ba97510e966d64ba91055d6b9afa6b30799340e89cc03"
             ],
-            "version": "==2.3.1"
+            "version": "==2.4.0"
         },
         "pyrsistent": {
             "hashes": [
@@ -600,11 +600,11 @@
         },
         "sphinx": {
             "hashes": [
-                "sha256:5a54f9132766c8ffdd4021de4d0ef8afeb93235569d64b617612e60070332583",
-                "sha256:91b29c8e98d18ed474bb92777e7af31931fae96e625b8f1bc595c67fb641c46d"
+                "sha256:423280646fb37944dd3c85c58fb92a20d745793a9f6c511f59da82fa97cd404b",
+                "sha256:de930f42600a4fef993587633984cc5027dedba2464bcf00ddace26b40f8d9ce"
             ],
             "index": "pypi",
-            "version": "==2.0.0"
+            "version": "==2.0.1"
         },
         "sphinx-autobuild": {
             "hashes": [

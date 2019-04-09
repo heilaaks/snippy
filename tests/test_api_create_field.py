@@ -34,8 +34,9 @@ pytest.importorskip('gunicorn')
 class TestApiCreateField(object):
     """Test POST fields API."""
 
+    @staticmethod
     @pytest.mark.usefixtures('caller')
-    def test_api_create_field_001(self, server):
+    def test_api_create_field_001(server):
         """Try to create ``groups`` attribute from API.
 
         Try to call not supported POST operation for the /v1/groups.
@@ -74,8 +75,9 @@ class TestApiCreateField(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(None)
 
+    @staticmethod
     @pytest.mark.usefixtures('caller')
-    def test_api_create_field_002(self, server):
+    def test_api_create_field_002(server):
         """Try to create ``tags`` attribute from API.
 
         Try to call not supported POST operation for /v1/tags.

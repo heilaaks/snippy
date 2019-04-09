@@ -3,6 +3,7 @@
    - [ ] Remove UUID VALID from test helpers because it is not longer needed- The UUID must be correct and not incremented randomly (from test point of view) to use it in URL.
    - [ ] Do not use UUID from client when new resource is created. This must be always allocated by the server. Test. Update swagger to not include UUID in HTTP requests. Reject with error?
    - [ ] Config.get_resource creates exter UUID usage when e.g resource is updated. Get rid of this (somehow) after UUID refactoring.
+   - [ ] Refactor test desc to: Send POST /snippets to create a new resource. (no v1 and use resource)
    - [ ] PUT can be like POST if not resource: https://stackoverflow.com/a/35845343. Test and fix PUT to new resource.
    - [ ] Fix resource queries to be with UUID and with full length of the ID. https://stackoverflow.com/a/35845343
    - [ ] Change the http response ID and LINKS to use UUID instead of digest. This moves towards using static URI.

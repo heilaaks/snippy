@@ -32,12 +32,13 @@ pytest.importorskip('gunicorn')
 class TestApiDeleteReference(object):
     """Test DELETE references API."""
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references', 'import-pytest')
-    def test_api_delete_reference_001(self, server):
+    def test_api_delete_reference_001(server):
         """Delete reference with digest.
 
-        Call DELETE /references/{id} to delete one reference. The digest
-        matches to one reference that is deleted.
+        Send DELETE /references/{id} to remove a reference. The ``digest``
+        matches to one resource that is deleted.
         """
 
         content = {
@@ -55,11 +56,12 @@ class TestApiDeleteReference(object):
         assert not result.text
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references', 'import-pytest', 'caller')
-    def test_api_delete_reference_002(self, server):
+    def test_api_delete_reference_002(server):
         """Try to delete reference.
 
-        Try to DELETE reference with resource location that does not exist.
+        Try to send DELETE /reference with resource URI that does not exist.
         """
 
         content = {
@@ -90,11 +92,12 @@ class TestApiDeleteReference(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references', 'caller')
-    def test_api_delete_reference_003(self, server):
+    def test_api_delete_reference_003(server):
         """Try to delete reference.
 
-        Try to call DELETE /references without digest identifying delete
+        Try to send DELETE /references without digest identifying deleted
         reource.
         """
 
@@ -125,11 +128,12 @@ class TestApiDeleteReference(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references', 'import-pytest')
-    def test_api_delete_reference_004(self, server):
+    def test_api_delete_reference_004(server):
         """Delete reference with UUID.
 
-        Call DELETE /references/{id} to delete one reference. The UUID matches
+        Send DELETE /references/{id} to remove one resource. The UUID matches
         to one reference that is deleted.
         """
 
@@ -141,7 +145,7 @@ class TestApiDeleteReference(object):
         }
         expect_headers = {}
         result = testing.TestClient(server.server.api).simulate_delete(
-            path='/snippy/api/app/v1/references/12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+            path='/snippy/api/app/v1/references/' + Reference.GITLOG_UUID,
             headers={'accept': 'application/json'})
         assert result.status == falcon.HTTP_204
         assert result.headers == expect_headers

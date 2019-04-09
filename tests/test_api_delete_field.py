@@ -34,11 +34,12 @@ pytest.importorskip('gunicorn')
 class TestApiDeleteField(object):
     """Test DELETE fields API."""
 
+    @staticmethod
     @pytest.mark.usefixtures('caller')
-    def test_api_delete_field_001(self, server):
+    def test_api_delete_field_001(server):
         """Try to delete ``groups`` attribute from API.
 
-        Try to call not supported DELETE operation for /v1/groups.
+        Try to send DELETE /groups that is not supported.
         """
 
         request_body = {
@@ -69,11 +70,12 @@ class TestApiDeleteField(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(None)
 
+    @staticmethod
     @pytest.mark.usefixtures('caller')
-    def test_api_delete_field_002(self, server):
+    def test_api_delete_field_002(server):
         """Try to delete ``tags`` attribute from API.
 
-        Try to call not supported DELETE operation for /v1/tags.
+        Try to send DELETE /tags that is not supported.
         """
 
         request_body = {

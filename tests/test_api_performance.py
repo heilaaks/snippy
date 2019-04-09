@@ -44,8 +44,9 @@ pytest.importorskip('gunicorn')
 class TestApiPerformance(object):
     """Test REST API server performance."""
 
+    @staticmethod
     @pytest.mark.serial
-    def test_server_performance(self):
+    def test_server_performance():
         """Test API server performance.
 
         Verify performance of the tool on a rough scale. The intention
@@ -160,8 +161,9 @@ class TestApiPerformance(object):
         assert not err
         assert runtime < 10
 
+    @staticmethod
     @pytest.mark.serial
-    def test_server_logging(self):
+    def test_server_logging():
         """Test server log configuration.
 
         Test that server initial log configuration is used for whole the whole

@@ -106,7 +106,7 @@ class TestCliSearchReference(object):
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--reference', '--uuid', '12cd5827-b6ef-4067-b5ac-3ceac07dde9f', '--no-ansi'])
+        cause = snippy.run(['snippy', 'search', '--reference', '--uuid', '31cd5827-b6ef-4067-b5ac-3ceac07dde9f', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -123,7 +123,7 @@ class TestCliSearchReference(object):
         """
 
         output = 'NOK: cannot find content with given search criteria\n'
-        cause = snippy.run(['snippy', 'search', '--reference', '--uuid', '12cd5827-b6ef-4067-b5ac-3ceac07dde9', '--no-ansi'])
+        cause = snippy.run(['snippy', 'search', '--reference', '--uuid', '31cd5827-b6ef-4067-b5ac-3ceac07dde9', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == 'NOK: cannot find content with given search criteria'
         assert out == output

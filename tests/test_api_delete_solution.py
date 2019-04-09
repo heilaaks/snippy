@@ -32,11 +32,12 @@ pytest.importorskip('gunicorn')
 class TestApiDeleteSolution(object):
     """Test DELETE solutions API."""
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions', 'import-kafka')
-    def test_api_delete_solution_001(self, server):
+    def test_api_delete_solution_001(server):
         """Delete solution with digest.
 
-        Call DELETE /solutions/{id} to delete one reference. The digest matches
+        Send DELETE /solutions/{id} to delete one resource. The digest matches
         to one reference that is deleted.
         """
 
@@ -55,11 +56,12 @@ class TestApiDeleteSolution(object):
         assert not result.text
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions', 'import-kafka', 'caller')
-    def test_api_delete_solution_002(self, server):
+    def test_api_delete_solution_002(server):
         """Try to delete solution.
 
-        Try to DELETE solution with resource location that does not exist.
+        Try to send DELETE /solutions with URI that does not exist.
         """
 
         content = {
@@ -90,11 +92,12 @@ class TestApiDeleteSolution(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions', 'caller')
-    def test_api_delete_solution_003(self, server):
+    def test_api_delete_solution_003(server):
         """Try to delete solution.
 
-        Try to call DELETE /references without digest identifying delete
+        Try to send DELETE /solutions without digest identifying delete
         resource.
         """
 

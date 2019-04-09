@@ -37,8 +37,9 @@ pytest.importorskip('gunicorn')
 class TestApiCreateReference(object):
     """Test POST references collection API."""
 
+    @staticmethod
     @pytest.mark.usefixtures('create-gitlog-utc')
-    def test_api_create_reference_001(self, server):
+    def test_api_create_reference_001(server):
         """Create one reference from API.
 
         Call POST /v1/references to create new referece. The created reference
@@ -78,8 +79,9 @@ class TestApiCreateReference(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('create-gitlog-utc')
-    def test_api_create_reference_002(self, server):
+    def test_api_create_reference_002(server):
         """Create one reference from API.
 
         Call POST /v1/references to create new reference. The reference is sent
@@ -120,8 +122,9 @@ class TestApiCreateReference(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('create-pytest-utc', 'create-gitlog-utc')
-    def test_api_create_reference_003(self, server):
+    def test_api_create_reference_003(server):
         """Create multiple references from API.
 
         Call POST /v1/references in a list context to create new resources.
@@ -172,8 +175,9 @@ class TestApiCreateReference(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('import-gitlog', 'update-regexp-utc')
-    def test_api_create_reference_004(self, server):
+    def test_api_create_reference_004(server):
         """Update reference with POST that maps to PUT.
 
         Call POST /v1/references/{id} to update existing reference with the
@@ -223,8 +227,9 @@ class TestApiCreateReference(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('import-gitlog', 'update-regexp-utc')
-    def test_api_create_reference_005(self, server):
+    def test_api_create_reference_005(server):
         """Update reference with POST that maps to PATCH.
 
         Call POST /v1/references/{id} to update existing reference with the
@@ -277,8 +282,9 @@ class TestApiCreateReference(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references', 'import-pytest')
-    def test_api_create_reference_006(self, server):
+    def test_api_create_reference_006(server):
         """Update reference with POST that maps to DELETE.
 
         Call POST /v1/references with X-HTTP-Method-Override header to delete
@@ -300,8 +306,9 @@ class TestApiCreateReference(object):
         assert not result.text
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('create-gitlog-utc', 'caller')
-    def test_api_create_reference_007(self, server):
+    def test_api_create_reference_007(server):
         """Create one reference from API.
 
         Try to call POST /v1/references to create a new reference with empty
@@ -349,8 +356,9 @@ class TestApiCreateReference(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(None)
 
+    @staticmethod
     @pytest.mark.usefixtures('create-gitlog-utc', 'caller')
-    def test_api_create_reference_008(self, server_db, used_database):
+    def test_api_create_reference_008(server_db, used_database):
         """Try to create reference.
 
         Try to POST new reference when database throws an integrity error from
@@ -417,8 +425,9 @@ class TestApiCreateReference(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(None)
 
+    @staticmethod
     @pytest.mark.usefixtures('create-regexp-utc')
-    def test_api_create_reference_009(self, server):
+    def test_api_create_reference_009(server):
         """Create one reference from API.
 
         Call POST /v1/references to create new reference with two groups.
@@ -457,8 +466,9 @@ class TestApiCreateReference(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('create-regexp-utc')
-    def test_api_create_reference_010(self, server):
+    def test_api_create_reference_010(server):
         """Create one reference from API.
 
         Call POST /v1/references to create new content. In this case every
@@ -521,8 +531,9 @@ class TestApiCreateReference(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('create-regexp-utc')
-    def test_api_create_reference_011(self, server):
+    def test_api_create_reference_011(server):
         """Create one reference from API.
 
         Call POST /v1/references to create new content. In this case only the
@@ -575,8 +586,9 @@ class TestApiCreateReference(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('create-regexp-utc')
-    def test_api_create_reference_012(self, server):
+    def test_api_create_reference_012(server):
         """Create new reference with duplicated content field values.
 
         Call POST /v1/references to create new reference. In this case content

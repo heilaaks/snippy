@@ -168,6 +168,13 @@ class Snippet(object):  # pylint: disable=too-few-public-methods
     NETCAT_DIGEST = _DEFAULTS[_NETCAT]['digest']
     UMOUNT_DIGEST = _DEFAULTS[_UMOUNT]['digest']
     INTERP_DIGEST = _DEFAULTS[_INTERP]['digest']
+    REMOVE_UUID = _DEFAULTS[_REMOVE]['uuid']
+    FORCED_UUID = _DEFAULTS[_FORCED]['uuid']
+    EXITED_UUID = _DEFAULTS[_EXITED]['uuid']
+    NETCAT_UUID = _DEFAULTS[_NETCAT]['uuid']
+    UMOUNT_UUID = _DEFAULTS[_UMOUNT]['uuid']
+    INTERP_UUID = _DEFAULTS[_INTERP]['uuid']
+
 
     REMOVE = _DEFAULTS[_REMOVE]
     FORCED = _DEFAULTS[_FORCED]

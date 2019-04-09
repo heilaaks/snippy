@@ -32,11 +32,12 @@ pytest.importorskip('gunicorn')
 class TestApiDeleteSnippet(object):
     """Test DELETE snippets API."""
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'import-netcat')
-    def test_api_delete_snippet_001(self, server):
+    def test_api_delete_snippet_001(server):
         """Delete snippet with digest.
 
-        Call DELETE /snippets/{id} to delete one snippet. The digest matches
+        Send DELETE /snippets/{id} to delete one snippet. The digest matches
         to one snippet that is deleted.
         """
 
@@ -55,11 +56,12 @@ class TestApiDeleteSnippet(object):
         assert not result.text
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'caller')
-    def test_api_delete_snippet_002(self, server):
+    def test_api_delete_snippet_002(server):
         """Try to delete snippet.
 
-        Try to DELETE snippet with resource location that does not exist.
+        Try to send DELETE /snippet with a URI location that does not exist.
         """
 
         content = {
@@ -90,11 +92,12 @@ class TestApiDeleteSnippet(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'caller')
-    def test_api_delete_snippet_003(self, server):
+    def test_api_delete_snippet_003(server):
         """Try to delete snippet.
 
-        Try to call DELETE /snippets without digest identifying delete
+        Try to send DELETE /snippets without digest identifying delete
         resource.
         """
 
@@ -125,11 +128,12 @@ class TestApiDeleteSnippet(object):
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_api_delete_snippet_004(self, server):
+    def test_api_delete_snippet_004(server):
         """Delete snippet with UUID.
 
-        Call DELETE /snippets/{id} to delete one snippet. The UUID matches
+        Send DELETE /snippets/{id} to delete one snippet. The UUID matches
         to one snippet that is deleted.
         """
 
@@ -140,7 +144,7 @@ class TestApiDeleteSnippet(object):
         }
         expect_headers = {}
         result = testing.TestClient(server.server.api).simulate_delete(
-            path='/snippy/api/app/v1/snippets/16cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+            path='/snippy/api/app/v1/snippets/' + Snippet.FORCED_UUID,
             headers={'accept': 'application/json'})
         assert result.status == falcon.HTTP_204
         assert result.headers == expect_headers

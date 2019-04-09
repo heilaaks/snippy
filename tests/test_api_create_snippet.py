@@ -36,12 +36,13 @@ pytest.importorskip('gunicorn')
 class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     """Test POST snippets collection API."""
 
+    @staticmethod
     @pytest.mark.usefixtures('create-remove-utc')
-    def test_api_create_snippet_001(self, server):
+    def test_api_create_snippet_001(server):
         """Create one snippet with POST.
 
-        Call POST /v1/snippets to create new snippet. The created snippet is
-        sent in the POST request 'data' attribute as a list of objects.
+        Send POST /snippets to create a new resource. The created snippet is
+        sent in the HTTP request ``data`` attribute as a list of objects.
         """
 
         content = {
@@ -76,14 +77,15 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('create-remove-utc')
-    def test_api_create_snippet_002(self, server):
+    def test_api_create_snippet_002(server):
         """Create one snippet with POST.
 
-        Call POST /v1/snippets to create new snippet. The created snippet is
-        sent in the POST request 'data' attribute as a plain object. The HTTP
-        response that contains the created snippet must be received as a list
-        of snippet objects.
+        Send POST /snippets to create a new resource. The created snippet is
+        sent in the POST request ``data`` attribute as an object. The HTTP
+        response that contains the created resource must be received as a
+        list of snippet objects.
         """
 
         content = {
@@ -118,14 +120,16 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('create-remove-utc')
-    def test_api_create_snippet_003(self, server):
+    def test_api_create_snippet_003(server):
         """Create one snippet with POST.
 
-        Call POST /v1/snippets to create new snippet. In this case there are
-        only part of the snippet content attributes defined.
+        Send POST /snippets to create a new resource. In this case there is
+        only part of the snippet object attributes defined.
 
-        The tags must be sorted and trimmed after parsing.
+        The ``tags`` attribute must be sorted and the tags trimmed when it is
+        stored into the database.
         """
 
         content = {
@@ -166,11 +170,12 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('create-exited-utc')
-    def test_api_create_snippet_004(self, server):
+    def test_api_create_snippet_004(server):
         """Create one snippet with POST.
 
-        Call POST /v1/snippets to create new snippet. In this case the snippet
+        Send POST /snippets to create a new resource. In this case the snippet
         content data, tags and links attributes are defined in string context
         where each line is separated with a newline.
         """
@@ -213,11 +218,12 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('create-exited-utc')
-    def test_api_create_snippet_005(self, server):
+    def test_api_create_snippet_005(server):
         """Create one snippet with POST.
 
-        Call POST /v1/snippets to create new snippet. In this case the snippet
+        Send POST /v1/snippets to create new snippet. In this case the snippet
         content data attribute is defined as list where each line is a separate
         element in a list.
 
@@ -265,8 +271,9 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('create-remove-utc')
-    def test_api_create_snippet_006(self, server):
+    def test_api_create_snippet_006(server):
         """Create one snippet with POST.
 
         Call POST /v1/snippets to create new snippet with only data.
@@ -319,8 +326,9 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('create-remove-utc', 'create-forced-utc')
-    def test_api_create_snippet_007(self, server):
+    def test_api_create_snippet_007(server):
         """Create list of snippets from API.
 
         Call POST /v1/snippets in list context to create new snippets.
@@ -367,8 +375,9 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('caller')
-    def test_api_create_snippet_008(self, server):
+    def test_api_create_snippet_008(server):
         """Try to create snippet with malformed JSON request.
 
         Try to call POST /v1/snippets to create new snippet with malformed
@@ -396,8 +405,9 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(None)
 
+    @staticmethod
     @pytest.mark.usefixtures('caller')
-    def test_api_create_snippet_009(self, server):
+    def test_api_create_snippet_009(server):
         """Try to create snippet with malformed JSON request.
 
         Try to call POST /v1/snippets to create new snippet with malformed
@@ -441,8 +451,9 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(None)
 
+    @staticmethod
     @pytest.mark.usefixtures('caller')
-    def test_api_create_snippet_010(self, server):
+    def test_api_create_snippet_010(server):
         """Try to create snippet with malformed JSON request.
 
         Try to call POST /v1/snippets to create new snippet with client
@@ -478,8 +489,9 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(None)
 
+    @staticmethod
     @pytest.mark.usefixtures('caller')
-    def test_api_create_snippet_011(self, server):
+    def test_api_create_snippet_011(server):
         """Try to create snippet with malformed JSON request.
 
         Try to call POST /v1/snippets to create two snippets. First one is
@@ -517,8 +529,9 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(None)
 
+    @staticmethod
     @pytest.mark.usefixtures('caller')
-    def test_api_create_snippet_012(self, server):
+    def test_api_create_snippet_012(server):
         """Try to create snippet with malformed JSON request.
 
         Try to call POST /v1/snippets to create two snippets. First snippet is
@@ -562,8 +575,9 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(None)
 
+    @staticmethod
     @pytest.mark.usefixtures('import-forced', 'update-remove-utc')
-    def test_api_create_snippet_013(self, server):
+    def test_api_create_snippet_013(server):
         """Update snippet with POST that maps to PUT.
 
         Call POST /v1/snippets with X-HTTP-Method-Override header to update
@@ -572,9 +586,10 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Snippet.REMOVE
+                Content.deepcopy(Snippet.REMOVE)
             ]
         }
+        content['data'][0]['uuid'] = Snippet.FORCED_UUID
         request_body = {
             'data': {
                 'type': 'snippet',
@@ -583,15 +598,15 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '804'
+            'content-length': '796'
         }
         expect_body = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/54e41e9b52a02b63'
+                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/' + Snippet.FORCED_UUID
             },
             'data': {
                 'type': 'snippet',
-                'id': Snippet.REMOVE_DIGEST,
+                'id': Snippet.FORCED_UUID,
                 'attributes': content['data'][0]
             }
         }
@@ -604,8 +619,9 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('import-forced', 'update-forced-utc')
-    def test_api_create_snippet_014(self, server):
+    def test_api_create_snippet_014(server):
         """Update snippet with POST that maps to PATCH.
 
         Call POST /v1/snippets with X-HTTP-Method-Override header to update
@@ -618,6 +634,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             ]
         }
         content['data'][0]['data'] = Snippet.REMOVE['data']
+        content['data'][0]['uuid'] = Snippet.FORCED_UUID
         content['data'][0]['digest'] = 'a9e137c08aee09852797a974ef91b871c48915fecf25b2e89c5bdba4885b2bd2'
         request_body = {
             'data': {
@@ -629,15 +646,15 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '896'
+            'content-length': '888'
         }
         expect_body = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/a9e137c08aee0985'
+                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/' + Snippet.FORCED_UUID
             },
             'data': {
                 'type': 'snippet',
-                'id': content['data'][0]['digest'],
+                'id': Snippet.FORCED_UUID,
                 'attributes': content['data'][0]
             }
         }
@@ -650,8 +667,9 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('import-forced', 'update-exited-utc')
-    def test_api_create_snippet_015(self, server):
+    def test_api_create_snippet_015(server):
         """Update snippet with POST that maps to PATCH.
 
         Call POST /v1/snippets with X-HTTP-Method-Override header to update
@@ -674,7 +692,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                 'filename': 'filename.txt',
                 'created': Content.FORCED_TIME,
                 'updated': Content.EXITED_TIME,
-                'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'uuid': Snippet.FORCED_UUID,
                 'digest': '5061cebcd73862862d3bcb720b1cce01a85bf3daff5b5db6d94534515befc280'
             }]
         }
@@ -695,22 +713,22 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                     'filename': 'filename.txt',
                     'created': 'invalid time',
                     'updated': 'invalid time',
-                    'uuid': 'invalid uuid',
+                    'uuid': Snippet.EXITED_UUID,
                     'digest': 'invalid digest'
                 }
             }
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '752'
+            'content-length': '744'
         }
         expect_body = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/5061cebcd7386286'
+                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/' + Snippet.FORCED_UUID
             },
             'data': {
                 'type': 'snippet',
-                'id': content['data'][0]['digest'],
+                'id': Snippet.FORCED_UUID,
                 'attributes': content['data'][0]
             }
         }
@@ -723,8 +741,9 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'import-netcat')
-    def test_api_create_snippet_016(self, server):
+    def test_api_create_snippet_016(server):
         """Update snippet with POST that maps to DELETE.
 
         Call POST /v1/snippets with X-HTTP-Method-Override header to delete
@@ -746,8 +765,9 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         assert not result.text
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('caller')
-    def test_api_create_snippet_017(self, server):
+    def test_api_create_snippet_017(server):
         """Try to create snippet with resource id.
 
         Try to call POST /v1/snippets/53908d68425c61dc to create new snippet
@@ -783,8 +803,9 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(None)
 
+    @staticmethod
     @pytest.mark.usefixtures('create-exited-utc', 'caller')
-    def test_api_create_snippet_018(self, server):
+    def test_api_create_snippet_018(server):
         """Create one snippet with POST.
 
         Try to call POST /v1/snippets to create new snippet with empty content
@@ -831,8 +852,9 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(None)
 
+    @staticmethod
     @pytest.mark.usefixtures('create-remove-utc')
-    def test_api_create_snippet_019(self, server):
+    def test_api_create_snippet_019(server):
         """Create and search snippet with unicode characters.
 
         Call POST /v1/snippets to create new snippet. In this case the content
@@ -855,7 +877,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                 'filename': '',
                 'created': '2017-10-14T19:56:31.000001+00:00',
                 'updated': '2017-10-14T19:56:31.000001+00:00',
-                'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'uuid': Content.UUID1,
                 'digest': 'c267233096b6977ea4dd9ef41faa1559d3886ad550d8932ddb4513eae5b84fbf'
             }]
         }
@@ -874,12 +896,12 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '935'
+            'content-length': '907'
         }
         expect_body = {
             'data': [{
                 'type': 'snippet',
-                'id': content['data'][0]['digest'],
+                'id': Content.UUID1,
                 'attributes': content['data'][0]
             }]
         }
@@ -894,7 +916,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '995'
+            'content-length': '967'
         }
         expect_body = {
             'meta': {
@@ -905,7 +927,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': content['data'][0]['digest'],
+                'id': content['data'][0]['uuid'],
                 'attributes': content['data'][0]
             }]
         }
@@ -917,13 +939,14 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('create-regexp-utc')
-    def test_api_create_snippet_020(self, server):
+    def test_api_create_snippet_020(server):
         """Create one snippet from API.
 
-        Call POST /v1/snippets to create new content. In this case every
-        attribute has additional leading and trailing whitespaces which must
-        be trimmed. Tags and links must be sorted.
+        Call POST /v1/snippets to create new content. In this case all fields
+        have unnecessary leading and trailing whitespaces which are removed.
+        Tags and links must be sorted.
         """
 
         content = {
@@ -964,11 +987,11 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '658'}
+            'content-length': '630'}
         expect_body = {
             'data': [{
                 'type': 'snippet',
-                'id': content['data'][0]['digest'],
+                'id': content['data'][0]['uuid'],
                 'attributes': content['data'][0]
             }]
         }
@@ -981,13 +1004,14 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('create-remove-utc')
-    def test_api_create_snippet_021(self, server):
+    def test_api_create_snippet_021(server):
         """Create one snippet with POST.
 
         Call POST /v1/snippets to create new snippet with data that have line
-        breaks in the middle of the snippet. In this case the line breaks in
-        middle of the snippet must not be interpolated.
+        breaks in the middle of the snippet which must not be interpolated to
+        newlines.
         """
 
         content = {
@@ -1019,12 +1043,12 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '570'
+            'content-length': '542'
         }
         expect_body = {
             'data': [{
                 'type': 'snippet',
-                'id': content['data'][0]['digest'],
+                'id': content['data'][0]['uuid'],
                 'attributes': content['data'][0]
             }]
         }
@@ -1037,13 +1061,14 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('create-remove-utc')
-    def test_api_create_snippet_022(self, server):
+    def test_api_create_snippet_022(server):
         """Create new snippet with duplicated content field values.
 
         Call POST /v1/snippets to create new snippet. In this case content
-        fields contain duplicated values. For example there are tag 'python'
-        added twice. Only unique values must be added.
+        fields contain duplicated values. For example there is a tag 'python'
+        twice. Only unique values must be added.
         """
 
         content = {
@@ -1061,7 +1086,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                 'filename': '',
                 'created': '2017-10-14T19:56:31.000001+00:00',
                 'updated': '2017-10-14T19:56:31.000001+00:00',
-                'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'uuid': Content.UUID1,
                 'digest': '800af62696ab9592c23dd5674642b91854e73a0c23f7659ac553de7fc66400d5'
             }]
         }
@@ -1081,12 +1106,12 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '647'
+            'content-length': '619'
         }
         expect_body = {
             'data': [{
                 'type': 'snippet',
-                'id': content['data'][0]['digest'],
+                'id': content['data'][0]['uuid'],
                 'attributes': content['data'][0]
             }]
         }
@@ -1099,13 +1124,14 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('create-remove-utc')
-    def test_api_create_snippet_023(self, server):
+    def test_api_create_snippet_023(server):
         """Create one snippet with POST.
 
-        Call POST /v1/snippets to create new snippet. If the ``groups`` field
-        is not defined at all. The default value for the field must be always
-        added if no value is provided.
+        Call POST /v1/snippets to create new snippet. The ``groups`` field is
+        not defined at all in the HTTP request. The default value for this
+        field must be always added if no value is provided by client.
         """
 
         content = {
@@ -1123,7 +1149,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                 'filename': '',
                 'created': '2017-10-14T19:56:31.000001+00:00',
                 'updated': '2017-10-14T19:56:31.000001+00:00',
-                'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'uuid': Content.UUID1,
                 'digest': '4531ade7232dda7debd7ec3a20b2669afb57d665bd058184155442de203c76af',
             }]
         }
@@ -1137,12 +1163,12 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '520'
+            'content-length': '492'
         }
         expect_body = {
             'data': [{
                 'type': 'snippet',
-                'id': content['data'][0]['digest'],
+                'id': content['data'][0]['uuid'],
                 'attributes': content['data'][0]
             }]
         }
@@ -1155,8 +1181,9 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('create-regexp-utc')
-    def test_api_create_snippet_024(self, server):
+    def test_api_create_snippet_024(server):
         """Create one snippet from API.
 
         Call POST /v1/snippets to create new content with invalid version
@@ -1180,7 +1207,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                 'filename': '',
                 'created': '2018-06-22T13:11:13.678729+00:00',
                 'updated': '2018-06-22T13:11:13.678729+00:00',
-                'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'uuid': Content.UUID1,
                 'digest': '1ff004f146c8771b93eed01bf65a837ab1617d264495187560cc33347f2cd0a3'
             }]
         }
@@ -1195,11 +1222,11 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '525'}
+            'content-length': '497'}
         expect_body = {
             'data': [{
                 'type': 'snippet',
-                'id': content['data'][0]['digest'],
+                'id': content['data'][0]['uuid'],
                 'attributes': content['data'][0]
             }]
         }

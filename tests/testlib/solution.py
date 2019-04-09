@@ -393,6 +393,10 @@ class Solution(object):  # pylint: disable=too-few-public-methods
     NGINX_DIGEST = _DEFAULTS[_NGINX]['digest']
     KAFKA_DIGEST = _DEFAULTS[_KAFKA]['digest']
     KAFKA_MKDN_DIGEST = _DEFAULTS[_KAFKA_MKDN]['digest']
+    BEATS_UUID = _DEFAULTS[_BEATS]['uuid']
+    NGINX_UUID = _DEFAULTS[_NGINX]['uuid']
+    KAFKA_UUID = _DEFAULTS[_KAFKA]['uuid']
+    KAFKA_MKDN_UUID = _DEFAULTS[_KAFKA_MKDN]['uuid']
 
     BEATS = _DEFAULTS[_BEATS]
     NGINX = _DEFAULTS[_NGINX]

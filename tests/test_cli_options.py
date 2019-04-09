@@ -148,7 +148,8 @@ class TestCliOptions(object):
         ''
     )
 
-    def test_help_option_001(self, capsys, caplog):
+    @staticmethod
+    def test_help_option_001(capsys, caplog):
         """Test printing help from console.
 
         Print help with long option.
@@ -162,7 +163,8 @@ class TestCliOptions(object):
         assert not caplog.records[:]
         Content.delete()
 
-    def test_help_option_002(self, capsys, caplog):
+    @staticmethod
+    def test_help_option_002(capsys, caplog):
         """Test printing help from console.
 
         Print help with short option.
@@ -176,7 +178,8 @@ class TestCliOptions(object):
         assert not caplog.records[:]
         Content.delete()
 
-    def test_help_option_003(self, capsys, caplog):
+    @staticmethod
+    def test_help_option_003(capsys, caplog):
         """Test printing help from console.
 
         Generate help text by giving only the tool name.
@@ -190,7 +193,8 @@ class TestCliOptions(object):
         assert not caplog.records[:]
         Content.delete()
 
-    def test_help_option_004(self, capsys, caplog):
+    @staticmethod
+    def test_help_option_004(capsys, caplog):
         """Test printing help from console.
 
         Suppress tool help text with quiet mode even when there are no other
@@ -205,7 +209,8 @@ class TestCliOptions(object):
         assert not caplog.records[:]
         Content.delete()
 
-    def test_help_option_005(self, capsys, caplog):
+    @staticmethod
+    def test_help_option_005(capsys, caplog):
         """Test printing examples from console.
 
         Print command examples from help.
@@ -219,8 +224,9 @@ class TestCliOptions(object):
         assert not caplog.records[:]
         Content.delete()
 
+    @staticmethod
     @pytest.mark.usefixtures('devel_file_list', 'devel_file_data')
-    def test_help_option_006(self, capsys, caplog):
+    def test_help_option_006(capsys, caplog):
         """Test printing test documentation from console.
 
         Print test cases. The --no-ansi option must be work when set before
@@ -250,8 +256,9 @@ class TestCliOptions(object):
         assert not caplog.records[:]
         Content.delete()
 
+    @staticmethod
     @pytest.mark.usefixtures('devel_file_list', 'devel_file_data')
-    def test_help_option_007(self, capsys, caplog):
+    def test_help_option_007(capsys, caplog):
         """Test printing test documentation from console.
 
         Print test cases. The --no-ansi option must work when set after
@@ -281,8 +288,9 @@ class TestCliOptions(object):
         assert not caplog.records[:]
         Content.delete()
 
+    @staticmethod
     @pytest.mark.usefixtures('devel_no_tests')
-    def test_help_option_008(self, capsys, caplog):
+    def test_help_option_008(capsys, caplog):
         """Print test documentation when testing package does not exist.
 
         Try to print tool test case reference documentation when tests are
@@ -299,8 +307,9 @@ class TestCliOptions(object):
         snippy.release()
         Content.delete()
 
+    @staticmethod
     @pytest.mark.parametrize('snippy', [['-vv']], indirect=True)
-    def test_very_verbose_option_001(self, snippy, caplog, capsys):
+    def test_very_verbose_option_001(snippy, caplog, capsys):
         """Test printing logs with the very verbose option.
 
         Enable verbose logging with -vv option. Test checks that there is more
@@ -318,8 +327,9 @@ class TestCliOptions(object):
         #assert not err
         assert len(caplog.records[:]) > 20
 
+    @staticmethod
     @pytest.mark.parametrize('snippy', [['-vv', '--log-msg-max', '200']], indirect=True)
-    def test_very_verbose_option_002(self, snippy, caplog, capsys):
+    def test_very_verbose_option_002(snippy, caplog, capsys):
         """Test printing logs with the very verbose option.
 
         Enable verbose logging with -vv option. In this case the message
@@ -338,9 +348,10 @@ class TestCliOptions(object):
         #assert not err
         assert len(caplog.records[:]) > 20
 
+    @staticmethod
     @pytest.mark.usefixtures('uuid', 'default-snippets')
     @pytest.mark.parametrize('snippy', [['--debug', '--no-ansi']], indirect=True)
-    def test_debug_option_001(self, snippy, capsys, caplog):
+    def test_debug_option_001(snippy, capsys, caplog):
         """Test printing logs with debug option.
 
         Enable full logging with --debug option. In this case the debug
@@ -363,11 +374,11 @@ class TestCliOptions(object):
             '   ! description : ',
             '   ! digest      : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319 (True)',
             '   ! filename    : ',
-            '   ! id          : 12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+            '   ! id          : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
             '   ! name        : ',
             '   ! source      : ',
             '   ! updated     : 2017-10-14T19:56:31.000001+00:00',
-            '   ! uuid        : 12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+            '   ! uuid        : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
             '   ! versions    : ',
             '',
             '2. Remove docker image with force @docker [53908d68425c61dc]',
@@ -383,11 +394,11 @@ class TestCliOptions(object):
             '   ! description : ',
             '   ! digest      : 53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5 (True)',
             '   ! filename    : ',
-            '   ! id          : 16cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+            '   ! id          : 12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
             '   ! name        : ',
             '   ! source      : ',
             '   ! updated     : 2017-10-14T19:56:31.000001+00:00',
-            '   ! uuid        : 16cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+            '   ! uuid        : 12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
             '   ! versions    :'
         )
         cause = snippy.run(['snippy', 'search', '--sall', '.', '--debug', '--no-ansi'])
@@ -397,8 +408,9 @@ class TestCliOptions(object):
         #assert not err
         assert len(caplog.records[:]) > 20
 
+    @staticmethod
     @pytest.mark.parametrize('snippy', [['-q']], indirect=True)
-    def test_quiet_option_001(self, snippy, capsys, caplog):
+    def test_quiet_option_001(snippy, capsys, caplog):
         """Test supressing all output from tool.
 
         Disable all logging and output to terminal. Only the printed content
@@ -412,7 +424,8 @@ class TestCliOptions(object):
         assert not err
         assert not caplog.records[:]
 
-    def test_version_option_001(self, capsys, caplog):
+    @staticmethod
+    def test_version_option_001(capsys, caplog):
         """Test printing tool version.
 
         Output tool version with long option. Only the version must be printed
@@ -427,7 +440,8 @@ class TestCliOptions(object):
         assert not caplog.records[:]
         Content.delete()
 
-    def test_version_option_002(self, capsys, caplog):
+    @staticmethod
+    def test_version_option_002(capsys, caplog):
         """Test printing tool version.
 
         Output tool version with short option. Only the version must be
@@ -442,7 +456,8 @@ class TestCliOptions(object):
         assert not caplog.records[:]
         Content.delete()
 
-    def test_snippy_main(self, capsys, caplog):
+    @staticmethod
+    def test_snippy_main(capsys, caplog):
         """Test running program main with profile option.
 
         Run program main with the profile option. Test checks that there is
@@ -457,12 +472,13 @@ class TestCliOptions(object):
         assert not caplog.records[:]
         Content.delete()
 
+    @staticmethod
     @pytest.mark.usefixtures('uuid', 'snippy', 'default-snippets')
-    def test_debug_print_001(self, capsys):
+    def test_debug_print_001(capsys):
         """Test printing the content.
 
         Test printing content with print. This is a development test which
-        must directly print the snippet.
+        must directly print the snippets.
         """
 
         output = (
@@ -478,11 +494,11 @@ class TestCliOptions(object):
             '   ! description : ',
             '   ! digest      : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319 (True)',
             '   ! filename    : ',
-            '   ! id          : 12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+            '   ! id          : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
             '   ! name        : ',
             '   ! source      : ',
             '   ! updated     : 2017-10-14T19:56:31.000001+00:00',
-            '   ! uuid        : 12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+            '   ! uuid        : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
             '   ! versions    : ',
             '',
             '2. Remove docker image with force @docker [53908d68425c61dc]',
@@ -498,11 +514,11 @@ class TestCliOptions(object):
             '   ! description : ',
             '   ! digest      : 53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5 (True)',
             '   ! filename    : ',
-            '   ! id          : 16cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+            '   ! id          : 12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
             '   ! name        : ',
             '   ! source      : ',
             '   ! updated     : 2017-10-14T19:56:31.000001+00:00',
-            '   ! uuid        : 16cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+            '   ! uuid        : 12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
             '   ! versions    : ',
             '',
             '# collection meta',
@@ -510,6 +526,7 @@ class TestCliOptions(object):
         )
         print(Content.output())  # Part of the test.
         out, err = capsys.readouterr()
+        print(out)
         out = Helper.remove_ansi(out)
         assert Const.NEWLINE.join(output) in out
         assert not err

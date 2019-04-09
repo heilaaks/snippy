@@ -32,7 +32,8 @@ pytest.importorskip('gunicorn')
 class TestApiHello(object):  # pylint: disable=too-many-public-methods
     """Test hello API and OPTIONS method."""
 
-    def test_api_hello_api_001(self, server):
+    @staticmethod
+    def test_api_hello_api_001(server):
         """Test hello API.
 
         Call GET /snippy/api/app/v1 to get Hello response.
@@ -48,7 +49,8 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
-    def test_api_hello_api_002(self, server):
+    @staticmethod
+    def test_api_hello_api_002(server):
         """Test hello API.
 
         Call GET /api/app/v1/hello to get hello!
@@ -181,8 +183,9 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
         server.release()
         Content.delete()
 
+    @staticmethod
     @pytest.mark.usefixtures('mock-server')
-    def test_api_hello_api_008(self, caplog):
+    def test_api_hello_api_008(caplog):
         """Test hello API with modified server IP and port configuration.
 
         Call GET /api/app/v1 to get hello! In this case the server host is
@@ -204,8 +207,9 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
         server.release()
         Content.delete()
 
+    @staticmethod
     @pytest.mark.usefixtures('mock-server')
-    def test_api_hello_api_009(self, server):
+    def test_api_hello_api_009(server):
         """Test hello API with OPTIONS.
 
         Call OPTIONS /api/app/v1 to get allowed methods for the hello API.
@@ -221,8 +225,9 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         assert not result.text
 
+    @staticmethod
     @pytest.mark.usefixtures('mock-server')
-    def test_api_hello_api_010(self, server):
+    def test_api_hello_api_010(server):
         """Test snippets API with OPTIONS.
 
         Call OPTIONS /v1/snippets to get allowed methods.
@@ -238,8 +243,9 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         assert not result.text
 
+    @staticmethod
     @pytest.mark.usefixtures('mock-server')
-    def test_api_hello_api_011(self, server):
+    def test_api_hello_api_011(server):
         """Test snippets digest API with OPTIONS.
 
         Call OPTIONS /v1/snippets/{id} to get allowed methods.
@@ -255,8 +261,9 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         assert not result.text
 
+    @staticmethod
     @pytest.mark.usefixtures('mock-server')
-    def test_api_hello_api_012(self, server):
+    def test_api_hello_api_012(server):
         """Test snippets field API with OPTIONS.
 
         Call OPTIONS /v1/snippets/{id}/{field} to get allowed methods.
@@ -272,8 +279,9 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         assert not result.text
 
+    @staticmethod
     @pytest.mark.usefixtures('mock-server')
-    def test_api_hello_api_013(self, server):
+    def test_api_hello_api_013(server):
         """Test fields groups API with OPTIONS.
 
         Call OPTIONS /v1/groups/<groups> to get allowed methods.
@@ -289,8 +297,9 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         assert not result.text
 
+    @staticmethod
     @pytest.mark.usefixtures('mock-server')
-    def test_api_hello_api_014(self, server):
+    def test_api_hello_api_014(server):
         """Test fields tags API with OPTIONS.
 
         Call OPTIONS /v1/tags/<tag> to get allowed methods.
@@ -306,8 +315,9 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         assert not result.text
 
+    @staticmethod
     @pytest.mark.usefixtures('mock-server')
-    def test_api_hello_api_015(self, server):
+    def test_api_hello_api_015(server):
         """Test fields keywords API with OPTIONS.
 
         Call OPTIONS /v1/groups to get allowed methods for keywords API. Note
@@ -326,8 +336,9 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         assert not result.text
 
+    @staticmethod
     @pytest.mark.usefixtures('mock-server')
-    def test_api_hello_api_016(self, caplog, osenviron):
+    def test_api_hello_api_016(caplog, osenviron):
         """Test server startup with environment variable configuration.
 
         Call GET /api/app/v1 to get Hello response. In this case the server
@@ -367,8 +378,9 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
         server.release()
         Content.delete()
 
+    @staticmethod
     @pytest.mark.usefixtures('mock-server')
-    def test_api_hello_api_017(self, caplog, osenviron):
+    def test_api_hello_api_017(caplog, osenviron):
         """Test server startup with environment and command line config.
 
         Call GET /api/app/v1 to get Hello response. In this case the server

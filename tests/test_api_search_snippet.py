@@ -37,7 +37,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_001(server):
         """Search snippets with GET.
 
-        Call GET /v1/snippets and search keywords from all fields. The search
+        Send GET /v1/snippets and search keywords from all fields. The search
         query matches to two snippets and both of them are returned. The
         search is sorted based on one field. The limit defined in the search
         query is not exceeded.
@@ -45,7 +45,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1545'
+            'content-length': '1489'
         }
         expect_body = {
             'meta': {
@@ -56,11 +56,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': Snippet.REMOVE_DIGEST,
+                'id': Snippet.REMOVE_UUID,
                 'attributes': Snippet.REMOVE
             }, {
                 'type': 'snippet',
-                'id': Snippet.FORCED_DIGEST,
+                'id': Snippet.FORCED_UUID,
                 'attributes': Snippet.FORCED
             }]
         }
@@ -85,7 +85,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1680'
+            'content-length': '1624'
         }
         expect_body = {
             'meta': {
@@ -96,11 +96,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': Snippet.REMOVE_DIGEST,
+                'id': Snippet.REMOVE_UUID,
                 'attributes': Snippet.REMOVE
             }, {
                 'type': 'snippet',
-                'id': Snippet.EXITED_DIGEST,
+                'id': Snippet.EXITED_UUID,
                 'attributes': Snippet.EXITED
             }]
         }
@@ -126,7 +126,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '246'
+            'content-length': '218'
         }
         expect_body = {
             'meta': {
@@ -137,7 +137,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': Snippet.FORCED_DIGEST,
+                'id': Snippet.FORCED_UUID,
                 'attributes': {field: Snippet.FORCED[field] for field in ['brief', 'category']}
             }]
         }
@@ -162,7 +162,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '246'
+            'content-length': '218'
         }
         expect_body = {
             'meta': {
@@ -173,7 +173,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': Snippet.FORCED_DIGEST,
+                'id': Snippet.FORCED_UUID,
                 'attributes': {field: Snippet.FORCED[field] for field in ['brief', 'category']}
             }]
         }
@@ -198,7 +198,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1648'
+            'content-length': '1592'
         }
         expect_body = {
             'meta': {
@@ -209,11 +209,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': Snippet.NETCAT_DIGEST,
+                'id': Snippet.NETCAT_UUID,
                 'attributes': Snippet.NETCAT
             }, {
                 'type': 'snippet',
-                'id': Snippet.EXITED_DIGEST,
+                'id': Snippet.EXITED_UUID,
                 'attributes': Snippet.EXITED
             }]
         }
@@ -238,7 +238,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1648'
+            'content-length': '1592'
         }
         expect_body = {
             'meta': {
@@ -249,11 +249,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': Snippet.NETCAT_DIGEST,
+                'id': Snippet.NETCAT_UUID,
                 'attributes': Snippet.NETCAT
             }, {
                 'type': 'snippet',
-                'id': Snippet.EXITED_DIGEST,
+                'id': Snippet.EXITED_UUID,
                 'attributes': Snippet.EXITED
             }]
         }
@@ -307,7 +307,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '246'
+            'content-length': '218'
         }
         expect_body = {
             'meta': {
@@ -318,7 +318,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': Snippet.FORCED_DIGEST,
+                'id': Snippet.FORCED_UUID,
                 'attributes': {field: Snippet.FORCED[field] for field in ['brief', 'category']}
             }]
         }
@@ -432,7 +432,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '864'
+            'content-length': '856'
         }
         expect_body = {
             'meta': {
@@ -443,11 +443,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             },
             'data': {
                 'type': 'snippet',
-                'id': Snippet.REMOVE_DIGEST,
+                'id': Snippet.REMOVE_UUID,
                 'attributes': Snippet.REMOVE
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/54e41e9b52a02b63'
+                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/' + Snippet.REMOVE_UUID
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -496,7 +496,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1545'
+            'content-length': '1489'
         }
         expect_body = {
             'meta': {
@@ -507,11 +507,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': Snippet.REMOVE_DIGEST,
+                'id': Snippet.REMOVE_UUID,
                 'attributes': Snippet.REMOVE
             }, {
                 'type': 'snippet',
-                'id': Snippet.FORCED_DIGEST,
+                'id': Snippet.FORCED_UUID,
                 'attributes': Snippet.FORCED
             }]
         }
@@ -536,7 +536,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '841'
+            'content-length': '813'
         }
         expect_body = {
             'meta': {
@@ -547,7 +547,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': Snippet.FORCED_DIGEST,
+                'id': Snippet.FORCED_UUID,
                 'attributes': Snippet.FORCED
             }]
         }
@@ -575,7 +575,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2699'
+            'content-length': '2643'
         }
         expect_body = {
             'meta': {
@@ -586,11 +586,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': Snippet.REMOVE_DIGEST,
+                'id': Snippet.REMOVE_UUID,
                 'attributes': Snippet.REMOVE
             }, {
                 'type': 'snippet',
-                'id': Snippet.FORCED_DIGEST,
+                'id': Snippet.FORCED_UUID,
                 'attributes': Snippet.FORCED
             }]
         }
@@ -599,36 +599,6 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             headers={'accept': 'application/vnd.api+json'},
             query_string='sall=docker%2Cswarm&limit=20&sort=brief')
         assert result.status == falcon.HTTP_200
-        assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_body)
-
-    @staticmethod
-    @pytest.mark.usefixtures('default-snippets', 'caller')
-    def test_api_search_snippet_field_017(server):
-        """Get specific snippet field.
-
-        Try to call GET /v1/snippets/{id} for existing snippet with short form
-        from UUID. The short form must not be accepted and no results must be
-        returned. The UUID is intended to be used as fully matching identity.
-        """
-
-        expect_headers = {
-            'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '413'
-        }
-        expect_body = {
-            'meta': Content.get_api_meta(),
-            'errors': [{
-                'status': '404',
-                'statusString': '404 Not Found',
-                'module': 'snippy.testing.testing:123',
-                'title': 'content identity: 116cd5827-b6ef-4067-b5ac-3ceac07dde9 was not unique and matched to: 0 resources'
-            }]
-        }
-        result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/snippets/116cd5827-b6ef-4067-b5ac-3ceac07dde9',
-            headers={'accept': 'application/vnd.api+json'})
-        assert result.status == falcon.HTTP_404
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
@@ -646,7 +616,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '3475'
+            'content-length': '3363'
         }
         expect_body = {
             'meta': {
@@ -657,19 +627,19 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': Snippet.REMOVE_DIGEST,
+                'id': Snippet.REMOVE_UUID,
                 'attributes': Snippet.REMOVE
             }, {
                 'type': 'snippet',
-                'id': Snippet.EXITED_DIGEST,
+                'id': Snippet.EXITED_UUID,
                 'attributes': Snippet.EXITED
             }, {
                 'type': 'snippet',
-                'id': Snippet.FORCED_DIGEST,
+                'id': Snippet.FORCED_UUID,
                 'attributes': Snippet.FORCED
             }, {
                 'type': 'snippet',
-                'id': Snippet.NETCAT_DIGEST,
+                'id': Snippet.NETCAT_UUID,
                 'attributes': Snippet.NETCAT
             }],
             'links': {
@@ -699,7 +669,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2140'
+            'content-length': '2084'
         }
         expect_body = {
             'meta': {
@@ -710,11 +680,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': Snippet.REMOVE_DIGEST,
+                'id': Snippet.REMOVE_UUID,
                 'attributes': Snippet.REMOVE
             }, {
                 'type': 'snippet',
-                'id': Snippet.EXITED_DIGEST,
+                'id': Snippet.EXITED_UUID,
                 'attributes': Snippet.EXITED
             }],
             'links': {
@@ -744,7 +714,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1972'
+            'content-length': '1916'
         }
         expect_body = {
             'meta': {
@@ -755,11 +725,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': Snippet.FORCED_DIGEST,
+                'id': Snippet.FORCED_UUID,
                 'attributes': Snippet.FORCED
             }, {
                 'type': 'snippet',
-                'id': Snippet.NETCAT_DIGEST,
+                'id': Snippet.NETCAT_UUID,
                 'attributes': Snippet.NETCAT
             }],
             'links': {
@@ -791,7 +761,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1549'
+            'content-length': '1521'
         }
         expect_body = {
             'meta': {
@@ -802,7 +772,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': Snippet.EXITED_DIGEST,
+                'id': Snippet.EXITED_UUID,
                 'attributes': Snippet.EXITED
             }],
             'links': {
@@ -836,7 +806,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2321'
+            'content-length': '2265'
         }
         expect_body = {
             'meta': {
@@ -847,11 +817,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': Snippet.EXITED_DIGEST,
+                'id': Snippet.EXITED_UUID,
                 'attributes': Snippet.EXITED
             }, {
                 'type': 'snippet',
-                'id': Snippet.FORCED_DIGEST,
+                'id': Snippet.FORCED_UUID,
                 'attributes': Snippet.FORCED
             }],
             'links': {
@@ -884,7 +854,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1200'
+            'content-length': '1172'
         }
         expect_body = {
             'meta': {
@@ -895,7 +865,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': Snippet.NETCAT_DIGEST,
+                'id': Snippet.NETCAT_UUID,
                 'attributes': Snippet.NETCAT
             }],
             'links': {
@@ -925,7 +895,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2176'
+            'content-length': '2120'
         }
         expect_body = {
             'meta': {
@@ -936,11 +906,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': Snippet.REMOVE_DIGEST,
+                'id': Snippet.REMOVE_UUID,
                 'attributes': Snippet.REMOVE
             }, {
                 'type': 'snippet',
-                'id': Snippet.EXITED_DIGEST,
+                'id': Snippet.EXITED_UUID,
                 'attributes': Snippet.EXITED
             }],
             'links': {
@@ -1156,18 +1126,18 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '277'
+            'content-length': '269'
         }
         expect_body = {
             'data': {
                 'type': 'snippet',
-                'id': Snippet.REMOVE_DIGEST,
+                'id': Snippet.REMOVE_UUID,
                 'attributes': {
                     'data': Snippet.REMOVE['data']
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/54e41e9b52a02b63/data'
+                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/11cd5827-b6ef-4067-b5ac-3ceac07dde9f/data'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -1189,18 +1159,18 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '272'
+            'content-length': '264'
         }
         expect_body = {
             'data': {
                 'type': 'snippet',
-                'id': Snippet.REMOVE_DIGEST,
+                'id': Snippet.REMOVE_UUID,
                 'attributes': {
                     'brief': Snippet.REMOVE['brief']
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/54e41e9b52a02b63/brief'
+                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/11cd5827-b6ef-4067-b5ac-3ceac07dde9f/brief'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -1220,18 +1190,18 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '241'
+            'content-length': '233'
         }
         expect_body = {
             'data': {
                 'type': 'snippet',
-                'id': Snippet.REMOVE_DIGEST,
+                'id': Snippet.REMOVE_UUID,
                 'attributes': {
                     'groups': Snippet.REMOVE['groups']
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/54e41e9b52a02b63/groups'
+                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/11cd5827-b6ef-4067-b5ac-3ceac07dde9f/groups'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -1252,18 +1222,18 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '282'
+            'content-length': '274'
         }
         expect_body = {
             'data': {
                 'type': 'snippet',
-                'id': Snippet.REMOVE_DIGEST,
+                'id': Snippet.REMOVE_UUID,
                 'attributes': {
                     'tags': Snippet.REMOVE['tags']
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/54e41e9b52a02b63/tags'
+                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/11cd5827-b6ef-4067-b5ac-3ceac07dde9f/tags'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -1283,18 +1253,18 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '289'
+            'content-length': '281'
         }
         expect_body = {
             'data': {
                 'type': 'snippet',
-                'id': Snippet.REMOVE_DIGEST,
+                'id': Snippet.REMOVE_UUID,
                 'attributes': {
                     'links': Snippet.REMOVE['links']
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/54e41e9b52a02b63/links'
+                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/11cd5827-b6ef-4067-b5ac-3ceac07dde9f/links'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -1373,25 +1343,54 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '261'
+            'content-length': '253'
         }
         expect_body = {
             'data': {
                 'type': 'snippet',
-                'id': Snippet.FORCED['digest'],
+                'id': Snippet.FORCED['uuid'],
                 'attributes': {
                     'brief': Snippet.FORCED['brief']
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/53908d68425c61dc/brief'
+                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/12cd5827-b6ef-4067-b5ac-3ceac07dde9f/brief'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/snippets/16cd5827-b6ef-4067-b5ac-3ceac07dde9f/brief',
+            path='/snippy/api/app/v1/snippets/12cd5827-b6ef-4067-b5ac-3ceac07dde9f/brief',
             headers={'accept': 'application/vnd.api+json'})
-        print(Content.output())
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
+
+    @staticmethod
+    @pytest.mark.usefixtures('default-snippets', 'caller')
+    def test_api_search_snippet_field_009(server):
+        """Get specific snippet field.
+
+        Try to call GET /v1/snippets/{id} for existing snippet with short form
+        from UUID. The short form must not be accepted and no results must be
+        returned. The UUID is intended to be used as fully matching identity.
+        """
+
+        expect_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '413'
+        }
+        expect_body = {
+            'meta': Content.get_api_meta(),
+            'errors': [{
+                'status': '404',
+                'statusString': '404 Not Found',
+                'module': 'snippy.testing.testing:123',
+                'title': 'content identity: 116cd5827-b6ef-4067-b5ac-3ceac07dde9 was not unique and matched to: 0 resources'
+            }]
+        }
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/app/v1/snippets/116cd5827-b6ef-4067-b5ac-3ceac07dde9',
+            headers={'accept': 'application/vnd.api+json'})
+        assert result.status == falcon.HTTP_404
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
@@ -1408,7 +1407,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1545'
+            'content-length': '1489'
         }
         expect_body = {
             'meta': {
@@ -1419,11 +1418,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': Snippet.REMOVE_DIGEST,
+                'id': Snippet.REMOVE_UUID,
                 'attributes': Snippet.REMOVE
             }, {
                 'type': 'snippet',
-                'id': Snippet.FORCED_DIGEST,
+                'id': Snippet.FORCED_UUID,
                 'attributes': Snippet.FORCED
             }]
         }
@@ -1448,7 +1447,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1680'
+            'content-length': '1624'
         }
         expect_body = {
             'meta': {
@@ -1459,11 +1458,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': Snippet.REMOVE_DIGEST,
+                'id': Snippet.REMOVE_UUID,
                 'attributes': Snippet.REMOVE
             }, {
                 'type': 'snippet',
-                'id': Snippet.EXITED_DIGEST,
+                'id': Snippet.EXITED_UUID,
                 'attributes': Snippet.EXITED
             }]
         }

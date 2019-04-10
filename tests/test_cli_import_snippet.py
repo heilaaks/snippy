@@ -35,8 +35,9 @@ from tests.testlib.snippet import Snippet
 class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
     """Test workflows for importing snippets."""
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true')
-    def test_cli_import_snippet_001(self, snippy):
+    def test_cli_import_snippet_001(snippy):
         """Import all snippets.
 
         Import all snippets. File name is not defined in command line. This
@@ -56,8 +57,9 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('./snippets.mkdn', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'yaml')
-    def test_cli_import_snippet_002(self, snippy):
+    def test_cli_import_snippet_002(snippy):
         """Import all snippets.
 
         Import all snippets from yaml file. File name and format are extracted
@@ -78,8 +80,9 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('./all-snippets.yaml', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'json')
-    def test_cli_import_snippet_003(self, snippy):
+    def test_cli_import_snippet_003(snippy):
         """Import all snippets.
 
         Import all snippets from json file. File name and format are extracted
@@ -100,8 +103,9 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('./all-snippets.json', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'default-snippets-utc')
-    def test_cli_import_snippet_004(self, snippy):
+    def test_cli_import_snippet_004(snippy):
         """Import all snippets.
 
         Import all snippets from txt file. File name and format are extracted
@@ -122,8 +126,9 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('./all-snippets.txt', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'default-snippets-utc')
-    def test_cli_import_snippet_005(self, snippy):
+    def test_cli_import_snippet_005(snippy):
         """Import all snippets.
 
         Import all snippets from text file. File name and format are extracted
@@ -144,7 +149,8 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('./all-snippets.text', 'r')
 
-    def test_cli_import_snippet_006(self, snippy):
+    @staticmethod
+    def test_cli_import_snippet_006(snippy):
         """Import all snippets.
 
         Try to import snippet from file which file format is not supported.
@@ -158,7 +164,8 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(None)
             mock_file.assert_not_called()
 
-    def test_cli_import_snippet_007(self, snippy):
+    @staticmethod
+    def test_cli_import_snippet_007(snippy):
         """Import all snippets.
 
         Try to import snippet from file that is not existing. The file
@@ -170,8 +177,9 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
             assert cause == 'NOK: cannot read file ./foo.yaml'
             Content.assert_storage(None)
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true')
-    def test_cli_import_snippet_008(self, snippy):
+    def test_cli_import_snippet_008(snippy):
         """Import all snippets.
 
         Try to import snippet from text file that is empty.
@@ -187,8 +195,9 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(None)
             mock_file.assert_called_once_with('./all-snippets.txt', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'yaml', 'import-remove', 'update-remove-utc')
-    def test_cli_import_snippet_009(self, snippy):
+    def test_cli_import_snippet_009(snippy):
         """Import defined snippet.
 
         Import defined snippet based on message digest. File name is defined
@@ -209,8 +218,9 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('one-snippet.yml', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'yaml', 'import-remove', 'update-remove-utc')
-    def test_cli_import_snippet_010(self, snippy):
+    def test_cli_import_snippet_010(snippy):
         """Import defined snippet.
 
         Import defined snippet based on message digest. File name is defined
@@ -233,8 +243,9 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('one-snippet.yaml', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'json', 'import-remove', 'update-remove-utc')
-    def test_cli_import_snippet_011(self, snippy):
+    def test_cli_import_snippet_011(snippy):
         """Import defined snippet.
 
         Import defined snippet based on message digest. File name is defined
@@ -257,8 +268,9 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('one-snippet.json', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'import-remove', 'update-remove-utc')
-    def test_cli_import_snippet_012(self, snippy):
+    def test_cli_import_snippet_012(snippy):
         """Import defined snippet.
 
         Import defined snippet based on message digest. File name is defined
@@ -280,8 +292,9 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('one-snippet.txt', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'import-remove', 'update-remove-utc')
-    def test_cli_import_snippet_013(self, snippy):
+    def test_cli_import_snippet_013(snippy):
         """Import defined snippet.
 
         Import defined snippet based on message digest. File name is defined
@@ -303,8 +316,9 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('one-snippet.text', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('import-remove')
-    def test_cli_import_snippet_014(self, snippy):
+    def test_cli_import_snippet_014(snippy):
         """Import defined snippet.
 
         Try to import defined snippet with message digest that cannot be
@@ -323,8 +337,9 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_not_called()
 
+    @staticmethod
     @pytest.mark.usefixtures('yaml')
-    def test_cli_import_snippet_015(self, snippy):
+    def test_cli_import_snippet_015(snippy):
         """Import snippet defaults.
 
         Import snippet defaults. All snippets should be imported from the
@@ -351,8 +366,9 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
             defaults_snippets = pkg_resources.resource_filename('snippy', 'data/defaults/snippets.yaml')
             mock_file.assert_called_once_with(defaults_snippets, 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('yaml', 'default-snippets', 'default-snippets-utc')
-    def test_cli_import_snippet_016(self, snippy):
+    def test_cli_import_snippet_016(snippy):
         """Import snippet defaults.
 
         Try to import snippet defaults again. The second import should fail
@@ -378,8 +394,9 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
             defaults_snippets = pkg_resources.resource_filename('snippy', 'data/defaults/snippets.yaml')
             mock_file.assert_called_once_with(defaults_snippets, 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true')
-    def test_cli_import_snippet_017(self, snippy):
+    def test_cli_import_snippet_017(snippy):
         """Import snippet from text template.
 
         Try to import snippet template without any changes. This should result
@@ -394,8 +411,9 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(None)
             mock_file.assert_called_once_with('./snippet-template.text', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'yaml', 'default-snippets', 'import-netcat-utc')
-    def test_cli_import_snippet_018(self, snippy):
+    def test_cli_import_snippet_018(snippy):
         """Import snippets already existing.
 
         Import snippets from yaml file that is defined from command line. In
@@ -421,8 +439,9 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('./snippets.yaml', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('yaml', 'default-snippets')
-    def test_cli_import_snippet_019(self, snippy):
+    def test_cli_import_snippet_019(snippy):
         """Import snippet based on digest.
 
         Try to import snippet based on message digest that matches to two
@@ -446,8 +465,9 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
             mock_file.assert_not_called()
             yaml.safe_load.assert_not_called()
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true')
-    def test_cli_import_snippet_020(self, snippy):
+    def test_cli_import_snippet_020(snippy):
         """Import all snippets.
 
         Import all snippets from Markdown formatted file.
@@ -466,8 +486,9 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('./all-snippets.md', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true')
-    def test_cli_import_snippet_021(self, snippy):
+    def test_cli_import_snippet_021(snippy):
         """Import snippet from Markdown template.
 
         Try to import snippet template without any changes. This should result
@@ -482,7 +503,8 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(None)
             mock_file.assert_called_once_with('./snippet-template.mkdn', 'r')
 
-    def test_cli_import_snippet_022(self, snippy):
+    @staticmethod
+    def test_cli_import_snippet_022(snippy):
         """Import all snippets.
 
         Try to import snippet from file which file format is not supported.

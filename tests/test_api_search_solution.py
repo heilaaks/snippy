@@ -40,7 +40,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
     def test_api_search_solution_001(server):
         """Search solution with GET.
 
-        Call GET /v1/solutions and search keywords from all attributes. The
+        Send GET /v1/solutions and search keywords from all attributes. The
         search query matches to two solutions and both of them are returned.
         The search is sorted based on one attribute. The search result limit
         defined in the search query is not exceeded.
@@ -48,7 +48,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '5518'
+            'content-length': '5462'
         }
         expect_body = {
             'meta': {
@@ -59,11 +59,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'solution',
-                'id': Solution.BEATS_DIGEST,
+                'id': Solution.BEATS_UUID,
                 'attributes': Solution.BEATS
             }, {
                 'type': 'solution',
-                'id': Solution.NGINX_DIGEST,
+                'id': Solution.NGINX_UUID,
                 'attributes': Solution.NGINX
             }]
         }
@@ -91,7 +91,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '5517'
+            'content-length': '5461'
         }
         expect_body = {
             'meta': {
@@ -102,11 +102,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'solution',
-                'id': Solution.BEATS_DIGEST,
+                'id': Solution.BEATS_UUID,
                 'attributes': Solution.BEATS
             }, {
                 'type': 'solution',
-                'id': Solution.NGINX_DIGEST,
+                'id': Solution.NGINX_UUID,
                 'attributes': Solution.NGINX
             }]
         }
@@ -132,7 +132,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '233'
+            'content-length': '205'
         }
         expect_body = {
             'meta': {
@@ -143,7 +143,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'solution',
-                'id': Solution.NGINX_DIGEST,
+                'id': Solution.NGINX_UUID,
                 'attributes': {field: Solution.NGINX[field] for field in ['brief', 'category']}
             }]
         }
@@ -168,7 +168,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '233'
+            'content-length': '205'
         }
         expect_body = {
             'meta': {
@@ -179,7 +179,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'solution',
-                'id': Solution.NGINX_DIGEST,
+                'id': Solution.NGINX_UUID,
                 'attributes': {field: Solution.NGINX[field] for field in ['brief', 'category']}
             }]
         }
@@ -211,7 +211,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '5517'
+            'content-length': '5461'
         }
         expect_body = {
             'meta': {
@@ -222,11 +222,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'solution',
-                'id': Solution.NGINX_DIGEST,
+                'id': Solution.NGINX_UUID,
                 'attributes': content['data'][0]
             }, {
                 'type': 'solution',
-                'id': Solution.BEATS_DIGEST,
+                'id': Solution.BEATS_UUID,
                 'attributes': content['data'][1]
             }]
         }
@@ -252,7 +252,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '7772'
+            'content-length': '7716'
         }
         expect_body = {
             'meta': {
@@ -263,11 +263,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'solution',
-                'id': Solution.NGINX_DIGEST,
+                'id': Solution.NGINX_UUID,
                 'attributes': Solution.NGINX
             }, {
                 'type': 'solution',
-                'id': Solution.KAFKA_DIGEST,
+                'id': Solution.KAFKA_UUID,
                 'attributes': Solution.KAFKA
             }]
         }
@@ -321,7 +321,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '233'
+            'content-length': '205'
         }
         expect_body = {
             'meta': {
@@ -332,7 +332,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'solution',
-                'id': Solution.NGINX_DIGEST,
+                'id': Solution.NGINX_UUID,
                 'attributes': {field: Solution.NGINX[field] for field in ['brief', 'category']}
             }]
         }
@@ -445,7 +445,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2609'
+            'content-length': '2601'
         }
         expect_body = {
             'meta': {
@@ -456,11 +456,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             },
             'data': {
                 'type': 'solution',
-                'id': Solution.BEATS_DIGEST,
+                'id': Solution.BEATS_UUID,
                 'attributes': Solution.BEATS
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/db712a82662d6932'
+                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/' + Solution.BEATS_UUID
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -509,7 +509,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '5518'
+            'content-length': '5462'
         }
         expect_body = {
             'meta': {
@@ -520,11 +520,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'solution',
-                'id': Solution.BEATS_DIGEST,
+                'id': Solution.BEATS_UUID,
                 'attributes': Solution.BEATS
             }, {
                 'type': 'solution',
-                'id': Solution.NGINX_DIGEST,
+                'id': Solution.NGINX_UUID,
                 'attributes': Solution.NGINX
             }]
         }
@@ -549,7 +549,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '3070'
+            'content-length': '3042'
         }
         expect_body = {
             'meta': {
@@ -560,7 +560,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'solution',
-                'id': Solution.NGINX_DIGEST,
+                'id': Solution.NGINX_UUID,
                 'attributes': Solution.NGINX
             }]
         }
@@ -585,7 +585,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '8632'
+            'content-length': '8576'
         }
         expect_body = {
             'meta': {
@@ -596,11 +596,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'solution',
-                'id': Solution.BEATS_DIGEST,
+                'id': Solution.BEATS_UUID,
                 'attributes': Solution.BEATS
             }, {
                 'type': 'solution',
-                'id': Solution.NGINX_DIGEST,
+                'id': Solution.NGINX_UUID,
                 'attributes': Solution.NGINX
             }]
         }
@@ -633,11 +633,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'solution',
-                'id': Solution.BEATS_DIGEST,
+                'id': Solution.BEATS_UUID,
                 'attributes': Solution.BEATS
             }, {
                 'type': 'solution',
-                'id': Solution.NGINX_DIGEST,
+                'id': Solution.NGINX_UUID,
                 'attributes': Solution.NGINX
             }]
         }
@@ -696,18 +696,18 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1969'
+            'content-length': '1961'
         }
         expect_body = {
             'data': {
                 'type': 'solution',
-                'id': Solution.BEATS_DIGEST,
+                'id': Solution.BEATS_UUID,
                 'attributes': {
                     'data': Solution.BEATS['data']
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/db712a82662d6932/data'
+                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/21cd5827-b6ef-4067-b5ac-3ceac07dde9f/data'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -727,18 +727,18 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '256'
+            'content-length': '248'
         }
         expect_body = {
             'data': {
                 'type': 'solution',
-                'id': Solution.BEATS_DIGEST,
+                'id': Solution.BEATS_UUID,
                 'attributes': {
                     'brief': Solution.BEATS['brief']
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/db712a82662d6932/brief'
+                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/21cd5827-b6ef-4067-b5ac-3ceac07dde9f/brief'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -758,18 +758,18 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '242'
+            'content-length': '234'
         }
         expect_body = {
             'data': {
                 'type': 'solution',
-                'id': Solution.BEATS_DIGEST,
+                'id': Solution.BEATS_UUID,
                 'attributes': {
                     'groups': Solution.BEATS['groups']
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/db712a82662d6932/groups'
+                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/21cd5827-b6ef-4067-b5ac-3ceac07dde9f/groups'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -789,18 +789,18 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '279'
+            'content-length': '271'
         }
         expect_body = {
             'data': {
                 'type': 'solution',
-                'id': Solution.BEATS_DIGEST,
+                'id': Solution.BEATS_UUID,
                 'attributes': {
                     'tags': Solution.BEATS['tags']
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/db712a82662d6932/tags'
+                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/21cd5827-b6ef-4067-b5ac-3ceac07dde9f/tags'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -820,18 +820,18 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '319'
+            'content-length': '311'
         }
         expect_body = {
             'data': {
                 'type': 'solution',
-                'id': Solution.BEATS_DIGEST,
+                'id': Solution.BEATS_UUID,
                 'attributes': {
                     'links': Solution.BEATS['links']
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/db712a82662d6932/links'
+                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/21cd5827-b6ef-4067-b5ac-3ceac07dde9f/links'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(

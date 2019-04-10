@@ -37,8 +37,9 @@ from tests.testlib.solution import Solution
 class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
     """Test workflows for exporting references."""
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references', 'export-time')
-    def test_cli_export_reference_001(self, snippy):
+    def test_cli_export_reference_001(snippy):
         """Export all references.
 
         Export all references without defining target filename from command
@@ -57,8 +58,9 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             assert cause == Cause.ALL_OK
             Content.assert_mkdn(mock_file, './references.mkdn', content)
 
+    @staticmethod
     @pytest.mark.usefixtures('yaml', 'default-references', 'export-time')
-    def test_cli_export_reference_002(self, snippy):
+    def test_cli_export_reference_002(snippy):
         """Export all references.
 
         Export all references into yaml formatted file as  defined in command
@@ -77,8 +79,9 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             assert cause == Cause.ALL_OK
             Content.assert_yaml(yaml, mock_file, './defined-references.yaml', content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references')
-    def test_cli_export_reference_003(self, snippy):
+    def test_cli_export_reference_003(snippy):
         """Export all references.
 
         Try to export all references into file format that is not supported.
@@ -93,8 +96,9 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_not_called()
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references', 'export-time')
-    def test_cli_export_reference_004(self, snippy):
+    def test_cli_export_reference_004(snippy):
         """Export all references.
 
         Export defined reference based on message digest. File name is not
@@ -114,8 +118,9 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             assert cause == Cause.ALL_OK
             Content.assert_mkdn(mock_file, './references.mkdn', content)
 
+    @staticmethod
     @pytest.mark.usefixtures('yaml', 'default-references', 'export-time')
-    def test_cli_export_reference_005(self, snippy):
+    def test_cli_export_reference_005(snippy):
         """Export all references.
 
         Export defined reference based on message digest. File name is defined
@@ -133,8 +138,9 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             assert cause == Cause.ALL_OK
             Content.assert_yaml(yaml, mock_file, 'defined-reference.yml', content)
 
+    @staticmethod
     @pytest.mark.usefixtures('json', 'default-references', 'export-time')
-    def test_cli_export_reference_006(self, snippy):
+    def test_cli_export_reference_006(snippy):
         """Export all references.
 
         Export defined reference based on message digest. File name is defined
@@ -152,8 +158,9 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             assert cause == Cause.ALL_OK
             Content.assert_json(json, mock_file, 'defined-reference.json', content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references', 'export-time')
-    def test_cli_export_reference_007(self, snippy):
+    def test_cli_export_reference_007(snippy):
         """Export defined reference with digest.
 
         Export defined reference based on message digest. File name is defined
@@ -172,8 +179,9 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             assert cause == Cause.ALL_OK
             Content.assert_text(mock_file, 'defined-reference.txt', content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references', 'export-time')
-    def test_cli_export_reference_008(self, snippy):
+    def test_cli_export_reference_008(snippy):
         """Export defined reference with digest.
 
         Try to export defined reference based on message digest that cannot be
@@ -187,8 +195,9 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_not_called()
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references', 'export-time')
-    def test_cli_export_reference_009(self, snippy):
+    def test_cli_export_reference_009(snippy):
         """Export all references.
 
         Export defined reference based on uuid.
@@ -205,8 +214,9 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             assert cause == Cause.ALL_OK
             Content.assert_mkdn(mock_file, './references.mkdn', content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references', 'export-time')
-    def test_cli_export_reference_010(self, snippy):
+    def test_cli_export_reference_010(snippy):
         """Export defined reference with uuid.
 
         Try to export defined reference based on uudi that cannot be found.
@@ -219,8 +229,9 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_not_called()
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references', 'export-time')
-    def test_cli_export_reference_011(self, snippy):
+    def test_cli_export_reference_011(snippy):
         """Export defined reference with digest.
 
         Export defined reference based on search keyword. File name is not
@@ -239,8 +250,9 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             assert cause == Cause.ALL_OK
             Content.assert_mkdn(mock_file, './references.mkdn', content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references', 'export-time')
-    def test_cli_export_reference_012(self, snippy):
+    def test_cli_export_reference_012(snippy):
         """Export defined reference with digest.
 
         Export defined reference based on search keyword. File name is defined
@@ -258,8 +270,9 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             assert cause == Cause.ALL_OK
             Content.assert_text(mock_file, 'defined-reference.txt', content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references', 'export-time')
-    def test_cli_export_reference_013(self, snippy):
+    def test_cli_export_reference_013(snippy):
         """Export defined reference with search keyword.
 
         Export defined reference based on search keyword. File name is defined
@@ -277,8 +290,9 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             assert cause == Cause.ALL_OK
             Content.assert_text(mock_file, 'defined-reference.text', content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references', 'export-time')
-    def test_cli_export_reference_014(self, snippy):
+    def test_cli_export_reference_014(snippy):
         """Export references with search keyword.
 
         Export references based on search keyword. In this case the search
@@ -298,8 +312,9 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             assert cause == Cause.ALL_OK
             Content.assert_text(mock_file, 'defined-reference.text', content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references', 'export-time')
-    def test_cli_export_reference_015(self, snippy):
+    def test_cli_export_reference_015(snippy):
         """Export defined reference with search keyword.
 
         Try to export reference based on search keyword that cannot befound.
@@ -310,8 +325,9 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             assert cause == 'NOK: cannot find content with given search criteria'
             mock_file.assert_not_called()
 
+    @staticmethod
     @pytest.mark.usefixtures('yaml', 'default-references', 'export-time')
-    def test_cli_export_reference_016(self, snippy):
+    def test_cli_export_reference_016(snippy):
         """Export defined reference with content data.
 
         Export defined reference based on content data. File name is defined in
@@ -329,8 +345,9 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             assert cause == Cause.ALL_OK
             Content.assert_yaml(yaml, mock_file, 'defined-reference.yaml', content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references', 'export-time')
-    def test_cli_export_reference_017(self, snippy):
+    def test_cli_export_reference_017(snippy):
         """Export reference template.
 
         Export reference template by explicitly defining content category.
@@ -345,8 +362,9 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_called_with(Const.NEWLINE.join(Reference.TEMPLATE_MKDN))
 
+    @staticmethod
     @pytest.mark.usefixtures('yaml', 'default-references', 'export-time')
-    def test_cli_export_reference_018(self, snippy):
+    def test_cli_export_reference_018(snippy):
         """Export reference defaults.
 
         Export reference defaults. All references should be exported into
@@ -366,8 +384,9 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             defaults_references = pkg_resources.resource_filename('snippy', 'data/defaults/references.yaml')
             Content.assert_yaml(yaml, mock_file, defaults_references, content)
 
+    @staticmethod
     @pytest.mark.usefixtures('export-time')
-    def test_cli_export_reference_019(self, snippy):
+    def test_cli_export_reference_019(snippy):
         """Export reference defaults.
 
         Try to export reference defaults when there are no stored references.
@@ -380,8 +399,9 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             assert cause == 'NOK: no content found to be exported'
             mock_file.assert_not_called()
 
+    @staticmethod
     @pytest.mark.usefixtures('yaml', 'import-gitlog', 'import-remove', 'import-beats', 'export-time-all-categories')
-    def test_cli_export_reference_020(self, snippy):
+    def test_cli_export_reference_020(snippy):
         """Export defaults with --all option.
 
         Export snippet, solution and reference defaults with category
@@ -406,8 +426,9 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             defaults_references = pkg_resources.resource_filename('snippy', 'data/defaults/references.yaml')
             Content.assert_yaml(yaml, mock_file, [defaults_snippets, defaults_solutions, defaults_references], content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references', 'export-time')
-    def test_cli_export_reference_021(self, snippy):
+    def test_cli_export_reference_021(snippy):
         """Export references with search keyword.
 
         Export references based on search keyword. In this case the search
@@ -427,8 +448,9 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             assert cause == Cause.ALL_OK
             Content.assert_mkdn(mock_file, './references.mkdn', content)
 
+    @staticmethod
     @pytest.mark.usefixtures('import-gitlog', 'import-remove', 'import-beats', 'export-time')
-    def test_cli_export_reference_022(self, snippy):
+    def test_cli_export_reference_022(snippy):
         """Export content with search keyword.
 
         Export content from two categories with search keyword. In this case
@@ -448,8 +470,9 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             assert cause == Cause.ALL_OK
             Content.assert_mkdn(mock_file, './content.mkdn', content)
 
+    @staticmethod
     @pytest.mark.usefixtures('import-gitlog', 'import-remove', 'import-beats', 'export-time')
-    def test_cli_export_reference_023(self, snippy):
+    def test_cli_export_reference_023(snippy):
         """Export content with search keyword.
 
         Export content from one category when search category is set to
@@ -469,8 +492,9 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             assert cause == Cause.ALL_OK
             Content.assert_mkdn(mock_file, './references.mkdn', content)
 
+    @staticmethod
     @pytest.mark.usefixtures('yaml', 'import-gitlog', 'import-remove', 'import-beats', 'export-time')
-    def test_cli_export_reference_024(self, snippy):
+    def test_cli_export_reference_024(snippy):
         """Export content with search keyword.
 
         Export content from two category with search keyword. In this case
@@ -490,8 +514,9 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             assert cause == Cause.ALL_OK
             Content.assert_yaml(yaml, mock_file, 'defined-content.yaml', content)
 
+    @staticmethod
     @pytest.mark.usefixtures('yaml', 'import-gitlog', 'import-remove', 'import-beats', 'export-time')
-    def test_cli_export_reference_025(self, snippy):
+    def test_cli_export_reference_025(snippy):
         """Exporting defaults while using search category.
 
         Export default content by selecting single category with the --scat
@@ -510,8 +535,9 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             defaults_references = pkg_resources.resource_filename('snippy', 'data/defaults/references.yaml')
             Content.assert_yaml(yaml, mock_file, defaults_references, content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references')
-    def test_cli_export_reference_026(self, snippy):
+    def test_cli_export_reference_026(snippy):
         """Export all references.
 
         Try to export all references into file format that is not supported.
@@ -526,8 +552,9 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_not_called()
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references')
-    def test_cli_export_reference_027(self, snippy):
+    def test_cli_export_reference_027(snippy):
         """Export all references.
 
         Try to export all references into file format that is not supported.
@@ -542,8 +569,9 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_not_called()
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references')
-    def test_cli_export_reference_028(self, snippy):
+    def test_cli_export_reference_028(snippy):
         """Export all references.
 
         Try to export all references into file format that is not supported.
@@ -558,8 +586,9 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_not_called()
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references', 'export-time')
-    def test_cli_export_reference_029(self, snippy):
+    def test_cli_export_reference_029(snippy):
         """Export all references.
 
         Export all references in Markdown format.
@@ -577,8 +606,9 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             assert cause == Cause.ALL_OK
             Content.assert_mkdn(mock_file, 'references.mkdn', content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references', 'export-time')
-    def test_cli_export_reference_030(self, snippy):
+    def test_cli_export_reference_030(snippy):
         """Export reference template.
 
         Export reference template by explicitly defining content category
@@ -592,8 +622,9 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_called_with(Const.NEWLINE.join(Reference.TEMPLATE_TEXT))
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references', 'export-time')
-    def test_cli_export_reference_031(self, snippy):
+    def test_cli_export_reference_031(snippy):
         """Export reference template.
 
         Export reference template by explicitly defining content category

@@ -37,7 +37,7 @@ class TestApiDeleteReference(object):
     def test_api_delete_reference_001(server):
         """Delete reference with digest.
 
-        Send DELETE /references/{id} to remove a reference. The ``digest``
+        Send DELETE /v1/references/{id} to remove a reference. The ``digest``
         matches to one resource that is deleted.
         """
 
@@ -61,7 +61,7 @@ class TestApiDeleteReference(object):
     def test_api_delete_reference_002(server):
         """Try to delete reference.
 
-        Try to send DELETE /reference with resource URI that does not exist.
+        Try to send DELETE /v1/reference with resource URI that does not exist.
         """
 
         content = {
@@ -97,7 +97,7 @@ class TestApiDeleteReference(object):
     def test_api_delete_reference_003(server):
         """Try to delete reference.
 
-        Try to send DELETE /references without digest identifying deleted
+        Try to send DELETE /v1/references without digest identifying deleted
         reource.
         """
 
@@ -133,7 +133,7 @@ class TestApiDeleteReference(object):
     def test_api_delete_reference_004(server):
         """Delete reference with UUID.
 
-        Send DELETE /references/{id} to remove one resource. The UUID matches
+        Send DELETE /v1/references/{id} to remove one resource. The UUID matches
         to one reference that is deleted.
         """
 

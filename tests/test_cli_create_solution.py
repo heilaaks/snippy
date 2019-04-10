@@ -30,8 +30,9 @@ from tests.testlib.solution import Solution
 class TestCliCreateSolution(object):
     """Test workflows for creating solutions."""
 
+    @staticmethod
     @pytest.mark.usefixtures('snippy', 'create-beats-utc')
-    def test_cli_create_solution_001(self, snippy):
+    def test_cli_create_solution_001(snippy):
         """Create solution from CLI.
 
         Create new solution by defining all content parameters from command
@@ -56,8 +57,9 @@ class TestCliCreateSolution(object):
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions', 'edit-beats')
-    def test_cli_create_solution_002(self, snippy):
+    def test_cli_create_solution_002(snippy):
         """Try to create solution from CLI.
 
         Try to create same solution again with exactly the same content data.
@@ -73,8 +75,9 @@ class TestCliCreateSolution(object):
         assert cause == 'NOK: content data already exist with digest db712a82662d6932'
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('edit-solution-template')
-    def test_cli_create_solution_003(self, snippy):
+    def test_cli_create_solution_003(snippy):
         """Try to create solution from CLI.
 
         Try to create new solution without any changes to template.
@@ -84,8 +87,9 @@ class TestCliCreateSolution(object):
         assert cause == 'NOK: content was not stored because it was matching to an empty template'
         Content.assert_storage(None)
 
+    @staticmethod
     @pytest.mark.usefixtures('edit-empty')
-    def test_cli_create_solution_004(self, snippy):
+    def test_cli_create_solution_004(snippy):
         """Try to create solution from CLI.
 
         Try to create new solution with empty data. In this case the whole
@@ -96,8 +100,9 @@ class TestCliCreateSolution(object):
         assert cause == 'NOK: could not identify content category - please keep template tags in place'
         Content.assert_storage(None)
 
+    @staticmethod
     @pytest.mark.usefixtures('edit-unknown-solution-template')
-    def test_cli_create_solution_005(self, snippy):
+    def test_cli_create_solution_005(snippy):
         """Try to create solution from CLI.
 
         Try to create new solution with a template that cannot be identified.
@@ -109,8 +114,9 @@ class TestCliCreateSolution(object):
         assert cause == 'NOK: could not identify content category - please keep template tags in place'
         Content.assert_storage(None)
 
+    @staticmethod
     @pytest.mark.usefixtures('snippy', 'edit-beats')
-    def test_cli_create_solution_006(self, snippy):
+    def test_cli_create_solution_006(snippy):
         """Create solution from editor.
 
         Create new solution by defining all values from editor.
@@ -125,8 +131,9 @@ class TestCliCreateSolution(object):
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('snippy', 'create-kafka-mkdn-utc')
-    def test_cli_create_solution_007(self, snippy, editor_data):
+    def test_cli_create_solution_007(snippy, editor_data):
         """Create solution from editor.
 
         Create a new solution by using the prefilled default Markdown template
@@ -227,8 +234,9 @@ class TestCliCreateSolution(object):
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('snippy', 'create-kafka-mkdn-utc')
-    def test_cli_create_solution_008(self, snippy, editor_data):
+    def test_cli_create_solution_008(snippy, editor_data):
         """Try to create solution from editor.
 
         Try to create a new solution by using the prefilled default Markdown
@@ -276,8 +284,9 @@ class TestCliCreateSolution(object):
         assert cause == 'NOK: content was not stored because it was matching to an empty template'
         Content.assert_storage(None)
 
+    @staticmethod
     @pytest.mark.usefixtures('create-remove-utc')
-    def test_cli_create_solution_009(self, snippy):
+    def test_cli_create_solution_009(snippy):
         """Try to create solution from CLI.
 
         Try to create new solution by from command line with --no-editor
@@ -288,8 +297,9 @@ class TestCliCreateSolution(object):
         assert cause == 'NOK: content was not stored because mandatory content field data is empty'
         Content.assert_storage(None)
 
+    @staticmethod
     @pytest.mark.usefixtures('snippy', 'create-beats-utc')
-    def test_cli_create_solution_010(self, snippy):
+    def test_cli_create_solution_010(snippy):
         """Create solution from command line.
 
         Create new solution by defining all content parameters from command

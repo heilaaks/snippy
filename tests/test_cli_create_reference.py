@@ -30,8 +30,9 @@ from tests.testlib.reference import Reference
 class TestCliCreateReferece(object):
     """Test workflows for creating references."""
 
+    @staticmethod
     @pytest.mark.usefixtures('create-gitlog-utc')
-    def test_cli_create_reference_001(self, snippy):
+    def test_cli_create_reference_001(snippy):
         """Create reference from CLI.
 
         Create new reference by defining all content parameters from command
@@ -53,7 +54,8 @@ class TestCliCreateReferece(object):
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
-    def test_cli_create_reference_002(self, snippy):
+    @staticmethod
+    def test_cli_create_reference_002(snippy):
         """Try to create reference from CLI.
 
         Try to create new reference without defining mandatory content link.
@@ -72,8 +74,9 @@ class TestCliCreateReferece(object):
         assert cause == 'NOK: content was not stored because mandatory content field links is empty'
         Content.assert_storage(None)
 
+    @staticmethod
     @pytest.mark.usefixtures('edit-reference-template')
-    def test_cli_create_reference_003(self, snippy):
+    def test_cli_create_reference_003(snippy):
         """Try to create reference from CLI.
 
         Try to create new reference without any changes to reference template.
@@ -83,8 +86,9 @@ class TestCliCreateReferece(object):
         assert cause == 'NOK: content was not stored because it was matching to an empty template'
         Content.assert_storage(None)
 
+    @staticmethod
     @pytest.mark.usefixtures('edit-empty')
-    def test_cli_create_reference_004(self, snippy):
+    def test_cli_create_reference_004(snippy):
         """Try to create reference from CLI.
 
         Try to create new reference with empty data. In this case the whole
@@ -95,8 +99,9 @@ class TestCliCreateReferece(object):
         assert cause == 'NOK: could not identify content category - please keep template tags in place'
         Content.assert_storage(None)
 
+    @staticmethod
     @pytest.mark.usefixtures('create-gitlog-utc')
-    def test_cli_create_reference_005(self, snippy, editor_data):
+    def test_cli_create_reference_005(snippy, editor_data):
         """Create reference with editor.
 
         Create a new reference by using the prefilled default Markdown template
@@ -160,8 +165,9 @@ class TestCliCreateReferece(object):
         editor_data.assert_called_with('\n'.join(template))
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('create-gitlog-utc')
-    def test_cli_create_reference_006(self, snippy, editor_data):
+    def test_cli_create_reference_006(snippy, editor_data):
         """Try to create reference with editor.
 
         Try to create a new reference by using the prefilled default Markdown
@@ -197,9 +203,9 @@ class TestCliCreateReferece(object):
         editor_data.assert_called_with('\n'.join(template))
         Content.assert_storage(None)
 
-
+    @staticmethod
     @pytest.mark.usefixtures('create-remove-utc')
-    def test_cli_create_reference_007(self, snippy):
+    def test_cli_create_reference_007(snippy):
         """Try to create reference from CLI.
 
         Try to create new reference by from command line with --no-editor

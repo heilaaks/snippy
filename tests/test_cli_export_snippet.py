@@ -35,8 +35,9 @@ from tests.testlib.snippet import Snippet
 class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
     """Test workflows for exporting snippets."""
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'export-time')
-    def test_cli_export_snippet_001(self, snippy):
+    def test_cli_export_snippet_001(snippy):
         """Export all snippets.
 
         Export all snippets without defining target file name from command
@@ -55,8 +56,9 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             assert cause == Cause.ALL_OK
             Content.assert_mkdn(mock_file, './snippets.mkdn', content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'export-time')
-    def test_cli_export_snippet_002(self, snippy):
+    def test_cli_export_snippet_002(snippy):
         """Export all snippets.
 
         Export all snippets without defining target file name from command
@@ -75,8 +77,9 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             assert cause == Cause.ALL_OK
             Content.assert_mkdn(mock_file, './snippets.mkdn', content)
 
+    @staticmethod
     @pytest.mark.usefixtures('yaml', 'default-snippets', 'export-time')
-    def test_cli_export_snippet_003(self, snippy):
+    def test_cli_export_snippet_003(snippy):
         """Export all snippets.
 
         Export all snippets into yaml file defined from command line.
@@ -94,8 +97,9 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             assert cause == Cause.ALL_OK
             Content.assert_yaml(yaml, mock_file, './defined-snippets.yaml', content)
 
+    @staticmethod
     @pytest.mark.usefixtures('yaml', 'default-snippets', 'export-time')
-    def test_cli_export_snippet_004(self, snippy):
+    def test_cli_export_snippet_004(snippy):
         """Export all snippets.
 
         Export all snippets into yaml file by explicitly defining the content
@@ -114,8 +118,9 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             assert cause == Cause.ALL_OK
             Content.assert_yaml(yaml, mock_file, './defined-snippets.yml', content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_export_snippet_005(self, snippy):
+    def test_cli_export_snippet_005(snippy):
         """Export all snippets.
 
         Try to export all snippets into file format that is not supported.
@@ -130,8 +135,9 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_not_called()
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'export-time')
-    def test_cli_export_snippet_006(self, snippy):
+    def test_cli_export_snippet_006(snippy):
         """Export defined snippets.
 
         Export defined snippet based on message digest. File name is not
@@ -150,8 +156,9 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             assert cause == Cause.ALL_OK
             Content.assert_mkdn(mock_file, './snippets.mkdn', content)
 
+    @staticmethod
     @pytest.mark.usefixtures('yaml', 'default-snippets', 'export-time')
-    def test_cli_export_snippet_007(self, snippy):
+    def test_cli_export_snippet_007(snippy):
         """Export defined snippets.
 
         Export defined snippet based on message digest. File name is defined
@@ -169,8 +176,9 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             assert cause == Cause.ALL_OK
             Content.assert_yaml(yaml, mock_file, 'defined-snippet.yaml', content)
 
+    @staticmethod
     @pytest.mark.usefixtures('json', 'default-snippets', 'export-time')
-    def test_cli_export_snippet_008(self, snippy):
+    def test_cli_export_snippet_008(snippy):
         """Export defined snippets.
 
         Export defined snippet based on message digest. File name is defined
@@ -188,8 +196,9 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             assert cause == Cause.ALL_OK
             Content.assert_json(json, mock_file, 'defined-snippet.json', content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'export-time')
-    def test_cli_export_snippet_009(self, snippy):
+    def test_cli_export_snippet_009(snippy):
         """Export defined snippets.
 
         Export defined snippet based on message digest. File name is defined
@@ -208,8 +217,9 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             assert cause == Cause.ALL_OK
             Content.assert_text(mock_file, 'defined-snippet.txt', content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'export-time')
-    def test_cli_export_snippet_010(self, snippy):
+    def test_cli_export_snippet_010(snippy):
         """Export defined snippets.
 
         Try to export defined snippet based on message digest that cannot be
@@ -221,8 +231,9 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             assert cause == 'NOK: cannot find content with message digest: 123456789abcdef0'
             Content.assert_text(mock_file, None, None)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'export-time')
-    def test_cli_export_snippet_011(self, snippy):
+    def test_cli_export_snippet_011(snippy):
         """Export defined snippets.
 
         Export defined snippet based on search keyword. File name is not
@@ -241,8 +252,9 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             assert cause == Cause.ALL_OK
             Content.assert_mkdn(mock_file, './snippets.mkdn', content)
 
+    @staticmethod
     @pytest.mark.usefixtures('yaml', 'default-snippets', 'export-time')
-    def test_cli_export_snippet_012(self, snippy):
+    def test_cli_export_snippet_012(snippy):
         """Export defined snippets.
 
         Export defined snippet based on search keyword. File name is defined
@@ -260,8 +272,9 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             assert cause == Cause.ALL_OK
             Content.assert_yaml(yaml, mock_file, 'defined-snippet.yaml', content)
 
+    @staticmethod
     @pytest.mark.usefixtures('json', 'default-snippets', 'export-time')
-    def test_cli_export_snippet_013(self, snippy):
+    def test_cli_export_snippet_013(snippy):
         """Export defined snippets.
 
         Export defined snippet based on search keyword. File name is defined
@@ -279,8 +292,9 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             assert cause == Cause.ALL_OK
             Content.assert_json(json, mock_file, 'defined-snippet.json', content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'export-time')
-    def test_cli_export_snippet_014(self, snippy):
+    def test_cli_export_snippet_014(snippy):
         """Export defined snippets.
 
         Export defined snippet based on search keyword. File name is defined
@@ -298,8 +312,9 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             assert cause == Cause.ALL_OK
             Content.assert_text(mock_file, 'defined-snippet.txt', content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'export-time')
-    def test_cli_export_snippet_015(self, snippy):
+    def test_cli_export_snippet_015(snippy):
         """Export defined snippets.
 
         Export defined snippet based on search keyword. File name is defined
@@ -317,8 +332,9 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             assert cause == Cause.ALL_OK
             Content.assert_text(mock_file, 'defined-snippet.text', content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'export-time')
-    def test_cli_export_snippet_016(self, snippy):
+    def test_cli_export_snippet_016(snippy):
         """Export snippets with search keyword.
 
         Export snippets based on search keyword. In this case the search
@@ -338,8 +354,9 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             assert cause == Cause.ALL_OK
             Content.assert_text(mock_file, 'defined-snippet.text', content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'export-time')
-    def test_cli_export_snippet_017(self, snippy):
+    def test_cli_export_snippet_017(snippy):
         """Export defined snippet with search keyword.
 
         Try to export snippet based on search keyword that cannot befound.
@@ -350,8 +367,9 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             assert cause == 'NOK: cannot find content with given search criteria'
             mock_file.assert_not_called()
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'export-time')
-    def test_cli_export_snippet_018(self, snippy):
+    def test_cli_export_snippet_018(snippy):
         """Export defined snippet with content data.
 
         Export defined snippet based on content data. File name is not defined
@@ -370,8 +388,9 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             assert cause == Cause.ALL_OK
             Content.assert_mkdn(mock_file, './snippets.mkdn', content)
 
+    @staticmethod
     @pytest.mark.usefixtures('yaml', 'default-snippets', 'export-time')
-    def test_cli_export_snippet_019(self, snippy):
+    def test_cli_export_snippet_019(snippy):
         """Export defined snippet with content data.
 
         Export defined snippet based on content data. File name is defined in
@@ -389,8 +408,9 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             assert cause == Cause.ALL_OK
             Content.assert_yaml(yaml, mock_file, 'defined-snippet.yaml', content)
 
+    @staticmethod
     @pytest.mark.usefixtures('json', 'default-snippets', 'export-time')
-    def test_cli_export_snippet_020(self, snippy):
+    def test_cli_export_snippet_020(snippy):
         """Export defined snippet with content data.
 
         Export defined snippet based on content data. File name is defined in
@@ -408,8 +428,9 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             assert cause == Cause.ALL_OK
             Content.assert_json(json, mock_file, 'defined-snippet.json', content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'export-time')
-    def test_cli_export_snippet_021(self, snippy):
+    def test_cli_export_snippet_021(snippy):
         """Export defined snippet with content data.
 
         Export defined snippet based on content data. File name is defined in
@@ -427,8 +448,9 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             assert cause == Cause.ALL_OK
             Content.assert_text(mock_file, 'defined-snippet.txt', content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'export-time')
-    def test_cli_export_snippet_022(self, snippy):
+    def test_cli_export_snippet_022(snippy):
         """Export snippet template.
 
         Export snippet template. This should result file name and format based
@@ -442,8 +464,9 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_called_with(Const.NEWLINE.join(Snippet.TEMPLATE_MKDN))
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'export-time')
-    def test_cli_export_snippet_023(self, snippy):
+    def test_cli_export_snippet_023(snippy):
         """Export snippet template.
 
         Export snippet template by explicitly defining content category. This
@@ -457,8 +480,9 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_called_with(Const.NEWLINE.join(Snippet.TEMPLATE_MKDN))
 
+    @staticmethod
     @pytest.mark.usefixtures('yaml', 'default-snippets', 'export-time')
-    def test_cli_export_snippet_024(self, snippy):
+    def test_cli_export_snippet_024(snippy):
         """Export snippet defaults.
 
         Export snippet defaults. All snippets should be exported into
@@ -478,8 +502,9 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             defaults_snippets = pkg_resources.resource_filename('snippy', 'data/defaults/snippets.yaml')
             Content.assert_yaml(yaml, mock_file, defaults_snippets, content)
 
+    @staticmethod
     @pytest.mark.usefixtures('export-time')
-    def test_cli_export_snippet_025(self, snippy):
+    def test_cli_export_snippet_025(snippy):
         """Export snippet defaults.
 
         Try to export snippet defaults when there are no stored snippets.
@@ -492,8 +517,9 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             assert cause == 'NOK: no content found to be exported'
             mock_file.assert_not_called()
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'export-time')
-    def test_cli_export_snippet_026(self, snippy):
+    def test_cli_export_snippet_026(snippy):
         """Export snippets with search keyword.
 
         Export snippets based on search keyword. In this case the search
@@ -513,8 +539,9 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             assert cause == Cause.ALL_OK
             Content.assert_mkdn(mock_file, './snippets.mkdn', content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'export-time')
-    def test_cli_export_snippet_027(self, snippy):
+    def test_cli_export_snippet_027(snippy):
         """Export all snippets.
 
         Export all snippets in Markdown format.
@@ -532,8 +559,9 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             assert cause == Cause.ALL_OK
             Content.assert_mkdn(mock_file, './snippets.mkdn', content)
 
+    @staticmethod
     @pytest.mark.usefixtures('export-time')
-    def test_cli_export_snippet_028(self, snippy):
+    def test_cli_export_snippet_028(snippy):
         """Export all snippets.
 
         Export snippet with two lines content description. There must be two
@@ -556,8 +584,9 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             call = mock_file.return_value.__enter__.return_value.write.mock_calls[0][1][0]
             assert 'Manipulate compressed tar files and define very long descrption for the content to  \nextend to two lines.\n\n' in call
 
+    @staticmethod
     @pytest.mark.usefixtures('import-exited', 'export-time')
-    def test_cli_export_snippet_029(self, snippy):
+    def test_cli_export_snippet_029(snippy):
         """Export all snippets.
 
         Export snippets in Markdown format. This case verified that there is
@@ -603,8 +632,9 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             assert mock_file.return_value.__enter__.return_value.write.mock_calls[0][1][0] == '\n'.join(markdown)
             Content.assert_mkdn(mock_file, './snippets.mkdn', content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'export-time')
-    def test_cli_export_snippet_030(self, snippy):
+    def test_cli_export_snippet_030(snippy):
         """Export snippet template.
 
         Export reference template by explicitly defining content category
@@ -618,8 +648,9 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_called_with(Const.NEWLINE.join(Snippet.TEMPLATE_TEXT))
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'export-time')
-    def test_cli_export_snippet_031(self, snippy):
+    def test_cli_export_snippet_031(snippy):
         """Export snippet template.
 
         Export reference template by explicitly defining content category

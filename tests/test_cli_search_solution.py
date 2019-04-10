@@ -30,8 +30,9 @@ from tests.testlib.solution import Solution
 class TestCliSearchSolution(object):
     """Test workflows for searching solutions."""
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions')
-    def test_cli_search_solution_001(self, snippy, capsys):
+    def test_cli_search_solution_001(snippy, capsys):
         """Search solutions with ``sall`` option.
 
         Search solutions from all content fields. The match is made from one
@@ -52,8 +53,9 @@ class TestCliSearchSolution(object):
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions')
-    def test_cli_search_solution_002(self, snippy, capsys):
+    def test_cli_search_solution_002(snippy, capsys):
         """Search solutions with ``sall`` option.
 
         Try to search solutions with keyword that cannot be found.
@@ -66,8 +68,9 @@ class TestCliSearchSolution(object):
         assert out == output
         assert not err
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions')
-    def test_cli_search_solution_003(self, snippy, capsys):
+    def test_cli_search_solution_003(snippy, capsys):
         """Search solutions with ``filter`` option.
 
         Search all content with regexp filter.
@@ -87,8 +90,9 @@ class TestCliSearchSolution(object):
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions')
-    def test_cli_search_solution_004(self, snippy, capsys):
+    def test_cli_search_solution_004(snippy, capsys):
         """Search solutions with ``digest`` option.
 
         Search a solution by explicitly defining the solutions message digest
@@ -109,8 +113,9 @@ class TestCliSearchSolution(object):
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions')
-    def test_cli_search_solution_005(self, snippy, capsys):
+    def test_cli_search_solution_005(snippy, capsys):
         """Search solutions with ``sall`` and ``sgrp`` options.
 
         Search solutions from all fields and limit the search to a specific

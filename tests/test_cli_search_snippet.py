@@ -30,8 +30,9 @@ from tests.testlib.helper import Helper
 class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
     """Test workflows for searching snippets."""
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_search_snippet_001(self, snippy, capsys):
+    def test_cli_search_snippet_001(snippy, capsys):
         """Search snippets with ``sall`` option.
 
         Search snippets from all fields. The match is made from one
@@ -56,8 +57,9 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_search_snippet_002(self, snippy, capsys):
+    def test_cli_search_snippet_002(snippy, capsys):
         """Search snippets with ``sall`` option.
 
         Search snippets from all fields. The match is made from one snippet
@@ -81,8 +83,9 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_search_snippet_003(self, snippy, capsys):
+    def test_cli_search_snippet_003(snippy, capsys):
         """Search snippets with ``sall`` option.
 
         Search snippets from all fields. The match is made from two snippets
@@ -114,8 +117,9 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_search_snippet_004(self, snippy, capsys):
+    def test_cli_search_snippet_004(snippy, capsys):
         """Search snippets with ``sall`` option.
 
         Search snippets from all fields. The match is made from two snippets
@@ -147,8 +151,9 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_search_snippet_005(self, snippy, capsys):
+    def test_cli_search_snippet_005(snippy, capsys):
         """Search snippets with ``sall`` option.
 
         Search snippets from all fields. The match is made from one snippet
@@ -173,8 +178,9 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_search_snippet_006(self, snippy, capsys):
+    def test_cli_search_snippet_006(snippy, capsys):
         """Search snippets with ``sall`` option.
 
         Search snippets from all fields. The match is made from one snippet
@@ -199,8 +205,9 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_search_snippet_007(self, snippy, capsys):
+    def test_cli_search_snippet_007(snippy, capsys):
         """Search snippets with ``sall`` option.
 
         Search snippets from all fields with two keywords. The match is made
@@ -233,8 +240,9 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'import-netcat')
-    def test_cli_search_snippet_008(self, snippy, capsys):
+    def test_cli_search_snippet_008(snippy, capsys):
         """Search snippets with ``sall`` option.
 
         Search snippets from all fields with three keywords. The match is made
@@ -267,8 +275,9 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_search_snippet_009(self, snippy, capsys):
+    def test_cli_search_snippet_009(snippy, capsys):
         """Search snippets with ``sall`` option.
 
         List all snippets by defining search criteria of search all to
@@ -300,8 +309,9 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_search_snippet_010(self, snippy, capsys):
+    def test_cli_search_snippet_010(snippy, capsys):
         """Search snippets with ``sall`` option.
 
         List all snippets by leaving search criteria for 'search all fields'
@@ -333,8 +343,9 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_search_snippet_011(self, snippy, capsys):
+    def test_cli_search_snippet_011(snippy, capsys):
         """Search snippets with ``sall`` option.
 
         List all snippets by leaving search criteria of search all as empty.
@@ -366,8 +377,9 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+    @staticmethod
     @pytest.mark.usefixtures('snippy')
-    def test_cli_search_snippet_012(self, snippy, capsys):
+    def test_cli_search_snippet_012(snippy, capsys):
         """Search snippets with ``sall`` option.
 
         Try to search snippets when there are no content stored. The used
@@ -382,8 +394,9 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == output
         assert not err
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_search_snippet_013(self, snippy, capsys):
+    def test_cli_search_snippet_013(snippy, capsys):
         """Search snippets with ``sall`` option.
 
         Try to search snippets with keyword that cannot be found.
@@ -396,8 +409,9 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == output
         assert not err
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'import-netcat')
-    def test_cli_search_snippet_014(self, snippy, capsys):
+    def test_cli_search_snippet_014(snippy, capsys):
         """Search snippets with ``stag`` option.
 
         Search snippets from tag field. The match is made from one snippet.
@@ -421,8 +435,9 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'import-netcat')
-    def test_cli_search_snippet_015(self, snippy, capsys):
+    def test_cli_search_snippet_015(snippy, capsys):
         """Search snippets with ``stag`` option.
 
         Search snippets from tag field. No matches are made.
@@ -435,8 +450,9 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == output
         assert not err
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_search_snippet_016(self, snippy, capsys):
+    def test_cli_search_snippet_016(snippy, capsys):
         """Search snippets with ``stag`` option.
 
         List all snippets by leaving search criteria for 'search tags' out
@@ -469,8 +485,9 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert not err
 
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'import-netcat')
-    def test_cli_search_snippet_017(self, snippy, capsys):
+    def test_cli_search_snippet_017(snippy, capsys):
         """Search snippets with ``sgrp`` option.
 
         Search snippets from group field. The match is made from one snippet.
@@ -494,8 +511,9 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'import-netcat')
-    def test_cli_search_snippet_018(self, snippy, capsys):
+    def test_cli_search_snippet_018(snippy, capsys):
         """Search snippets with ``sgrp`` option.
 
         Search snippets from group field. No matches are made.
@@ -508,8 +526,9 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == output
         assert not err
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_search_snippet_019(self, snippy, capsys):
+    def test_cli_search_snippet_019(snippy, capsys):
         """Search snippets with ``sgrp`` option.
 
         List all snippets by leaving search criteria for 'search groups' out
@@ -541,8 +560,9 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'default-solutions', 'import-netcat')
-    def test_cli_search_snippet_020(self, snippy, capsys):
+    def test_cli_search_snippet_020(snippy, capsys):
         """Search snippets with ``filter`` option.
 
         Search all content with a regexp filter. The filter removes all
@@ -577,8 +597,9 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'default-solutions', 'import-netcat')
-    def test_cli_search_snippet_021(self, snippy, capsys):
+    def test_cli_search_snippet_021(snippy, capsys):
         """Search snippets with ``filter`` option.
 
         Search all content with a regexp filter. The filter removes all
@@ -612,8 +633,9 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'default-solutions', 'import-netcat')
-    def test_cli_search_snippet_022(self, snippy, capsys):
+    def test_cli_search_snippet_022(snippy, capsys):
         """Search snippets with ``filter`` option.
 
         Search all content with a regexp filter. The filter removes all
@@ -630,8 +652,9 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == output
         assert not err
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'default-solutions')
-    def test_cli_search_snippet_023(self, snippy, capsys):
+    def test_cli_search_snippet_023(snippy, capsys):
         """Search snippets with ``filter`` option.
 
         Try to search snippets with a regexp filter that is not syntactically
@@ -664,8 +687,9 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_search_snippet_024(self, snippy, capsys):
+    def test_cli_search_snippet_024(snippy, capsys):
         """Search snippets with ``content`` option.
 
         Search snippets based on content data.
@@ -688,8 +712,9 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_search_snippet_025(self, snippy, capsys):
+    def test_cli_search_snippet_025(snippy, capsys):
         """Search snippets with --content option.
 
         Search snippets based on content data that matches to beginnging
@@ -713,8 +738,9 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_search_snippet_026(self, snippy, capsys):
+    def test_cli_search_snippet_026(snippy, capsys):
         """Search snippets with ``content`` option.
 
         Search snippets based on content data that matches to a string in
@@ -738,8 +764,9 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_search_snippet_027(self, snippy, capsys):
+    def test_cli_search_snippet_027(snippy, capsys):
         """Search snippets with ``digest`` option.
 
         Search snippet by explicitly defining short message digest.
@@ -763,8 +790,9 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_search_snippet_028(self, snippy, capsys):
+    def test_cli_search_snippet_028(snippy, capsys):
         """Search snippets with ``digest`` option.
 
         Search snippet by explicitly defining long message digest.
@@ -788,8 +816,9 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_search_snippet_029(self, snippy, capsys):
+    def test_cli_search_snippet_029(snippy, capsys):
         """Search snippets with ``digest`` option.
 
         Search snippets by defining one digit message digest. In this case
@@ -821,8 +850,9 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_search_snippet_030(self, snippy, capsys):
+    def test_cli_search_snippet_030(snippy, capsys):
         """Search snippets with ``digest`` option.
 
         Search snippets by defining empty string as message digest. This
@@ -854,8 +884,9 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'import-netcat')
-    def test_cli_search_snippet_031(self, snippy, capsys):
+    def test_cli_search_snippet_031(snippy, capsys):
         """Search snippets with ``sall`` option.
 
         Search snippets from all fields of specific group. The match must not
@@ -888,8 +919,9 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'import-netcat')
-    def test_cli_search_snippet_032(self, snippy, capsys):
+    def test_cli_search_snippet_032(snippy, capsys):
         """Search snippets with ``sall`` option.
 
         Search snippets from all fields of two different groups.
@@ -928,8 +960,9 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'import-netcat')
-    def test_cli_search_snippet_033(self, snippy, capsys):
+    def test_cli_search_snippet_033(snippy, capsys):
         """Search snippets with ``stag`` option.
 
         Search snippets from tag fields of specific group. The match must not
@@ -962,8 +995,9 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'import-netcat')
-    def test_cli_search_snippet_034(self, snippy, capsys):
+    def test_cli_search_snippet_034(snippy, capsys):
         """Search snippets with ``stag`` option.
 
         Try to search snippets based on tag fields of specific group. In this
@@ -977,8 +1011,9 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == output
         assert not err
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_search_snippet_035(self, snippy, capsys):
+    def test_cli_search_snippet_035(snippy, capsys):
         """Search snippets with special failures.
 
         Try to search snippets without defining any search criteria.
@@ -991,8 +1026,9 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == output
         assert not err
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_search_snippet_036(self, snippy, capsys):
+    def test_cli_search_snippet_036(snippy, capsys):
         """Search snippets with ``filter`` option.
 
         Try to search snippets defining filter but not any search criteria.
@@ -1007,8 +1043,9 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == output
         assert not err
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'import-netcat')
-    def test_cli_search_snippet_037(self, snippy, capsys):
+    def test_cli_search_snippet_037(snippy, capsys):
         """Limit number of search results.
 
         Search snippets from tag fields of specific group which would result
@@ -1033,7 +1070,8 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    def test_cli_search_snippet_038(self, snippy, capsys):
+    @staticmethod
+    def test_cli_search_snippet_038(snippy, capsys):
         """Print snippet with aligned comments.
 
         Print snippet which has commends on every command. In this case the
@@ -1072,7 +1110,8 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    def test_cli_search_snippet_039(self, snippy, capsys):
+    @staticmethod
+    def test_cli_search_snippet_039(snippy, capsys):
         """Print snippet with aligned comments.
 
         Print snippet which do not have comments after every command. In
@@ -1112,7 +1151,8 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    def test_cli_search_snippet_040(self, snippy, capsys):
+    @staticmethod
+    def test_cli_search_snippet_040(snippy, capsys):
         """Print snippet with aligned comments.
 
         Print snippet with comments that must not trigger comment aligment
@@ -1157,8 +1197,9 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+    @staticmethod
     @pytest.mark.usefixtures('import-interp')
-    def test_cli_search_snippet_041(self, snippy, capsys):
+    def test_cli_search_snippet_041(snippy, capsys):
         """Search snippets with special format and characters.
 
         Search a snippet which content data has a ASCII string that is a
@@ -1183,8 +1224,9 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_search_snippet_042(self, snippy, capsys):
+    def test_cli_search_snippet_042(snippy, capsys):
         """Search snippets with special format and characters.
 
         Search snippets and print the results in Markdown format.

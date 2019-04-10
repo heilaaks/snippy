@@ -41,8 +41,8 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_create_snippet_001(server):
         """Create one snippet with POST.
 
-        Send POST /snippets to create a new resource. The created snippet is
-        sent in the HTTP request ``data`` attribute as a list of objects.
+        Send POST /v1/snippets to create a new resource. The created snippet
+        is sent in the HTTP request ``data`` attribute as a list of objects.
         """
 
         content = {
@@ -82,8 +82,8 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_create_snippet_002(server):
         """Create one snippet with POST.
 
-        Send POST /snippets to create a new resource. The created snippet is
-        sent in the POST request ``data`` attribute as an object. The HTTP
+        Send POST /v1/snippets to create a new resource. The created snippet
+        is sent in the POST request ``data`` attribute as an object. The HTTP
         response that contains the created resource must be received as a
         list of snippet objects.
         """
@@ -125,8 +125,8 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_create_snippet_003(server):
         """Create one snippet with POST.
 
-        Send POST /snippets to create a new resource. In this case there is
-        only part of the snippet object attributes defined.
+        Send POST /v1/snippets to create a new resource. In this case there
+        is only part of the snippet object attributes defined.
 
         The ``tags`` attribute must be sorted and the tags trimmed when it is
         stored into the database.
@@ -175,7 +175,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_create_snippet_004(server):
         """Create one snippet with POST.
 
-        Send POST /snippets to create a new resource. In this case the snippet
+        Send POST /v1/snippets to create a new resource. In this case snippet
         content data, tags and links attributes are defined in string context
         where each line is separated with a newline.
         """
@@ -331,7 +331,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_create_snippet_007(server):
         """Create list of snippets from API.
 
-        Call POST /v1/snippets in list context to create new snippets.
+        Send POST /v1/snippets in list context to create new snippets.
         """
 
         content = {
@@ -380,7 +380,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_create_snippet_008(server):
         """Try to create snippet with malformed JSON request.
 
-        Try to call POST /v1/snippets to create new snippet with malformed
+        Try to send POST /v1/snippets to create new snippet with malformed
         JSON request. In this case the top level json object is incorrect.
         """
 

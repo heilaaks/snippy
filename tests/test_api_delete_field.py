@@ -39,7 +39,7 @@ class TestApiDeleteField(object):
     def test_api_delete_field_001(server):
         """Try to delete ``groups`` attribute from API.
 
-        Try to send DELETE /groups that is not supported.
+        Try to send DELETE /v1/groups that is not supported.
         """
 
         request_body = {
@@ -75,7 +75,7 @@ class TestApiDeleteField(object):
     def test_api_delete_field_002(server):
         """Try to delete ``tags`` attribute from API.
 
-        Try to send DELETE /tags that is not supported.
+        Try to send DELETE /v1/tags that is not supported.
         """
 
         request_body = {

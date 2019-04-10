@@ -29,8 +29,9 @@ from tests.testlib.solution import Solution
 class TestCliDeleteSolution(object):
     """Test workflows for deleting solutions."""
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions')
-    def test_cli_delete_solution_001(self, snippy):
+    def test_cli_delete_solution_001(snippy):
         """Delete solution with digest.
 
         Delete solution with short 16 byte version of message digest.
@@ -46,8 +47,9 @@ class TestCliDeleteSolution(object):
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions')
-    def test_cli_delete_solution_002(self, snippy):
+    def test_cli_delete_solution_002(snippy):
         """Delete solution with digest.
 
         Delete solution with without explicitly specifying solution category.
@@ -63,8 +65,9 @@ class TestCliDeleteSolution(object):
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions')
-    def test_cli_delete_solution_003(self, snippy):
+    def test_cli_delete_solution_003(snippy):
         """Delete solution with digest.
 
         Delete solution with very short version of digest that matches to
@@ -80,8 +83,9 @@ class TestCliDeleteSolution(object):
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions')
-    def test_cli_delete_solution_004(self, snippy):
+    def test_cli_delete_solution_004(snippy):
         """Delete solution with digest.
 
         Delete solution with long 16 byte version of message digest.
@@ -97,8 +101,9 @@ class TestCliDeleteSolution(object):
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('import-nginx')
-    def test_cli_delete_solution_005(self, snippy):
+    def test_cli_delete_solution_005(snippy):
         """Delete solution with digest.
 
         Delete solution with empty message digest when there is only one
@@ -111,8 +116,9 @@ class TestCliDeleteSolution(object):
         assert cause == Cause.ALL_OK
         Content.assert_storage(None)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions')
-    def test_cli_delete_solution_006(self, snippy):
+    def test_cli_delete_solution_006(snippy):
         """Delete solution with digest.
 
         Try to delete solution with message digest that cannot be found.
@@ -128,8 +134,9 @@ class TestCliDeleteSolution(object):
         assert cause == 'NOK: cannot find content with message digest: 123456789abcdef0'
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions')
-    def test_cli_delete_solution_007(self, snippy):
+    def test_cli_delete_solution_007(snippy):
         """Delete solution with digest.
 
         Try to delete solution with empty message digest. Nothing should be
@@ -146,8 +153,9 @@ class TestCliDeleteSolution(object):
         assert cause == 'NOK: cannot use empty message digest for delete operation'
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions')
-    def test_cli_delete_solution_008(self, snippy):
+    def test_cli_delete_solution_008(snippy):
         """Delete solution with digest.
 
         Try to delete solution with short version of digest that does not
@@ -164,8 +172,9 @@ class TestCliDeleteSolution(object):
         assert cause == 'NOK: cannot find content with message digest: 123456'
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions')
-    def test_cli_delete_solution_009(self, snippy):
+    def test_cli_delete_solution_009(snippy):
         """Delete solution with data.
 
         Delete solution based on content data.
@@ -182,8 +191,9 @@ class TestCliDeleteSolution(object):
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions')
-    def test_cli_delete_solution_010(self, snippy):
+    def test_cli_delete_solution_010(snippy):
         """Delete solution with data.
 
         Try to delete solution with content data that does not exist. In this
@@ -200,8 +210,9 @@ class TestCliDeleteSolution(object):
         assert cause == 'NOK: cannot find content with content data: not-exists'
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions')
-    def test_cli_delete_solution_011(self, snippy):
+    def test_cli_delete_solution_011(snippy):
         """Delete solution with data.
 
         Try to delete solution with content data that does not exist. In this
@@ -219,8 +230,9 @@ class TestCliDeleteSolution(object):
         assert cause == 'NOK: cannot find content with content data: ##############################...'
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-solutions')
-    def test_cli_delete_solution_012(self, snippy):
+    def test_cli_delete_solution_012(snippy):
         """Delete solution with data.
 
         Try to delete solution with empty content data. Nothing should be

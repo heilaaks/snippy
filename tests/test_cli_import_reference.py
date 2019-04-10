@@ -35,8 +35,9 @@ from tests.testlib.reference import Reference
 class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
     """Test workflows for importing references."""
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true')
-    def test_cli_import_reference_001(self, snippy):
+    def test_cli_import_reference_001(snippy):
         """Import all references.
 
         Import all references. File name is not defined in command line. This
@@ -56,8 +57,9 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('./references.mkdn', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'yaml')
-    def test_cli_import_reference_002(self, snippy):
+    def test_cli_import_reference_002(snippy):
         """Import all references.
 
         Import all references from yaml file. File name and format are extracted
@@ -79,8 +81,9 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('./all-references.yaml', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'yaml')
-    def test_cli_import_reference_003(self, snippy):
+    def test_cli_import_reference_003(snippy):
         """Import all references.
 
         Import all references from yaml file without specifying the reference
@@ -102,8 +105,9 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('./all-references.yml', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'json')
-    def test_cli_import_reference_004(self, snippy):
+    def test_cli_import_reference_004(snippy):
         """Import all references.
 
         Import all references from json file. File name and format are extracted
@@ -124,8 +128,9 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('./all-references.json', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'default-references-utc')
-    def test_cli_import_reference_005(self, snippy):
+    def test_cli_import_reference_005(snippy):
         """Import all references.
 
         Import all references from txt file. File name and format are extracted
@@ -149,8 +154,9 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('./all-references.txt', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'default-references-utc')
-    def test_cli_import_reference_006(self, snippy):
+    def test_cli_import_reference_006(snippy):
         """Import all references.
 
         Import all references from txt file without specifying the reference
@@ -171,8 +177,9 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('./all-references.txt', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'default-references-utc')
-    def test_cli_import_reference_007(self, snippy):
+    def test_cli_import_reference_007(snippy):
         """Import all references.
 
         Import all references from txt file without specifying the reference
@@ -193,8 +200,9 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('./all-references.text', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true')
-    def test_cli_import_reference_008(self, snippy):
+    def test_cli_import_reference_008(snippy):
         """Import all references.
 
         Try to import empty reference template. The operation will fail because
@@ -209,7 +217,8 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(None)
             mock_file.assert_called_once_with('./reference-template.text', 'r')
 
-    def test_cli_import_reference_009(self, snippy):
+    @staticmethod
+    def test_cli_import_reference_009(snippy):
         """Import all references.
 
         Try to import reference from file which file format is not supported.
@@ -222,8 +231,9 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(None)
             mock_file.assert_not_called()
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'yaml', 'import-gitlog', 'update-pytest-utc')
-    def test_cli_import_reference_010(self, snippy):
+    def test_cli_import_reference_010(snippy):
         """Import reference based on message digest.
 
         Import defined reference based on message digest. File name is defined
@@ -248,8 +258,9 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('one-reference.yaml', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'yaml', 'import-gitlog', 'update-pytest-utc')
-    def test_cli_import_reference_011(self, snippy):
+    def test_cli_import_reference_011(snippy):
         """Import reference based on message digest.
 
         Import defined reference based on message digest without specifying
@@ -273,8 +284,9 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('one-reference.yaml', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'import-gitlog', 'update-pytest-utc')
-    def test_cli_import_reference_012(self, snippy):
+    def test_cli_import_reference_012(snippy):
         """Import reference based on message digest.
 
         Import defined reference based on message digest. In this case the
@@ -297,8 +309,9 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('one-reference.text', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('import-pytest', 'update-regexp-utc')
-    def test_cli_import_reference_013(self, snippy):
+    def test_cli_import_reference_013(snippy):
         """Import reference based on message digest.
 
         Try to import defined reference with message digest that cannot be
@@ -322,8 +335,9 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_not_called()
 
+    @staticmethod
     @pytest.mark.usefixtures('yaml', 'import-gitlog', 'update-pytest-utc', 'isfile_true')
-    def test_cli_import_reference_014(self, snippy):
+    def test_cli_import_reference_014(snippy):
         """Import reference based on uuid.
 
         Import defined reference based on uuid.
@@ -345,8 +359,9 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('one-reference.yaml', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('import-pytest', 'update-regexp-utc')
-    def test_cli_import_reference_015(self, snippy):
+    def test_cli_import_reference_015(snippy):
         """Import reference based on message uuid.
 
         Try to import defined reference with uuid that cannot be found.
@@ -369,8 +384,9 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_not_called()
 
+    @staticmethod
     @pytest.mark.usefixtures('yaml')
-    def test_cli_import_reference_016(self, snippy):
+    def test_cli_import_reference_016(snippy):
         """Import references defaults.
 
         Import reference defaults. All references should be imported from
@@ -392,8 +408,9 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             defaults_references = pkg_resources.resource_filename('snippy', 'data/defaults/references.yaml')
             mock_file.assert_called_once_with(defaults_references, 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('yaml', 'default-references', 'import-gitlog-utc', 'import-regexp-utc')
-    def test_cli_import_reference_017(self, snippy):
+    def test_cli_import_reference_017(snippy):
         """Import references defaults.
 
         Try to import reference defaults again. The second import should fail
@@ -419,8 +436,9 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             defaults_references = pkg_resources.resource_filename('snippy', 'data/defaults/references.yaml')
             mock_file.assert_called_once_with(defaults_references, 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true')
-    def test_cli_import_reference_018(self, snippy):
+    def test_cli_import_reference_018(snippy):
         """Import reference from text template.
 
         Try to import reference template without any changes. This should result
@@ -435,8 +453,9 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(None)
             mock_file.assert_called_once_with('./reference-template.text', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'update-gitlog-utc')
-    def test_cli_import_reference_019(self, snippy):
+    def test_cli_import_reference_019(snippy):
         """Try to import reference which uuid collides.
 
         The uuid must be unique and this causes a database integrity error.
@@ -467,8 +486,9 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('./references.mkdn', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true')
-    def test_cli_import_reference_020(self, snippy):
+    def test_cli_import_reference_020(snippy):
         """Import all references.
 
         Import all references from Markdown formatted file.
@@ -487,8 +507,9 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('./all-references.mkdn', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'yaml', 'import-gitlog', 'update-regexp-utc')
-    def test_cli_import_reference_021(self, snippy):
+    def test_cli_import_reference_021(snippy):
         """Try to import reference from YAML file.
 
         Try to import a reference from YAML file that does not have any content.
@@ -507,8 +528,9 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('one-reference.yaml', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true')
-    def test_cli_import_reference_022(self, snippy):
+    def test_cli_import_reference_022(snippy):
         """Try to import references wihtout UUID.
 
         Try to import two references without UUID. When the UUID is missing, it
@@ -530,8 +552,9 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('./references.mkdn', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true')
-    def test_cli_import_reference_023(self, snippy):
+    def test_cli_import_reference_023(snippy):
         """Import reference from Markdown template.
 
         Try to import reference template without any changes. This should result

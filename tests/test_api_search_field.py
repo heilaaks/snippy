@@ -45,7 +45,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '6247'
+            'content-length': '6163'
         }
         expect_body = {
             'meta': {
@@ -56,15 +56,15 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': Snippet.REMOVE_DIGEST,
+                'id': Snippet.REMOVE_UUID,
                 'attributes': Snippet.REMOVE
             }, {
                 'type': 'snippet',
-                'id': Snippet.FORCED_DIGEST,
+                'id': Snippet.FORCED_UUID,
                 'attributes': Snippet.FORCED
             }, {
                 'type': 'solution',
-                'id': Solution.KAFKA_DIGEST,
+                'id': Solution.KAFKA_UUID,
                 'attributes': Solution.KAFKA
             }]
         }
@@ -86,7 +86,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '5377'
+            'content-length': '5321'
         }
         expect_body = {
             'meta': {
@@ -97,11 +97,11 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'reference',
-                'id': Reference.PYTEST_DIGEST,
+                'id': Reference.PYTEST_UUID,
                 'attributes': Reference.PYTEST
             }, {
                 'type': 'solution',
-                'id': Solution.KAFKA_DIGEST,
+                'id': Solution.KAFKA_UUID,
                 'attributes': Solution.KAFKA
             }]
         }
@@ -126,7 +126,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '4772'
+            'content-length': '4744'
         }
         expect_body = {
             'meta': {
@@ -137,7 +137,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'solution',
-                'id': Solution.KAFKA_DIGEST,
+                'id': Solution.KAFKA_UUID,
                 'attributes': Solution.KAFKA
             }]
         }
@@ -248,7 +248,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1545'
+            'content-length': '1489'
         }
         expect_body = {
             'meta': {
@@ -259,11 +259,11 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': Snippet.REMOVE_DIGEST,
+                'id': Snippet.REMOVE_UUID,
                 'attributes': Snippet.REMOVE
             }, {
                 'type': 'snippet',
-                'id': Snippet.FORCED_DIGEST,
+                'id': Snippet.FORCED_UUID,
                 'attributes': Snippet.FORCED
             }]
         }
@@ -321,7 +321,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '6247'
+            'content-length': '6163'
         }
         expect_body = {
             'meta': {
@@ -332,15 +332,15 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': Snippet.REMOVE_DIGEST,
+                'id': Snippet.REMOVE_UUID,
                 'attributes': Snippet.REMOVE
             }, {
                 'type': 'snippet',
-                'id': Snippet.FORCED_DIGEST,
+                'id': Snippet.FORCED_UUID,
                 'attributes': Snippet.FORCED
             }, {
                 'type': 'solution',
-                'id': Solution.KAFKA_DIGEST,
+                'id': Solution.KAFKA_UUID,
                 'attributes': Solution.KAFKA
             }]
         }
@@ -362,7 +362,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '675'
+            'content-length': '647'
         }
         expect_body = {
             'meta': {
@@ -373,7 +373,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'reference',
-                'id': Reference.PYTEST_DIGEST,
+                'id': Reference.PYTEST_UUID,
                 'attributes': Reference.PYTEST
             }]
         }

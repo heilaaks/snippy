@@ -30,8 +30,9 @@ from tests.testlib.snippet import Snippet
 class TestCliCreateSnippet(object):
     """Test workflows for creating snippets."""
 
+    @staticmethod
     @pytest.mark.usefixtures('create-remove-utc')
-    def test_cli_create_snippet_001(self, snippy):
+    def test_cli_create_snippet_001(snippy):
         """Create snippet from CLI.
 
         Create new snippet by defining all content parameters from command
@@ -52,8 +53,9 @@ class TestCliCreateSnippet(object):
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('create-remove-utc')
-    def test_cli_create_snippet_002(self, snippy):
+    def test_cli_create_snippet_002(snippy):
         """Create snippet from CLI.
 
         Create new snippet with all content parameters but only one tag.
@@ -75,7 +77,8 @@ class TestCliCreateSnippet(object):
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
-    def test_cli_create_snippet_003(self, snippy):
+    @staticmethod
+    def test_cli_create_snippet_003(snippy):
         """Try to create snippet from CLI.
 
         Try to create new snippet without defining mandatory content data.
@@ -94,8 +97,9 @@ class TestCliCreateSnippet(object):
         assert cause == 'NOK: content was not stored because mandatory content field data is empty'
         Content.assert_storage(None)
 
+    @staticmethod
     @pytest.mark.usefixtures('edit-snippet-template')
-    def test_cli_create_snippet_004(self, snippy):
+    def test_cli_create_snippet_004(snippy):
         """Try to create snippet from CLI.
 
         Try to create new snippet without any changes to snippet template.
@@ -105,8 +109,9 @@ class TestCliCreateSnippet(object):
         assert cause == 'NOK: content was not stored because it was matching to an empty template'
         Content.assert_storage(None)
 
+    @staticmethod
     @pytest.mark.usefixtures('edit-empty')
-    def test_cli_create_snippet_005(self, snippy):
+    def test_cli_create_snippet_005(snippy):
         """Try to create snippet from CLI.
 
         Try to create new snippet with empty data. In this case the whole
@@ -117,8 +122,9 @@ class TestCliCreateSnippet(object):
         assert cause == 'NOK: could not identify content category - please keep template tags in place'
         Content.assert_storage(None)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'edit-remove')
-    def test_cli_create_snippet_006(self, snippy):
+    def test_cli_create_snippet_006(snippy):
         """Try to create snippet from CLI.
 
         Try to create snippet again with exactly same content than already
@@ -140,8 +146,9 @@ class TestCliCreateSnippet(object):
         assert cause == 'NOK: content data already exist with digest 54e41e9b52a02b63'
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('create-remove-utc')
-    def test_cli_create_snippet_007(self, snippy, capsys):
+    def test_cli_create_snippet_007(snippy, capsys):
         """Create snippet with unicode characters from CLI.
 
         Every field that can be given from command line contains unicode
@@ -195,8 +202,9 @@ class TestCliCreateSnippet(object):
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+    @staticmethod
     @pytest.mark.usefixtures('create-remove-utc')
-    def test_cli_create_snippet_008(self, snippy, capsys):
+    def test_cli_create_snippet_008(snippy, capsys):
         """Create snippet from CLI.
 
         Create new snippet with three groups. The groups must be sorted when
@@ -237,8 +245,9 @@ class TestCliCreateSnippet(object):
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+    @staticmethod
     @pytest.mark.usefixtures('create-remove-utc')
-    def test_cli_create_snippet_009(self, snippy, editor_data):
+    def test_cli_create_snippet_009(snippy, editor_data):
         """Create snippet with editor.
 
         Create a new snippet by using the prefilled default Markdown template
@@ -304,8 +313,9 @@ class TestCliCreateSnippet(object):
         editor_data.assert_called_with('\n'.join(template))
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('create-remove-utc')
-    def test_cli_create_snippet_010(self, snippy, editor_data):
+    def test_cli_create_snippet_010(snippy, editor_data):
         """Try to create snippet with editor.
 
         Try to create a new snippet by using the prefilled default Markdown
@@ -343,8 +353,9 @@ class TestCliCreateSnippet(object):
         editor_data.assert_called_with('\n'.join(template))
         Content.assert_storage(None)
 
+    @staticmethod
     @pytest.mark.usefixtures('create-remove-utc')
-    def test_cli_create_snippet_011(self, snippy):
+    def test_cli_create_snippet_011(snippy):
         """Try to create snippet from CLI.
 
         Try to create new snippet by from command line with --no-editor option
@@ -355,8 +366,9 @@ class TestCliCreateSnippet(object):
         assert cause == 'NOK: content was not stored because mandatory content field data is empty'
         Content.assert_storage(None)
 
+    @staticmethod
     @pytest.mark.usefixtures('create-remove-utc')
-    def test_cli_create_snippet_012(self, snippy, editor_data):
+    def test_cli_create_snippet_012(snippy, editor_data):
         """Create snippet with editor.
 
         Create a new snippet and define tags and brief already from command

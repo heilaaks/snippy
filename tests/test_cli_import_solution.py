@@ -37,8 +37,9 @@ from tests.testlib.solution import Solution
 class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
     """Test workflows for importing solutions."""
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true')
-    def test_cli_import_solution_001(self, snippy):
+    def test_cli_import_solution_001(snippy):
         """Import all solutions.
 
         Import all solutions. File name is not defined in command line. This
@@ -58,8 +59,9 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('./solutions.mkdn', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'yaml')
-    def test_cli_import_solution_002(self, snippy):
+    def test_cli_import_solution_002(snippy):
         """Import all solutions.
 
         Import all solutions from yaml file. File name and format are extracted
@@ -80,8 +82,9 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('./all-solutions.yaml', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'yaml')
-    def test_cli_import_solution_003(self, snippy):
+    def test_cli_import_solution_003(snippy):
         """Import all solutions.
 
         Import all solutions from yaml file without specifying the solution
@@ -103,8 +106,9 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('./all-solutions.yaml', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'json')
-    def test_cli_import_solution_004(self, snippy):
+    def test_cli_import_solution_004(snippy):
         """Import all solutions.
 
         Import all solutions from json file. File name and format are extracted
@@ -125,8 +129,9 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('./all-solutions.json', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'json')
-    def test_cli_import_solution_005(self, snippy):
+    def test_cli_import_solution_005(snippy):
         """Import all solutions.
 
         Import all solutions from json file without specifying the solution
@@ -148,8 +153,9 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('./all-solutions.json', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'default-solutions-utc')
-    def test_cli_import_solution_006(self, snippy):
+    def test_cli_import_solution_006(snippy):
         """Import all solutions.
 
         Import all solutions from txt file. File name and format are extracted
@@ -170,8 +176,9 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('./all-solutions.txt', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'default-solutions-utc')
-    def test_cli_import_solution_007(self, snippy):
+    def test_cli_import_solution_007(snippy):
         """Import all solutions.
 
         Import all solutions from txt file without specifying the solution
@@ -192,8 +199,9 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('./all-solutions.txt', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'default-solutions-utc')
-    def test_cli_import_solution_008(self, snippy):
+    def test_cli_import_solution_008(snippy):
         """Import all solutions.
 
         Import all solutions from txt file. File name and format are extracted
@@ -214,8 +222,9 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('./all-solutions.text', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'default-solutions-utc')
-    def test_cli_import_solution_009(self, snippy):
+    def test_cli_import_solution_009(snippy):
         """Import all solutions.
 
         Import all solutions from txt file without specifying the solution
@@ -236,8 +245,9 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('./all-solutions.text', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'yaml', 'import-beats', 'import-kafka-utc')
-    def test_cli_import_solution_010(self, snippy):
+    def test_cli_import_solution_010(snippy):
         """Import all solutions.
 
         Import solutions from yaml file when all but one of the solutions in
@@ -259,8 +269,9 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('./all-solutions.yaml', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true')
-    def test_cli_import_solution_011(self, snippy):
+    def test_cli_import_solution_011(snippy):
         """Import all solutions.
 
         Try to import empty solution template. The operation will fail because
@@ -274,7 +285,8 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(None)
             mock_file.assert_called_once_with('./solution-template.txt', 'r')
 
-    def test_cli_import_solution_012(self, snippy):
+    @staticmethod
+    def test_cli_import_solution_012(snippy):
         """Import all solutions.
 
         Try to import solution from file which file format is not supported.
@@ -287,8 +299,9 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(None)
             mock_file.assert_not_called()
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'yaml', 'import-nginx', 'update-kafka-utc')
-    def test_cli_import_solution_013(self, snippy):
+    def test_cli_import_solution_013(snippy):
         """Import solution based on message digest.
 
         Import defined solution based on message digest. File name is defined
@@ -312,8 +325,9 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('one-solution.yaml', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'yaml', 'import-nginx', 'update-kafka-utc')
-    def test_cli_import_solution_014(self, snippy):
+    def test_cli_import_solution_014(snippy):
         """Import solution based on message digest.
 
         Import defined solution based on message digest without specifying the
@@ -336,8 +350,9 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('one-solution.yaml', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'json', 'import-nginx', 'update-kafka-utc')
-    def test_cli_import_solution_015(self, snippy):
+    def test_cli_import_solution_015(snippy):
         """Import solution based on message digest.
 
         Import defined solution based on message digest. File name is defined
@@ -361,8 +376,9 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('one-solution.json', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'import-nginx', 'update-kafka-utc')
-    def test_cli_import_solution_016(self, snippy):
+    def test_cli_import_solution_016(snippy):
         """Import solution based on message digest.
 
         Import defined solution based on message digest. File name is defined
@@ -387,8 +403,9 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('one-solution.txt', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'import-nginx', 'update-kafka-utc')
-    def test_cli_import_solution_017(self, snippy):
+    def test_cli_import_solution_017(snippy):
         """Import solution based on message digest.
 
         Import defined solution based on message digest. File name is defined
@@ -413,8 +430,9 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('one-solution.text', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'import-nginx', 'update-kafka-utc')
-    def test_cli_import_solution_018(self, snippy):
+    def test_cli_import_solution_018(snippy):
         """Import solution based on message digest.
 
         Import defined solution based on message digest. In this case the
@@ -438,8 +456,9 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('one-solution.text', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('import-nginx', 'import-nginx-utc')
-    def test_cli_import_solution_019(self, snippy):
+    def test_cli_import_solution_019(snippy):
         """Import solution based on message digest.
 
         Try to import defined solution with message digest that cannot be
@@ -467,8 +486,9 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_not_called()
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'yaml')
-    def test_cli_import_solution_020(self, snippy):
+    def test_cli_import_solution_020(snippy):
         """Import solution.
 
         Import new solution from yaml file.
@@ -487,8 +507,9 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('one-solution.yaml', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'json')
-    def test_cli_import_solution_021(self, snippy):
+    def test_cli_import_solution_021(snippy):
         """Import solution.
 
         Import new solution from json file.
@@ -507,8 +528,9 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('one-solution.json', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'import-nginx-utc')
-    def test_cli_import_solution_022(self, snippy):
+    def test_cli_import_solution_022(snippy):
         """Import solution.
 
         Import new solution from text file. In this case the file extension
@@ -527,8 +549,9 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('one-solution.txt', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'import-nginx-utc')
-    def test_cli_import_solution_023(self, snippy):
+    def test_cli_import_solution_023(snippy):
         """Import solution.
 
         Import new solution from text file without specifying the content
@@ -547,8 +570,9 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('one-solution.txt', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'import-nginx-utc')
-    def test_cli_import_solution_024(self, snippy):
+    def test_cli_import_solution_024(snippy):
         """Import solution.
 
         Import new solution from text file. In this case the file extension
@@ -567,8 +591,9 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('one-solution.text', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('yaml')
-    def test_cli_import_solution_025(self, snippy):
+    def test_cli_import_solution_025(snippy):
         """Import solutions defaults.
 
         Import solution defaults. All solutions should be imported from
@@ -590,8 +615,9 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             defaults_solutions = pkg_resources.resource_filename('snippy', 'data/defaults/solutions.yaml')
             mock_file.assert_called_once_with(defaults_solutions, 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('yaml', 'default-solutions', 'default-solutions-utc')
-    def test_cli_import_solution_026(self, snippy):
+    def test_cli_import_solution_026(snippy):
         """Import solutions defaults.
 
         Try to import solution defaults again. The second import should fail
@@ -617,8 +643,9 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             defaults_solutions = pkg_resources.resource_filename('snippy', 'data/defaults/solutions.yaml')
             mock_file.assert_called_once_with(defaults_solutions, 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'import-content-utc')
-    def test_cli_import_solution_027(self, snippy):
+    def test_cli_import_solution_027(snippy):
         """Import solutions from text template.
 
         Import solution template that does not have any changes to file header
@@ -642,8 +669,9 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('./solution-template.txt', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true')
-    def test_cli_import_solution_028(self, snippy):
+    def test_cli_import_solution_028(snippy):
         """Import solutions from text template.
 
         Try to import solution template without any changes. This should result
@@ -658,8 +686,9 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(None)
             mock_file.assert_called_once_with('./solution-template.text', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('yaml')
-    def test_cli_import_solution_029(self, snippy):
+    def test_cli_import_solution_029(snippy):
         """Import all content defaults.
 
         Import snippet, solution and reference defaults.
@@ -684,8 +713,9 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             defaults.append(mock.call(pkg_resources.resource_filename('snippy', 'data/defaults/references.yaml'), 'r'))
             mock_file.assert_has_calls(defaults, any_order=True)
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true')
-    def test_cli_import_solution_030(self, snippy):
+    def test_cli_import_solution_030(snippy):
         """Import all solutions.
 
         Try to import content with option --all. This is not supported for
@@ -698,8 +728,9 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(None)
             mock_file.assert_not_called()
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true')
-    def test_cli_import_solution_031(self, snippy):
+    def test_cli_import_solution_031(snippy):
         """Import all solutions.
 
         Try to import content with option --all. This is not supported for
@@ -712,8 +743,9 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(None)
             mock_file.assert_not_called()
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true')
-    def test_cli_import_solution_032(self, snippy):
+    def test_cli_import_solution_032(snippy):
         """Import all solutions.
 
         Import all solutions from Markdown formatted file.
@@ -732,8 +764,9 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('./all-solutions.md', 'r')
 
+    @staticmethod
     @pytest.mark.usefixtures('isfile_true')
-    def test_cli_import_solution_033(self, snippy):
+    def test_cli_import_solution_033(snippy):
         """Import solutions from Markdown template.
 
         Try to import solution template without any changes. This should result

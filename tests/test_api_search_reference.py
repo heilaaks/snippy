@@ -45,7 +45,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1334'
+            'content-length': '1278'
         }
         expect_body = {
             'meta': {
@@ -56,11 +56,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'reference',
-                'id': Reference.GITLOG_DIGEST,
+                'id': Reference.GITLOG_UUID,
                 'attributes': Reference.GITLOG
             }, {
                 'type': 'reference',
-                'id': Reference.REGEXP_DIGEST,
+                'id': Reference.REGEXP_UUID,
                 'attributes': Reference.REGEXP
             }]
         }
@@ -88,7 +88,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1272'
+            'content-length': '1216'
         }
         expect_body = {
             'meta': {
@@ -99,11 +99,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'reference',
-                'id': Reference.GITLOG_DIGEST,
+                'id': Reference.GITLOG_UUID,
                 'attributes': Reference.GITLOG
             }, {
                 'type': 'reference',
-                'id': Reference.PYTEST_DIGEST,
+                'id': Reference.PYTEST_UUID,
                 'attributes': Reference.PYTEST
             }]
         }
@@ -129,7 +129,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '245'
+            'content-length': '217'
         }
         expect_body = {
             'meta': {
@@ -140,7 +140,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'reference',
-                'id': Reference.REGEXP_DIGEST,
+                'id': Reference.REGEXP_UUID,
                 'attributes': {field: Reference.REGEXP[field] for field in ['brief', 'category']}
             }]
         }
@@ -165,7 +165,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '245'
+            'content-length': '217'
         }
         expect_body = {
             'meta': {
@@ -176,7 +176,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'reference',
-                'id': Reference.REGEXP_DIGEST,
+                'id': Reference.REGEXP_UUID,
                 'attributes': {field: Reference.REGEXP[field] for field in ['brief', 'category']}
             }]
         }
@@ -200,7 +200,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '245'
+            'content-length': '217'
         }
         expect_body = {
             'meta': {
@@ -211,7 +211,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'reference',
-                'id': Reference.REGEXP_DIGEST,
+                'id': Reference.REGEXP_UUID,
                 'attributes': {field: Reference.REGEXP[field] for field in ['brief', 'category']}
             }]
         }
@@ -294,7 +294,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '761'
+            'content-length': '753'
         }
         expect_body = {
             'meta': {
@@ -305,11 +305,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             },
             'data': {
                 'type': 'reference',
-                'id': Reference.GITLOG_DIGEST,
+                'id': Reference.GITLOG_UUID,
                 'attributes': Reference.GITLOG
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/references/5c2071094dbfaa33'
+                'self': 'http://falconframework.org/snippy/api/app/v1/references/' + Reference.GITLOG_UUID
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -358,7 +358,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1334'
+            'content-length': '1278'
         }
         expect_body = {
             'meta': {
@@ -369,11 +369,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'reference',
-                'id': Reference.GITLOG_DIGEST,
+                'id': Reference.GITLOG_UUID,
                 'attributes': Reference.GITLOG
             }, {
                 'type': 'reference',
-                'id': Reference.REGEXP_DIGEST,
+                'id': Reference.REGEXP_UUID,
                 'attributes': Reference.REGEXP
             }]
         }
@@ -398,7 +398,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '735'
+            'content-length': '707'
         }
         expect_body = {
             'meta': {
@@ -409,7 +409,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'reference',
-                'id': Reference.REGEXP_DIGEST,
+                'id': Reference.REGEXP_UUID,
                 'attributes': Reference.REGEXP
             }]
         }
@@ -440,7 +440,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2352'
+            'content-length': '2296'
         }
         expect_body = {
             'meta': {
@@ -451,11 +451,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'reference',
-                'id': Reference.GITLOG_DIGEST,
+                'id': Reference.GITLOG_UUID,
                 'attributes': Reference.GITLOG
             }, {
                 'type': 'reference',
-                'id': Reference.REGEXP_DIGEST,
+                'id': Reference.REGEXP_UUID,
                 'attributes': Reference.REGEXP
             }]
         }
@@ -512,18 +512,18 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '233'
+            'content-length': '225'
         }
         expect_body = {
             'data': {
                 'type': 'reference',
-                'id': Reference.GITLOG_DIGEST,
+                'id': Reference.GITLOG_UUID,
                 'attributes': {
                     'data': []
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/references/5c2071094dbfaa33/data'
+                'self': 'http://falconframework.org/snippy/api/app/v1/references/31cd5827-b6ef-4067-b5ac-3ceac07dde9f/data'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -543,18 +543,18 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '263'
+            'content-length': '255'
         }
         expect_body = {
             'data': {
                 'type': 'reference',
-                'id': Reference.GITLOG_DIGEST,
+                'id': Reference.GITLOG_UUID,
                 'attributes': {
                     'brief': Reference.GITLOG['brief']
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/references/5c2071094dbfaa33/brief'
+                'self': 'http://falconframework.org/snippy/api/app/v1/references/31cd5827-b6ef-4067-b5ac-3ceac07dde9f/brief'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -574,18 +574,18 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '242'
+            'content-length': '234'
         }
         expect_body = {
             'data': {
                 'type': 'reference',
-                'id': Reference.GITLOG_DIGEST,
+                'id': Reference.GITLOG_UUID,
                 'attributes': {
                     'groups': Reference.GITLOG['groups']
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/references/5c2071094dbfaa33/groups'
+                'self': 'http://falconframework.org/snippy/api/app/v1/references/31cd5827-b6ef-4067-b5ac-3ceac07dde9f/groups'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -605,18 +605,18 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '257'
+            'content-length': '249'
         }
         expect_body = {
             'data': {
                 'type': 'reference',
-                'id': Reference.GITLOG_DIGEST,
+                'id': Reference.GITLOG_UUID,
                 'attributes': {
                     'tags': Reference.GITLOG['tags']
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/references/5c2071094dbfaa33/tags'
+                'self': 'http://falconframework.org/snippy/api/app/v1/references/31cd5827-b6ef-4067-b5ac-3ceac07dde9f/tags'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -636,18 +636,18 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '277'
+            'content-length': '269'
         }
         expect_body = {
             'data': {
                 'type': 'reference',
-                'id': Reference.GITLOG_DIGEST,
+                'id': Reference.GITLOG_UUID,
                 'attributes': {
                     'links': Reference.GITLOG['links']
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/references/5c2071094dbfaa33/links'
+                'self': 'http://falconframework.org/snippy/api/app/v1/references/31cd5827-b6ef-4067-b5ac-3ceac07dde9f/links'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -667,18 +667,18 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '250'
+            'content-length': '242'
         }
         expect_body = {
             'data': {
                 'type': 'reference',
-                'id': Reference.GITLOG_DIGEST,
+                'id': Reference.GITLOG_UUID,
                 'attributes': {
                     'category': Reference.GITLOG['category']
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/references/5c2071094dbfaa33/category'
+                'self': 'http://falconframework.org/snippy/api/app/v1/references/31cd5827-b6ef-4067-b5ac-3ceac07dde9f/category'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -698,18 +698,18 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '233'
+            'content-length': '225'
         }
         expect_body = {
             'data': {
                 'type': 'reference',
-                'id': Reference.GITLOG_DIGEST,
+                'id': Reference.GITLOG_UUID,
                 'attributes': {
                     'name': Reference.GITLOG['name']
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/references/5c2071094dbfaa33/name'
+                'self': 'http://falconframework.org/snippy/api/app/v1/references/31cd5827-b6ef-4067-b5ac-3ceac07dde9f/name'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -729,18 +729,18 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '241'
+            'content-length': '233'
         }
         expect_body = {
             'data': {
                 'type': 'reference',
-                'id': Reference.GITLOG_DIGEST,
+                'id': Reference.GITLOG_UUID,
                 'attributes': {
                     'filename': Reference.GITLOG['filename']
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/references/5c2071094dbfaa33/filename'
+                'self': 'http://falconframework.org/snippy/api/app/v1/references/31cd5827-b6ef-4067-b5ac-3ceac07dde9f/filename'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -760,18 +760,18 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '241'
+            'content-length': '233'
         }
         expect_body = {
             'data': {
                 'type': 'reference',
-                'id': Reference.GITLOG_DIGEST,
+                'id': Reference.GITLOG_UUID,
                 'attributes': {
                     'versions': Reference.GITLOG['versions']
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/references/5c2071094dbfaa33/versions'
+                'self': 'http://falconframework.org/snippy/api/app/v1/references/31cd5827-b6ef-4067-b5ac-3ceac07dde9f/versions'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -791,18 +791,18 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '237'
+            'content-length': '229'
         }
         expect_body = {
             'data': {
                 'type': 'reference',
-                'id': Reference.GITLOG_DIGEST,
+                'id': Reference.GITLOG_UUID,
                 'attributes': {
                     'source': Reference.GITLOG['source']
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/references/5c2071094dbfaa33/source'
+                'self': 'http://falconframework.org/snippy/api/app/v1/references/31cd5827-b6ef-4067-b5ac-3ceac07dde9f/source'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -822,18 +822,18 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '269'
+            'content-length': '261'
         }
         expect_body = {
             'data': {
                 'type': 'reference',
-                'id': Reference.GITLOG_DIGEST,
+                'id': Reference.GITLOG_UUID,
                 'attributes': {
-                    'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f'
+                    'uuid': Reference.GITLOG_UUID
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/references/5c2071094dbfaa33/uuid'
+                'self': 'http://falconframework.org/snippy/api/app/v1/references/31cd5827-b6ef-4067-b5ac-3ceac07dde9f/uuid'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(

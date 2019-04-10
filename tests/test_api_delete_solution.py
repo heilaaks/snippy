@@ -37,7 +37,7 @@ class TestApiDeleteSolution(object):
     def test_api_delete_solution_001(server):
         """Delete solution with digest.
 
-        Send DELETE /solutions/{id} to delete one resource. The digest matches
+        Send DELETE /v1/solutions/{id} to delete one resource. The digest matches
         to one reference that is deleted.
         """
 
@@ -61,7 +61,7 @@ class TestApiDeleteSolution(object):
     def test_api_delete_solution_002(server):
         """Try to delete solution.
 
-        Try to send DELETE /solutions with URI that does not exist.
+        Try to send DELETE /v1/solutions with URI that does not exist.
         """
 
         content = {
@@ -97,7 +97,7 @@ class TestApiDeleteSolution(object):
     def test_api_delete_solution_003(server):
         """Try to delete solution.
 
-        Try to send DELETE /solutions without digest identifying delete
+        Try to send DELETE /v1/solutions without digest identifying delete
         resource.
         """
 

@@ -29,8 +29,9 @@ from tests.testlib.reference import Reference
 class TestCliDeleteReference(object):
     """Test workflows for deleting references."""
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references')
-    def test_cli_delete_reference_001(self, snippy):
+    def test_cli_delete_reference_001(snippy):
         """Delete reference with digest.
 
         Delete reference with short 16 byte version of message digest.
@@ -46,8 +47,9 @@ class TestCliDeleteReference(object):
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('import-gitlog')
-    def test_cli_delete_reference_002(self, snippy):
+    def test_cli_delete_reference_002(snippy):
         """Delete reference with digest.
 
         Delete reference with empty message digest when there is only one
@@ -60,8 +62,9 @@ class TestCliDeleteReference(object):
         assert cause == Cause.ALL_OK
         Content.assert_storage(None)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references')
-    def test_cli_delete_reference_003(self, snippy):
+    def test_cli_delete_reference_003(snippy):
         """Delete reference with digest.
 
         Try to delete reference with message digest that cannot be found.
@@ -77,8 +80,9 @@ class TestCliDeleteReference(object):
         assert cause == 'NOK: cannot find content with message digest: 123456789abcdef0'
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references')
-    def test_cli_delete_reference_004(self, snippy):
+    def test_cli_delete_reference_004(snippy):
         """Delete reference with uuid.
 
         Try to delete reference with short content UUID. Since the UUID is
@@ -96,8 +100,9 @@ class TestCliDeleteReference(object):
         assert cause == 'NOK: cannot find content with content uuid: 16cd5827'
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references')
-    def test_cli_delete_reference_005(self, snippy):
+    def test_cli_delete_reference_005(snippy):
         """Delete reference with uuid.
 
         Try to delete content with empty uuid string.
@@ -113,8 +118,9 @@ class TestCliDeleteReference(object):
         assert cause == 'NOK: cannot use empty content uuid for delete operation'
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references')
-    def test_cli_delete_reference_006(self, snippy):
+    def test_cli_delete_reference_006(snippy):
         """Delete reference with uuid.
 
         Try to delete content with uuid that does not match to any content.
@@ -130,8 +136,9 @@ class TestCliDeleteReference(object):
         assert cause == 'NOK: cannot find content with content uuid: 1234567'
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references')
-    def test_cli_delete_reference_007(self, snippy):
+    def test_cli_delete_reference_007(snippy):
         """Delete reference with uuid.
 
         Try to delete content with uuid that matches to more than one content.
@@ -149,8 +156,9 @@ class TestCliDeleteReference(object):
         assert cause == 'NOK: cannot find content with content uuid: 1'
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references')
-    def test_cli_delete_reference_008(self, snippy):
+    def test_cli_delete_reference_008(snippy):
         """Delete reference with data.
 
         Delete reference based on content data.
@@ -166,8 +174,9 @@ class TestCliDeleteReference(object):
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references')
-    def test_cli_delete_reference_009(self, snippy):
+    def test_cli_delete_reference_009(snippy):
         """Delete reference with data.
 
         Try to delete reference with content data that does not exist. In this
@@ -184,9 +193,10 @@ class TestCliDeleteReference(object):
         assert cause == 'NOK: cannot find content with content data: not found content'
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.skip(reason='not supported yet')
     @pytest.mark.usefixtures('default-references')
-    def test_cli_delete_reference_010(self, snippy):
+    def test_cli_delete_reference_010(snippy):
         """Delete reference with link.
 
         Delete reference based on content link.
@@ -202,8 +212,9 @@ class TestCliDeleteReference(object):
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references')
-    def test_cli_delete_reference_011(self, snippy):
+    def test_cli_delete_reference_011(snippy):
         """Delete reference with data.
 
         Try to delete reference with empty content data. Nothing should be
@@ -220,8 +231,9 @@ class TestCliDeleteReference(object):
         assert cause == 'NOK: cannot use empty content data for delete operation'
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references')
-    def test_cli_delete_reference_012(self, snippy):
+    def test_cli_delete_reference_012(snippy):
         """Delete reference with search.
 
         Delete reference based on search keyword that results one hit. In this
@@ -238,8 +250,9 @@ class TestCliDeleteReference(object):
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+    @staticmethod
     @pytest.mark.usefixtures('default-references')
-    def test_cli_delete_reference_013(self, snippy):
+    def test_cli_delete_reference_013(snippy):
         """Try to delete reference with search.
 
         Try to delete reference based on search keyword so that the category

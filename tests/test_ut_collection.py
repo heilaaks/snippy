@@ -253,8 +253,9 @@ class TestUtCollection(object):
         with pytest.raises(KeyError):
             resource = collection[0]
 
+    @staticmethod
     @pytest.mark.usefixtures('uuid')
-    def test_collection_operations_003(self):
+    def test_collection_operations_003():
         """Test merging resources and collections.
 
         Verify that merging collection or resource to collection works.
@@ -295,8 +296,9 @@ class TestUtCollection(object):
         collection2.migrate('string')
         assert len(collection2) == 1
 
+    @staticmethod
     @pytest.mark.usefixtures('uuid')
-    def test_collection_operations_004(self):
+    def test_collection_operations_004():
         """Test collection data class operations.
 
         Verify values with None generate default values for resource. For

@@ -66,8 +66,9 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
+    @staticmethod
     @pytest.mark.usefixtures('mock-server')
-    def test_api_hello_api_003(self):
+    def test_api_hello_api_003():
         """Test hello API with modified server base path configuration.
 
         Call GET /snippy/api to get hello! In this case the server base path is
@@ -88,8 +89,9 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
         server.release()
         Content.delete()
 
+    @staticmethod
     @pytest.mark.usefixtures('mock-server')
-    def test_api_hello_api_004(self):
+    def test_api_hello_api_004():
         """Test hello API with modified server base path configuration.
 
         Call GET /snippy/api to get hello! In this case the server base path
@@ -112,8 +114,9 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
         server.release()
         Content.delete()
 
+    @staticmethod
     @pytest.mark.usefixtures('mock-server')
-    def test_api_hello_api_005(self):
+    def test_api_hello_api_005():
         """Test hello API with modified server base path configuration.
 
         Call GET /snippy/api to get hello! In this case the server base path
@@ -136,8 +139,9 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
         server.release()
         Content.delete()
 
+    @staticmethod
     @pytest.mark.usefixtures('mock-server')
-    def test_api_hello_api_006(self):
+    def test_api_hello_api_006():
         """Test hello API with modified server base path configuration.
 
         Call GET /snippy/api to get hello! In this case the server base path
@@ -160,8 +164,9 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
         server.release()
         Content.delete()
 
+    @staticmethod
     @pytest.mark.usefixtures('mock-server')
-    def test_api_hello_api_007(self):
+    def test_api_hello_api_007():
         """Test hello API with modified server base path configuration.
 
         Call GET /api/app/v1 to get hello! In this case the server base path is

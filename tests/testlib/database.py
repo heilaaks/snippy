@@ -54,7 +54,6 @@ class Database(object):
     _DATABASES = (DB_SQLITE, DB_POSTGRESQL, DB_COCKROACHDB)
     _PLACEHOLDER = '?'
 
-    VALID_UUID = '11cd5827-b6ef-4067-b5ac-3ceac07dde9f'
     # Mocked UUIDs must not collide with predefined resource UUIDs.
     TEST_UUIDS = (
         uuid.UUID(hex='a1cd5827b6ef4067b5ac3ceac07dde9f'),
@@ -275,7 +274,7 @@ class Database(object):
                       )
         '''.format(cls._PLACEHOLDER)
         qargs = (
-            content.get('id', Database.VALID_UUID),
+            content.get('id', Database.TEST_UUIDS_STR[0]),
             content.get('category', ''),
             Const.DELIMITER_DATA.join(map(Const.TEXT_TYPE, content.get('data', ()))),
             content.get('brief', ''),
@@ -289,7 +288,7 @@ class Database(object):
             content.get('filename', ''),
             content.get('created', Helper.IMPORT_TIME),
             content.get('updated', Helper.IMPORT_TIME),
-            content.get('uuid', Database.VALID_UUID),
+            content.get('uuid', Database.TEST_UUIDS_STR[0]),
             content.get('digest', '')
         )
         try:

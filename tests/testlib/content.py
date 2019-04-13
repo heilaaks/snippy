@@ -209,16 +209,13 @@ class Content(object):  # pylint: disable=too-many-public-methods
         """Compare content stored in database.
 
         The assert comparisons use equality implemented for collection data
-        class. This quarantees that the count of resources in collection is
-        same between expected content and collection created from database.
+        class. This quarantees that the count and content of resources are
+        the same in database and expected content.
 
-        The comparison tests all but the key attribute between references
-        stored in collection. The key attribute is an index in database and
-        it cannot be compared.
-
-        Text formatted content does not have all fields. For example created
-        and updated fields are missing and cannot be compared. Because of this,
-        some fields are masked away when comparing text content.
+        The text formatted content does not have all resource attributes. For
+        example created and updated attributes are missing and thus cannot be
+        compared. Because of this, a text reference is always compared against
+        text formatted content.
 
         If the result and expected content are compared only as collections,
         there are cases that are not noticed. A content fields in collection
@@ -239,10 +236,10 @@ class Content(object):  # pylint: disable=too-many-public-methods
 
             return
 
-        result_collection = cls._get_db_collection()
+        result_collection = Database.get_collection()
         result_dictionary = cls._get_db_dictionary(result_collection)
         expect_collection = cls._get_expect_collection(Const.CONTENT_FORMAT_DICT, content)
-        expect_dictionary = cls._get_expect_dictionary(content)
+        expect_dictionary = content
         try:
             assert result_collection == expect_collection
             assert result_dictionary == expect_dictionary
@@ -299,7 +296,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
         result_collection = cls._get_result_collection(Const.CONTENT_FORMAT_JSON, json_mock)
         result_dictionary = cls._get_result_dictionary(Const.CONTENT_FORMAT_JSON, json_mock)
         expect_collection = cls._get_expect_collection(Const.CONTENT_FORMAT_JSON, content)
-        expect_dictionary = cls._get_expect_dictionary(content)
+        expect_dictionary = content
         try:
             assert result_collection == expect_collection
             assert result_dictionary == expect_dictionary
@@ -381,7 +378,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
         result_collection = cls._get_result_collection(Const.CONTENT_FORMAT_YAML, yaml)
         result_dictionary = cls._get_result_dictionary(Const.CONTENT_FORMAT_YAML, yaml)
         expect_collection = cls._get_expect_collection(Const.CONTENT_FORMAT_YAML, content)
-        expect_dictionary = cls._get_expect_dictionary(content)
+        expect_dictionary = content
         try:
             assert result_collection == expect_collection
             assert result_dictionary == expect_dictionary
@@ -537,18 +534,6 @@ class Content(object):  # pylint: disable=too-many-public-methods
         return result
 
     @classmethod
-    def _get_db_collection(cls):
-        """Return comparable collection from database.
-
-        See the description for assert_storage method.
-
-        Returns:
-            Collection(): Comparable collection from database.
-        """
-
-        return Database.get_collection()
-
-    @classmethod
     def _get_db_dictionary(cls, collection):
         """Return comparable dictionary from database.
 
@@ -562,21 +547,6 @@ class Content(object):  # pylint: disable=too-many-public-methods
         dictionary['data'] = collection.dump_dict()
 
         return dictionary
-
-    @classmethod
-    def _get_expect_dictionary(cls, content):
-        """Return comparable dictionary from expected content.
-
-        See the description for assert_storage method.
-
-        Args:
-            content (dict): Reference content.
-
-        Returns:
-            content (dict): Comparable reference content.
-        """
-
-        return content
 
     @staticmethod
     def _get_result_dictionary(content_format, mock_object):

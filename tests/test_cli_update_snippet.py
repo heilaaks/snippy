@@ -487,7 +487,7 @@ class TestCliUpdateSnippet(object):
                 'filename': '',
                 'created': '2018-03-02T02:02:02.000001+00:00',
                 'updated': '2017-10-14T19:56:31.000001+00:00',
-                'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'uuid': 'a1cd5827-b6ef-4067-b5ac-3ceac07dde9f',
                 'digest': 'dae4e22c3c3858b5616a29be11916112a16994e30bc3e4b93b069bc9a772d889'
             }]
         }
@@ -532,7 +532,7 @@ class TestCliUpdateSnippet(object):
             'source   :  ',
             'tags     : find,linux,regexp  ',
             'updated  : 2018-03-02T02:02:02.000001+00:00  ',
-            'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+            'uuid     : a1cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
             'versions :  ',
             ''
         )

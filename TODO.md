@@ -1,14 +1,9 @@
 ## WORKING
-   - [ ] Fix markdown/text update solution is broken. the data is not there.
-   - [ ] Update tests. UUID check must be valid in tests.
-   - [ ] Remove UUID VALID from test helpers because it is not longer needed- The UUID must be correct and not incremented randomly (from test point of view) to use it in URL.
-   - [ ] Do not use UUID from client when new resource is created. This must be always allocated by the server. Test. Update swagger to not include UUID in HTTP requests. Reject with error?
-   - [ ] Check test case lint rules because they did not notice redundant self in tests.
+   - [ ] Fix updating Markdown based solutions in text formats does not work because the Mkdn solution does not have text header and data structure.
+   - [ ] Fix received user defined UUID in create and update. This must generate error because otherwise user would expect that the UUID was updated.
    - [ ] Config.get_resource creates exter UUID usage when e.g resource is updated. Get rid of this (somehow) after UUID refactoring.
    - [ ] Refactor test desc to: Send POST /v1/snippets to create a new resource. (use v1 and use resource)
    - [ ] PUT can be like POST if not resource: https://stackoverflow.com/a/35845343. Test and fix PUT to new resource.
-   - [ ] Fix resource queries to be with UUID and with full length of the ID. https://stackoverflow.com/a/35845343
-   - [ ] Change the http response ID and LINKS to use UUID instead of digest. This moves towards using static URI.
    - [ ] Test export/import Mkdn snippet with partial comments. The export must have the <not documented> tag and import must remove it.
    - [ ] Fix creating/updating resource with invalid versions. Check test_api_create_snippet_024. The seal() cannot check if Cause not is_is because it generates incorrect error. For example GET ../<valid digest>/error shows error that digest not foind. See test_api_search_reference_field_012. move the reast API based empty list check earlier in code to solve this.
    - [ ] Fix cli -f file to see if this goes ot content filename attribute. Should not. -f|--file and content.filename are not the same.

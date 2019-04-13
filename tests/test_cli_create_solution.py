@@ -47,6 +47,7 @@ class TestCliCreateSolution(object):
         }
         content['data'][0]['description'] = ''
         content['data'][0]['filename'] = ''
+        content['data'][0]['uuid'] = Content.UUID1
         content['data'][0]['digest'] = 'b8dfd78b2f92caac57469acda50bebf4dca9fd3e85bb9083c8408f430fc83f52'
         data = Const.DELIMITER_DATA.join(content['data'][0]['data'])
         brief = content['data'][0]['brief']
@@ -124,9 +125,10 @@ class TestCliCreateSolution(object):
 
         content = {
             'data': [
-                Solution.BEATS
+                Content.deepcopy(Solution.BEATS)
             ]
         }
+        content['data'][0]['uuid'] = Content.UUID2
         cause = snippy.run(['snippy', 'create', '--solution', '--editor', '--format', 'text'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
@@ -175,13 +177,13 @@ class TestCliCreateSolution(object):
             '',
             '> category : solution  ',
             'created  : 2019-01-04T10:54:49.265512+00:00  ',
-            'digest   : a6617fdf3a067ede0dafe09fa30045a1134436e6254117f70c5134c2658fe263  ',
+            'digest   : 5facdc16dc81851c2f65b112a0921eb2f2db206c7756714efb45ba0026471f11  ',
             'filename : example-content.md  ',
             'name     : example content handle  ',
             'source   : https://www.example.com/source.md  ',
             'tags     : example,tags  ',
             'updated  : 2019-01-04T10:54:49.265512+00:00  ',
-            'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+            'uuid     : a1cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
             'versions : example=3.9.0,python>=3  ',
             ''
         )
@@ -210,7 +212,7 @@ class TestCliCreateSolution(object):
             'source   :  ',
             'tags     : docker,driver,kafka,kubernetes,logging,logs2kafka,moby,plugin  ',
             'updated  : 2019-01-04T10:54:49.265512+00:00  ',
-            'uuid     : 24cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+            'uuid     : a1cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
             'versions :  ',
             '')
         content['data'][0]['data'] = (
@@ -226,7 +228,7 @@ class TestCliCreateSolution(object):
         content['data'][0]['description'] = 'Investigate docker log drivers and the logs2kafka log plugin'
         content['data'][0]['links'] = ()
         content['data'][0]['updated'] = '2019-01-04T10:54:49.265512+00:00'
-        content['data'][0]['uuid'] = '11cd5827-b6ef-4067-b5ac-3ceac07dde9f'
+        content['data'][0]['uuid'] = Content.UUID1
         content['data'][0]['digest'] = '7941851522a23d3651f223b6d69441f77649ccb7ae1e72c6709890f2caf6401a'
         editor_data.return_value = '\n'.join(edited)
         cause = snippy.run(['snippy', 'create', '--solution'])
@@ -267,13 +269,13 @@ class TestCliCreateSolution(object):
             '',
             '> category : solution  ',
             'created  : 2019-01-04T10:54:49.265512+00:00  ',
-            'digest   : a6617fdf3a067ede0dafe09fa30045a1134436e6254117f70c5134c2658fe263  ',
+            'digest   : 5facdc16dc81851c2f65b112a0921eb2f2db206c7756714efb45ba0026471f11  ',
             'filename : example-content.md  ',
             'name     : example content handle  ',
             'source   : https://www.example.com/source.md  ',
             'tags     : example,tags  ',
             'updated  : 2019-01-04T10:54:49.265512+00:00  ',
-            'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+            'uuid     : a1cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
             'versions : example=3.9.0,python>=3  ',
             ''
         )
@@ -315,6 +317,7 @@ class TestCliCreateSolution(object):
         }
         content['data'][0]['description'] = ''
         content['data'][0]['filename'] = ''
+        content['data'][0]['uuid'] = Content.UUID1
         content['data'][0]['digest'] = 'b8dfd78b2f92caac57469acda50bebf4dca9fd3e85bb9083c8408f430fc83f52'
         data = Const.DELIMITER_DATA.join(content['data'][0]['data'])
         brief = content['data'][0]['brief']

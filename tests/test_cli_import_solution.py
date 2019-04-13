@@ -159,16 +159,22 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         """Import all solutions.
 
         Import all solutions from txt file. File name and format are extracted
-        from command line option -f|--file. File extension is '*.txt' in this
-        case.
+        from command line option ``-f|--file``. File extension is '*.txt' in
+        this case.
+
+        Because text template does not have UUID, the UUID mock allocates a new
+        UUID for the exported comparison. Because of this the imported resource
+        UUID cannot be compared to exported text.
         """
 
         content = {
             'data': [
-                Solution.BEATS,
-                Solution.NGINX
+                Content.deepcopy(Solution.BEATS),
+                Content.deepcopy(Solution.NGINX)
             ]
         }
+        content['data'][0]['uuid'] = Content.UUID1
+        content['data'][1]['uuid'] = Content.UUID2
         file_content = Content.get_file_content(Content.TEXT, content)
         with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--solution', '-f', './all-solutions.txt'])
@@ -188,10 +194,12 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Solution.BEATS,
-                Solution.NGINX
+                Content.deepcopy(Solution.BEATS),
+                Content.deepcopy(Solution.NGINX)
             ]
         }
+        content['data'][0]['uuid'] = Content.UUID1
+        content['data'][1]['uuid'] = Content.UUID2
         file_content = Content.get_file_content(Content.TEXT, content)
         with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', './all-solutions.txt'])
@@ -211,10 +219,12 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Solution.BEATS,
-                Solution.NGINX
+                Content.deepcopy(Solution.BEATS),
+                Content.deepcopy(Solution.NGINX)
             ]
         }
+        content['data'][0]['uuid'] = Content.UUID1
+        content['data'][1]['uuid'] = Content.UUID2
         file_content = Content.get_file_content(Content.TEXT, content)
         with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--solution', '-f', './all-solutions.text'])
@@ -234,10 +244,12 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Solution.BEATS,
-                Solution.NGINX
+                Content.deepcopy(Solution.BEATS),
+                Content.deepcopy(Solution.NGINX)
             ]
         }
+        content['data'][0]['uuid'] = Content.UUID1
+        content['data'][1]['uuid'] = Content.UUID2
         file_content = Content.get_file_content(Content.TEXT, content)
         with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', './all-solutions.text'])
@@ -253,19 +265,25 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         Import solutions from yaml file when all but one of the solutions in
         the file is already stored. Because one solution was stored
         successfully, the return cause is OK.
+
+        The UUID is modified to avoid the UUID collision which produces error.
+        The test verifies that user modified resource attributes do not stop
+        importing multiple resources.
         """
 
         content = {
             'data': [
                 Solution.KAFKA,
-                Solution.BEATS
+                Content.deepcopy(Solution.BEATS)
             ]
         }
+        content['data'][1]['uuid'] = Content.UUID1
         file_content = Content.get_file_content(Content.YAML, content)
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             yaml.safe_load.return_value = file_content
             cause = snippy.run(['snippy', 'import', '--solution', '--file', './all-solutions.yaml'])
             assert cause == Cause.ALL_OK
+            content['data'][1]['uuid'] = Solution.BEATS_UUID
             Content.assert_storage(content)
             mock_file.assert_called_once_with('./all-solutions.yaml', 'r')
 
@@ -539,9 +557,10 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Solution.NGINX
+                Content.deepcopy(Solution.NGINX)
             ]
         }
+        content['data'][0]['uuid'] = Content.UUID1
         file_content = Content.get_file_content(Content.TEXT, content)
         with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--solution', '-f', 'one-solution.txt'])
@@ -560,9 +579,10 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Solution.NGINX
+                Content.deepcopy(Solution.NGINX)
             ]
         }
+        content['data'][0]['uuid'] = Content.UUID1
         file_content = Content.get_file_content(Content.TEXT, content)
         with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', 'one-solution.txt'])
@@ -581,9 +601,10 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Solution.NGINX
+                Content.deepcopy(Solution.NGINX)
             ]
         }
+        content['data'][0]['uuid'] = Content.UUID1
         file_content = Content.get_file_content(Content.TEXT, content)
         with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--solution', '-f', 'one-solution.text'])
@@ -622,9 +643,14 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
 
         Try to import solution defaults again. The second import should fail
         with an error because the content already exist. The error text must
-        be the same for all content categories. Because of random order
-        dictionary in the code, the reported digest can vary when there are
-        multiple failures to import each content.
+        be the same for all content categories.
+
+        Because of random order dictionary in the code, the reported digest
+        can vary when there are multiple failures to import each content.
+
+        Because there is unique constraint violation for ``data`` and ``uuid``
+        attributes and PostgreSQL and Sqlite throw the error from different
+        attributes, both attributes must be checked.
         """
 
         content = {
@@ -638,7 +664,9 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             yaml.safe_load.return_value = file_content
             cause = snippy.run(['snippy', 'import', '--solution', '--defaults'])
             assert cause in ('NOK: content data already exist with digest 5dee85bedb7f4d3a',
-                             'NOK: content data already exist with digest db712a82662d6932')
+                             'NOK: content uuid already exist with digest 5dee85bedb7f4d3a',
+                             'NOK: content data already exist with digest db712a82662d6932',
+                             'NOK: content uuid already exist with digest db712a82662d6932')
             Content.assert_storage(content)
             defaults_solutions = pkg_resources.resource_filename('snippy', 'data/defaults/solutions.yaml')
             mock_file.assert_called_once_with(defaults_solutions, 'r')
@@ -662,6 +690,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
                 Content.dump_dict(template)
             ]
         }
+        content['data'][0]['uuid'] = Content.UUID2
         file_content = Content.get_file_content(Content.TEXT, content)
         with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', './solution-template.txt'])

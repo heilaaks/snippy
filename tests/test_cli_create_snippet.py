@@ -41,9 +41,10 @@ class TestCliCreateSnippet(object):
 
         content = {
             'data': [
-                Snippet.REMOVE
+                Content.deepcopy(Snippet.REMOVE)
             ]
         }
+        content['data'][0]['uuid'] = Content.UUID1
         data = Const.DELIMITER_DATA.join(content['data'][0]['data'])
         brief = content['data'][0]['brief']
         groups = Const.DELIMITER_GROUPS.join(content['data'][0]['groups'])
@@ -66,6 +67,7 @@ class TestCliCreateSnippet(object):
                 Content.deepcopy(Snippet.REMOVE)
             ]
         }
+        content['data'][0]['uuid'] = Content.UUID1
         content['data'][0]['tags'] = (content['data'][0]['tags'][0],)
         content['data'][0]['digest'] = 'f94cf88b1546a8fd5cb442d39f5d598cee6db666a0577de3c6e046782b339a59'
         data = Const.DELIMITER_DATA.join(content['data'][0]['data'])
@@ -171,6 +173,7 @@ class TestCliCreateSnippet(object):
                 'filename': '',
                 'created': Content.REMOVE_TIME,
                 'updated': Content.REMOVE_TIME,
+                'uuid': Content.UUID1,
                 'digest': 'a74d83df95d5729aceffc472433fea4d5e3fd2d87b510112fac264c741f20438'
             }]
         }
@@ -217,6 +220,7 @@ class TestCliCreateSnippet(object):
             ]
         }
         content['data'][0]['groups'] = ('docker', 'dockerfile', 'moby')
+        content['data'][0]['uuid'] = Content.UUID1
         content['data'][0]['digest'] = '03dc5d1629b256271a6f2bf16abdc8f5d6f4f94f6deef9e79288792e41e32fe7'
         data = Const.DELIMITER_DATA.join(content['data'][0]['data'])
         brief = content['data'][0]['brief']
@@ -259,9 +263,10 @@ class TestCliCreateSnippet(object):
 
         content = {
             'data': [
-                Snippet.REMOVE
+                Content.deepcopy(Snippet.REMOVE)
             ]
         }
+        content['data'][0]['uuid'] = Content.UUID1
         template = (
             '# Add brief title for content @groups',
             '',
@@ -281,7 +286,7 @@ class TestCliCreateSnippet(object):
             'source   : https://www.example.com/source.md  ',
             'tags     : example,tags  ',
             'updated  : 2017-10-14T19:56:31.000001+00:00  ',
-            'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+            'uuid     : a1cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
             'versions : example=3.9.0,python>=3  ',
             ''
         )
@@ -304,7 +309,7 @@ class TestCliCreateSnippet(object):
             'source   :  ',
             'tags     : cleanup,container,docker,docker-ce,moby  ',
             'updated  : 2017-10-14T19:56:31.000001+00:00  ',
-            'uuid     : 24cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+            'uuid     : a1cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
             'versions :  ',
             '')
         editor_data.return_value = '\n'.join(edited)
@@ -342,7 +347,7 @@ class TestCliCreateSnippet(object):
             'source   : https://www.example.com/source.md  ',
             'tags     : example,tags  ',
             'updated  : 2017-10-14T19:56:31.000001+00:00  ',
-            'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+            'uuid     : a1cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
             'versions : example=3.9.0,python>=3  ',
             ''
         )
@@ -400,7 +405,7 @@ class TestCliCreateSnippet(object):
                 'filename': '',
                 'created': '2017-10-14T19:56:31.000001+00:00',
                 'updated': '2017-10-14T19:56:31.000001+00:00',
-                'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'uuid': 'a1cd5827-b6ef-4067-b5ac-3ceac07dde9f',
                 'digest': 'a020eb12a278e4426169360af1e124fb989747fd8a9192c293c938cea05798fa'
             }]
         }
@@ -423,7 +428,7 @@ class TestCliCreateSnippet(object):
             'source   : https://www.example.com/source.md  ',
             'tags     : cli,from,tags  ',
             'updated  : 2017-10-14T19:56:31.000001+00:00  ',
-            'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+            'uuid     : a1cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
             'versions : example=3.9.0,python>=3  ',
             ''
         )
@@ -446,7 +451,7 @@ class TestCliCreateSnippet(object):
             'source   :  ',
             'tags     : cli,from,tags  ',
             'updated  : 2017-10-14T19:56:31.000001+00:00  ',
-            'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+            'uuid     : a1cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
             'versions :  ',
             ''
         )

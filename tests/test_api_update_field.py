@@ -39,7 +39,7 @@ class TestApiCreateField(object):
     def test_api_update_field_001(server):
         """Try to update groups fields from API.
 
-        Try to call not supported PUT operation for /v1/groups.
+        Try to send not supported PUT /v1/groups.
         """
 
         content = {
@@ -80,7 +80,7 @@ class TestApiCreateField(object):
     def test_api_update_field_002(server):
         """Try to update tags fields from API.
 
-        Try to call not supported PUT operation for /v1/tags.
+        Try to send not supported PUT /v1/tags.
         """
 
         content = {

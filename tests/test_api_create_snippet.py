@@ -276,7 +276,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_create_snippet_006(server):
         """Create one snippet with POST.
 
-        Call POST /v1/snippets to create new snippet with only data.
+        Send POST /v1/snippets to create new resource with only ``data`` attribute.
         """
 
         content = {
@@ -294,7 +294,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                 'filename': '',
                 'created': '2017-10-14T19:56:31.000001+00:00',
                 'updated': '2017-10-14T19:56:31.000001+00:00',
-                'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'uuid': Content.UUID1,
                 'digest': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd'
             }]
         }
@@ -944,7 +944,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_create_snippet_020(server):
         """Create one snippet from API.
 
-        Call POST /v1/snippets to create new content. In this case all fields
+        Send POST /v1/snippets to create new resource. In this case all fields
         have unnecessary leading and trailing whitespaces which are removed.
         Tags and links must be sorted.
         """
@@ -964,7 +964,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                 'filename': 'shortfilename.yaml',
                 'created': Content.REGEXP_TIME,
                 'updated': Content.REGEXP_TIME,
-                'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'uuid': Content.UUID1,
                 'digest': 'b04d8c1f2913fc3c501e129505265986f1294da0cd3e9f758561cf5443ccf69f'
             }]
         }
@@ -1009,7 +1009,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_create_snippet_021(server):
         """Create one snippet with POST.
 
-        Call POST /v1/snippets to create new snippet with data that have line
+        Send POST /v1/snippets to create new resource with data that have line
         breaks in the middle of the snippet which must not be interpolated to
         newlines.
         """
@@ -1029,7 +1029,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                 'filename': '',
                 'created': '2017-10-14T19:56:31.000001+00:00',
                 'updated': '2017-10-14T19:56:31.000001+00:00',
-                'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'uuid': Content.UUID1,
                 'digest': 'c10b8614d264ed75ad3b671526efb9718895974291627b4fd21307051c6928c1'
             }]
         }

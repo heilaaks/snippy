@@ -150,7 +150,16 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
 
     @data.setter
     def data(self, value):
-        """Resource data is stored as a tuple with one line per element."""
+        """Resource data is stored as a tuple with one line per element.
+
+        The value must be formatted only if it contains a value. If an empty
+        string or a tuple would be passed to format_data, the result would be
+        tuple that contains one empty string. The reason is that empty data is
+        considered valid byte the formatter.
+        """
+
+        if not value:
+            value = None
 
         self._data = Parser.format_data(self.category, value)
 
@@ -394,6 +403,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             self.digest = self._compute_digest()
 
         template = Const.EMPTY
+
         if template_format == Const.CONTENT_FORMAT_MKDN:
             template = self.dump_mkdn(templates)
         elif template_format == Const.CONTENT_FORMAT_TEXT:
@@ -762,9 +772,16 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     def _dump_mkdn_data(self):
         """Dump resource data to Markdown format.
 
-        Snippet data contains commands that may have comment. The comment
-        is extracted from the command string and used as a header in the
-        Markdown formatted data.
+        Snippet data contains commands that may have comment. Snippet comments
+        are extracted from a command string and used as headers in Markdown
+        formatted data.
+
+        Solutions are quarateed to have one newline. The Markdown template has
+        already one newline for the solution data. Because of this, the last
+        newline from the data field is not converted to the string.
+
+        Returns:
+            str: Sring representing the resource data attribute.
         """
 
         data = Const.EMPTY
@@ -787,10 +804,10 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             data = data.rstrip()
         elif self.is_solution():
             if self.is_native_mkdn_solution():
-                data = data + Const.DELIMITER_DATA.join(self.data)
+                data = data + Const.DELIMITER_DATA.join(self.data[0:-1])
             else:
                 data = '```\n'
-                data = data + Const.DELIMITER_DATA.join(self.data)
+                data = data + Const.DELIMITER_DATA.join(self.data[0:-1])
                 data = data + '```'
 
         return data

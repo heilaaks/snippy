@@ -112,10 +112,12 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Solution.BEATS,
-                Solution.NGINX
+                Content.deepcopy(Solution.BEATS),
+                Content.deepcopy(Solution.NGINX)
             ]
         }
+        content['data'][0]['uuid'] = Content.UUID1
+        content['data'][1]['uuid'] = Content.UUID2
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--solution', '-f', './all-solutions.txt'])
             assert cause == Cause.ALL_OK
@@ -133,10 +135,12 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Solution.BEATS,
-                Solution.NGINX
+                Content.deepcopy(Solution.BEATS),
+                Content.deepcopy(Solution.NGINX)
             ]
         }
+        content['data'][0]['uuid'] = Content.UUID1
+        content['data'][1]['uuid'] = Content.UUID2
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--solution', '-f', './all-solutions.text'])
             assert cause == Cause.ALL_OK
@@ -171,9 +175,10 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Solution.BEATS
+                Content.deepcopy(Solution.BEATS)
             ]
         }
+        content['data'][0]['uuid'] = Content.UUID1
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--solution', '-d', 'db712a82662d6932'])
             assert cause == Cause.ALL_OK
@@ -193,9 +198,10 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Solution.BEATS
+                Content.deepcopy(Solution.BEATS)
             ]
         }
+        content['data'][0]['uuid'] = Content.UUID1
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-d', 'db712a82662d6932'])
             assert cause == Cause.ALL_OK
@@ -329,9 +335,10 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Solution.BEATS
+                Content.deepcopy(Solution.BEATS)
             ]
         }
+        content['data'][0]['uuid'] = Content.UUID1
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--solution', '-d', 'db712a82662d6932', '-f', './defined-solution.txt'])
             assert cause == Cause.ALL_OK
@@ -350,9 +357,10 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Solution.BEATS
+                Content.deepcopy(Solution.BEATS)
             ]
         }
+        content['data'][0]['uuid'] = Content.UUID1
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-d', 'db712a82662d6932', '-f', './defined-solution.txt'])
             assert cause == Cause.ALL_OK
@@ -372,9 +380,10 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Solution.BEATS
+                Content.deepcopy(Solution.BEATS)
             ]
         }
+        content['data'][0]['uuid'] = Content.UUID1
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--solution', '-d', 'db712a82662d6932', '-f', './defined-solution.text'])
             assert cause == Cause.ALL_OK
@@ -392,9 +401,10 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Solution.BEATS
+                Content.deepcopy(Solution.BEATS)
             ]
         }
+        content['data'][0]['uuid'] = Content.UUID1
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-d', 'db712a82662d6932', '-f', './defined-solution.text'])
             assert cause == Cause.ALL_OK
@@ -476,6 +486,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             assert cause == Cause.ALL_OK
 
         content['data'][0]['filename'] = 'kubernetes-docker-log-driver-kafka.txt'
+        content['data'][0]['uuid'] = Content.UUID2
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--solution', '-d', 'e22e8ee4cbbe681e'])
             assert cause == Cause.ALL_OK
@@ -511,9 +522,10 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Solution.BEATS
+                Content.deepcopy(Solution.BEATS)
             ]
         }
+        content['data'][0]['uuid'] = Content.UUID1
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--solution', '--sall', 'beats'])
             assert cause == Cause.ALL_OK
@@ -577,9 +589,10 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Solution.BEATS
+                Content.deepcopy(Solution.BEATS)
             ]
         }
+        content['data'][0]['uuid'] = Content.UUID1
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--solution', '--sall', 'beats', '-f', './defined-solution.txt'])
             assert cause == Cause.ALL_OK
@@ -598,10 +611,12 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Solution.BEATS,
-                Solution.NGINX
+                Content.deepcopy(Solution.BEATS),
+                Content.deepcopy(Solution.NGINX)
             ]
         }
+        content['data'][0]['uuid'] = Content.UUID1
+        content['data'][1]['uuid'] = Content.UUID2
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--solution', '--sall', 'howto', '-f', './defined-solutions.txt'])
             assert cause == Cause.ALL_OK

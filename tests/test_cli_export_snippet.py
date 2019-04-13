@@ -204,14 +204,19 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         Export defined snippet based on message digest. File name is defined
         in command line. This should result file and format defined by command
         line option -f|--file.
+
+        Because text template does not have UUID, the UUID mock allocates a new
+        UUID for the exported comparison. Because of this the imported resource
+        UUID cannot be compared to exported text.
         """
 
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Snippet.FORCED
+                Content.deepcopy(Snippet.FORCED)
             ]
         }
+        content['data'][0]['uuid'] = Content.UUID1
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-d', '53908d68425c61dc', '-f', 'defined-snippet.txt'])
             assert cause == Cause.ALL_OK
@@ -304,9 +309,10 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Snippet.FORCED
+                Content.deepcopy(Snippet.FORCED)
             ]
         }
+        content['data'][0]['uuid'] = Content.UUID1
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--sall', 'force', '-f', 'defined-snippet.txt'])
             assert cause == Cause.ALL_OK
@@ -324,9 +330,10 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Snippet.FORCED
+                Content.deepcopy(Snippet.FORCED)
             ]
         }
+        content['data'][0]['uuid'] = Content.UUID1
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--sall', 'force', '-f', 'defined-snippet.text'])
             assert cause == Cause.ALL_OK
@@ -345,10 +352,12 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Snippet.REMOVE,
-                Snippet.FORCED
+                Content.deepcopy(Snippet.REMOVE),
+                Content.deepcopy(Snippet.FORCED)
             ]
         }
+        content['data'][0]['uuid'] = Content.UUID1
+        content['data'][1]['uuid'] = Content.UUID2
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--sall', 'docker', '-f', 'defined-snippet.text'])
             assert cause == Cause.ALL_OK
@@ -440,9 +449,10 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Snippet.REMOVE
+                Content.deepcopy(Snippet.REMOVE)
             ]
         }
+        content['data'][0]['uuid'] = Content.UUID1
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-c', 'docker rm --volumes $(docker ps --all --quiet)', '-f', 'defined-snippet.txt'])  # pylint: disable=line-too-long
             assert cause == Cause.ALL_OK
@@ -589,7 +599,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
     def test_cli_export_snippet_029(snippy):
         """Export all snippets.
 
-        Export snippets in Markdown format. This case verified that there is
+        Export snippets in Markdown format. This case verified that there are
         two spaces at the end of lists like links, data and metadata. This
         forces newlines in exported Markdown format.
         """
@@ -622,7 +632,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             'source   :  ',
             'tags     : cleanup,container,docker,docker-ce,image,moby  ',
             'updated  : 2017-10-20T07:08:45.000001+00:00  ',
-            'uuid     : 12cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+            'uuid     : 13cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
             'versions :  ',
             ''
         )

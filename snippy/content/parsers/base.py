@@ -144,7 +144,10 @@ class ContentParserBase(object):
             tuple: Tuple of utf-8 encoded unicode strings.
         """
 
-        data = ()
+        data = []
+        if value is None:
+            return tuple(data)
+
         if category in [Const.SNIPPET, Const.REFERENCE]:
             data = cls.to_unicode(value).rstrip().split(Const.DELIMITER_DATA)
         elif category == Const.SOLUTION:

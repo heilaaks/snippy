@@ -374,7 +374,7 @@ class TestCliOptions(object):
             '   ! description : ',
             '   ! digest      : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319 (True)',
             '   ! filename    : ',
-            '   ! id          : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+            '   ! id          : a1cd5827-b6ef-4067-b5ac-3ceac07dde9f',
             '   ! name        : ',
             '   ! source      : ',
             '   ! updated     : 2017-10-14T19:56:31.000001+00:00',
@@ -394,7 +394,7 @@ class TestCliOptions(object):
             '   ! description : ',
             '   ! digest      : 53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5 (True)',
             '   ! filename    : ',
-            '   ! id          : 12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+            '   ! id          : a2cd5827-b6ef-4067-b5ac-3ceac07dde9f',
             '   ! name        : ',
             '   ! source      : ',
             '   ! updated     : 2017-10-14T19:56:31.000001+00:00',
@@ -494,7 +494,7 @@ class TestCliOptions(object):
             '   ! description : ',
             '   ! digest      : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319 (True)',
             '   ! filename    : ',
-            '   ! id          : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+            '   ! id          : a1cd5827-b6ef-4067-b5ac-3ceac07dde9f',
             '   ! name        : ',
             '   ! source      : ',
             '   ! updated     : 2017-10-14T19:56:31.000001+00:00',
@@ -514,7 +514,7 @@ class TestCliOptions(object):
             '   ! description : ',
             '   ! digest      : 53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5 (True)',
             '   ! filename    : ',
-            '   ! id          : 12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+            '   ! id          : a2cd5827-b6ef-4067-b5ac-3ceac07dde9f',
             '   ! name        : ',
             '   ! source      : ',
             '   ! updated     : 2017-10-14T19:56:31.000001+00:00',
@@ -526,7 +526,6 @@ class TestCliOptions(object):
         )
         print(Content.output())  # Part of the test.
         out, err = capsys.readouterr()
-        print(out)
         out = Helper.remove_ansi(out)
         assert Const.NEWLINE.join(output) in out
         assert not err

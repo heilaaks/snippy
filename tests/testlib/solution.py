@@ -466,13 +466,13 @@ class Solution(object):  # pylint: disable=too-few-public-methods
         '',
         '> category : solution  ',
         'created  : 2017-10-14T19:56:31.000001+00:00  ',
-        'digest   : a6617fdf3a067ede0dafe09fa30045a1134436e6254117f70c5134c2658fe263  ',
+        'digest   : 5facdc16dc81851c2f65b112a0921eb2f2db206c7756714efb45ba0026471f11  ',
         'filename : example-content.md  ',
         'name     : example content handle  ',
         'source   : https://www.example.com/source.md  ',
         'tags     : example,tags  ',
         'updated  : 2017-10-14T19:56:31.000001+00:00  ',
-        'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+        'uuid     : a1cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
         'versions : example=3.9.0,python>=3  ',
         ''
     )

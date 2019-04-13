@@ -177,7 +177,7 @@ class TestCliUpdateReference(object):
         content['data'][0]['links'] = ('https://docs.docker.com', )
         content['data'][0]['digest'] = '1fc34e79a4d2bac51a039b7265da464ad787da41574c3d6651dc6a128d4c7c10'
         edited_gitlog.return_value = Content.dump_text(content['data'][0])
-        cause = snippy.run(['snippy', 'update', '--reference', '-u', '12cd5827-b6ef-4067-b5ac-3ceac07dde9f', '--format', 'text'])
+        cause = snippy.run(['snippy', 'update', '--reference', '-u', '31cd5827-b6ef-4067-b5ac-3ceac07dde9f', '--format', 'text'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -277,9 +277,10 @@ class TestCliUpdateReference(object):
 
         content = {
             'data': [
-                Reference.GITLOG
+                Content.deepcopy(Reference.GITLOG)
             ]
         }
+        content['data'][0]['uuid'] = Reference.REGEXP_UUID
         edited_gitlog.return_value = Content.dump_text(content['data'][0])
         cause = snippy.run(['snippy', 'update', '-d', 'cb9225a81eab8ced', '--reference', '--editor', '--format', 'text'])
         edited_gitlog.assert_called_with(Content.dump_text(Reference.REGEXP))
@@ -337,7 +338,7 @@ class TestCliUpdateReference(object):
             'source   :  ',
             'tags     : howto,online,python,regexp  ',
             'updated  : 2018-06-22T13:11:13.678729+00:00  ',
-            'uuid     : 12cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+            'uuid     : 32cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
             'versions :  ',
             ''
         )

@@ -160,7 +160,7 @@ class Reference(object):  # pylint: disable=too-few-public-methods
         'source   : https://www.example.com/source.md  ',
         'tags     : example,tags  ',
         'updated  : 2018-02-02T02:02:02.000001+00:00  ',
-        'uuid     : 1acd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+        'uuid     : a1cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
         'versions : example=3.9.0,python>=3  ',
         ''
     )

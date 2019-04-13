@@ -471,7 +471,7 @@ class TestApiCreateReference(object):
     def test_api_create_reference_010(server):
         """Create one reference from API.
 
-        Call POST /v1/references to create new content. In this case every
+        Send POST /v1/references to create new resource. In this case every
         attribute has additional leading and trailing whitespaces which must
         be trimmed.
         """
@@ -491,7 +491,7 @@ class TestApiCreateReference(object):
                 'filename': 'shortfilename.yaml',
                 'created': Content.REGEXP_TIME,
                 'updated': Content.REGEXP_TIME,
-                'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'uuid': Content.UUID1,
                 'digest': 'f68078e62794f6e1e00ccff301fb83ea01b7587959d6ab7b444c18b637f6e61b'
             }]
         }
@@ -536,7 +536,7 @@ class TestApiCreateReference(object):
     def test_api_create_reference_011(server):
         """Create one reference from API.
 
-        Call POST /v1/references to create new content. In this case only the
+        Send POST /v1/references to create new resource. In this case only the
         links field is defined
         """
 
@@ -555,7 +555,7 @@ class TestApiCreateReference(object):
                 'filename': '',
                 'created': Content.REGEXP_TIME,
                 'updated': Content.REGEXP_TIME,
-                'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'uuid': Content.UUID1,
                 'digest': 'b978df98e539644f9861a13803c19345d286544302ccedfd98c36cf16724eb80'
             }]
         }
@@ -616,7 +616,7 @@ class TestApiCreateReference(object):
                 'filename': '',
                 'created': '2018-06-22T13:11:13.678729+00:00',
                 'updated': '2018-06-22T13:11:13.678729+00:00',
-                'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'uuid': Content.UUID1,
                 'digest': 'aa6aa8c9a94f1959c9935d7bc6aca060edd5369ae5a24d26ce2960852751d09d'
             }]
         }

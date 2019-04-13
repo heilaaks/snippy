@@ -318,7 +318,7 @@ class TestCliUpdateSnippet(object):
             'source   :  ',
             'tags     : cli-tag  ',
             'updated  : 2017-10-14T19:56:31.000001+00:00  ',
-            'uuid     : 12cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+            'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
             'versions :  ',
             ''
         )
@@ -386,7 +386,7 @@ class TestCliUpdateSnippet(object):
             'source   :  ',
             'tags     : cleanup,container,docker,docker-ce,moby  ',
             'updated  : 2017-10-14T19:56:31.000001+00:00  ',
-            'uuid     : 12cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+            'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
             'versions :  ',
             ''
         )
@@ -430,7 +430,7 @@ class TestCliUpdateSnippet(object):
             'source   :  ',
             'tags     : cleanup,container,docker,docker-ce,moby  ',
             'updated  : 2017-10-14T19:56:31.000001+00:00  ',
-            'uuid     : 12cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+            'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
             'versions :  ',
             ''
         )

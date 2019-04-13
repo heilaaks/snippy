@@ -166,10 +166,12 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Reference.GITLOG,
-                Reference.REGEXP
+                Content.deepcopy(Reference.GITLOG),
+                Content.deepcopy(Reference.REGEXP)
             ]
         }
+        content['data'][0]['uuid'] = Content.UUID1
+        content['data'][1]['uuid'] = Content.UUID2
         file_content = Content.get_file_content(Content.TEXT, content)
         with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', './all-references.txt'])
@@ -189,10 +191,12 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Reference.GITLOG,
-                Reference.REGEXP
+                Content.deepcopy(Reference.GITLOG),
+                Content.deepcopy(Reference.REGEXP)
             ]
         }
+        content['data'][0]['uuid'] = Content.UUID1
+        content['data'][1]['uuid'] = Content.UUID2
         file_content = Content.get_file_content(Content.TEXT, content)
         with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', './all-references.text'])
@@ -354,7 +358,7 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
         file_content = Content.get_file_content(Content.YAML, content)
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             yaml.safe_load.return_value = file_content
-            cause = snippy.run(['snippy', 'import', '--reference', '-u', '12cd5827-b6ef-4067-b5ac-3ceac07dde9f', '-f', 'one-reference.yaml'])
+            cause = snippy.run(['snippy', 'import', '--reference', '-u', '31cd5827-b6ef-4067-b5ac-3ceac07dde9f', '-f', 'one-reference.yaml'])
             assert cause == Cause.ALL_OK
             Content.assert_storage(content)
             mock_file.assert_called_once_with('one-reference.yaml', 'r')
@@ -413,11 +417,16 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
     def test_cli_import_reference_017(snippy):
         """Import references defaults.
 
-        Try to import reference defaults again. The second import should fail
-        with an error because the content already exist. The error text must
-        be the same for all content categories. Because of random order
-        dictionary in the code, the reported digest can vary when there are
-        multiple failures to import each content.
+        Try to import reference defaults again. The second import must fail
+        with error because resoureces already exist. The error text must be
+        the same for all content categories.
+
+        Because of random order dictionary in the code, the reported digest
+        can vary when there are multiple failures to import each content.
+
+        Because there is unique constraint violation for ``data`` and ``uuid``
+        attributes and PostgreSQL and Sqlite throw the error from different
+        attributes, both attributes must be checked.
         """
 
         content = {
@@ -431,7 +440,9 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             yaml.safe_load.return_value = file_content
             cause = snippy.run(['snippy', 'import', '--reference', '--defaults'])
             assert cause in ('NOK: content data already exist with digest 5c2071094dbfaa33',
-                             'NOK: content data already exist with digest cb9225a81eab8ced')
+                             'NOK: content uuid already exist with digest 5c2071094dbfaa33',
+                             'NOK: content data already exist with digest cb9225a81eab8ced',
+                             'NOK: content uuid already exist with digest cb9225a81eab8ced')
             Content.assert_storage(content)
             defaults_references = pkg_resources.resource_filename('snippy', 'data/defaults/references.yaml')
             mock_file.assert_called_once_with(defaults_references, 'r')
@@ -546,6 +557,8 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
         content['data'][0]['uuid'] = ''
         content['data'][1]['uuid'] = ''
         file_content = Content.get_file_content(Content.MKDN, content)
+        content['data'][0]['uuid'] = 'a1cd5827-b6ef-4067-b5ac-3ceac07dde9f'
+        content['data'][1]['uuid'] = 'a2cd5827-b6ef-4067-b5ac-3ceac07dde9f'
         with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--reference'])
             assert cause == Cause.ALL_OK

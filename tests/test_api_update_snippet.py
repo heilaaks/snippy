@@ -40,7 +40,7 @@ class TestApiUpdateSnippet(object):
     def test_api_update_snippet_001(server):
         """Update one snippet with PUT request.
 
-        Call PUT /v1/snippets/{id} to update existing snippet with specified
+        Send PUT /v1/snippets/{id} to update existing resource with specified
         digest. See 'updating content attributes' for the attribute list that
         can be changed by user.
         """
@@ -52,6 +52,7 @@ class TestApiUpdateSnippet(object):
         }
         content['data'][0]['created'] = Content.FORCED_TIME
         content['data'][0]['updated'] = Content.EXITED_TIME
+        content['data'][0]['uuid'] = Snippet.FORCED_UUID
         content['data'][0]['digest'] = Snippet.EXITED_DIGEST
         request_body = {
             'data': {
@@ -68,15 +69,15 @@ class TestApiUpdateSnippet(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1009'
+            'content-length': '1001'
         }
         expect_body = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/49d6916b6711f13d'
+                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/' + Snippet.FORCED_UUID
             },
             'data': {
                 'type': 'snippet',
-                'id': content['data'][0]['digest'],
+                'id': content['data'][0]['uuid'],
                 'attributes': content['data'][0]
             }
         }
@@ -94,7 +95,7 @@ class TestApiUpdateSnippet(object):
     def test_api_update_snippet_002(server):
         """Update one snippet with PUT request.
 
-        Call PUT /v1/snippets/{id} to update existing snippet with specified
+        SEnd PUT /v1/snippets/{id} to update existing resource with specified
         digest. Only partial set of attributes that can be modified is sent
         in request.
         """
@@ -130,15 +131,15 @@ class TestApiUpdateSnippet(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '710'
+            'content-length': '702'
         }
         expect_body = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/e56c2183edcc3a67'
+                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/' + Snippet.FORCED_UUID
             },
             'data': {
                 'type': 'snippet',
-                'id': content['data'][0]['digest'],
+                'id': content['data'][0]['uuid'],
                 'attributes': content['data'][0]
             }
         }
@@ -156,7 +157,7 @@ class TestApiUpdateSnippet(object):
     def test_api_update_snippet_003(server):
         """Update one snippet with PUT request.
 
-        Call PUT /v1/snippets/{id} to update existing snippet with specified
+        Send PUT /v1/snippets/{id} to update existing resource with specified
         digest. The PUT request contains only the mandatory data attribute.
         All other attributes must be set to their default values.
         """
@@ -190,15 +191,15 @@ class TestApiUpdateSnippet(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '653'
+            'content-length': '645'
         }
         expect_body = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/26128ea95707a3a2'
+                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/' + Snippet.FORCED_UUID
             },
             'data': {
                 'type': 'snippet',
-                'id': content['data'][0]['digest'],
+                'id': content['data'][0]['uuid'],
                 'attributes': content['data'][0]
             }
         }
@@ -216,7 +217,7 @@ class TestApiUpdateSnippet(object):
     def test_api_update_snippet_004(server):
         """Try to update snippet with malformed request.
 
-        Try to call PUT /v1/snippets/{id} to update snippet with digest that
+        Try to send PUT /v1/snippets/{id} to update resource with digest that
         is not found.
         """
 
@@ -264,7 +265,7 @@ class TestApiUpdateSnippet(object):
     def test_api_update_snippet_005(server):
         """Try to update snippet with malformed request.
 
-        Try to call PUT /v1/snippets/{id} to update snippet with malformed
+        Try to send PUT /v1/snippets/{id} to update snippet with malformed
         JSON request.
         """
 
@@ -305,7 +306,7 @@ class TestApiUpdateSnippet(object):
     def test_api_update_snippet_006(server):
         """Updated snippet and verify created and updated timestamps.
 
-        Call PUT /v1/snippets/{id} to update existing snippet with specified
+        Send PUT /v1/snippets/{id} to update existing resource with specified
         digest. This test verifies that the created timestamp does not change
         and the updated timestamp changes when the content is updated.
         """
@@ -317,6 +318,7 @@ class TestApiUpdateSnippet(object):
         }
         content['data'][0]['created'] = Content.FORCED_TIME
         content['data'][0]['updated'] = Content.NETCAT_TIME
+        content['data'][0]['uuid'] = Snippet.FORCED_UUID
         content['data'][0]['digest'] = Snippet.NETCAT_DIGEST
         request_body = {
             'data': {
@@ -332,15 +334,15 @@ class TestApiUpdateSnippet(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '772'
+            'content-length': '764'
         }
         expect_body = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/f3fd167c64b6f97e'
+                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/' + Snippet.FORCED_UUID
             },
             'data': {
                 'type': 'snippet',
-                'id': content['data'][0]['digest'],
+                'id': content['data'][0]['uuid'],
                 'attributes': content['data'][0]
             }
         }
@@ -359,7 +361,7 @@ class TestApiUpdateSnippet(object):
     def test_api_update_snippet_007(server):
         """Update one snippet with PATCH request.
 
-        Call PATCH /v1/snippets/{id} to update existing snippet with specified
+        Send PATCH /v1/snippets/{id} to update existing resource with specified
         digest. The PATCH request contains only mandatory the data attribute.
         All other attributes must be returned with their previous stored values.
         """
@@ -372,6 +374,7 @@ class TestApiUpdateSnippet(object):
         content['data'][0]['data'] = Snippet.REMOVE['data']
         content['data'][0]['created'] = Content.FORCED_TIME
         content['data'][0]['updated'] = Content.REMOVE_TIME
+        content['data'][0]['uuid'] = Snippet.FORCED_UUID
         content['data'][0]['digest'] = 'a9e137c08aee09852797a974ef91b871c48915fecf25b2e89c5bdba4885b2bd2'
         request_body = {
             'data': {
@@ -383,15 +386,15 @@ class TestApiUpdateSnippet(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '896'
+            'content-length': '888'
         }
         expect_body = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/a9e137c08aee0985'
+                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/' + Snippet.FORCED_UUID
             },
             'data': {
                 'type': 'snippet',
-                'id': content['data'][0]['digest'],
+                'id': content['data'][0]['uuid'],
                 'attributes': content['data'][0]
             }
         }

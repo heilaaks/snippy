@@ -142,6 +142,9 @@ IMPORT_DEFAULT_SNIPPETS = ((REMOVE_CREATED,) + (FORCED_CREATED,))
 IMPORT_DEFAULT_SOLUTIONS = ((BEATS_CREATED,) + (NGINX_CREATED,))
 IMPORT_DEFAULT_REFERENCES = ((GITLOG_CREATED,) + (REGEXP_CREATED,))
 
+# Originals
+JSON_LOAD = json.load
+
 def pytest_addoption(parser):
     """Add command line options for Pytest."""
 
@@ -981,8 +984,13 @@ def _import_resources(snippy, mocker, resources):
 
     The Config.utcnow() is mocked away just to avoid calling ``utcnow``. The
     intention is just to avoid unncessary system calls during tests.
+
+    The json.load is used by the import operation. Because of this, optional
+    json.load mock must be temporary removed.
     """
 
+    mock_load = json.load
+    json.load = JSON_LOAD
     timestamp = '2000-01-01T01:01:01.000001+00:00'
     with mock.patch('snippy.content.migrate.os.path.isfile', return_value=True):
         for resource in resources:
@@ -991,6 +999,7 @@ def _import_resources(snippy, mocker, resources):
                 with mock.patch.object(Config, 'utcnow', side_effect=(timestamp,)*20):
                     cause = snippy.run(['snippy', 'import', '--file', 'resource.json'])
                     assert cause == Cause.ALL_OK
+    json.load = mock_load
 
 def _import_content_mkdn(snippy, mocker, contents, timestamps):
     """Import requested Markdown content."""

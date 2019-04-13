@@ -261,9 +261,10 @@ class TestCliUpdateSolution(object):
 
         content = {
             'data': [
-                Solution.BEATS
+                Content.deepcopy(Solution.BEATS)
             ]
         }
+        content['data'][0]['uuid'] = Solution.NGINX_UUID
         edited_beats.return_value = Content.dump_text(content['data'][0])
         cause = snippy.run(['snippy', 'update', '-d', '5dee85bedb7f4d3a', '--solution', '--editor', '--format', 'text'])
         edited_beats.assert_called_with(Content.dump_text(Solution.NGINX))
@@ -334,7 +335,7 @@ class TestCliUpdateSolution(object):
         updates['data'][0]['description'] = 'Investigate docker log drivers and the logs2kafka log plugin'
         updates['data'][0]['links'] = ()
         updates['data'][0]['updated'] = Content.BEATS_TIME
-        updates['data'][0]['uuid'] = '11cd5827-b6ef-4067-b5ac-3ceac07dde9f'
+        updates['data'][0]['uuid'] = Solution.KAFKA_MKDN_UUID
         updates['data'][0]['digest'] = '7941851522a23d3651f223b6d69441f77649ccb7ae1e72c6709890f2caf6401a'
         editor_data.return_value = '\n'.join(edited)
         cause = snippy.run(['snippy', 'update', '-d', '18473ec207798670', '--solution'])
@@ -355,10 +356,9 @@ class TestCliUpdateSolution(object):
 
         content = {
             'data': [
-                Content.deepcopy(Solution.KAFKA)
+                Solution.KAFKA
             ]
         }
-        content['data'][0]['uuid'] = '12cd5827-b6ef-4067-b5ac-3ceac07dde9f'
         template = Content.dump_mkdn(content['data'][0])
         editor_data.return_value = template
         cause = snippy.run(['snippy', 'update', '-d', 'fffeaf31e98e68a3', '--format', 'mkdn'])
@@ -395,7 +395,6 @@ class TestCliUpdateSolution(object):
             '[2] https://github.com/garo/logs2kafka  ',
             '[3] https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ',
             '') + Solution.KAFKA_MKDN['data'] + (
-            '',
             '## Meta',
             '',
             '> category : solution  ',

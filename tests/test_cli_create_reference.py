@@ -42,9 +42,10 @@ class TestCliCreateReferece(object):
 
         content = {
             'data': [
-                Reference.GITLOG
+                Content.deepcopy(Reference.GITLOG)
             ]
         }
+        content['data'][0]['uuid'] = Content.UUID1
         data = 'must not be used'
         brief = content['data'][0]['brief']
         groups = content['data'][0]['groups']
@@ -113,9 +114,10 @@ class TestCliCreateReferece(object):
 
         content = {
             'data': [
-                Reference.GITLOG
+                Content.deepcopy(Reference.GITLOG)
             ]
         }
+        content['data'][0]['uuid'] = Content.UUID1
         template = (
             '# Add brief title for content @groups',
             '',
@@ -133,7 +135,7 @@ class TestCliCreateReferece(object):
             'source   : https://www.example.com/source.md  ',
             'tags     : example,tags  ',
             'updated  : 2018-06-22T13:11:13.678729+00:00  ',
-            'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+            'uuid     : a1cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
             'versions : example=3.9.0,python>=3  ',
             ''
         )
@@ -156,7 +158,7 @@ class TestCliCreateReferece(object):
             'source   :  ',
             'tags     : commit,git,howto  ',
             'updated  : 2018-06-22T13:11:13.678729+00:00  ',
-            'uuid     : 24cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+            'uuid     : a1cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
             'versions :  ',
             '')
         editor_data.return_value = '\n'.join(edited)
@@ -192,7 +194,7 @@ class TestCliCreateReferece(object):
             'source   : https://www.example.com/source.md  ',
             'tags     : example,tags  ',
             'updated  : 2018-06-22T13:11:13.678729+00:00  ',
-            'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+            'uuid     : a1cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
             'versions : example=3.9.0,python>=3  ',
             ''
         )

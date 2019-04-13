@@ -1,5 +1,6 @@
 ## WORKING
-   - [ ] Update tests. UUID check must be valid in tests. See API referecens tests 1-4, test_cli_import_reference_005/020, test_ut*
+   - [ ] Fix markdown/text update solution is broken. the data is not there.
+   - [ ] Update tests. UUID check must be valid in tests.
    - [ ] Remove UUID VALID from test helpers because it is not longer needed- The UUID must be correct and not incremented randomly (from test point of view) to use it in URL.
    - [ ] Do not use UUID from client when new resource is created. This must be always allocated by the server. Test. Update swagger to not include UUID in HTTP requests. Reject with error?
    - [ ] Check test case lint rules because they did not notice redundant self in tests.

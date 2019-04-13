@@ -40,9 +40,9 @@ class TestApiUpdateSolution(object):
     def test_api_update_solution_001(server):
         """Update one solution with PUT request.
 
-        Call PUT /v1/solutions/{id} to update existing solution with specified
+        Send PUT /v1/solutions/{id} to update existing resource with specified
         digest. See 'updating content attributes' for the attribute list that
-        can be changed by user.
+        can be changed by client.
         """
 
         content = {
@@ -53,6 +53,7 @@ class TestApiUpdateSolution(object):
         content['data'][0]['filename'] = ''
         content['data'][0]['created'] = Content.BEATS_TIME
         content['data'][0]['updated'] = Content.KAFKA_TIME
+        content['data'][0]['uuid'] = Solution.BEATS_UUID
         content['data'][0]['digest'] = '04be0828cd51e173eb7f12620ad79ddab36721ccbd85c3cfbf5218a93e9b1a2e'
         request_body = {
             'data': {
@@ -69,15 +70,15 @@ class TestApiUpdateSolution(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '4766'
+            'content-length': '4758'
         }
         expect_body = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/04be0828cd51e173'
+                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/' + Solution.BEATS_UUID
             },
             'data': {
                 'type': 'solution',
-                'id': content['data'][0]['digest'],
+                'id': content['data'][0]['uuid'],
                 'attributes': content['data'][0]
             }
         }
@@ -95,7 +96,7 @@ class TestApiUpdateSolution(object):
     def test_api_update_solution_002(server):
         """Update one solution with PUT request.
 
-        Call PUT /v1/solutions/{id} to update existing solution. The PUT
+        Send PUT /v1/solutions/{id} to update existing resource. The PUT
         request contains only the mandatory data attribute. All other
         attributes must be set to their default values.
         """
@@ -115,7 +116,7 @@ class TestApiUpdateSolution(object):
                 'filename': '',
                 'created': Content.BEATS_TIME,
                 'updated': Content.NGINX_TIME,
-                'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'uuid': Solution.BEATS_UUID,
                 'digest': '6cd48521a898357f5f088c3cd5a8614c6291ef98733cd7e52ab2cdedb146a874'
             }]
         }
@@ -130,15 +131,15 @@ class TestApiUpdateSolution(object):
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2949'
+            'content-length': '2941'
         }
         expect_body = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/6cd48521a898357f'
+                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/' + Solution.BEATS_UUID
             },
             'data': {
                 'type': 'solution',
-                'id': content['data'][0]['digest'],
+                'id': content['data'][0]['uuid'],
                 'attributes': content['data'][0]
             }
         }
@@ -156,7 +157,7 @@ class TestApiUpdateSolution(object):
     def test_api_update_solution_003(server):
         """Update one solution with PUT request.
 
-        Try to call PUT /v1/solutions/{id} to update solution with digest that
+        Try to send PUT /v1/solutions/{id} to update resource with digest that
         is not found.
         """
 
@@ -202,7 +203,7 @@ class TestApiUpdateSolution(object):
     def test_api_update_solution_004(server):
         """Try to update solution with malformed request.
 
-        Try to call PUT /v1/solutions/{id} to update solution with malformed
+        Try to send PUT /v1/solutions/{id} to update resource with malformed
         JSON request.
         """
 
@@ -243,7 +244,7 @@ class TestApiUpdateSolution(object):
     def test_api_update_solution_005(server):
         """Try to update solution with malformed request.
 
-        Try to call PUT /v1/solutions/{id} to update solution with a client
+        Try to send PUT /v1/solutions/{id} to update resource with a client
         generated resource ID. In this case the ID looks like a valid message
         digest.
         """
@@ -342,7 +343,7 @@ class TestApiUpdateSolution(object):
     def test_api_update_solution_007(server):
         """Update one solution with PATCH request.
 
-        Call PATCH /v1/solutions/{id} to update existing solution with digest.
+        Send PATCH /v1/solutions/{id} to update existing resource with digest.
         The PATCH request contains only the mandatory data attribute. All other
         attributes that can be updated must be returned with their previous
         values.
@@ -356,6 +357,7 @@ class TestApiUpdateSolution(object):
         content['data'][0]['data'] = Solution.KAFKA['data']
         content['data'][0]['created'] = Content.BEATS_TIME
         content['data'][0]['updated'] = Content.KAFKA_TIME
+        content['data'][0]['uuid'] = Solution.BEATS_UUID
         content['data'][0]['digest'] = 'c7b25c6ee326b025c471caa32be285f8c4fc4138593d7cb31a7da63acc36043b'
         request_body = {
             'data': {
@@ -367,15 +369,15 @@ class TestApiUpdateSolution(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '4637'
+            'content-length': '4629'
         }
         expect_body = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/c7b25c6ee326b025'
+                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/' + Solution.BEATS_UUID
             },
             'data': {
                 'type': 'solution',
-                'id': content['data'][0]['digest'],
+                'id': content['data'][0]['uuid'],
                 'attributes': content['data'][0]
             }
         }
@@ -393,10 +395,9 @@ class TestApiUpdateSolution(object):
     def test_api_update_solution_008(server):
         """Update one solution with PUT request.
 
-        Try to update solution uuid by calling PUT /v1/solutions. This must
-        not be done because the uuid is not changed once allocated.
+        Try to update solution ``uuid`` attribute by sending PUT /v1/solutions.
+        This must not work because the uuid cannot be changed by client.
         """
-
 
         content = {
             'data': [{
@@ -413,7 +414,7 @@ class TestApiUpdateSolution(object):
                 'filename': '',
                 'created': Content.BEATS_TIME,
                 'updated': Content.NGINX_TIME,
-                'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'uuid': Solution.BEATS_UUID,
                 'digest': '6cd48521a898357f5f088c3cd5a8614c6291ef98733cd7e52ab2cdedb146a874'
             }]
         }
@@ -428,15 +429,15 @@ class TestApiUpdateSolution(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2949'
+            'content-length': '2941'
         }
         expect_body = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/6cd48521a898357f'
+                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/' + Solution.BEATS_UUID
             },
             'data': {
                 'type': 'solution',
-                'id': content['data'][0]['digest'],
+                'id': content['data'][0]['uuid'],
                 'attributes': content['data'][0]
             }
         }

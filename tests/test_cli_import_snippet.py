@@ -111,14 +111,20 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
         Import all snippets from txt file. File name and format are extracted
         from command line option -f|--file. File extension is '*.txt' in this
         case.
+
+        Because text template does not have UUID, the UUID mock allocates a new
+        UUID for the exported comparison. Because of this the imported resource
+        UUID cannot be compared to exported text.
         """
 
         content = {
             'data': [
-                Snippet.REMOVE,
-                Snippet.FORCED
+                Content.deepcopy(Snippet.REMOVE),
+                Content.deepcopy(Snippet.FORCED)
             ]
         }
+        content['data'][0]['uuid'] = Content.UUID1
+        content['data'][1]['uuid'] = Content.UUID2
         file_content = Content.get_file_content(Content.TEXT, content)
         with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', './all-snippets.txt'])
@@ -138,10 +144,12 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Snippet.REMOVE,
-                Snippet.FORCED
+                Content.deepcopy(Snippet.REMOVE),
+                Content.deepcopy(Snippet.FORCED)
             ]
         }
+        content['data'][0]['uuid'] = Content.UUID1
+        content['data'][1]['uuid'] = Content.UUID2
         file_content = Content.get_file_content(Content.TEXT, content)
         with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', './all-snippets.text'])
@@ -373,9 +381,14 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
 
         Try to import snippet defaults again. The second import should fail
         with an error because the content already exist. The error text must
-        be the same for all content categories. Because of random order
-        dictionary in the code, the reported digest can vary if there are
-        multiple failures.
+        be the same for all content categories.
+
+        Because of random order dictionary in the code, the reported digest
+        can vary when there are multiple failures to import each content.
+
+        Because there is unique constraint violation for ``data`` and ``uuid``
+        attributes and PostgreSQL and Sqlite throw the error from different
+        attributes, both attributes must be checked.
         """
 
         content = {
@@ -389,7 +402,9 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
             yaml.safe_load.return_value = file_content
             cause = snippy.run(['snippy', 'import', '--defaults'])
             assert cause in ('NOK: content data already exist with digest 53908d68425c61dc',
-                             'NOK: content data already exist with digest 54e41e9b52a02b63')
+                             'NOK: content uuid already exist with digest 53908d68425c61dc',
+                             'NOK: content data already exist with digest 54e41e9b52a02b63',
+                             'NOK: content uuid already exist with digest 54e41e9b52a02b63')
             Content.assert_storage(content)
             defaults_snippets = pkg_resources.resource_filename('snippy', 'data/defaults/snippets.yaml')
             mock_file.assert_called_once_with(defaults_snippets, 'r')
@@ -420,6 +435,10 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
         this case two out of three imported snippets are already stored into
         the database. Because existing content is not considered as an error,
         the third snippet is imported successfully with success cause.
+
+        The UUID is modified to avoid the UUID collision which produces error.
+        The test verifies that user modified resource attributes do not stop
+        importing multiple resources.
         """
 
         content = {
@@ -429,13 +448,15 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
                 Snippet.NETCAT
             ]
         }
-        content['data'][0]['uuid'] = '24cd5827-b6ef-4067-b5ac-3ceac07dde9f'
-        content['data'][1]['uuid'] = '25cd5827-b6ef-4067-b5ac-3ceac07dde9f'
+        content['data'][0]['uuid'] = Content.UUID1
+        content['data'][1]['uuid'] = Content.UUID2
         file_content = Content.get_file_content(Content.YAML, content)
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             yaml.safe_load.return_value = file_content
             cause = snippy.run(['snippy', 'import', '-f', './snippets.yaml'])
             assert cause == Cause.ALL_OK
+            content['data'][0]['uuid'] = Snippet.REMOVE_UUID
+            content['data'][1]['uuid'] = Snippet.FORCED_UUID
             Content.assert_storage(content)
             mock_file.assert_called_once_with('./snippets.yaml', 'r')
 

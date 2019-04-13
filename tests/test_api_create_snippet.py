@@ -223,7 +223,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_create_snippet_005(server):
         """Create one snippet with POST.
 
-        Send POST /v1/snippets to create new snippet. In this case the snippet
+        Send POST /v1/snippets to create a new resource. In this case snippet
         content data attribute is defined as list where each line is a separate
         element in a list.
 
@@ -276,7 +276,8 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_create_snippet_006(server):
         """Create one snippet with POST.
 
-        Send POST /v1/snippets to create new resource with only ``data`` attribute.
+        Send POST /v1/snippets to create a new resource. In this case the
+        request resource has only the ``data`` attribute.
         """
 
         content = {
@@ -331,7 +332,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_create_snippet_007(server):
         """Create list of snippets from API.
 
-        Send POST /v1/snippets in list context to create new snippets.
+        Send POST /v1/snippets in list context to create a new resource.
         """
 
         content = {
@@ -380,7 +381,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_create_snippet_008(server):
         """Try to create snippet with malformed JSON request.
 
-        Try to send POST /v1/snippets to create new snippet with malformed
+        Try to send POST /v1/snippets to create a new resource with malformed
         JSON request. In this case the top level json object is incorrect.
         """
 
@@ -410,15 +411,13 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_create_snippet_009(server):
         """Try to create snippet with malformed JSON request.
 
-        Try to call POST /v1/snippets to create new snippet with malformed
-        JSON request. In this case the top level data JSON object type is
-        not 'snippet' or 'solution'.
+        Try to send POST /v1/snippets to create a new resource with malformed
+        JSON request. In this case the top level data object type is not valid.
         """
 
         request_body = {
             'data': [{
                 'type': 'snippe',
-                'id': '1',
                 'attributes': {
                     'category': 'snippet',
                     'data': ['docker rm $(docker ps --all -q -f status=exited)'],
@@ -456,7 +455,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_create_snippet_010(server):
         """Try to create snippet with malformed JSON request.
 
-        Try to call POST /v1/snippets to create new snippet with client
+        Try to send POST /v1/snippets to create new a resource with client
         generated ID. This is not supported and it will generate error.
         """
 

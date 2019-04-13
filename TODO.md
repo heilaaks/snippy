@@ -1,4 +1,5 @@
 ## WORKING
+   - [ ] Add schema to validate data attributes to prevent updating e.g. uuid, created, updated, etc. Before adding schema run performance tests. Can be done with simle if like with ID.
    - [ ] Fix updating Markdown based solutions in text formats does not work because the Mkdn solution does not have text header and data structure.
    - [ ] Fix received user defined UUID in create and update. This must generate error because otherwise user would expect that the UUID was updated.
    - [ ] Config.get_resource creates exter UUID usage when e.g resource is updated. Get rid of this (somehow) after UUID refactoring.

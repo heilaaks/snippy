@@ -12,7 +12,8 @@
    - [ ] Add data.id validation with schema instead of check Validation.
    - [ ] Add missing references import to docker containers. Use --all option.
    - [ ] Add schema to validate data attributes to prevent updating e.g. uuid, created, updated, etc. Before adding schema run performance tests. Can be done with simle if like with ID.
-   - [ ] INcorrect header does not leave logs. Test manually since this works differently that the tests? For example ab was missing '-T application/vnd.api+json' without this it did not work.
+   - [ ] Incorrect header does not leave logs. Test manually since this works differently that the tests? For example ab was missing '-T application/vnd.api+json' without this it did not work.
+   - [ ] Check why test_api_create_snippet_004 has specific error length in Python 3.4.
    - [ ] Fix updating Markdown based solutions in text formats does not work because the Mkdn solution does not have text header and data structure.
    - [ ] Fix received user defined UUID in create and update. This must generate error because otherwise user would expect that the UUID was updated.
    - [ ] Config.get_resource creates exter UUID usage when e.g resource is updated. Get rid of this (somehow) after UUID refactoring.

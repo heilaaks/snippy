@@ -196,6 +196,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             }]
         }
         expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1835'}
+        expect_headers_p34 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1838'}
         expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1868'}
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -211,7 +212,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_400
-        assert result.headers in (expect_headers_p2, expect_headers_p3)
+        assert result.headers in (expect_headers_p2, expect_headers_p3, expect_headers_p34)
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(None)
 

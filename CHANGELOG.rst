@@ -137,4 +137,4 @@ Security
 .. _`[2019.03.24]`: https://github.com/heilaaks/snippy/commit/063426d8c7bee05b620fa85cbf6ca81b1e96f45b
 .. _`[2019.03.31]`: https://github.com/heilaaks/snippy/commit/4b65ffa15e614a1715b8c5586563c8de093c7a34
 .. _`[2019.04.06]`: https://github.com/heilaaks/snippy/commit/c9f2efda31294deb149014232780952f64bc3e9c
-.. _`[2019.04.14]`: https://github.com/heilaaks/snippy/commit/c9f2efda31294deb149014232780952f64bc3e9c
+.. _`[2019.04.14]`: https://github.com/heilaaks/snippy/commit/cd720fc4252abf68f61c080dd39143b6436067f4

@@ -1,5 +1,6 @@
 {
   "type": "object",
+  "additionalProperties": false,
   "properties": {
     "category": {
       "$ref": "_definitions.json#/definitions/attributeCategory"
@@ -47,8 +48,6 @@
       "$ref": "_definitions.json#/definitions/attributeDigest"
     }
   },
-  "required": [
-    "data"
-  ],
+  "description": "# Brief\n\nResource `data` attributes for all API endoints HTTP responses.\n\nDifferent resource categories require different attributes. Creating and updating resources have\ndifferent mandatory resource attribute requirements. For example `snippets` require `data` but\n`references` require `links` attribute. PATCH and PUT can be send without `data` attribute for\n`snippets`.\n\nBecause of these reasons, JSON schema definition does not define the required properties.\n",
   "$schema": "http://json-schema.org/schema#"
 }

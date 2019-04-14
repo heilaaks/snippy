@@ -802,8 +802,6 @@ components:
         data:
           $ref: '#/components/schemas/requestData'
     requestAttributes:
-      required:
-      - data
       type: object
       properties:
         data:
@@ -826,6 +824,17 @@ components:
           $ref: '#/components/schemas/attributeVersions'
         filename:
           $ref: '#/components/schemas/attributeFilename'
+      description: |
+        # Brief
+
+        Resource `data` attributes for all API endoints HTTP requests.
+
+        Different resource categories require different attributes. Creating and updating resources have
+        different mandatory resource attribute requirements. For example `snippets` require `data` but
+        `references` require `links` attribute. PATCH and PUT can be send without `data` attribute for
+        `snippets`.
+
+        Because of these reasons, JSON schema definition does not define the required properties.
     requestCollection:
       required:
       - data
@@ -864,8 +873,6 @@ components:
         which name is defined by this attribute-
       default: ""
     responseAttributes:
-      required:
-      - data
       type: object
       properties:
         category:
@@ -898,6 +905,17 @@ components:
           $ref: '#/components/schemas/attributeUuid'
         digest:
           $ref: '#/components/schemas/attributeDigest'
+      description: |
+        # Brief
+
+        Resource `data` attributes for all API endoints HTTP responses.
+
+        Different resource categories require different attributes. Creating and updating resources have
+        different mandatory resource attribute requirements. For example `snippets` require `data` but
+        `references` require `links` attribute. PATCH and PUT can be send without `data` attribute for
+        `snippets`.
+
+        Because of these reasons, JSON schema definition does not define the required properties.
     attributeDescription:
       type: string
       description: |

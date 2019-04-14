@@ -40,7 +40,7 @@ class TestApiUpdateReference(object):
     def test_api_update_reference_001(server):
         """Update one reference with PUT request.
 
-        send PUT /v1/references/{id} to update existing resource with digest.
+        Send PUT /v1/references/{id} to update existing resource with digest.
         See 'updating content attributes' for the attribute list that can be
         changed by user.
         """
@@ -215,8 +215,8 @@ class TestApiUpdateReference(object):
             'tags': Const.DELIMITER_TAGS.join(Reference.REGEXP['tags']),
             'links': Const.DELIMITER_LINKS.join(Reference.REGEXP['links'])
         }
-        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '805'}
-        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '807'}
+        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1254'}
+        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1294'}
         expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
@@ -255,11 +255,11 @@ class TestApiUpdateReference(object):
                 'type': 'reference',
                 'id': Reference.REGEXP_DIGEST,
                 'attributes': {
-                    'data': Const.NEWLINE.join(Reference.REGEXP['data']),
+                    'data': Reference.REGEXP['data'],
                     'brief': Reference.REGEXP['brief'],
                     'groups': Reference.REGEXP['groups'],
-                    'tags': Const.DELIMITER_TAGS.join(Reference.REGEXP['tags']),
-                    'links': Const.DELIMITER_LINKS.join(Reference.REGEXP['links'])
+                    'tags': Reference.REGEXP['tags'],
+                    'links': Reference.REGEXP['links']
                 }
             }
         }
@@ -314,7 +314,7 @@ class TestApiUpdateReference(object):
             'data': {
                 'type': 'reference',
                 'attributes': {
-                    'links': Const.NEWLINE.join(Reference.REGEXP['links']),
+                    'links': Reference.REGEXP['links'],
                 }
             }
         }
@@ -427,15 +427,17 @@ class TestApiUpdateReference(object):
                 }
             }
         }
-        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '515'}
-        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '521'}
+        expect_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '387'
+        }
         expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '400',
                 'statusString': '400 Bad Request',
                 'module': 'snippy.testing.testing:123',
-                'title': 'json media validation failed'
+                'title': 'content was not stored because mandatory content field links is empty'
             }]
         }
         result = testing.TestClient(server.server.api).simulate_put(
@@ -443,7 +445,7 @@ class TestApiUpdateReference(object):
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_400
-        assert result.headers in (expect_headers_p2, expect_headers_p3)
+        assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
@@ -512,6 +514,7 @@ class TestApiUpdateReference(object):
         Content.assert_storage(content)
 
     @staticmethod
+    @pytest.mark.skip(reason="OAS 2.0 does not support nullable")
     @pytest.mark.usefixtures('import-gitlog', 'update-pytest-utc')
     def test_api_update_reference_010(server):
         """Update reference with PATCH request.
@@ -575,6 +578,7 @@ class TestApiUpdateReference(object):
         Content.assert_storage(content)
 
     @staticmethod
+    @pytest.mark.skip(reason="OAS 2.0 does not support nullable")
     @pytest.mark.usefixtures('import-gitlog', 'update-pytest-utc')
     def test_api_update_reference_011(server):
         """Update reference with PATCH request.

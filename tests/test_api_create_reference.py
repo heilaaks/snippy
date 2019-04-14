@@ -26,7 +26,6 @@ from falcon import testing
 import falcon
 import pytest
 
-from snippy.constants import Constants as Const
 from tests.testlib.content import Content
 from tests.testlib.helper import Helper
 from tests.testlib.reference import Reference
@@ -232,12 +231,13 @@ class TestApiCreateReference(object):
     def test_api_create_reference_005(server):
         """Update reference with POST that maps to PATCH.
 
-        Call POST /v1/references/{id} to update existing reference with the
-        X-HTTP-Method-Override header that overrides the operation as PATCH.
+        Send POST /v1/references/{id} to update existing resource with the
+        X-HTTP-Method-Override header that overrides the method as PATCH.
         Only the updated attributes must be changed.
 
-        The UUID must not be changed when the resource is updated because it
-        is immutable resource identity used in resource URI.
+        REsource UUID must not change when the resource is updated. The UUID
+        is immutable identity used in the resource URI and allocated when the
+        resource is created.
         """
 
         content = {
@@ -255,7 +255,7 @@ class TestApiCreateReference(object):
                 'type': 'reference',
                 'attributes': {
                     'brief': content['data'][0]['brief'],
-                    'links': Const.DELIMITER_LINKS.join(content['data'][0]['links']),
+                    'links': content['data'][0]['links']
                 }
             }
         }

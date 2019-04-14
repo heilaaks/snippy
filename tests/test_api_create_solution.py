@@ -25,7 +25,6 @@ from falcon import testing
 import falcon
 import pytest
 
-from snippy.constants import Constants as Const
 from tests.testlib.content import Content
 from tests.testlib.solution import Solution
 
@@ -40,7 +39,7 @@ class TestApiCreateSolution(object):
     def test_api_create_solution_001(server):
         """Create one solution from API.
 
-        Call POST /v1/solutions to create new solution.
+        Send POST /v1/solutions to create new solution.
         """
 
         content = {
@@ -79,7 +78,7 @@ class TestApiCreateSolution(object):
     def test_api_create_solution_002(server):
         """Create multiple solutions from API.
 
-        Call POST /v1/solutions in list context to create new solutions.
+        Send POST /v1/solutions in list context to create new solutions.
         """
 
         content = {
@@ -128,7 +127,7 @@ class TestApiCreateSolution(object):
     def test_api_create_solution_003(server):
         """Update solution with POST that maps to PUT.
 
-        Call POST /v1/solutions/[id} to update existing solution with the
+        Send POST /v1/solutions/[id} to update existing solution with the
         X-HTTP-Method-Override header that overrides the operation as PUT. In
         this case the created timestamp must remain in initial value and the
         updated timestamp must be updated to reflect the update time.
@@ -156,12 +155,12 @@ class TestApiCreateSolution(object):
             'data': {
                 'type': 'solution',
                 'attributes': {
-                    'data': Const.DELIMITER_DATA.join(content['data'][0]['data']),
+                    'data': content['data'][0]['data'],
                     'brief': content['data'][0]['brief'],
                     'description': content['data'][0]['description'],
                     'groups': content['data'][0]['groups'],
-                    'tags': Const.DELIMITER_TAGS.join(content['data'][0]['tags']),
-                    'links': Const.DELIMITER_LINKS.join(content['data'][0]['links'])
+                    'tags': content['data'][0]['tags'],
+                    'links': content['data'][0]['links']
                 }
             }
         }
@@ -193,7 +192,7 @@ class TestApiCreateSolution(object):
     def test_api_create_solution_004(server):
         """Update solution with POST that maps to PATCH.
 
-        Call POST /v1/solutions/db712a82662d6932 to update existing solution
+        Send POST /v1/solutions/db712a82662d6932 to update existing solution
         with X-HTTP-Method-Override header that overrides the operation as
         PATCH.
 
@@ -213,7 +212,7 @@ class TestApiCreateSolution(object):
             'data': {
                 'type': 'solution',
                 'attributes': {
-                    'data': Const.NEWLINE.join(content['data'][0]['data']),
+                    'data': content['data'][0]['data'],
                 }
             }
         }
@@ -245,7 +244,7 @@ class TestApiCreateSolution(object):
     def test_api_create_solution_005(server):
         """Update solution with POST that maps to DELETE.
 
-        Call POST /v1/solutions with X-HTTP-Method-Override header to delete
+        Send POST /v1/solutions with X-HTTP-Method-Override header to delete
         solution. In this case the resource exists and the content is deleted.
         """
 
@@ -269,7 +268,7 @@ class TestApiCreateSolution(object):
     def test_api_create_solution_006(server):
         """Try to create solution with resource id.
 
-        Try to call POST /v1/solutions/{id} to create new solution with
+        Try to send POST /v1/solutions/{id} to create a new solution with
         resource ID in URL. The POST method is not overriden with custom
         X-HTTP-Method-Override header.
         """
@@ -320,10 +319,8 @@ class TestApiCreateSolution(object):
         request_body = {
             'data': [{}]
         }
-        expect_headers = {
-            'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '824'
-        }
+        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '845'}
+        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '870'}
         expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
@@ -338,7 +335,7 @@ class TestApiCreateSolution(object):
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_400
-        assert result.headers == expect_headers
+        assert result.headers in (expect_headers_p2, expect_headers_p3)
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(None)
 

@@ -21,6 +21,7 @@
 
 import datetime
 import io
+import json
 import os.path
 import sys
 
@@ -397,12 +398,58 @@ class Config(object):
         """Test that database schema file exist."""
 
         # The database schema is installed with the tool and it must always exist.
-        schema_file = os.path.join(pkg_resources.resource_filename('snippy', 'data/storage'), 'database.sql')
-        if not os.path.isfile(schema_file):
-            Logger.print_status('NOK: cannot run because database schema is not accessible: {}'.format(schema_file))
+        filename = os.path.join(pkg_resources.resource_filename('snippy', 'data/storage'), 'database.sql')
+        if not os.path.isfile(filename):
+            Logger.print_status('NOK: cannot run because database schema is not accessible: {}'.format(filename))
             sys.exit(1)
 
-        return schema_file
+        return filename
+
+    @classmethod
+    def server_schema(cls):
+        """Get server API validation schema.
+
+        Returns:
+            str: Server API schema to validate incoming HTTP requests.
+        """
+
+        filename = os.path.join(pkg_resources.resource_filename('snippy', 'data/server/openapi/schema'), 'requestresource.json')
+        if not os.path.isfile(filename):
+            Logger.print_status('NOK: cannot run because server api schema is not accessible: {}'.format(filename))
+            sys.exit(1)
+
+        with io.open(filename, encoding='utf-8') as infile:
+            request_resource = json.load(infile)
+
+        filename = os.path.join(pkg_resources.resource_filename('snippy', 'data/server/openapi/schema'), 'requestcollection.json')
+        if not os.path.isfile(filename):
+            Logger.print_status('NOK: cannot run because server api schema is not accessible: {}'.format(filename))
+            sys.exit(1)
+
+        with io.open(filename, encoding='utf-8') as infile:
+            request_collection = json.load(infile)
+
+        schema = Const.EMPTY
+        schema = {
+            'oneOf': [request_resource, request_collection]
+        }
+
+        return schema
+
+    @classmethod
+    def server_schema_base_uri(cls):
+        """Get server API schema base URI.
+
+        Returns:
+            str: Path where the API schema is stored in URI format.
+        """
+
+        filepath = pkg_resources.resource_filename('snippy', 'data/server/openapi/schema/')
+        if not os.path.isdir(filepath):
+            Logger.print_status('NOK: cannot run because server api schema base uri is not accessible: {}'.format(filepath))
+            sys.exit(1)
+
+        return 'file:' + filepath
 
     @classmethod
     def _content_template(cls, template):

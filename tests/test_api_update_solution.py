@@ -59,12 +59,12 @@ class TestApiUpdateSolution(object):
             'data': {
                 'type': 'solution',
                 'attributes': {
-                    'data': Const.NEWLINE.join(content['data'][0]['data']),
+                    'data': content['data'][0]['data'],
                     'brief': content['data'][0]['brief'],
                     'description': content['data'][0]['description'],
                     'groups': content['data'][0]['groups'],
-                    'tags': Const.DELIMITER_TAGS.join(content['data'][0]['tags']),
-                    'links': Const.DELIMITER_LINKS.join(content['data'][0]['links'])
+                    'tags': content['data'][0]['tags'],
+                    'links': content['data'][0]['links']
                 }
             }
         }
@@ -124,7 +124,7 @@ class TestApiUpdateSolution(object):
             'data': {
                 'type': 'snippet',
                 'attributes': {
-                    'data': Const.NEWLINE.join(content['data'][0]['data']),
+                    'data': content['data'][0]['data'],
                 }
             }
         }
@@ -170,11 +170,11 @@ class TestApiUpdateSolution(object):
             'data': {
                 'type': 'snippet',
                 'attributes': {
-                    'data': Const.NEWLINE.join(Solution.NGINX['data']),
+                    'data': Solution.NGINX['data'],
                     'brief': Solution.NGINX['brief'],
                     'groups': Solution.NGINX['groups'],
-                    'tags': Const.DELIMITER_TAGS.join(Solution.NGINX['tags']),
-                    'links': Const.DELIMITER_LINKS.join(Solution.NGINX['links'])
+                    'tags': Solution.NGINX['tags'],
+                    'links': Solution.NGINX['links']
                 }
             }
         }
@@ -219,8 +219,8 @@ class TestApiUpdateSolution(object):
             'tags': Const.DELIMITER_TAGS.join(Solution.NGINX['tags']),
             'links': Const.DELIMITER_LINKS.join(Solution.NGINX['links'])
         }
-        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5380'}
-        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5193'}
+        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5710'}
+        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5568'}
         expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
@@ -259,11 +259,11 @@ class TestApiUpdateSolution(object):
                 'type': 'solution',
                 'id': '59c5861b51701c2f52abad1a7965e4503875b2668a4df12f6c3386ef9d535970',
                 'attributes': {
-                    'data': Const.NEWLINE.join(Solution.NGINX['data']),
+                    'data': Solution.NGINX['data'],
                     'brief': Solution.NGINX['brief'],
                     'groups': Solution.NGINX['groups'],
-                    'tags': Const.DELIMITER_TAGS.join(Solution.NGINX['tags']),
-                    'links': Const.DELIMITER_LINKS.join(Solution.NGINX['links'])
+                    'tags': Solution.NGINX['tags'],
+                    'links': Solution.NGINX['links']
                 }
             }
         }
@@ -294,7 +294,7 @@ class TestApiUpdateSolution(object):
     def test_api_update_solution_006(server):
         """Try to update solution with malformed request.
 
-        Try to call PUT /v1/solutions/{id} to update solution with a client
+        Try to send PUT /v1/solutions/{id} to update solution with a client
         generated resource ID. In this case the ID is empty string.
         """
 
@@ -308,11 +308,11 @@ class TestApiUpdateSolution(object):
                 'type': 'snippet',
                 'id': '',
                 'attributes': {
-                    'data': Const.NEWLINE.join(Solution.NGINX['data']),
+                    'data': Solution.NGINX['data'],
                     'brief': Solution.NGINX['brief'],
                     'groups': Solution.NGINX['groups'],
-                    'tags': Const.DELIMITER_TAGS.join(Solution.NGINX['tags']),
-                    'links': Const.DELIMITER_LINKS.join(Solution.NGINX['links'])
+                    'tags': Solution.NGINX['tags'],
+                    'links': Solution.NGINX['links']
                 }
             }
         }
@@ -363,7 +363,7 @@ class TestApiUpdateSolution(object):
             'data': {
                 'type': 'snippet',
                 'attributes': {
-                    'data': Const.NEWLINE.join(Solution.KAFKA['data']),
+                    'data': Solution.KAFKA['data'],
                 }
             }
         }
@@ -422,7 +422,7 @@ class TestApiUpdateSolution(object):
             'data': {
                 'type': 'solution',
                 'attributes': {
-                    'data': Const.NEWLINE.join(content['data'][0]['data']),
+                    'data': content['data'][0]['data'],
                     'uuid': '11111111-1111-1111-1111-111111111111'
                 }
             }

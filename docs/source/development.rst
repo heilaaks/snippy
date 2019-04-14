@@ -443,6 +443,104 @@ Apache Bench
       [200] 10000 responses
 
 
+.. code:: bash
+
+    # Bench POST with ab.
+    {"data":[{"type":"snippet","attributes":{"data":["docker rm $(docker ps --all -q -f status=exited)"],"brief":"testing performance","name":"testing performance","groups":["default"],"tags":["test","performance"],"links":["https://jsonlint.com/"],"versions":["ab==1.0"],"filename":"ab.txt"}}]}
+    ab -p snippet.txt -T application/vnd.api+json -c 1 -n 1000 http://127.0.0.1:8080/snippy/api/app/v1/snippets
+
+    # Bench POST with hey.
+    /root/go/bin/hey -m POST -T application/vnd.api+json -D snippet.txt -n 1000 -c 1 http://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=20
+    
+    Summary:
+      Total:        2.8403 secs
+      Slowest:      0.0255 secs
+      Fastest:      0.0027 secs
+      Average:      0.0028 secs
+      Requests/sec: 352.0781
+      
+      Total data:   494000 bytes
+      Size/request: 494 bytes
+    
+    Response time histogram:
+      0.003 [1]     |
+      0.005 [994]   |
+      0.007 [3]     |
+      0.010 [0]     |
+      0.012 [0]     |
+      0.014 [0]     |
+      0.016 [0]     |
+      0.019 [0]     |
+      0.021 [1]     |
+      0.023 [0]     |
+      0.025 [1]     |
+    
+    
+    Latency distribution:
+      10% in 0.0027 secs
+      25% in 0.0027 secs
+      50% in 0.0028 secs
+      75% in 0.0028 secs
+      90% in 0.0029 secs
+      95% in 0.0030 secs
+      99% in 0.0035 secs
+    
+    Details (average, fastest, slowest):
+      DNS+dialup:   0.0001 secs, 0.0027 secs, 0.0255 secs
+      DNS-lookup:   0.0000 secs, 0.0000 secs, 0.0000 secs
+      req write:    0.0000 secs, 0.0000 secs, 0.0002 secs
+      resp wait:    0.0027 secs, 0.0026 secs, 0.0246 secs
+      resp read:    0.0000 secs, 0.0000 secs, 0.0003 secs
+    
+    Status code distribution:
+      [409] 1000 responses
+    
+    /root/go/bin/hey -m POST -T application/vnd.api+json -D snippet.txt -n 1000 -c 1 http://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=20
+    
+    Summary:
+      Total:        2.8316 secs
+      Slowest:      0.0184 secs
+      Fastest:      0.0027 secs
+      Average:      0.0028 secs
+      Requests/sec: 353.1552
+      
+      Total data:   494000 bytes
+      Size/request: 494 bytes
+    
+    Response time histogram:
+      0.003 [1]     |
+      0.004 [987]   |
+      0.006 [9]     |
+      0.007 [0]     |
+      0.009 [0]     |
+      0.011 [2]     |
+      0.012 [0]     |
+      0.014 [0]     |
+      0.015 [0]     |
+      0.017 [0]     |
+      0.018 [1]     |
+    
+    
+    Latency distribution:
+      10% in 0.0027 secs
+      25% in 0.0027 secs
+      50% in 0.0028 secs
+      75% in 0.0028 secs
+      90% in 0.0029 secs
+      95% in 0.0030 secs
+      99% in 0.0045 secs
+    
+    Details (average, fastest, slowest):
+      DNS+dialup:   0.0001 secs, 0.0027 secs, 0.0184 secs
+      DNS-lookup:   0.0000 secs, 0.0000 secs, 0.0000 secs
+      req write:    0.0000 secs, 0.0000 secs, 0.0003 secs
+      resp wait:    0.0027 secs, 0.0025 secs, 0.0167 secs
+      resp read:    0.0000 secs, 0.0000 secs, 0.0003 secs
+    
+    Status code distribution:
+      [409] 1000 responses
+
+
 
 .. _virtualenvwrapper: http://virtualenvwrapper.readthedocs.io/en/latest/command_ref.html
 

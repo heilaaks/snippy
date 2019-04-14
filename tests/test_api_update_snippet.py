@@ -95,7 +95,7 @@ class TestApiUpdateSnippet(object):
     def test_api_update_snippet_002(server):
         """Update one snippet with PUT request.
 
-        SEnd PUT /v1/snippets/{id} to update existing resource with specified
+        Send PUT /v1/snippets/{id} to update existing resource with specified
         digest. Only partial set of attributes that can be modified is sent
         in request.
         """
@@ -125,7 +125,7 @@ class TestApiUpdateSnippet(object):
                 'attributes': {
                     'data': content['data'][0]['data'],
                     'groups': content['data'][0]['groups'],
-                    'links': Const.DELIMITER_LINKS.join(content['data'][0]['links'],)
+                    'links': content['data'][0]['links']
                 }
             }
         }
@@ -185,7 +185,7 @@ class TestApiUpdateSnippet(object):
             'data': {
                 'type': 'snippet',
                 'attributes': {
-                    'data': Const.NEWLINE.join(Snippet.REMOVE['data']),
+                    'data': Snippet.REMOVE['data'],
                 }
             }
         }
@@ -230,11 +230,11 @@ class TestApiUpdateSnippet(object):
             'data': {
                 'type': 'snippet',
                 'attributes': {
-                    'data': Const.NEWLINE.join(Snippet.REMOVE['data']),
+                    'data': Snippet.REMOVE['data'],
                     'brief': Snippet.REMOVE['brief'],
                     'groups': Snippet.REMOVE['groups'],
-                    'tags': Const.DELIMITER_TAGS.join(Snippet.REMOVE['tags']),
-                    'links': Const.DELIMITER_LINKS.join(Snippet.REMOVE['links'])
+                    'tags': Snippet.REMOVE['tags'],
+                    'links': Snippet.REMOVE['links']
                 }
             }
         }
@@ -281,8 +281,8 @@ class TestApiUpdateSnippet(object):
             'tags': Const.DELIMITER_TAGS.join(Snippet.REMOVE['tags']),
             'links': Const.DELIMITER_LINKS.join(Snippet.REMOVE['links'])
         }
-        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '897'}
-        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '899'}
+        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1325'}
+        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1368'}
         expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
@@ -324,11 +324,11 @@ class TestApiUpdateSnippet(object):
             'data': {
                 'type': 'snippet',
                 'attributes': {
-                    'data': Const.NEWLINE.join(content['data'][0]['data']),
+                    'data': content['data'][0]['data'],
                     'brief': content['data'][0]['brief'],
                     'groups': content['data'][0]['groups'],
-                    'tags': Const.DELIMITER_TAGS.join(content['data'][0]['tags']),
-                    'links': Const.DELIMITER_LINKS.join(content['data'][0]['links'])
+                    'tags': content['data'][0]['tags'],
+                    'links': content['data'][0]['links']
                 }
             }
         }
@@ -380,7 +380,7 @@ class TestApiUpdateSnippet(object):
             'data': {
                 'type': 'snippet',
                 'attributes': {
-                    'data': Const.NEWLINE.join(Snippet.REMOVE['data'])
+                    'data': Snippet.REMOVE['data']
                 }
             }
         }

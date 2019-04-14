@@ -1,5 +1,18 @@
 ## WORKING
+   . [ ] Fix test_api_update_solution_008 that requires no additional fields since it has UUID that now works. This must generate error.
+   - [ ] Note in commit log that the Configu does not use jsonschema import because it is SErver import. The Config must work in CLI mode with only Yaml.
+   - [ ] Do not allow string or list. This makes the OAS API spec complicated. Rerequire explicit format.
+   - [ ] Swagger 2.0 does not support nullable and this does not work with validation: test_api_update_reference_010
+   - [ ] Add first validation without preventing extra fields. Then add "additionalProperties": False, to swagger.
+   - [ ] Clean the jsonvalidator and the constant since those are not needed because swagger in use.
+   - [ ] Can collection and resource validation merged together? Should be possible ...
+   - [ ] Add internal tests to support parsing of string or list (from cli) since API does not allow it anymore.
+   - [ ] Add option to activate/disable validation of request and second option for responses. The later is for internal testing to make sure the schema is valid for client.
+   - [ ] Add test with disable schema vlidation to test if string formats from arrays work from API.
+   - [ ] Add data.id validation with schema instead of check Validation.
+   - [ ] Add missing references import to docker containers. Use --all option.
    - [ ] Add schema to validate data attributes to prevent updating e.g. uuid, created, updated, etc. Before adding schema run performance tests. Can be done with simle if like with ID.
+   - [ ] INcorrect header does not leave logs. Test manually since this works differently that the tests? For example ab was missing '-T application/vnd.api+json' without this it did not work.
    - [ ] Fix updating Markdown based solutions in text formats does not work because the Mkdn solution does not have text header and data structure.
    - [ ] Fix received user defined UUID in create and update. This must generate error because otherwise user would expect that the UUID was updated.
    - [ ] Config.get_resource creates exter UUID usage when e.g resource is updated. Get rid of this (somehow) after UUID refactoring.
@@ -56,6 +69,7 @@
    - [ ] Fix (optimize) POST API with multiple contents. Now each content in collection is *.run with own resources. The create supports collection so this should work.
    - [ ] Fix (optimize) the order of SQL columns. Fixed length columns first. This should ? allow database to optimize the length of data. Is this the case?
    - [ ] Fix (optimize) the Mkdn and Text parsing. The parsers and Resource() do the input data formatting. Parsers when data read and Resource() when set. This is good now to avoid data format problems.
+   - [ ] Fix (optimize) Why GET with limit=20 is much slower than limit=1? Even POST with one resource is much faster than GET with limit=20 (Sqlite in tests). The test produced 409 from trying to POST the same content in loop.
 
 ## FEATURES
    - [ ] Add decsription, name, versions and source to CLI? Or does this make the CLI too bloated? These can be updated via editor or REST API.

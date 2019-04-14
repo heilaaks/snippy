@@ -382,10 +382,21 @@ definitions:
         $ref: '#/definitions/attributeVersions'
       filename:
         $ref: '#/definitions/attributeFilename'
-    required:
-      - data
+    description: |
+      # Brief
+
+      Resource `data` attributes for all API endoints HTTP requests.
+      
+      Different resource categories require different attributes. Creating and updating resources have
+      different mandatory resource attribute requirements. For example `snippets` require `data` but
+      `references` require `links` attribute. PATCH and PUT can be send without `data` attribute for
+      `snippets`.
+      
+      Because of these reasons, JSON schema definition does not define the required properties.
+
   responseAttributes:
     type: object
+    additionalProperties: False
     properties:
       category:
         $ref: '#/definitions/attributeCategory'
@@ -417,8 +428,17 @@ definitions:
         $ref: '#/definitions/attributeUuid'
       digest:
         $ref: '#/definitions/attributeDigest'
-    required:
-      - data
+    description: |
+      # Brief
+
+      Resource `data` attributes for all API endoints HTTP responses.
+      
+      Different resource categories require different attributes. Creating and updating resources have
+      different mandatory resource attribute requirements. For example `snippets` require `data` but
+      `references` require `links` attribute. PATCH and PUT can be send without `data` attribute for
+      `snippets`.
+
+      Because of these reasons, JSON schema definition does not define the required properties.
 
   requestData:
     type: object

@@ -93,6 +93,7 @@
     },
     "requestAttributes": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "data": {
           "$ref": "#/definitions/attributeData"

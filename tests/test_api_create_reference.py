@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""test_api_create_reference: Test POST /references API."""
+"""test_api_create_reference: Test POST /references API endpoint."""
 
 import json
 import sqlite3
@@ -27,6 +27,8 @@ import falcon
 import pytest
 
 from tests.testlib.content import Content
+from tests.testlib.content import Request
+from tests.testlib.content import Storage
 from tests.testlib.helper import Helper
 from tests.testlib.reference import Reference
 
@@ -34,28 +36,28 @@ pytest.importorskip('gunicorn')
 
 
 class TestApiCreateReference(object):
-    """Test POST references collection API."""
+    """Test POST /references API endpoint."""
 
     @staticmethod
     @pytest.mark.usefixtures('create-gitlog-utc')
     def test_api_create_reference_001(server):
         """Create one reference from API.
 
-        Call POST /v1/references to create new referece. The created reference
-        is sent in the POST request 'data' attribute as a list of reference
+        Call POST /v1/references to create a new resource. Created resource
+        is sent in the POST method resource ``data`` attribute as a list of
         objects.
         """
 
-        content = {
+        storage = {
             'data': [
-                Content.deepcopy(Reference.GITLOG)
+                Storage.gitlog
             ]
         }
-        content['data'][0]['uuid'] = Content.UUID1
+        storage['data'][0]['uuid'] = Content.UUID1
         request_body = {
             'data': [{
                 'type': 'reference',
-                'attributes': content['data'][0]
+                'attributes': Request.gitlog
             }]
         }
         expect_headers = {
@@ -66,7 +68,7 @@ class TestApiCreateReference(object):
             'data': [{
                 'type': 'reference',
                 'id': Content.UUID1,
-                'attributes': content['data'][0]
+                'attributes': storage['data'][0]
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
@@ -76,7 +78,7 @@ class TestApiCreateReference(object):
         assert result.status == falcon.HTTP_201
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('create-gitlog-utc')

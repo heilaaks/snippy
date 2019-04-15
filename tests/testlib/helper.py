@@ -43,6 +43,20 @@ class Helper(object):
     DB_COCKROACHDB = 'cockroachdb'
     STORAGES = (DB_SQLITE, DB_POSTGRESQL, DB_COCKROACHDB)
 
+    # All resource attributes that can be sent in HTTP request.
+    REQUEST_ATTRIBUTES = (
+        'data',
+        'brief',
+        'description',
+        'name',
+        'groups',
+        'tags',
+        'links',
+        'source',
+        'versions',
+        'filename'
+    )
+
     RE_MATCH_ANSI_ESCAPE_SEQUENCES = re.compile(r'''
         \x1b[^m]*m    # Match all ANSI escape sequences.
         ''', re.VERBOSE)
@@ -94,3 +108,20 @@ class Helper(object):
         """
 
         return Helper.RE_MATCH_ANSI_ESCAPE_SEQUENCES.sub('', message)
+
+
+class Classproperty(object):  # pylint: disable=too-few-public-methods
+    """Implement classproperty.
+
+    Implement decorator that mimics object property. See [1] for more details.
+
+    [1] https://stackoverflow.com/a/3203659
+    """
+
+    def __init__(self, getter):
+        self._getter = getter
+
+    def __get__(self, _, owner):
+        """Get property of a class."""
+
+        return self._getter(owner)

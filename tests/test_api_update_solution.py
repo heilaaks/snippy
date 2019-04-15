@@ -391,7 +391,7 @@ class TestApiUpdateSolution(object):
         Content.assert_storage(content)
 
     @staticmethod
-    @pytest.mark.usefixtures('import-beats', 'update-nginx-utc')
+    @pytest.mark.usefixtures('import-beats', 'caller')
     def test_api_update_solution_008(server):
         """Update one solution with PUT request.
 
@@ -400,23 +400,9 @@ class TestApiUpdateSolution(object):
         """
 
         content = {
-            'data': [{
-                'category': 'solution',
-                'data': Solution.NGINX['data'],
-                'brief': '',
-                'description': '',
-                'name': '',
-                'groups': ('default',),
-                'tags': (),
-                'links': (),
-                'source': '',
-                'versions': (),
-                'filename': '',
-                'created': Content.BEATS_TIME,
-                'updated': Content.NGINX_TIME,
-                'uuid': Solution.BEATS_UUID,
-                'digest': '6cd48521a898357f5f088c3cd5a8614c6291ef98733cd7e52ab2cdedb146a874'
-            }]
+            'data': [
+                Solution.BEATS
+            ]
         }
         request_body = {
             'data': {
@@ -427,26 +413,23 @@ class TestApiUpdateSolution(object):
                 }
             }
         }
-        expect_headers = {
-            'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2941'
-        }
+        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '4480'}
+        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '4584'}
         expect_body = {
-            'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/' + Solution.BEATS_UUID
-            },
-            'data': {
-                'type': 'solution',
-                'id': content['data'][0]['uuid'],
-                'attributes': content['data'][0]
-            }
+            'meta': Content.get_api_meta(),
+            'errors': [{
+                'status': '400',
+                'statusString': '400 Bad Request',
+                'module': 'snippy.testing.testing:123',
+                'title': 'json media validation failed'
+            }]
         }
         result = testing.TestClient(server.server.api).simulate_put(
             path='/snippy/api/app/v1/solutions/db712a82662d6932',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
-        assert result.status == falcon.HTTP_200
-        assert result.headers == expect_headers
+        assert result.status == falcon.HTTP_400
+        assert result.headers in (expect_headers_p2, expect_headers_p3)
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 

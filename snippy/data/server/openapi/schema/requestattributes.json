@@ -1,5 +1,6 @@
 {
   "type": "object",
+  "additionalProperties": false,
   "properties": {
     "data": {
       "$ref": "_definitions.json#/definitions/attributeData"

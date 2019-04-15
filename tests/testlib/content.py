@@ -38,6 +38,7 @@ from snippy.meta import __openapi__
 from snippy.meta import __version__
 from tests.testlib.database import Database
 from tests.testlib.helper import Helper
+from tests.testlib.helper import Classproperty as classproperty
 from tests.testlib.reference import Reference
 from tests.testlib.snippet import Snippet
 from tests.testlib.solution import Solution
@@ -751,3 +752,32 @@ class Field(object):  # pylint: disable=too-few-public-methods
                 return False
 
         return True
+
+
+class Storage(object):  # pylint: disable=too-few-public-methods
+    """Content represented as in storage.
+
+    There was no solution found out that would allow adding @staticmethod
+    or @classmethod decorators to avoid lint warnings from @classproperty.
+    if these standard decorats are added, it breaks the @classproperty.
+    """
+
+    @classproperty
+    def gitlog(cls):  # pylint: disable=no-self-argument
+        """Get gitlog resource.
+
+        Optimization: Event though there are too few calls in test to get a
+        resource to matter, the copy.deepcopy is much slower than iterating
+        dictionary keys to get a new dictionary that caller can modify.
+        """
+
+        return {attribute: Reference.GITLOG[attribute] for attribute in Reference.GITLOG.keys()}
+
+class Request(object):  # pylint: disable=too-few-public-methods
+    """Content represented as in HTTP request."""
+
+    @classproperty
+    def gitlog(cls):  # pylint: disable=no-self-argument
+        """Get gitlog resource."""
+
+        return {attribute: Reference.GITLOG[attribute] for attribute in Helper.REQUEST_ATTRIBUTES}

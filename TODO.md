@@ -1,9 +1,13 @@
 ## WORKING
-   . [ ] Fix test_api_update_solution_008 that requires no additional fields since it has UUID that now works. This must generate error.
+   - [ ] Check lint warning unsupported-assignment-operation which seems false positive? Pylint does not see @property decorator?
+   - [ ] See test_api_create_reference_001
+   - [ ] Make all defaults 6 letters long like gitlog.
+   - [ ] Why the addition proerty field did not affect swagger 3.0?
+   - [ ] Change content variable to storage because the storage tells that the content is used with storage.
+   - [ ] Note: Added additionalProperties: false and ended up refactoring test and how default resources are requested.
    - [ ] Note in commit log that the Configu does not use jsonschema import because it is SErver import. The Config must work in CLI mode with only Yaml.
    - [ ] Do not allow string or list. This makes the OAS API spec complicated. Rerequire explicit format.
    - [ ] Swagger 2.0 does not support nullable and this does not work with validation: test_api_update_reference_010
-   - [ ] Add first validation without preventing extra fields. Then add "additionalProperties": False, to swagger.
    - [ ] Clean the jsonvalidator and the constant since those are not needed because swagger in use.
    - [ ] Can collection and resource validation merged together? Should be possible ...
    - [ ] Add internal tests to support parsing of string or list (from cli) since API does not allow it anymore.

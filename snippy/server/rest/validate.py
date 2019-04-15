@@ -50,7 +50,7 @@ class Schema(object):  # pylint: disable=too-few-public-methods
             minimized = ' '.join(str(error).split())
             Cause.push(Cause.HTTP_BAD_REQUEST, 'json media validation failed: {}'.format(minimized))
             for error in self.validator.iter_errors(media):
-                self._logger.debug('json media failures: {}'.format(error))
+                self._logger.debug('json media failure: {}'.format(error))
         except SchemaError as error:
             minimized = ' '.join(str(error).split())
             Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'json schema failure: {}'.format(minimized))

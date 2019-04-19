@@ -19,8 +19,7 @@ RUN apk add python3 && \
     pip3 install --upgrade pip setuptools && \
     pip3 install -e .[docker] && \
     find /usr/lib/python* -type d -name __pycache__ -exec rm -r {} \+ && \
-    snippy import --snippet --defaults -q && \
-    snippy import --solution --defaults -q && \
+    snippy import --defaults --all -q && \
     pip3 uninstall pip --yes && \
     apk del apk-tools && \
     rm -rf /etc/apk/ && \

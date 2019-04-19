@@ -7,7 +7,6 @@
    - [ ] Add internal tests to support parsing of string or list (from cli) since API does not allow it anymore.
    - [ ] Add schem validation for tests (not to sending side). Hide this into helper: assert_restapi.
    - [ ] Add data.id validation with schema instead of check in Validation().
-   - [ ] Add missing references import to docker containers. Use --all option.
    - [ ] Design and change /groups and /tags to GET groups and tags not content. Like unique tags and groups.
    - [ ] Incorrect header does not leave logs. Test manually since this works differently that the tests? For example ab was missing '-T application/vnd.api+json' without this it did not work.
    - [ ] Check why test_api_create_snippet_004 has specific error length in Python 3.4.

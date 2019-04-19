@@ -95,6 +95,7 @@ setup(
     package_data={
         'snippy': [
             'data/defaults/*',
+            'data/server/openapi/schema/*',
             'data/storage/*',
             'data/templates/*'
         ]

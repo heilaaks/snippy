@@ -42,7 +42,7 @@ extras_server = (
     'falcon==1.4.1',
     'gunicorn==19.9.0',
     'jsonschema==3.0.1',
-    'psycopg2-binary==2.8.1'
+    'psycopg2-binary==2.8.2'
 )
 extras_server_docker = (
     extras_server[0],

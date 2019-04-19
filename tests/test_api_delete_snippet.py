@@ -17,34 +17,35 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""test_api_delete_snippets: Test DELETE snippets API."""
+"""test_api_delete_snippets: Test DELETE /snippets API endpoint."""
 
 from falcon import testing
 import falcon
 import pytest
 
 from tests.testlib.content import Content
+from tests.testlib.content import Storage
 from tests.testlib.snippet import Snippet
 
 pytest.importorskip('gunicorn')
 
 
 class TestApiDeleteSnippet(object):
-    """Test DELETE snippets API."""
+    """Test DELETE /snippets API endpoint."""
 
     @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'import-netcat')
     def test_api_delete_snippet_001(server):
         """Delete snippet with digest.
 
-        Send DELETE /v1/snippets/{id} to delete one snippet. The digest matches
-        to one snippet that is deleted.
+        Send DELETE /v1/snippets/{id} to delete one snippet. The ``id`` in URI
+        that matches to one resource that is deleted.
         """
 
         content = {
             'data': [
-                Snippet.REMOVE,
-                Snippet.FORCED
+                Storage.remove,
+                Storage.forced
             ]
         }
         expect_headers = {}
@@ -61,14 +62,15 @@ class TestApiDeleteSnippet(object):
     def test_api_delete_snippet_002(server):
         """Try to delete snippet.
 
-        Try to send DELETE /v1/snippet with a URI location that does not exist.
+        Try to send DELETE /v1/snippet{id} with a ``id`` in URI that does not
+        exist.
         """
 
         content = {
             'data': [
-                Snippet.REMOVE,
-                Snippet.FORCED,
-                Snippet.NETCAT,
+                Storage.remove,
+                Storage.forced,
+                Storage.netcat,
             ]
         }
         expect_headers = {
@@ -97,14 +99,14 @@ class TestApiDeleteSnippet(object):
     def test_api_delete_snippet_003(server):
         """Try to delete snippet.
 
-        Try to send DELETE /v1/snippets without digest identifying delete
-        resource.
+        Try to send DELETE /v1/snippets without ``id`` in URI that identifies
+        the delete resource.
         """
 
         content = {
             'data': [
-                Snippet.REMOVE,
-                Snippet.FORCED
+                Storage.remove,
+                Storage.forced
             ]
         }
         expect_headers = {
@@ -133,13 +135,13 @@ class TestApiDeleteSnippet(object):
     def test_api_delete_snippet_004(server):
         """Delete snippet with UUID.
 
-        Send DELETE /v1/snippets/{id} to delete one snippet. The UUID matches
-        to one snippet that is deleted.
+        Send DELETE /v1/snippets/{id} to delete one snippet. The ``id`` in
+        URI matches to one resource that is deleted.
         """
 
         content = {
             'data': [
-                Snippet.REMOVE,
+                Storage.remove
             ]
         }
         expect_headers = {}
@@ -153,6 +155,6 @@ class TestApiDeleteSnippet(object):
 
     @classmethod
     def teardown_class(cls):
-        """Teardown class."""
+        """Teardown tests."""
 
         Content.delete()

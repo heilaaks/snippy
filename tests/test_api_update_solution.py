@@ -27,11 +27,14 @@ import pytest
 
 from snippy.constants import Constants as Const
 from tests.testlib.content import Content
+from tests.testlib.content import Request
+from tests.testlib.content import Storage
 from tests.testlib.solution import Solution
 
 pytest.importorskip('gunicorn')
 
 
+# pylint: disable=unsupported-assignment-operation, unsubscriptable-object
 class TestApiUpdateSolution(object):
     """Test PUT /solutions/{digest} API."""
 
@@ -45,26 +48,26 @@ class TestApiUpdateSolution(object):
         can be changed by client.
         """
 
-        content = {
+        storage = {
             'data': [
-                Content.deepcopy(Solution.KAFKA)
+                Storage.dkafka
             ]
         }
-        content['data'][0]['filename'] = ''
-        content['data'][0]['created'] = Content.BEATS_TIME
-        content['data'][0]['updated'] = Content.KAFKA_TIME
-        content['data'][0]['uuid'] = Solution.BEATS_UUID
-        content['data'][0]['digest'] = '04be0828cd51e173eb7f12620ad79ddab36721ccbd85c3cfbf5218a93e9b1a2e'
+        storage['data'][0]['filename'] = ''
+        storage['data'][0]['created'] = Content.BEATS_TIME
+        storage['data'][0]['updated'] = Content.KAFKA_TIME
+        storage['data'][0]['uuid'] = Solution.BEATS_UUID
+        storage['data'][0]['digest'] = '04be0828cd51e173eb7f12620ad79ddab36721ccbd85c3cfbf5218a93e9b1a2e'
         request_body = {
             'data': {
                 'type': 'solution',
                 'attributes': {
-                    'data': content['data'][0]['data'],
-                    'brief': content['data'][0]['brief'],
-                    'description': content['data'][0]['description'],
-                    'groups': content['data'][0]['groups'],
-                    'tags': content['data'][0]['tags'],
-                    'links': content['data'][0]['links']
+                    'data': storage['data'][0]['data'],
+                    'brief': storage['data'][0]['brief'],
+                    'description': storage['data'][0]['description'],
+                    'groups': storage['data'][0]['groups'],
+                    'tags': storage['data'][0]['tags'],
+                    'links': storage['data'][0]['links']
                 }
             }
         }
@@ -78,8 +81,8 @@ class TestApiUpdateSolution(object):
             },
             'data': {
                 'type': 'solution',
-                'id': content['data'][0]['uuid'],
-                'attributes': content['data'][0]
+                'id': storage['data'][0]['uuid'],
+                'attributes': storage['data'][0]
             }
         }
         result = testing.TestClient(server.server.api).simulate_put(
@@ -89,7 +92,7 @@ class TestApiUpdateSolution(object):
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('import-beats', 'update-nginx-utc')
@@ -101,10 +104,10 @@ class TestApiUpdateSolution(object):
         attributes must be set to their default values.
         """
 
-        content = {
+        storage = {
             'data': [{
                 'category': 'solution',
-                'data': Solution.NGINX['data'],
+                'data': Request.dnginx['data'],
                 'brief': '',
                 'description': '',
                 'name': '',
@@ -124,7 +127,7 @@ class TestApiUpdateSolution(object):
             'data': {
                 'type': 'snippet',
                 'attributes': {
-                    'data': content['data'][0]['data'],
+                    'data': storage['data'][0]['data'],
                 }
             }
         }
@@ -139,8 +142,8 @@ class TestApiUpdateSolution(object):
             },
             'data': {
                 'type': 'solution',
-                'id': content['data'][0]['uuid'],
-                'attributes': content['data'][0]
+                'id': storage['data'][0]['uuid'],
+                'attributes': storage['data'][0]
             }
         }
         result = testing.TestClient(server.server.api).simulate_put(
@@ -150,31 +153,31 @@ class TestApiUpdateSolution(object):
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('import-beats', 'caller')
     def test_api_update_solution_003(server):
         """Update one solution with PUT request.
 
-        Try to send PUT /v1/solutions/{id} to update resource with digest that
-        is not found.
+        Try to send PUT /v1/solutions/{id} to update resource with ``id`` in
+        URI that is not found.
         """
 
-        content = {
+        storage = {
             'data': [
-                Solution.BEATS
+                Storage.ebeats
             ]
         }
         request_body = {
             'data': {
                 'type': 'snippet',
                 'attributes': {
-                    'data': Solution.NGINX['data'],
-                    'brief': Solution.NGINX['brief'],
-                    'groups': Solution.NGINX['groups'],
-                    'tags': Solution.NGINX['tags'],
-                    'links': Solution.NGINX['links']
+                    'data': Request.dnginx['data'],
+                    'brief': Request.dnginx['brief'],
+                    'groups': Request.dnginx['groups'],
+                    'tags': Request.dnginx['tags'],
+                    'links': Request.dnginx['links']
                 }
             }
         }
@@ -196,7 +199,7 @@ class TestApiUpdateSolution(object):
         assert result.status == falcon.HTTP_404
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('import-beats', 'caller')
@@ -207,17 +210,17 @@ class TestApiUpdateSolution(object):
         JSON request.
         """
 
-        content = {
+        storage = {
             'data': [
-                Solution.BEATS
+                Storage.ebeats
             ]
         }
         request_body = {
-            'data': Const.NEWLINE.join(Solution.NGINX['data']),
-            'brief': Solution.NGINX['brief'],
-            'groups': Solution.NGINX['groups'],
-            'tags': Const.DELIMITER_TAGS.join(Solution.NGINX['tags']),
-            'links': Const.DELIMITER_LINKS.join(Solution.NGINX['links'])
+            'data': Const.NEWLINE.join(Request.dnginx['data']),
+            'brief': Request.dnginx['brief'],
+            'groups': Request.dnginx['groups'],
+            'tags': Const.DELIMITER_TAGS.join(Request.dnginx['tags']),
+            'links': Const.DELIMITER_LINKS.join(Request.dnginx['links'])
         }
         expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5710'}
         expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5568'}
@@ -237,7 +240,7 @@ class TestApiUpdateSolution(object):
         assert result.status == falcon.HTTP_400
         assert result.headers in (expect_headers_p2, expect_headers_p3)
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('import-beats', 'caller')
@@ -249,7 +252,7 @@ class TestApiUpdateSolution(object):
         digest.
         """
 
-        content = {
+        storage = {
             'data': [
                 Solution.BEATS
             ]
@@ -259,11 +262,11 @@ class TestApiUpdateSolution(object):
                 'type': 'solution',
                 'id': '59c5861b51701c2f52abad1a7965e4503875b2668a4df12f6c3386ef9d535970',
                 'attributes': {
-                    'data': Solution.NGINX['data'],
-                    'brief': Solution.NGINX['brief'],
-                    'groups': Solution.NGINX['groups'],
-                    'tags': Solution.NGINX['tags'],
-                    'links': Solution.NGINX['links']
+                    'data': Request.dnginx['data'],
+                    'brief': Request.dnginx['brief'],
+                    'groups': Request.dnginx['groups'],
+                    'tags': Request.dnginx['tags'],
+                    'links': Request.dnginx['links']
                 }
             }
         }
@@ -287,7 +290,7 @@ class TestApiUpdateSolution(object):
         assert result.status == falcon.HTTP_403
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('import-beats', 'caller')
@@ -298,9 +301,9 @@ class TestApiUpdateSolution(object):
         generated resource ID. In this case the ID is empty string.
         """
 
-        content = {
+        storage = {
             'data': [
-                Solution.BEATS
+                Storage.ebeats
             ]
         }
         request_body = {
@@ -308,11 +311,11 @@ class TestApiUpdateSolution(object):
                 'type': 'snippet',
                 'id': '',
                 'attributes': {
-                    'data': Solution.NGINX['data'],
-                    'brief': Solution.NGINX['brief'],
-                    'groups': Solution.NGINX['groups'],
-                    'tags': Solution.NGINX['tags'],
-                    'links': Solution.NGINX['links']
+                    'data': Request.dnginx['data'],
+                    'brief': Request.dnginx['brief'],
+                    'groups': Request.dnginx['groups'],
+                    'tags': Request.dnginx['tags'],
+                    'links': Request.dnginx['links']
                 }
             }
         }
@@ -336,7 +339,7 @@ class TestApiUpdateSolution(object):
         assert result.status == falcon.HTTP_403
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('import-beats', 'update-kafka-utc')
@@ -349,21 +352,21 @@ class TestApiUpdateSolution(object):
         values.
         """
 
-        content = {
+        storage = {
             'data': [
-                Content.deepcopy(Solution.BEATS)
+                Storage.ebeats
             ]
         }
-        content['data'][0]['data'] = Solution.KAFKA['data']
-        content['data'][0]['created'] = Content.BEATS_TIME
-        content['data'][0]['updated'] = Content.KAFKA_TIME
-        content['data'][0]['uuid'] = Solution.BEATS_UUID
-        content['data'][0]['digest'] = 'c7b25c6ee326b025c471caa32be285f8c4fc4138593d7cb31a7da63acc36043b'
+        storage['data'][0]['data'] = Solution.KAFKA['data']
+        storage['data'][0]['created'] = Content.BEATS_TIME
+        storage['data'][0]['updated'] = Content.KAFKA_TIME
+        storage['data'][0]['uuid'] = Solution.BEATS_UUID
+        storage['data'][0]['digest'] = 'c7b25c6ee326b025c471caa32be285f8c4fc4138593d7cb31a7da63acc36043b'
         request_body = {
             'data': {
                 'type': 'snippet',
                 'attributes': {
-                    'data': Solution.KAFKA['data'],
+                    'data': Request.dkafka['data'],
                 }
             }
         }
@@ -377,8 +380,8 @@ class TestApiUpdateSolution(object):
             },
             'data': {
                 'type': 'solution',
-                'id': content['data'][0]['uuid'],
-                'attributes': content['data'][0]
+                'id': storage['data'][0]['uuid'],
+                'attributes': storage['data'][0]
             }
         }
         result = testing.TestClient(server.server.api).simulate_patch(
@@ -388,7 +391,7 @@ class TestApiUpdateSolution(object):
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('import-beats', 'caller')
@@ -396,19 +399,19 @@ class TestApiUpdateSolution(object):
         """Update one solution with PUT request.
 
         Try to update solution ``uuid`` attribute by sending PUT /v1/solutions.
-        This must not work because the uuid cannot be changed by client.
+        This must not work because the ``uuid`` cannot be changed by client.
         """
 
-        content = {
+        storage = {
             'data': [
-                Solution.BEATS
+                Storage.ebeats
             ]
         }
         request_body = {
             'data': {
                 'type': 'solution',
                 'attributes': {
-                    'data': content['data'][0]['data'],
+                    'data': storage['data'][0]['data'],
                     'uuid': '11111111-1111-1111-1111-111111111111'
                 }
             }
@@ -431,10 +434,10 @@ class TestApiUpdateSolution(object):
         assert result.status == falcon.HTTP_400
         assert result.headers in (expect_headers_p2, expect_headers_p3)
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @classmethod
     def teardown_class(cls):
-        """Teardown class."""
+        """Teardown tests."""
 
         Content.delete()

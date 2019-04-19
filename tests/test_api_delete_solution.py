@@ -17,34 +17,34 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""test_api_delete_solutions: Test DELETE solutions API."""
+"""test_api_delete_solutions: Test DELETE /solutions API endpoint."""
 
 from falcon import testing
 import falcon
 import pytest
 
 from tests.testlib.content import Content
-from tests.testlib.solution import Solution
+from tests.testlib.content import Storage
 
 pytest.importorskip('gunicorn')
 
 
 class TestApiDeleteSolution(object):
-    """Test DELETE solutions API."""
+    """Test DELETE /solutions API endpoint."""
 
     @staticmethod
     @pytest.mark.usefixtures('default-solutions', 'import-kafka')
     def test_api_delete_solution_001(server):
         """Delete solution with digest.
 
-        Send DELETE /v1/solutions/{id} to delete one resource. The digest matches
-        to one reference that is deleted.
+        Send DELETE /v1/solutions/{id} to delete one resource. The ``id`` in
+        URI matches to one resource that is deleted.
         """
 
         content = {
             'data': [
-                Solution.BEATS,
-                Solution.NGINX
+                Storage.ebeats,
+                Storage.dnginx
             ]
         }
         expect_headers = {}
@@ -61,14 +61,15 @@ class TestApiDeleteSolution(object):
     def test_api_delete_solution_002(server):
         """Try to delete solution.
 
-        Try to send DELETE /v1/solutions with URI that does not exist.
+        Try to send DELETE /v1/solutions/{id} with ``id`` in URI that does
+        not exist.
         """
 
         content = {
             'data': [
-                Solution.KAFKA,
-                Solution.BEATS,
-                Solution.NGINX,
+                Storage.dkafka,
+                Storage.ebeats,
+                Storage.dnginx,
             ]
         }
         expect_headers = {
@@ -97,14 +98,14 @@ class TestApiDeleteSolution(object):
     def test_api_delete_solution_003(server):
         """Try to delete solution.
 
-        Try to send DELETE /v1/solutions without digest identifying delete
-        resource.
+        Try to send DELETE /v1/solutions without ``id`` in URI that identifies
+        the deleted resource.
         """
 
         content = {
             'data': [
-                Solution.BEATS,
-                Solution.NGINX
+                Storage.ebeats,
+                Storage.dnginx
             ]
         }
         expect_headers = {
@@ -130,6 +131,6 @@ class TestApiDeleteSolution(object):
 
     @classmethod
     def teardown_class(cls):
-        """Teardown class."""
+        """Teardown tests."""
 
         Content.delete()

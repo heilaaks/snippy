@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""test_api_update_snippet: Test PUT /snippets API."""
+"""test_api_update_snippet: Test PUT /snippets API endpoint."""
 
 import json
 
@@ -27,13 +27,16 @@ import pytest
 
 from snippy.constants import Constants as Const
 from tests.testlib.content import Content
+from tests.testlib.content import Request
+from tests.testlib.content import Storage
 from tests.testlib.snippet import Snippet
 
 pytest.importorskip('gunicorn')
 
 
+# pylint: disable=unsupported-assignment-operation, unsubscriptable-object
 class TestApiUpdateSnippet(object):
-    """Test PUT /snippets/{digest} API."""
+    """Test PUT /snippets API endpoint."""
 
     @staticmethod
     @pytest.mark.usefixtures('import-forced', 'update-exited-utc')
@@ -45,25 +48,25 @@ class TestApiUpdateSnippet(object):
         can be changed by user.
         """
 
-        content = {
+        storage = {
             'data': [
-                Content.deepcopy(Snippet.EXITED)
+                Storage.exited
             ]
         }
-        content['data'][0]['created'] = Content.FORCED_TIME
-        content['data'][0]['updated'] = Content.EXITED_TIME
-        content['data'][0]['uuid'] = Snippet.FORCED_UUID
-        content['data'][0]['digest'] = Snippet.EXITED_DIGEST
+        storage['data'][0]['created'] = Content.FORCED_TIME
+        storage['data'][0]['updated'] = Content.EXITED_TIME
+        storage['data'][0]['uuid'] = Snippet.FORCED_UUID
+        storage['data'][0]['digest'] = Snippet.EXITED_DIGEST
         request_body = {
             'data': {
                 'type': 'snippet',
                 'attributes': {
-                    'data': content['data'][0]['data'],
-                    'brief': content['data'][0]['brief'],
-                    'description': content['data'][0]['description'],
-                    'groups': content['data'][0]['groups'],
-                    'tags': content['data'][0]['tags'],
-                    'links': content['data'][0]['links']
+                    'data': storage['data'][0]['data'],
+                    'brief': storage['data'][0]['brief'],
+                    'description': storage['data'][0]['description'],
+                    'groups': storage['data'][0]['groups'],
+                    'tags': storage['data'][0]['tags'],
+                    'links': storage['data'][0]['links']
                 }
             }
         }
@@ -77,8 +80,8 @@ class TestApiUpdateSnippet(object):
             },
             'data': {
                 'type': 'snippet',
-                'id': content['data'][0]['uuid'],
-                'attributes': content['data'][0]
+                'id': storage['data'][0]['uuid'],
+                'attributes': storage['data'][0]
             }
         }
         result = testing.TestClient(server.server.api).simulate_put(
@@ -88,7 +91,7 @@ class TestApiUpdateSnippet(object):
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('import-forced', 'update-remove-utc')
@@ -100,7 +103,7 @@ class TestApiUpdateSnippet(object):
         in request.
         """
 
-        content = {
+        storage = {
             'data': [{
                 'category': 'snippet',
                 'data': Snippet.REMOVE['data'],
@@ -123,9 +126,9 @@ class TestApiUpdateSnippet(object):
             'data': {
                 'type': 'snippet',
                 'attributes': {
-                    'data': content['data'][0]['data'],
-                    'groups': content['data'][0]['groups'],
-                    'links': content['data'][0]['links']
+                    'data': storage['data'][0]['data'],
+                    'groups': storage['data'][0]['groups'],
+                    'links': storage['data'][0]['links']
                 }
             }
         }
@@ -139,8 +142,8 @@ class TestApiUpdateSnippet(object):
             },
             'data': {
                 'type': 'snippet',
-                'id': content['data'][0]['uuid'],
-                'attributes': content['data'][0]
+                'id': storage['data'][0]['uuid'],
+                'attributes': storage['data'][0]
             }
         }
         result = testing.TestClient(server.server.api).simulate_put(
@@ -150,7 +153,7 @@ class TestApiUpdateSnippet(object):
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('import-forced', 'update-remove-utc')
@@ -162,7 +165,7 @@ class TestApiUpdateSnippet(object):
         All other attributes must be set to their default values.
         """
 
-        content = {
+        storage = {
             'data': [{
                 'category': 'snippet',
                 'data': Snippet.REMOVE['data'],
@@ -199,8 +202,8 @@ class TestApiUpdateSnippet(object):
             },
             'data': {
                 'type': 'snippet',
-                'id': content['data'][0]['uuid'],
-                'attributes': content['data'][0]
+                'id': storage['data'][0]['uuid'],
+                'attributes': storage['data'][0]
             }
         }
         result = testing.TestClient(server.server.api).simulate_put(
@@ -210,7 +213,7 @@ class TestApiUpdateSnippet(object):
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('import-forced', 'caller')
@@ -221,20 +224,20 @@ class TestApiUpdateSnippet(object):
         is not found.
         """
 
-        content = {
+        storage = {
             'data': [
-                Snippet.FORCED
+                Storage.forced
             ]
         }
         request_body = {
             'data': {
                 'type': 'snippet',
                 'attributes': {
-                    'data': Snippet.REMOVE['data'],
-                    'brief': Snippet.REMOVE['brief'],
-                    'groups': Snippet.REMOVE['groups'],
-                    'tags': Snippet.REMOVE['tags'],
-                    'links': Snippet.REMOVE['links']
+                    'data': Request.remove['data'],
+                    'brief': Request.remove['brief'],
+                    'groups': Request.remove['groups'],
+                    'tags': Request.remove['tags'],
+                    'links': Request.remove['links']
                 }
             }
         }
@@ -258,7 +261,7 @@ class TestApiUpdateSnippet(object):
         assert result.status == falcon.HTTP_404
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('import-forced', 'caller')
@@ -269,17 +272,17 @@ class TestApiUpdateSnippet(object):
         JSON request.
         """
 
-        content = {
+        storage = {
             'data': [
-                Snippet.FORCED
+                Storage.forced
             ]
         }
         request_body = {
-            'data': Const.NEWLINE.join(Snippet.REMOVE['data']),
-            'brief': Snippet.REMOVE['brief'],
-            'groups': Snippet.REMOVE['groups'],
-            'tags': Const.DELIMITER_TAGS.join(Snippet.REMOVE['tags']),
-            'links': Const.DELIMITER_LINKS.join(Snippet.REMOVE['links'])
+            'data': Const.NEWLINE.join(Request.remove['data']),
+            'brief': Request.remove['brief'],
+            'groups': Request.remove['groups'],
+            'tags': Const.DELIMITER_TAGS.join(Request.remove['tags']),
+            'links': Const.DELIMITER_LINKS.join(Request.remove['links'])
         }
         expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1325'}
         expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1368'}
@@ -299,7 +302,7 @@ class TestApiUpdateSnippet(object):
         assert result.status == falcon.HTTP_400
         assert result.headers in (expect_headers_p2, expect_headers_p3)
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('import-forced', 'update-netcat-utc')
@@ -311,24 +314,24 @@ class TestApiUpdateSnippet(object):
         and the updated timestamp changes when the content is updated.
         """
 
-        content = {
+        storage = {
             'data': [
-                Content.deepcopy(Snippet.NETCAT)
+                Storage.netcat
             ]
         }
-        content['data'][0]['created'] = Content.FORCED_TIME
-        content['data'][0]['updated'] = Content.NETCAT_TIME
-        content['data'][0]['uuid'] = Snippet.FORCED_UUID
-        content['data'][0]['digest'] = Snippet.NETCAT_DIGEST
+        storage['data'][0]['created'] = Content.FORCED_TIME
+        storage['data'][0]['updated'] = Content.NETCAT_TIME
+        storage['data'][0]['uuid'] = Snippet.FORCED_UUID
+        storage['data'][0]['digest'] = Snippet.NETCAT_DIGEST
         request_body = {
             'data': {
                 'type': 'snippet',
                 'attributes': {
-                    'data': content['data'][0]['data'],
-                    'brief': content['data'][0]['brief'],
-                    'groups': content['data'][0]['groups'],
-                    'tags': content['data'][0]['tags'],
-                    'links': content['data'][0]['links']
+                    'data': storage['data'][0]['data'],
+                    'brief': storage['data'][0]['brief'],
+                    'groups': storage['data'][0]['groups'],
+                    'tags': storage['data'][0]['tags'],
+                    'links': storage['data'][0]['links']
                 }
             }
         }
@@ -342,8 +345,8 @@ class TestApiUpdateSnippet(object):
             },
             'data': {
                 'type': 'snippet',
-                'id': content['data'][0]['uuid'],
-                'attributes': content['data'][0]
+                'id': storage['data'][0]['uuid'],
+                'attributes': storage['data'][0]
             }
         }
         expect_body['data']['attributes']['updated'] = Content.NETCAT_TIME
@@ -354,7 +357,7 @@ class TestApiUpdateSnippet(object):
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('import-forced', 'update-remove-utc')
@@ -366,16 +369,16 @@ class TestApiUpdateSnippet(object):
         All other attributes must be returned with their previous stored values.
         """
 
-        content = {
+        storage = {
             'data': [
-                Content.deepcopy(Snippet.FORCED)
+                Storage.forced
             ]
         }
-        content['data'][0]['data'] = Snippet.REMOVE['data']
-        content['data'][0]['created'] = Content.FORCED_TIME
-        content['data'][0]['updated'] = Content.REMOVE_TIME
-        content['data'][0]['uuid'] = Snippet.FORCED_UUID
-        content['data'][0]['digest'] = 'a9e137c08aee09852797a974ef91b871c48915fecf25b2e89c5bdba4885b2bd2'
+        storage['data'][0]['data'] = Snippet.REMOVE['data']
+        storage['data'][0]['created'] = Content.FORCED_TIME
+        storage['data'][0]['updated'] = Content.REMOVE_TIME
+        storage['data'][0]['uuid'] = Snippet.FORCED_UUID
+        storage['data'][0]['digest'] = 'a9e137c08aee09852797a974ef91b871c48915fecf25b2e89c5bdba4885b2bd2'
         request_body = {
             'data': {
                 'type': 'snippet',
@@ -394,8 +397,8 @@ class TestApiUpdateSnippet(object):
             },
             'data': {
                 'type': 'snippet',
-                'id': content['data'][0]['uuid'],
-                'attributes': content['data'][0]
+                'id': storage['data'][0]['uuid'],
+                'attributes': storage['data'][0]
             }
         }
         result = testing.TestClient(server.server.api).simulate_patch(
@@ -405,10 +408,10 @@ class TestApiUpdateSnippet(object):
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @classmethod
     def teardown_class(cls):
-        """Teardown class."""
+        """Teardown tests."""
 
         Content.delete()

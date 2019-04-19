@@ -17,34 +17,35 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""test_api_delete_references: Test DELETE references API."""
+"""test_api_delete_references: Test DELETE /references API endpoint."""
 
 from falcon import testing
 import falcon
 import pytest
 
 from tests.testlib.content import Content
+from tests.testlib.content import Storage
 from tests.testlib.reference import Reference
 
 pytest.importorskip('gunicorn')
 
 
 class TestApiDeleteReference(object):
-    """Test DELETE references API."""
+    """Test DELETE /references API endpoint."""
 
     @staticmethod
     @pytest.mark.usefixtures('default-references', 'import-pytest')
     def test_api_delete_reference_001(server):
         """Delete reference with digest.
 
-        Send DELETE /v1/references/{id} to remove a reference. The ``digest``
-        matches to one resource that is deleted.
+        Send DELETE /v1/references/{id} to remove a resource. The ``id`` in
+        URI matches to one resource that is deleted.
         """
 
-        content = {
+        storage = {
             'data': [
-                Reference.GITLOG,
-                Reference.REGEXP
+                Storage.gitlog,
+                Storage.regexp
             ]
         }
         expect_headers = {}
@@ -54,21 +55,21 @@ class TestApiDeleteReference(object):
         assert result.status == falcon.HTTP_204
         assert result.headers == expect_headers
         assert not result.text
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('default-references', 'import-pytest', 'caller')
     def test_api_delete_reference_002(server):
         """Try to delete reference.
 
-        Try to send DELETE /v1/reference with resource URI that does not exist.
+        Try to send DELETE /v1/reference{id} with ``id`` in URI does not exist.
         """
 
-        content = {
+        storage = {
             'data': [
-                Reference.PYTEST,
-                Reference.GITLOG,
-                Reference.REGEXP
+                Storage.pytest,
+                Storage.gitlog,
+                Storage.regexp
             ]
         }
         expect_headers = {
@@ -90,21 +91,21 @@ class TestApiDeleteReference(object):
         assert result.status == falcon.HTTP_404
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('default-references', 'caller')
     def test_api_delete_reference_003(server):
         """Try to delete reference.
 
-        Try to send DELETE /v1/references without digest identifying deleted
-        reource.
+        Try to send DELETE /v1/references without ``id`` in URI that identifies
+        the deleted resource.
         """
 
-        content = {
+        storage = {
             'data': [
-                Reference.GITLOG,
-                Reference.REGEXP
+                Storage.gitlog,
+                Storage.regexp
             ]
         }
         expect_headers = {
@@ -126,21 +127,21 @@ class TestApiDeleteReference(object):
         assert result.status == falcon.HTTP_404
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('default-references', 'import-pytest')
     def test_api_delete_reference_004(server):
         """Delete reference with UUID.
 
-        Send DELETE /v1/references/{id} to remove one resource. The UUID matches
-        to one reference that is deleted.
+        Send DELETE /v1/references/{id} to remove one resource. The ``id``
+        in URI matches to one resource that is deleted.
         """
 
-        content = {
+        storage = {
             'data': [
-                Reference.PYTEST,
-                Reference.REGEXP
+                Storage.pytest,
+                Storage.regexp
             ]
         }
         expect_headers = {}
@@ -150,10 +151,10 @@ class TestApiDeleteReference(object):
         assert result.status == falcon.HTTP_204
         assert result.headers == expect_headers
         assert not result.text
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @classmethod
     def teardown_class(cls):
-        """Teardown class."""
+        """Teardown tests."""
 
         Content.delete()

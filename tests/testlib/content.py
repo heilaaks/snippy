@@ -754,30 +754,296 @@ class Field(object):  # pylint: disable=too-few-public-methods
         return True
 
 
-class Storage(object):  # pylint: disable=too-few-public-methods
+class Storage(object):
     """Content represented as in storage.
 
-    There was no solution found out that would allow adding @staticmethod
-    or @classmethod decorators to avoid lint warnings from @classproperty.
-    if these standard decorats are added, it breaks the @classproperty.
+    There was no solution found that would allow adding @staticmethod or
+    @classmethod decorators to avoid lint warnings from @classproperty.
+    if these standard decorators are added, it breaks the @classproperty.
+
+    Optimization: Event though there are too few calls in test to get a
+    reference resource to matter, the copy.deepcopy is avoided because it
+    is much slower than iterating dictionary keys to get a new dictionary
+    that caller can modify.
     """
 
     @classproperty
-    def gitlog(cls):  # pylint: disable=no-self-argument
-        """Get gitlog resource.
+    def remove(cls):  # pylint: disable=no-self-argument, no-self-use
+        """Get remove Snippet.
 
-        Optimization: Event though there are too few calls in test to get a
-        resource to matter, the copy.deepcopy is much slower than iterating
-        dictionary keys to get a new dictionary that caller can modify.
+        Returns:
+            dict: Resource attributes as stored in database.
         """
 
-        return {attribute: Reference.GITLOG[attribute] for attribute in Reference.GITLOG.keys()}
-
-class Request(object):  # pylint: disable=too-few-public-methods
-    """Content represented as in HTTP request."""
+        return {attribute: Snippet.REMOVE[attribute] for attribute in Snippet.REMOVE}
 
     @classproperty
-    def gitlog(cls):  # pylint: disable=no-self-argument
-        """Get gitlog resource."""
+    def forced(cls):  # pylint: disable=no-self-argument, no-self-use
+        """Get forced Snippet.
+
+        Returns:
+            dict: Resource attributes as stored in database.
+        """
+
+        return {attribute: Snippet.FORCED[attribute] for attribute in Snippet.FORCED}
+
+    @classproperty
+    def exited(cls):  # pylint: disable=no-self-argument, no-self-use
+        """Get exited Snippet.
+
+        Returns:
+            dict: Resource attributes as stored in database.
+        """
+
+        return {attribute: Snippet.EXITED[attribute] for attribute in Snippet.EXITED}
+
+    @classproperty
+    def netcat(cls):  # pylint: disable=no-self-argument, no-self-use
+        """Get netcat Snippet.
+
+        Returns:
+            dict: Resource attributes as stored in database.
+        """
+
+        return {attribute: Snippet.NETCAT[attribute] for attribute in Snippet.NETCAT}
+
+    @classproperty
+    def umount(cls):  # pylint: disable=no-self-argument, no-self-use
+        """Get umount Snippet.
+
+        Returns:
+            dict: Resource attributes as stored in database.
+        """
+
+        return {attribute: Snippet.UMOUNT[attribute] for attribute in Snippet.UMOUNT}
+
+    @classproperty
+    def interp(cls):  # pylint: disable=no-self-argument, no-self-use
+        """Get interp Snippet.
+
+        Returns:
+            dict: Resource attributes as stored in database.
+        """
+
+        return {attribute: Snippet.INTERP[attribute] for attribute in Snippet.INTERP}
+
+    @classproperty
+    def ebeats(cls):  # pylint: disable=no-self-argument, no-self-use
+        """Get ebeats Solution.
+
+        Returns:
+            dict: Resource attributes as stored in database.
+        """
+
+        return {attribute: Solution.BEATS[attribute] for attribute in Solution.BEATS}
+
+    @classproperty
+    def dnginx(cls):  # pylint: disable=no-self-argument, no-self-use
+        """Get dnginx Solution.
+
+        Returns:
+            dict: Resource attributes as stored in database.
+        """
+
+        return {attribute: Solution.NGINX[attribute] for attribute in Solution.NGINX}
+
+    @classproperty
+    def dkafka(cls):  # pylint: disable=no-self-argument, no-self-use
+        """Get dkafka Solution.
+
+        Returns:
+            dict: Resource attributes as stored in database.
+        """
+
+        return {attribute: Solution.KAFKA[attribute] for attribute in Solution.KAFKA}
+
+    @classproperty
+    def kafkam(cls):  # pylint: disable=no-self-argument, no-self-use
+        """Get kafkam Solution.
+
+        Returns:
+            dict: Resource attributes as stored in database.
+        """
+
+        return {attribute: Solution.KAFKA_MKDN[attribute] for attribute in Solution.KAFKA_MKDN}
+
+    @classproperty
+    def gitlog(cls):  # pylint: disable=no-self-argument, no-self-use
+        """Get gitlog Reference.
+
+        Returns:
+            dict: Resource attributes as stored in database.
+        """
+
+        return {attribute: Reference.GITLOG[attribute] for attribute in Reference.GITLOG}
+
+    @classproperty
+    def regexp(cls):  # pylint: disable=no-self-argument, no-self-use
+        """Get regexp Reference.
+
+        Returns:
+            dict: Resource attributes as stored in database.
+        """
+
+        return {attribute: Reference.REGEXP[attribute] for attribute in Reference.REGEXP}
+
+    @classproperty
+    def pytest(cls):  # pylint: disable=no-self-argument, no-self-use
+        """Get pytest Reference.
+
+        Returns:
+            dict: Resource attributes as stored in database.
+        """
+
+        return {attribute: Reference.PYTEST[attribute] for attribute in Reference.PYTEST}
+
+
+class Request(object):
+    """Content represented as in a HTTP request."""
+
+    @classproperty
+    def remove(cls):  # pylint: disable=no-self-argument, no-self-use
+        """Get remove Snippet.
+
+        Returns:
+            dict: Resource attributes as sent in HTTP request.
+        """
+
+        return {attribute: Snippet.REMOVE[attribute] for attribute in Helper.REQUEST_ATTRIBUTES}
+
+    @classproperty
+    def forced(cls):  # pylint: disable=no-self-argument, no-self-use
+        """Get forced Snippet.
+
+        Returns:
+            dict: Resource attributes as sent in HTTP request.
+        """
+
+        return {attribute: Snippet.FORCED[attribute] for attribute in Helper.REQUEST_ATTRIBUTES}
+
+    @classproperty
+    def exited(cls):  # pylint: disable=no-self-argument, no-self-use
+        """Get exited Snippet.
+
+        Returns:
+            dict: Resource attributes as sent in HTTP request.
+        """
+
+        return {attribute: Snippet.EXITED[attribute] for attribute in Helper.REQUEST_ATTRIBUTES}
+
+    @classproperty
+    def netcat(cls):  # pylint: disable=no-self-argument, no-self-use
+        """Get netcat Snippet.
+
+        Returns:
+            dict: Resource attributes as sent in HTTP request.
+        """
+
+        return {attribute: Snippet.NETCAT[attribute] for attribute in Helper.REQUEST_ATTRIBUTES}
+
+    @classproperty
+    def umount(cls):  # pylint: disable=no-self-argument, no-self-use
+        """Get umount Snippet.
+
+        Returns:
+            dict: Resource attributes as sent in HTTP request.
+        """
+
+        return {attribute: Snippet.UMOUNT[attribute] for attribute in Helper.REQUEST_ATTRIBUTES}
+
+    @classproperty
+    def interp(cls):  # pylint: disable=no-self-argument, no-self-use
+        """Get interp Snippet.
+
+        Returns:
+            dict: Resource attributes as sent in HTTP request.
+        """
+
+        return {attribute: Snippet.INTERP[attribute] for attribute in Helper.REQUEST_ATTRIBUTES}
+
+    @classproperty
+    def ebeats(cls):  # pylint: disable=no-self-argument, no-self-use
+        """Get ebeats Solution.
+
+        Returns:
+            dict: Resource attributes as sent in HTTP request.
+        """
+
+        return {attribute: Solution.BEATS[attribute] for attribute in Helper.REQUEST_ATTRIBUTES}
+
+    @classproperty
+    def dnginx(cls):  # pylint: disable=no-self-argument, no-self-use
+        """Get dnginx Solution.
+
+        Returns:
+            dict: Resource attributes as sent in HTTP request.
+        """
+
+        return {attribute: Solution.NGINX[attribute] for attribute in Helper.REQUEST_ATTRIBUTES}
+
+    @classproperty
+    def dkafka(cls):  # pylint: disable=no-self-argument, no-self-use
+        """Get dkafka Solution.
+
+        Returns:
+            dict: Resource attributes as sent in HTTP request.
+        """
+
+        return {attribute: Solution.KAFKA[attribute] for attribute in Helper.REQUEST_ATTRIBUTES}
+
+    @classproperty
+    def kafkam(cls):  # pylint: disable=no-self-argument, no-self-use
+        """Get kafkam Solution.
+
+        Returns:
+            dict: Resource attributes as sent in HTTP request.
+        """
+
+        return {attribute: Solution.KAFKA_MKDN[attribute] for attribute in Helper.REQUEST_ATTRIBUTES}
+
+    @classproperty
+    def gitlog(cls):  # pylint: disable=no-self-argument, no-self-use
+        """Get gitlog Reference.
+
+        Returns:
+            dict: Resource attributes as sent in HTTP request.
+        """
 
         return {attribute: Reference.GITLOG[attribute] for attribute in Helper.REQUEST_ATTRIBUTES}
+
+    @classproperty
+    def regexp(cls):  # pylint: disable=no-self-argument, no-self-use
+        """Get regexp Reference.
+
+        Returns:
+            dict: Resource attributes as sent in HTTP request.
+        """
+
+        return {attribute: Reference.REGEXP[attribute] for attribute in Helper.REQUEST_ATTRIBUTES}
+
+    @classproperty
+    def pytest(cls):  # pylint: disable=no-self-argument, no-self-use
+        """Get pytest Reference.
+
+        Returns:
+            dict: Resource attributes as sent in HTTP request.
+        """
+
+        return {attribute: Reference.PYTEST[attribute] for attribute in Helper.REQUEST_ATTRIBUTES}
+
+    @staticmethod
+    def storage(storage):
+        """Get Request from Storage object.
+
+        Only some of the reference resource attributes are accepted in HTTP
+        request. This method removes the attributes from storage data format
+        that cannot be sent in a HTTP request.
+
+        Args:
+            storage (dict): Resource attributes in dictionary as stored in storage.
+
+        Returns:
+            dict: Resource attributes as sent in HTTP request.
+        """
+
+        return {attribute: storage[attribute] for attribute in Helper.REQUEST_ATTRIBUTES}

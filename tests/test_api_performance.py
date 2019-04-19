@@ -31,7 +31,7 @@ import pytest
 
 from snippy.cause import Cause
 from tests.testlib.content import Content
-from tests.testlib.snippet import Snippet
+from tests.testlib.content import Request
 
 try:
     import http.client as httplib
@@ -82,10 +82,10 @@ class TestApiPerformance(object):
         time.sleep(1)  # Wait untill server is up.
         snippets = {
             'data': [
-                {'type': 'snippet', 'attributes': Snippet.REMOVE},
-                {'type': 'snippet', 'attributes': Snippet.FORCED},
-                {'type': 'snippet', 'attributes': Snippet.EXITED},
-                {'type': 'snippet', 'attributes': Snippet.NETCAT}
+                {'type': 'snippet', 'attributes': Request.remove},
+                {'type': 'snippet', 'attributes': Request.forced},
+                {'type': 'snippet', 'attributes': Request.exited},
+                {'type': 'snippet', 'attributes': Request.netcat}
             ]
         }
         conn = httplib.HTTPConnection('localhost', port=8080)
@@ -177,10 +177,10 @@ class TestApiPerformance(object):
         time.sleep(1)  # Wait untill server up.
         snippets = {
             'data': [
-                {'type': 'snippet', 'attributes': Snippet.REMOVE},
-                {'type': 'snippet', 'attributes': Snippet.FORCED},
-                {'type': 'snippet', 'attributes': Snippet.EXITED},
-                {'type': 'snippet', 'attributes': Snippet.NETCAT}
+                {'type': 'snippet', 'attributes': Request.remove},
+                {'type': 'snippet', 'attributes': Request.forced},
+                {'type': 'snippet', 'attributes': Request.exited},
+                {'type': 'snippet', 'attributes': Request.netcat}
             ]
         }
         conn = httplib.HTTPConnection('localhost', port=8080)
@@ -214,6 +214,6 @@ class TestApiPerformance(object):
 
     @classmethod
     def teardown_class(cls):
-        """Teardown class."""
+        """Teardown tests."""
 
         Content.delete()

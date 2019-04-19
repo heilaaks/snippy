@@ -1,27 +1,18 @@
 ## WORKING
-   - [ ] Check lint warning unsupported-assignment-operation which seems false positive? Pylint does not see @property decorator?
-   - [ ] See test_api_create_reference_001
-   - [ ] Make all defaults 6 letters long like gitlog.
-   - [ ] Why the addition proerty field did not affect swagger 3.0?
-   - [ ] Change content variable to storage because the storage tells that the content is used with storage.
-   - [ ] Note: Added additionalProperties: false and ended up refactoring test and how default resources are requested.
-   - [ ] Note in commit log that the Configu does not use jsonschema import because it is SErver import. The Config must work in CLI mode with only Yaml.
-   - [ ] Do not allow string or list. This makes the OAS API spec complicated. Rerequire explicit format.
-   - [ ] Swagger 2.0 does not support nullable and this does not work with validation: test_api_update_reference_010
+   - [ ] Swagger 3.0: Why the 'additionProperties: false' field did not affect swagger 3.0?
+   - [ ] Swagger 2.0: Does not support nullable and this does not work with validation: test_api_update_reference_010/117. move to OAS3.0 to solve this?
+   - [ ] Note in commit log that the Config() does not use jsonschema import because it is Server import. The Config must work in CLI mode with only Yaml.
    - [ ] Clean the jsonvalidator and the constant since those are not needed because swagger in use.
-   - [ ] Can collection and resource validation merged together? Should be possible ...
+   - [ ] Can collection and resource validation for API merged together? Should be possible ...
    - [ ] Add internal tests to support parsing of string or list (from cli) since API does not allow it anymore.
-   - [ ] Add option to activate/disable validation of request and second option for responses. The later is for internal testing to make sure the schema is valid for client.
-   - [ ] Add test with disable schema vlidation to test if string formats from arrays work from API.
-   - [ ] Add data.id validation with schema instead of check Validation.
+   - [ ] Add schem validation for tests (not to sending side). Hide this into helper: assert_restapi.
+   - [ ] Add data.id validation with schema instead of check in Validation().
    - [ ] Add missing references import to docker containers. Use --all option.
-   - [ ] Add schema to validate data attributes to prevent updating e.g. uuid, created, updated, etc. Before adding schema run performance tests. Can be done with simle if like with ID.
+   - [ ] Design and change /groups and /tags to GET groups and tags not content. Like unique tags and groups.
    - [ ] Incorrect header does not leave logs. Test manually since this works differently that the tests? For example ab was missing '-T application/vnd.api+json' without this it did not work.
    - [ ] Check why test_api_create_snippet_004 has specific error length in Python 3.4.
    - [ ] Fix updating Markdown based solutions in text formats does not work because the Mkdn solution does not have text header and data structure.
-   - [ ] Fix received user defined UUID in create and update. This must generate error because otherwise user would expect that the UUID was updated.
-   - [ ] Config.get_resource creates exter UUID usage when e.g resource is updated. Get rid of this (somehow) after UUID refactoring.
-   - [ ] Refactor test desc to: Send POST /v1/snippets to create a new resource. (use v1 and use resource)
+   - [ ] Config.get_resource creates external UUID usage when e.g resource is updated. Get rid of this (somehow) after UUID refactoring.
    - [ ] PUT can be like POST if not resource: https://stackoverflow.com/a/35845343. Test and fix PUT to new resource.
    - [ ] Test export/import Mkdn snippet with partial comments. The export must have the <not documented> tag and import must remove it.
    - [ ] Fix creating/updating resource with invalid versions. Check test_api_create_snippet_024. The seal() cannot check if Cause not is_is because it generates incorrect error. For example GET ../<valid digest>/error shows error that digest not foind. See test_api_search_reference_field_012. move the reast API based empty list check earlier in code to solve this.
@@ -30,7 +21,6 @@
    - [ ] Fix somehow (?) the python runner search --sall 'test' --filter test -vv | grep --all?
    - [ ] Fix JSON API v1.x requires links for collection responses too. Individual resource not found or attrbute results null otherwise empty list.
    - [ ] Fix changing URI with digest which may be bad practise?
-   - [ ] Design and change /groups and /tags to GET groups and tags not content. Like unique tags and groups.
    - [ ] Post references with data must be automatically set to links. Data is only mandatory in API specs. Not easy (?) to add conditional mandatory fields in OAS.
    - [ ] change (?) default basepath to /api/snippy/v1.
    - [ ] Fix digest computation once things are setling down. Changing this forces changes to all tests and code that rely on digest.

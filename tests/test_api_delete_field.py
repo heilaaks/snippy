@@ -26,7 +26,7 @@ import falcon
 import pytest
 
 from tests.testlib.content import Content
-from tests.testlib.reference import Reference
+from tests.testlib.content import Request
 
 pytest.importorskip('gunicorn')
 
@@ -45,7 +45,7 @@ class TestApiDeleteField(object):
         request_body = {
             'data': [{
                 'type': 'reference',
-                'attributes': Reference.GITLOG
+                'attributes': Request.gitlog
             }]
         }
         expect_headers = {
@@ -81,7 +81,7 @@ class TestApiDeleteField(object):
         request_body = {
             'data': [{
                 'type': 'reference',
-                'attributes': Reference.GITLOG
+                'attributes': Request.gitlog
             }]
         }
         expect_headers = {
@@ -108,6 +108,6 @@ class TestApiDeleteField(object):
 
     @classmethod
     def teardown_class(cls):
-        """Teardown class."""
+        """Teardown tests."""
 
         Content.delete()

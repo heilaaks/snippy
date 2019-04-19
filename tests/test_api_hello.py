@@ -36,7 +36,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
     def test_api_hello_api_001(server):
         """Test hello API.
 
-        Call GET /snippy/api/app/v1 to get Hello response.
+        Send GET /snippy/api/app/v1 to get Hello response.
         """
 
         expect_headers = {
@@ -53,7 +53,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
     def test_api_hello_api_002(server):
         """Test hello API.
 
-        Call GET /api/app/v1/hello to get hello!
+        Send GET /api/app/v1/hello to get hello!
         """
 
         expect_headers = {
@@ -94,7 +94,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
     def test_api_hello_api_004():
         """Test hello API with modified server base path configuration.
 
-        Call GET /snippy/api to get hello! In this case the server base path
+        Send GET /snippy/api to get hello! In this case the server base path
         configuration is incorrect. The server base path must contain trailing
         slash which is missing from this test. The configuration must be
         updated automatically and the API call must work.
@@ -119,7 +119,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
     def test_api_hello_api_005():
         """Test hello API with modified server base path configuration.
 
-        Call GET /snippy/api to get hello! In this case the server base path
+        Send GET /snippy/api to get hello! In this case the server base path
         configuration is incorrect. The server base path must contain leading
         slash which is missing from this test. The configuration must be
         updated and the API call must work.
@@ -144,7 +144,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
     def test_api_hello_api_006():
         """Test hello API with modified server base path configuration.
 
-        Call GET /snippy/api to get hello! In this case the server base path
+        Send GET /snippy/api to get hello! In this case the server base path
         configuration is incorrect. The server base path must contain leading
         and trailing slashes which are missing from this test. In this case the
         configuration must be updated automatically and the API call must work.
@@ -169,7 +169,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
     def test_api_hello_api_007():
         """Test hello API with modified server base path configuration.
 
-        Call GET /api/app/v1 to get hello! In this case the server base path is
+        Send GET /api/app/v1 to get hello! In this case the server base path is
         incorrect because it contains two slashes. This configuration error
         results the default base path configuration.
         """
@@ -193,7 +193,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
     def test_api_hello_api_008(caplog):
         """Test hello API with modified server IP and port configuration.
 
-        Call GET /api/app/v1 to get hello! In this case the server host is
+        Send GET /api/app/v1 to get hello! In this case the server host is
         changed from the default with command line option.
         """
 
@@ -217,7 +217,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
     def test_api_hello_api_009(server):
         """Test hello API with OPTIONS.
 
-        Call OPTIONS /api/app/v1 to get allowed methods for the hello API.
+        Send OPTIONS /api/app/v1 to get allowed methods for the hello API.
         """
 
         expect_headers = {
@@ -235,7 +235,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
     def test_api_hello_api_010(server):
         """Test snippets API with OPTIONS.
 
-        Call OPTIONS /v1/snippets to get allowed methods.
+        Send OPTIONS /v1/snippets to get allowed methods.
         """
 
         expect_headers = {
@@ -253,7 +253,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
     def test_api_hello_api_011(server):
         """Test snippets digest API with OPTIONS.
 
-        Call OPTIONS /v1/snippets/{id} to get allowed methods.
+        Send OPTIONS /v1/snippets/{id} to get allowed methods.
         """
 
         expect_headers = {
@@ -271,7 +271,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
     def test_api_hello_api_012(server):
         """Test snippets field API with OPTIONS.
 
-        Call OPTIONS /v1/snippets/{id}/{field} to get allowed methods.
+        Send OPTIONS /v1/snippets/{id}/{field} to get allowed methods.
         """
 
         expect_headers = {
@@ -289,7 +289,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
     def test_api_hello_api_013(server):
         """Test fields groups API with OPTIONS.
 
-        Call OPTIONS /v1/groups/<groups> to get allowed methods.
+        Send OPTIONS /v1/groups/<groups> to get allowed methods.
         """
 
         expect_headers = {
@@ -307,7 +307,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
     def test_api_hello_api_014(server):
         """Test fields tags API with OPTIONS.
 
-        Call OPTIONS /v1/tags/<tag> to get allowed methods.
+        Send OPTIONS /v1/tags/<tag> to get allowed methods.
         """
 
         expect_headers = {
@@ -325,7 +325,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
     def test_api_hello_api_015(server):
         """Test fields keywords API with OPTIONS.
 
-        Call OPTIONS /v1/groups to get allowed methods for keywords API. Note
+        Send OPTIONS /v1/groups to get allowed methods for keywords API. Note
         that this does not call the groups API but keywords API. The reason is
         that the route /groups does not have the parameter and in this case id
         does not lead to /groups but to /{keywords} API.
@@ -346,7 +346,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
     def test_api_hello_api_016(caplog, osenviron):
         """Test server startup with environment variable configuration.
 
-        Call GET /api/app/v1 to get Hello response. In this case the server
+        Send GET /api/app/v1 to get Hello response. In this case the server
         variables are changed with environment variables.
         """
 
@@ -388,7 +388,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
     def test_api_hello_api_017(caplog, osenviron):
         """Test server startup with environment and command line config.
 
-        Call GET /api/app/v1 to get Hello response. In this case the server
+        Send GET /api/app/v1 to get Hello response. In this case the server
         options are configured with environment variables and command line
         options. The command line option has higher precedence and they must
         be used.
@@ -420,6 +420,6 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
 
     @classmethod
     def teardown_class(cls):
-        """Teardown class."""
+        """Teardown tests."""
 
         Content.delete()

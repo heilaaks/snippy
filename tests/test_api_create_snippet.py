@@ -28,33 +28,36 @@ import pytest
 
 from snippy.constants import Constants as Const
 from tests.testlib.content import Content
+from tests.testlib.content import Request
+from tests.testlib.content import Storage
 from tests.testlib.snippet import Snippet
 
 pytest.importorskip('gunicorn')
 
 
+# pylint: disable=unsupported-assignment-operation, unsubscriptable-object
 class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     """Test POST snippets collection API."""
 
     @staticmethod
     @pytest.mark.usefixtures('create-remove-utc')
     def test_api_create_snippet_001(server):
-        """Create one snippet with POST.
+        """Create one Snippet with POST.
 
         Send POST /v1/snippets to create a new resource. The created snippet
         is sent in the HTTP request ``data`` attribute as a list of objects.
         """
 
-        content = {
+        storage = {
             'data': [
-                Content.deepcopy(Snippet.REMOVE)
+                Storage.remove
             ]
         }
-        content['data'][0]['uuid'] = Content.UUID1
+        storage['data'][0]['uuid'] = Content.UUID1
         request_body = {
             'data': [{
                 'type': 'snippet',
-                'attributes': content['data'][0]
+                'attributes': Request.remove
             }]
         }
         expect_headers = {
@@ -65,7 +68,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'snippet',
                 'id': Content.UUID1,
-                'attributes': content['data'][0]
+                'attributes': storage['data'][0]
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
@@ -75,12 +78,12 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.status == falcon.HTTP_201
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('create-remove-utc')
     def test_api_create_snippet_002(server):
-        """Create one snippet with POST.
+        """Create one Snippet with POST.
 
         Send POST /v1/snippets to create a new resource. The created snippet
         is sent in the POST request ``data`` attribute as an object. The HTTP
@@ -88,16 +91,16 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         list of snippet objects.
         """
 
-        content = {
+        storage = {
             'data': [
-                Content.deepcopy(Snippet.REMOVE)
+                Storage.remove
             ]
         }
-        content['data'][0]['uuid'] = Content.UUID1
+        storage['data'][0]['uuid'] = Content.UUID1
         request_body = {
             'data': {
                 'type': 'snippet',
-                'attributes': content['data'][0]
+                'attributes': Request.remove
             }
         }
         expect_headers = {
@@ -108,7 +111,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'snippet',
                 'id': Content.UUID1,
-                'attributes': content['data'][0]
+                'attributes': storage['data'][0]
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
@@ -118,12 +121,12 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.status == falcon.HTTP_201
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('create-remove-utc')
     def test_api_create_snippet_003(server):
-        """Create one snippet with POST.
+        """Create one Snippet with POST.
 
         Send POST /v1/snippets to create a new resource. In this case there
         is only part of the resource attributes that are defined.
@@ -132,12 +135,12 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         are stored into the database.
         """
 
-        content = {
+        storage = {
             'data': [
-                Content.deepcopy(Snippet.REMOVE)
+                Storage.remove
             ]
         }
-        content['data'][0]['uuid'] = Content.UUID1
+        storage['data'][0]['uuid'] = Content.UUID1
         request_body = {
             'data': [{
                 'type': 'snippet',
@@ -158,7 +161,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'snippet',
                 'id': Content.UUID1,
-                'attributes': content['data'][0]
+                'attributes': storage['data'][0]
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
@@ -168,12 +171,12 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.status == falcon.HTTP_201
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('caller')
     def test_api_create_snippet_004(server):
-        """Create one snippet with POST.
+        """Create one Snippet with POST.
 
         Send POST /v1/snippets to create a new resource. In this case snippet
         content data, tags and links attributes are defined in string context
@@ -219,21 +222,21 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     @staticmethod
     @pytest.mark.usefixtures('create-exited-utc')
     def test_api_create_snippet_005(server):
-        """Create one snippet with POST.
+        """Create one Snippet with POST.
 
         Send POST /v1/snippets to create a new resource. In this case snippet
-        content data attribute is defined as list where each line is a separate
-        element in a list.
+        resource ``data`` attribute is defined as list where each line is a
+        separate element in the list.
 
-        Additional newlines must be removed from the snippet data attribute.
+        Additional newlines must be removed from the ``data`` attribute.
         """
 
-        content = {
+        storage = {
             'data': [
-                Content.deepcopy(Snippet.EXITED)
+                Storage.exited
             ]
         }
-        content['data'][0]['uuid'] = Content.UUID1
+        storage['data'][0]['uuid'] = Content.UUID1
         request_body = {
             'data': [{
                 'type': 'snippet',
@@ -242,10 +245,10 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                         'docker rm $(docker ps --all -q -f status=exited)\n\n\n\n',
                         'docker images -q --filter dangling=true | xargs docker rmi'
                     ],
-                    'brief': content['data'][0]['brief'],
-                    'groups': content['data'][0]['groups'],
-                    'tags': content['data'][0]['tags'],
-                    'links': content['data'][0]['links']
+                    'brief': storage['data'][0]['brief'],
+                    'groups': storage['data'][0]['groups'],
+                    'tags': storage['data'][0]['tags'],
+                    'links': storage['data'][0]['links']
                 }
             }]
         }
@@ -257,7 +260,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'snippet',
                 'id': Content.UUID1,
-                'attributes': content['data'][0]
+                'attributes': storage['data'][0]
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
@@ -267,18 +270,18 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.status == falcon.HTTP_201
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('create-remove-utc')
     def test_api_create_snippet_006(server):
-        """Create one snippet with POST.
+        """Create one Snippet with POST.
 
         Send POST /v1/snippets to create a new resource. In this case the
         request resource has only the ``data`` attribute.
         """
 
-        content = {
+        storage = {
             'data': [{
                 'category': 'snippet',
                 'data': ('docker rm $(docker ps --all -q -f status=exited)',),
@@ -312,8 +315,8 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         expect_body = {
             'data': [{
                 'type': 'snippet',
-                'id': content['data'][0]['uuid'],
-                'attributes': content['data'][0]
+                'id': storage['data'][0]['uuid'],
+                'attributes': storage['data'][0]
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
@@ -323,31 +326,31 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.status == falcon.HTTP_201
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('create-remove-utc', 'create-forced-utc')
     def test_api_create_snippet_007(server):
-        """Create list of snippets from API.
+        """Create two Snippets with POST.
 
-        Send POST /v1/snippets in list context to create a new resource.
+        Send POST /v1/snippets in list context to create new resources.
         """
 
-        content = {
+        storage = {
             'data': [
-                Content.deepcopy(Snippet.REMOVE),
-                Content.deepcopy(Snippet.FORCED)
+                Storage.remove,
+                Storage.forced
             ]
         }
-        content['data'][0]['uuid'] = Content.UUID1
-        content['data'][1]['uuid'] = Content.UUID2
+        storage['data'][0]['uuid'] = Content.UUID1
+        storage['data'][1]['uuid'] = Content.UUID2
         request_body = {
             'data': [{
                 'type': 'snippet',
-                'attributes': content['data'][0]
+                'attributes': Request.remove
             }, {
                 'type': 'snippet',
-                'attributes': content['data'][1]
+                'attributes': Request.forced
             }]
         }
         expect_headers = {
@@ -358,11 +361,11 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'snippet',
                 'id': Content.UUID1,
-                'attributes': content['data'][0]
+                'attributes': storage['data'][0]
             }, {
                 'type': 'snippet',
                 'id': Content.UUID2,
-                'attributes': content['data'][1]
+                'attributes': storage['data'][1]
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
@@ -372,7 +375,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.status == falcon.HTTP_201
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('caller')
@@ -454,14 +457,14 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         """Try to create snippet with malformed JSON request.
 
         Try to send POST /v1/snippets to create new a resource with client
-        generated ID. This is not supported and it will generate error.
+        generated ``id``. This is not supported and it will generate error.
         """
 
         request_body = {
             'data': [{
                 'type': 'snippet',
                 'id': Snippet.REMOVE_DIGEST,
-                'attributes': Snippet.REMOVE
+                'attributes': Request.remove
             }]
         }
         expect_headers = {
@@ -492,7 +495,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         """Try to create snippet with malformed JSON request.
 
         Try to send POST /v1/snippets to create two snippets. First one is
-        correctly defind but the second one contains error in the JSON data.
+        correctly defined but the second contains an error in the JSON data.
         This must not create any resources and the whole request must be
         considered erroneous.
         """
@@ -500,14 +503,14 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         request_body = {
             'data': [{
                 'type': 'snippet',
-                'attributes': Snippet.REMOVE
+                'attributes': Request.remove
             }, {
                 'type': 'snippet',
                 'attributes': {'brief': []}
             }]
         }
-        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '2201'}
-        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '2300'}
+        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1715'}
+        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1794'}
         expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
@@ -531,17 +534,17 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_create_snippet_012(server):
         """Try to create snippet with malformed JSON request.
 
-        Try to send POST /v1/snippets to create two resources. First snippet is
-        correctly defind but the second one contains an error in the JSON data
-        structure. The error is the client generated ID which is not supported.
-        This request must not create any resources and the whole request must
-        be considered request.
+        Try to send POST /v1/snippets to create two resources. First snippet
+        is correctly defind but the second one contains an error in the JSON
+        data structure. The error is the client generated ``id`` that is not
+        supported. This request must not create any resources and the whole
+        HTTP request must be considered invalid.
         """
 
         request_body = {
             'data': [{
                 'type': 'snippet',
-                'attributes': Snippet.REMOVE
+                'attributes': Request.remove
             }, {
                 'type': 'snippet',
                 'id': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd',
@@ -581,16 +584,16 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         resource. In this case the resource exists and the content is updated.
         """
 
-        content = {
+        storage = {
             'data': [
-                Content.deepcopy(Snippet.REMOVE)
+                Storage.remove
             ]
         }
-        content['data'][0]['uuid'] = Snippet.FORCED_UUID
+        storage['data'][0]['uuid'] = Snippet.FORCED_UUID
         request_body = {
             'data': {
                 'type': 'snippet',
-                'attributes': content['data'][0]
+                'attributes': Request.remove
             }
         }
         expect_headers = {
@@ -604,7 +607,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             'data': {
                 'type': 'snippet',
                 'id': Snippet.FORCED_UUID,
-                'attributes': content['data'][0]
+                'attributes': storage['data'][0]
             }
         }
         result = testing.TestClient(server.server.api).simulate_post(
@@ -614,25 +617,33 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
-    @pytest.mark.usefixtures('import-forced', 'update-forced-utc')
+    @pytest.mark.usefixtures('import-forced', 'update-remove-utc')
     def test_api_create_snippet_014(server):
         """Update snippet with POST that maps to PATCH.
 
-        Send POST /v1/snippets with X-HTTP-Method-Override header to update a
-        resource. In this case the resource exists and the content is updated.
+        Send POST /v1/snippets with the ``X-HTTP-Method-Override`` header to
+        update a resource. In this case the resource exists and the content
+        is updated.
+
+        In this case the resource ``created`` attribute must remain in the
+        initial value and the ``updated`` attribute must be set to reflect
+        the update time.
+
+        The ``uuid`` attribute must not be changed from it's initial value.
         """
 
-        content = {
+        storage = {
             'data': [
-                Content.deepcopy(Snippet.FORCED)
+                Storage.forced
             ]
         }
-        content['data'][0]['data'] = Snippet.REMOVE['data']
-        content['data'][0]['uuid'] = Snippet.FORCED_UUID
-        content['data'][0]['digest'] = 'a9e137c08aee09852797a974ef91b871c48915fecf25b2e89c5bdba4885b2bd2'
+        storage['data'][0]['data'] = Snippet.REMOVE['data']
+        storage['data'][0]['updated'] = Content.FORCED_TIME
+        storage['data'][0]['uuid'] = Snippet.FORCED_UUID
+        storage['data'][0]['digest'] = 'a9e137c08aee09852797a974ef91b871c48915fecf25b2e89c5bdba4885b2bd2'
         request_body = {
             'data': {
                 'type': 'snippet',
@@ -652,7 +663,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             'data': {
                 'type': 'snippet',
                 'id': Snippet.FORCED_UUID,
-                'attributes': content['data'][0]
+                'attributes': storage['data'][0]
             }
         }
         result = testing.TestClient(server.server.api).simulate_post(
@@ -662,22 +673,22 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('import-forced', 'caller')
     def test_api_create_snippet_015(server):
         """Update snippet with POST that maps to PATCH.
 
-        Send POST /v1/snippets with X-HTTP-Method-Override header to update a
-        resource. All fields are tried to be updated. This must generate HTTP
-        error because it is not possible to update for example the ``uuid``
-        attribute by client.
+        Send POST /v1/snippets with the ``X-HTTP-Method-Override`` header to
+        update a resource. All resource attributes are tried to be updated.
+        This must generate HTTP error because it is not possible to update
+        for example the ``uuid`` attribute by client.
         """
 
-        content = {
+        storage = {
             'data': [
-                Snippet.FORCED
+                Storage.forced
             ]
         }
         request_body = {
@@ -720,21 +731,22 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.status == falcon.HTTP_400
         assert result.headers in (expect_headers_p2, expect_headers_p3)
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'import-netcat')
     def test_api_create_snippet_016(server):
         """Update snippet with POST that maps to DELETE.
 
-        Send POST /v1/snippets with X-HTTP-Method-Override header to delete
-        snippet. In this case the resource exists and the content is deleted.
+        Send POST /v1/snippets with the ``X-HTTP-Method-Override`` header to
+        delete a snippet. In this case the resource exists and the content is
+        deleted.
         """
 
-        content = {
+        storage = {
             'data': [
-                Snippet.REMOVE,
-                Snippet.FORCED
+                Storage.remove,
+                Storage.forced
             ]
         }
         expect_headers = {}
@@ -744,22 +756,22 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.status == falcon.HTTP_204
         assert result.headers == expect_headers
         assert not result.text
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('caller')
     def test_api_create_snippet_017(server):
         """Try to create snippet with resource id.
 
-        Try to send POST /v1/snippets/53908d68425c61dc to create a new snippet
-        with resource ID in URL. The POST method is not overriden with custom
-        X-HTTP-Method-Override header.
+        Try to send POST /v1/snippets/{id} to create a new resource with the
+        resource ID in the URL. The POST method is not overriden with custom
+        ``X-HTTP-Method-Override`` header.
         """
 
         request_body = {
             'data': [{
                 'type': 'snippet',
-                'attributes': Snippet.REMOVE
+                'attributes': Request.remove
             }]
         }
         expect_headers = {
@@ -789,8 +801,10 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_create_snippet_018(server):
         """Create one snippet with POST.
 
-        Try to send POST /v1/snippets to create a new snippet with empty content
-        data. In case of snippets, the resulting error string is misleading.
+        Try to send POST /v1/snippets to create a new snippet with an empty
+        resource ``data``. In case of snippets, the resulting error string is
+        misleading because the only given attribute is ``data`` that is empty
+        which maps the resource to a resource template.
         """
 
         request_body = {
@@ -843,7 +857,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         be also returned correctly when searching with unicode characters.
         """
 
-        content = {
+        storage = {
             'data': [{
                 'category': 'snippet',
                 'data': (u'Sîne klâwen durh die wolken sint geslagen', u'er stîget ûf mit grôzer kraft'),
@@ -883,7 +897,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'snippet',
                 'id': Content.UUID1,
-                'attributes': content['data'][0]
+                'attributes': storage['data'][0]
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
@@ -893,7 +907,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.status == falcon.HTTP_201
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
@@ -908,8 +922,8 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': content['data'][0]['uuid'],
-                'attributes': content['data'][0]
+                'id': storage['data'][0]['uuid'],
+                'attributes': storage['data'][0]
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -923,14 +937,14 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     @staticmethod
     @pytest.mark.usefixtures('create-regexp-utc')
     def test_api_create_snippet_020(server):
-        """Create one snippet from API.
+        """Create one Snippet resource.
 
         Send POST /v1/snippets to create new resource. In this case all fields
         have unnecessary leading and trailing whitespaces which are removed.
         Tags and links must be sorted.
         """
 
-        content = {
+        storage = {
             'data': [{
                 'category': 'snippet',
                 'data': ('first row', 'second row'),
@@ -972,8 +986,8 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         expect_body = {
             'data': [{
                 'type': 'snippet',
-                'id': content['data'][0]['uuid'],
-                'attributes': content['data'][0]
+                'id': storage['data'][0]['uuid'],
+                'attributes': storage['data'][0]
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
@@ -983,19 +997,19 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.status == falcon.HTTP_201
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('create-remove-utc')
     def test_api_create_snippet_021(server):
-        """Create one snippet with POST.
+        """Create one Snippet resource.
 
         Send POST /v1/snippets to create new resource with data that have line
         breaks in the middle of the snippet which must not be interpolated to
         newlines.
         """
 
-        content = {
+        storage = {
             'data': [{
                 'category': 'snippet',
                 'data': ('docker rm $(docker\\nps \\n --all -q -f status=exited)',),
@@ -1029,8 +1043,8 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         expect_body = {
             'data': [{
                 'type': 'snippet',
-                'id': content['data'][0]['uuid'],
-                'attributes': content['data'][0]
+                'id': storage['data'][0]['uuid'],
+                'attributes': storage['data'][0]
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
@@ -1040,19 +1054,20 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.status == falcon.HTTP_201
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('create-remove-utc')
     def test_api_create_snippet_022(server):
         """Create new snippet with duplicated content field values.
 
-        Send POST /v1/snippets to create a new snippet. In this case content
-        fields contain duplicated values. For example there is a tag 'python'
-        twice. Only unique values must be added.
+        Send POST /v1/snippets to create a new resource. In this case the
+        resource attributes contain duplicated values. For example, there is
+        a tag 'python' included twice in the ``tags`` attribute. Only unique
+        values in attributes in array context must be added.
         """
 
-        content = {
+        storage = {
             'data': [{
                 'category': 'snippet',
                 'data': ('duplicated field values', ),
@@ -1092,8 +1107,8 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         expect_body = {
             'data': [{
                 'type': 'snippet',
-                'id': content['data'][0]['uuid'],
-                'attributes': content['data'][0]
+                'id': storage['data'][0]['uuid'],
+                'attributes': storage['data'][0]
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
@@ -1103,19 +1118,19 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.status == falcon.HTTP_201
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('create-remove-utc')
     def test_api_create_snippet_023(server):
         """Create one snippet with POST.
 
-        Send POST /v1/snippets to create a new snippet. The ``groups`` field
+        Send POST /v1/snippets to create a new resource. The ``groups`` field
         is not defined at all in the HTTP request. The default value for this
-        field must be always added if no value is provided by client.
+        attribute must be always added if no value is provided by client.
         """
 
-        content = {
+        storage = {
             'data': [{
                 'category': 'snippet',
                 'data': ('test',),
@@ -1149,8 +1164,8 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         expect_body = {
             'data': [{
                 'type': 'snippet',
-                'id': content['data'][0]['uuid'],
-                'attributes': content['data'][0]
+                'id': storage['data'][0]['uuid'],
+                'attributes': storage['data'][0]
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
@@ -1160,7 +1175,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.status == falcon.HTTP_201
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('create-regexp-utc')
@@ -1173,7 +1188,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         empty list.
         """
 
-        content = {
+        storage = {
             'data': [{
                 'category': 'snippet',
                 'data': ('first row', ),
@@ -1207,8 +1222,8 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         expect_body = {
             'data': [{
                 'type': 'snippet',
-                'id': content['data'][0]['uuid'],
-                'attributes': content['data'][0]
+                'id': storage['data'][0]['uuid'],
+                'attributes': storage['data'][0]
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
@@ -1218,10 +1233,10 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.status == falcon.HTTP_400
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @classmethod
     def teardown_class(cls):
-        """Teardown class."""
+        """Teardown tests."""
 
         Content.delete()

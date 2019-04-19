@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""test_api_update_field: Test PUT fields API."""
+"""test_api_update_field: Test PUT fields API endpoint."""
 
 import json
 
@@ -26,7 +26,7 @@ import falcon
 import pytest
 
 from tests.testlib.content import Content
-from tests.testlib.reference import Reference
+from tests.testlib.content import Request
 
 pytest.importorskip('gunicorn')
 
@@ -42,15 +42,10 @@ class TestApiCreateField(object):
         Try to send not supported PUT /v1/groups.
         """
 
-        content = {
-            'data': [
-                Reference.GITLOG
-            ]
-        }
         request_body = {
             'data': [{
                 'type': 'reference',
-                'attributes': content['data'][0]
+                'attributes': Request.gitlog
             }]
         }
         expect_headers = {
@@ -83,15 +78,10 @@ class TestApiCreateField(object):
         Try to send not supported PUT /v1/tags.
         """
 
-        content = {
-            'data': [
-                Reference.GITLOG
-            ]
-        }
         request_body = {
             'data': [{
                 'type': 'reference',
-                'attributes': content['data'][0]
+                'attributes': Request.gitlog
             }]
         }
         expect_headers = {
@@ -118,6 +108,6 @@ class TestApiCreateField(object):
 
     @classmethod
     def teardown_class(cls):
-        """Teardown class."""
+        """Teardown tests."""
 
         Content.delete()

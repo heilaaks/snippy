@@ -35,17 +35,19 @@ from tests.testlib.reference import Reference
 pytest.importorskip('gunicorn')
 
 
+# pylint: disable=unsupported-assignment-operation
 class TestApiCreateReference(object):
     """Test POST /references API endpoint."""
 
     @staticmethod
     @pytest.mark.usefixtures('create-gitlog-utc')
     def test_api_create_reference_001(server):
-        """Create one reference from API.
+        """Create one Reference resource.
 
-        Call POST /v1/references to create a new resource. Created resource
+        Send POST /v1/references to create a new resource. Created resource
         is sent in the POST method resource ``data`` attribute as a list of
-        objects.
+        objects. The HTTP response must send the created resource in the
+        resource ``data`` attribute as list of objects.
         """
 
         storage = {
@@ -83,24 +85,24 @@ class TestApiCreateReference(object):
     @staticmethod
     @pytest.mark.usefixtures('create-gitlog-utc')
     def test_api_create_reference_002(server):
-        """Create one reference from API.
+        """Create one Reference reference.
 
-        Call POST /v1/references to create new reference. The reference is sent
-        in the POST request 'data' attribute as a object. The HTTP esponse that
-        contains the created reference must be received with a list of resource
-        objects.
+        Send POST /v1/references to create a new reference. Created resource
+        is sent in the POST method resource ``data`` attribute as object. The
+        HTTP response must send the created resource in the resource ``data``
+        attribute as list of objects.
         """
 
-        content = {
+        storage = {
             'data': [
-                Content.deepcopy(Reference.GITLOG)
+                Storage.gitlog
             ]
         }
-        content['data'][0]['uuid'] = Content.UUID1
+        storage['data'][0]['uuid'] = Content.UUID1
         request_body = {
             'data': {
                 'type': 'reference',
-                'attributes': content['data'][0]
+                'attributes': Request.gitlog
             }
         }
         expect_headers = {
@@ -111,7 +113,7 @@ class TestApiCreateReference(object):
             'data': [{
                 'type': 'reference',
                 'id': Content.UUID1,
-                'attributes': content['data'][0]
+                'attributes': storage['data'][0]
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
@@ -121,35 +123,35 @@ class TestApiCreateReference(object):
         assert result.status == falcon.HTTP_201
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('create-pytest-utc', 'create-gitlog-utc')
     def test_api_create_reference_003(server):
-        """Create multiple references from API.
+        """Create multiple Reference references.
 
-        Call POST /v1/references in a list context to create new resources.
+        Send POST /v1/references in a list context to create new resources.
         The external UUID must not be created from the resource sent by the
         client. The Snippy server must allocate new UUID that is a resource
         identity. This resource identity is used also in the URI and it is
         immutable.
         """
 
-        content = {
+        storage = {
             'data': [
-                Content.deepcopy(Reference.PYTEST),
-                Content.deepcopy(Reference.GITLOG)
+                Storage.pytest,
+                Storage.gitlog
             ]
         }
-        content['data'][0]['uuid'] = Content.UUID1
-        content['data'][1]['uuid'] = Content.UUID2
+        storage['data'][0]['uuid'] = Content.UUID1
+        storage['data'][1]['uuid'] = Content.UUID2
         request_body = {
             'data': [{
                 'type': 'reference',
-                'attributes': content['data'][0]
+                'attributes': Request.pytest
             }, {
                 'type': 'reference',
-                'attributes': content['data'][1]
+                'attributes': Request.gitlog
             }]
         }
         expect_headers = {
@@ -160,11 +162,11 @@ class TestApiCreateReference(object):
             'data': [{
                 'type': 'reference',
                 'id': Content.UUID1,
-                'attributes': content['data'][0]
+                'attributes': storage['data'][0]
             }, {
                 'type': 'reference',
                 'id': Content.UUID2,
-                'attributes': content['data'][1]
+                'attributes': storage['data'][1]
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
@@ -174,32 +176,35 @@ class TestApiCreateReference(object):
         assert result.status == falcon.HTTP_201
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('import-gitlog', 'update-regexp-utc')
     def test_api_create_reference_004(server):
-        """Update reference with POST that maps to PUT.
+        """Update Reference resource with POST that maps to PUT.
 
-        Call POST /v1/references/{id} to update existing reference with the
-        X-HTTP-Method-Override header that overrides the operation as PUT.
+        Send POST /v1/references/{id} to update existing resource with the
+        ``X-HTTP-Method-Override`` header that maps the operation as PUT.
 
-        In this case the created timestamp must remain in initial value and
-        the updated timestamp must be updated to reflect the update time.
+        In this case the resource ``created`` attribute must remain in the
+        initial value and the ``updated`` attribute must be set to reflect
+        the update time.
 
-        The UUID must not be changed when the resource is updated because it
-        is immutable resource identity used in resource URI.
+        The ``uuid`` attribute must not be changed from it's initial value.
         """
 
-        content = {
+        storage = {
             'data': [
-                Content.deepcopy(Reference.REGEXP)
+                Storage.regexp
             ]
         }
+        storage['data'][0]['created'] = Content.GITLOG_TIME
+        storage['data'][0]['updated'] = Content.REGEXP_TIME
+        storage['data'][0]['uuid'] = Reference.GITLOG_UUID
         request_body = {
             'data': {
                 'type': 'reference',
-                'attributes': content['data'][0]
+                'attributes': Request.regexp
             }
         }
         expect_headers = {
@@ -213,12 +218,9 @@ class TestApiCreateReference(object):
             'data': {
                 'type': 'reference',
                 'id': Reference.GITLOG_UUID,
-                'attributes': content['data'][0]
+                'attributes': storage['data'][0]
             }
         }
-        expect_body['data']['attributes']['created'] = Content.GITLOG_TIME
-        expect_body['data']['attributes']['updated'] = Content.REGEXP_TIME
-        expect_body['data']['attributes']['uuid'] = Reference.GITLOG_UUID
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/references/5c2071094dbfaa33',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8', 'X-HTTP-Method-Override': 'PUT'},
@@ -226,38 +228,39 @@ class TestApiCreateReference(object):
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('import-gitlog', 'update-regexp-utc')
     def test_api_create_reference_005(server):
-        """Update reference with POST that maps to PATCH.
+        """Update Reference resource with POST that maps to PATCH.
 
         Send POST /v1/references/{id} to update existing resource with the
-        X-HTTP-Method-Override header that overrides the method as PATCH.
-        Only the updated attributes must be changed.
+        ``X-HTTP-Method-Override`` header that overrides the POST method as
+        PATCH. Only the attributes sent in the PATCH method must be changed.
 
-        REsource UUID must not change when the resource is updated. The UUID
-        is immutable identity used in the resource URI and allocated when the
-        resource is created.
+        In this case the resource ``created`` attribute must remain in the
+        initial value and the ``updated`` attribute must be set to reflect
+        the update time.
+
+        The ``uuid`` attribute must not be changed from it's initial value.
         """
 
-        content = {
+        storage = {
             'data': [
-                Content.deepcopy(Reference.GITLOG)
+                Storage.gitlog
             ]
         }
-        content['data'][0]['brief'] = Reference.REGEXP['brief']
-        content['data'][0]['description'] = Reference.REGEXP['description']
-        content['data'][0]['links'] = Reference.REGEXP['links']
-        content['data'][0]['updated'] = Content.REGEXP_TIME
-        content['data'][0]['digest'] = 'ee4a072a5a7a661a8c5d8e8f2aac88267c47fbf0b26db19b97d0b72bae3d74f0'
+        storage['data'][0]['brief'] = Reference.REGEXP['brief']
+        storage['data'][0]['links'] = Reference.REGEXP['links']
+        storage['data'][0]['updated'] = Content.REGEXP_TIME
+        storage['data'][0]['digest'] = 'ee4a072a5a7a661a8c5d8e8f2aac88267c47fbf0b26db19b97d0b72bae3d74f0'
         request_body = {
             'data': {
                 'type': 'reference',
                 'attributes': {
-                    'brief': content['data'][0]['brief'],
-                    'links': content['data'][0]['links']
+                    'brief': Reference.REGEXP['brief'],
+                    'links': Reference.REGEXP['links']
                 }
             }
         }
@@ -271,8 +274,8 @@ class TestApiCreateReference(object):
             },
             'data': {
                 'type': 'reference',
-                'id': content['data'][0]['uuid'],
-                'attributes': content['data'][0]
+                'id': Reference.GITLOG_UUID,
+                'attributes': storage['data'][0]
             }
         }
         result = testing.TestClient(server.server.api).simulate_post(
@@ -282,21 +285,22 @@ class TestApiCreateReference(object):
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('default-references', 'import-pytest')
     def test_api_create_reference_006(server):
-        """Update reference with POST that maps to DELETE.
+        """Update Reference resource with POST that maps to DELETE.
 
-        Call POST /v1/references with X-HTTP-Method-Override header to delete
-        reference. In this case the resource exists and the content is deleted.
+        Send POST /v1/references with the ``X-HTTP-Method-Override`` header to
+        delete a resource. In this case the resource exists and the content is
+        deleted.
         """
 
-        content = {
+        storage = {
             'data': [
-                Reference.GITLOG,
-                Reference.REGEXP
+                Storage.gitlog,
+                Storage.regexp
             ]
         }
         expect_headers = {}
@@ -306,16 +310,16 @@ class TestApiCreateReference(object):
         assert result.status == falcon.HTTP_204
         assert result.headers == expect_headers
         assert not result.text
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('create-gitlog-utc', 'caller')
     def test_api_create_reference_007(server):
-        """Create one reference from API.
+        """Try to create a Reference resource.
 
-        Try to call POST /v1/references to create a new reference with empty
-        content links. The links are mandatory in case of reference content
-        and the request must be rejected with error.
+        Try to send POST /v1/references to create a new reference with empty
+        content links. The links are mandatory in case of Reference content
+        and the request must be rejected with an error.
         """
 
         request_body = {
@@ -361,26 +365,21 @@ class TestApiCreateReference(object):
     @staticmethod
     @pytest.mark.usefixtures('create-gitlog-utc', 'caller')
     def test_api_create_reference_008(server_db, used_database):
-        """Try to create reference.
+        """Try to create a Reference resource.
 
-        Try to POST new reference when database throws an integrity error from
-        UUID column's unique constraint violation.
+        Try to POST new resource when database throws an unique constraint
+        violation error from the ``uuid`` attribute.
 
-        Internally in this case there is are no stored content and the digest
-        in generated error message cannot filled based on database content.
-        Database tries to insert the content twice and both of the inserts
-        result same unique constraint violation.
+        In this case there is no stored resources and digest in generated
+        error message cannot filled fromi database. The database tries to
+        insert the content twice once batched and then one by one. Both of
+        the inserts result same unique constraint violation.
         """
 
-        content = {
-            'data': [
-                Reference.GITLOG
-            ]
-        }
         request_body = {
             'data': [{
                 'type': 'reference',
-                'attributes': content['data'][0]
+                'attributes': Request.gitlog
             }]
         }
         expect_headers = {
@@ -430,23 +429,24 @@ class TestApiCreateReference(object):
     @staticmethod
     @pytest.mark.usefixtures('create-regexp-utc')
     def test_api_create_reference_009(server):
-        """Create one reference from API.
+        """Create one Reference resource.
 
-        Call POST /v1/references to create new reference with two groups.
+        Send POST /v1/references to create a new resource. In the case there
+        are multiple values in the ``groups`` attribute.
         """
 
-        content = {
+        storage = {
             'data': [
-                Content.deepcopy(Reference.REGEXP)
+                Storage.regexp
             ]
         }
-        content['data'][0]['groups'] = ('python', 'regexp')
-        content['data'][0]['uuid'] = Content.UUID1
-        content['data'][0]['digest'] = 'e5a94aae97e43273b37142d242e9669b97a899a44b6d73b340b191d3fee4b58a'
+        storage['data'][0]['groups'] = ('python', 'regexp')
+        storage['data'][0]['uuid'] = Content.UUID1
+        storage['data'][0]['digest'] = 'e5a94aae97e43273b37142d242e9669b97a899a44b6d73b340b191d3fee4b58a'
         request_body = {
             'data': [{
                 'type': 'reference',
-                'attributes': content['data'][0]
+                'attributes': Request.storage(storage['data'][0])
             }]
         }
         expect_headers = {
@@ -456,7 +456,7 @@ class TestApiCreateReference(object):
             'data': [{
                 'type': 'reference',
                 'id': Content.UUID1,
-                'attributes': content['data'][0]
+                'attributes': storage['data'][0]
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
@@ -466,19 +466,19 @@ class TestApiCreateReference(object):
         assert result.status == falcon.HTTP_201
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('create-regexp-utc')
     def test_api_create_reference_010(server):
-        """Create one reference from API.
+        """Create one Reference resource.
 
-        Send POST /v1/references to create new resource. In this case every
-        attribute has additional leading and trailing whitespaces which must
-        be trimmed.
+        Send POST /v1/references to create a new resource. In this case every
+        attribute has additional leading and trailing whitespaces that must
+        be trimmed when stored.
         """
 
-        content = {
+        storage = {
             'data': [{
                 'category': 'reference',
                 'data': (),
@@ -520,8 +520,8 @@ class TestApiCreateReference(object):
         expect_body = {
             'data': [{
                 'type': 'reference',
-                'id': content['data'][0]['uuid'],
-                'attributes': content['data'][0]
+                'id': storage['data'][0]['uuid'],
+                'attributes': storage['data'][0]
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
@@ -531,18 +531,18 @@ class TestApiCreateReference(object):
         assert result.status == falcon.HTTP_201
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('create-regexp-utc')
     def test_api_create_reference_011(server):
-        """Create one reference from API.
+        """Create one Reference resource.
 
-        Send POST /v1/references to create new resource. In this case only the
-        links field is defined
+        Send POST /v1/references to create a new resource. In this case only
+        the mandatory ``links`` attribute for Reference resource is defined.
         """
 
-        content = {
+        storage = {
             'data': [{
                 'category': 'reference',
                 'data': (),
@@ -575,8 +575,8 @@ class TestApiCreateReference(object):
         expect_body = {
             'data': [{
                 'type': 'reference',
-                'id': content['data'][0]['uuid'],
-                'attributes': content['data'][0]
+                'id': storage['data'][0]['uuid'],
+                'attributes': storage['data'][0]
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
@@ -586,24 +586,25 @@ class TestApiCreateReference(object):
         assert result.status == falcon.HTTP_201
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('create-regexp-utc')
     def test_api_create_reference_012(server):
         """Create new reference with duplicated content field values.
 
-        Call POST /v1/references to create new reference. In this case content
-        fields contain duplicated values. For example there is a tag 'python'
-        included twice. Only unique values must be added.
+        Send POST /v1/references to create a new resource. In this case the
+        resource attributes contain duplicated values. For example, there is
+        a tag 'python' included twice in the ``tags`` attribute. Only unique
+        values in attributes in array context must be added.
 
         Links are not sorted because the order is assumed to convey relevant
-        information related to link importance in case of reference content.
-        Because of this, removal of duplicated links must not change the
-        order which links are insert.
+        information related to link importance in case of Reference resource.
+        Because of this, removal of duplicated values in ``links`` attribute
+        must not change the order which links are added.
         """
 
-        content = {
+        storage = {
             'data': [{
                 'category': 'reference',
                 'data': (),
@@ -642,8 +643,8 @@ class TestApiCreateReference(object):
         expect_body = {
             'data': [{
                 'type': 'reference',
-                'id': content['data'][0]['uuid'],
-                'attributes': content['data'][0]
+                'id': storage['data'][0]['uuid'],
+                'attributes': storage['data'][0]
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
@@ -653,10 +654,10 @@ class TestApiCreateReference(object):
         assert result.status == falcon.HTTP_201
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @classmethod
     def teardown_class(cls):
-        """Teardown class."""
+        """Teardown tests."""
 
         Content.delete()

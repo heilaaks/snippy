@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""test_api_update_reference: Test PUT /references API."""
+"""test_api_update_reference: Test PUT /references API endpoint."""
 
 import json
 
@@ -27,13 +27,16 @@ import pytest
 
 from snippy.constants import Constants as Const
 from tests.testlib.content import Content
+from tests.testlib.content import Request
+from tests.testlib.content import Storage
 from tests.testlib.reference import Reference
 
 pytest.importorskip('gunicorn')
 
 
+# pylint: disable=unsupported-assignment-operation, unsubscriptable-object
 class TestApiUpdateReference(object):
-    """Test PUT /references/{digest} API."""
+    """Test PUT /references API en dpoint."""
 
     @staticmethod
     @pytest.mark.usefixtures('import-gitlog', 'update-pytest-utc')
@@ -45,25 +48,25 @@ class TestApiUpdateReference(object):
         changed by user.
         """
 
-        content = {
+        storage = {
             'data': [
-                Content.deepcopy(Reference.PYTEST)
+                Storage.pytest
             ]
         }
-        content['data'][0]['created'] = Content.GITLOG_TIME
-        content['data'][0]['updated'] = Content.PYTEST_TIME
-        content['data'][0]['uuid'] = Reference.GITLOG_UUID
-        content['data'][0]['digest'] = Reference.PYTEST_DIGEST
+        storage['data'][0]['created'] = Content.GITLOG_TIME
+        storage['data'][0]['updated'] = Content.PYTEST_TIME
+        storage['data'][0]['uuid'] = Reference.GITLOG_UUID
+        storage['data'][0]['digest'] = Reference.PYTEST_DIGEST
         request_body = {
             'data': {
                 'type': 'snippet',
                 'attributes': {
-                    'data': content['data'][0]['data'],
-                    'brief': content['data'][0]['brief'],
-                    'description': content['data'][0]['description'],
-                    'groups': content['data'][0]['groups'],
-                    'tags': content['data'][0]['tags'],
-                    'links': content['data'][0]['links']
+                    'data': storage['data'][0]['data'],
+                    'brief': storage['data'][0]['brief'],
+                    'description': storage['data'][0]['description'],
+                    'groups': storage['data'][0]['groups'],
+                    'tags': storage['data'][0]['tags'],
+                    'links': storage['data'][0]['links']
                 }
             }
         }
@@ -77,8 +80,8 @@ class TestApiUpdateReference(object):
             },
             'data': {
                 'type': 'reference',
-                'id': content['data'][0]['uuid'],
-                'attributes': content['data'][0]
+                'id': storage['data'][0]['uuid'],
+                'attributes': storage['data'][0]
             }
         }
         result = testing.TestClient(server.server.api).simulate_put(
@@ -88,19 +91,19 @@ class TestApiUpdateReference(object):
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('import-gitlog', 'update-pytest-utc')
     def test_api_update_reference_002(server):
         """Update one reference with PUT request.
 
-        Send PUT /v1/references/{id} to update existing reference. The PUT
+        Send PUT /v1/references/{id} to update existing resource. The PUT
         request contains only the mandatory links attribute. All other
-        attributes must be set to their default values.
+        attributes must be set to their default values in the HTTP response.
         """
 
-        content = {
+        storage = {
             'data': [{
                 'category': 'reference',
                 'data': (),
@@ -123,7 +126,7 @@ class TestApiUpdateReference(object):
             'data': {
                 'type': 'snippet',
                 'attributes': {
-                    'links': content['data'][0]['links'],
+                    'links': storage['data'][0]['links'],
                 }
             }
         }
@@ -137,8 +140,8 @@ class TestApiUpdateReference(object):
             },
             'data': {
                 'type': 'reference',
-                'id': content['data'][0]['uuid'],
-                'attributes': content['data'][0]
+                'id': storage['data'][0]['uuid'],
+                'attributes': storage['data'][0]
             }
         }
         result = testing.TestClient(server.server.api).simulate_put(
@@ -148,27 +151,27 @@ class TestApiUpdateReference(object):
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('import-gitlog', 'caller')
     def test_api_update_reference_003(server):
         """Update one reference with PUT request.
 
-        Try to send PUT /v1/references/{id} to update resource with digest
-        that is not found.
+        Try to send PUT /v1/references/{id} to update resource with ``id`` in
+        URI path that is not found.
         """
 
-        content = {
+        storage = {
             'data': [
-                Reference.GITLOG
+                Storage.gitlog
             ]
         }
         request_body = {
             'data': {
                 'type': 'snippet',
                 'attributes': {
-                    'links': Reference.REGEXP['links'],
+                    'links': Request.regexp['links'],
                 }
             }
         }
@@ -192,7 +195,7 @@ class TestApiUpdateReference(object):
         assert result.status == falcon.HTTP_404
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('import-gitlog', 'caller')
@@ -203,17 +206,17 @@ class TestApiUpdateReference(object):
         JSON request.
         """
 
-        content = {
+        storage = {
             'data': [
-                Reference.GITLOG
+                Storage.gitlog
             ]
         }
         request_body = {
-            'data': Const.NEWLINE.join(Reference.REGEXP['data']),
-            'brief': Reference.REGEXP['brief'],
-            'groups': Reference.REGEXP['groups'],
-            'tags': Const.DELIMITER_TAGS.join(Reference.REGEXP['tags']),
-            'links': Const.DELIMITER_LINKS.join(Reference.REGEXP['links'])
+            'data': Const.NEWLINE.join(Request.regexp['data']),
+            'brief': Request.regexp['brief'],
+            'groups': Request.regexp['groups'],
+            'tags': Const.DELIMITER_TAGS.join(Request.regexp['tags']),
+            'links': Const.DELIMITER_LINKS.join(Request.regexp['links'])
         }
         expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1254'}
         expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1294'}
@@ -233,7 +236,7 @@ class TestApiUpdateReference(object):
         assert result.status == falcon.HTTP_400
         assert result.headers in (expect_headers_p2, expect_headers_p3)
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('import-gitlog', 'caller')
@@ -245,9 +248,9 @@ class TestApiUpdateReference(object):
         digest.
         """
 
-        content = {
+        storage = {
             'data': [
-                Reference.GITLOG
+                Storage.gitlog
             ]
         }
         request_body = {
@@ -255,11 +258,11 @@ class TestApiUpdateReference(object):
                 'type': 'reference',
                 'id': Reference.REGEXP_DIGEST,
                 'attributes': {
-                    'data': Reference.REGEXP['data'],
-                    'brief': Reference.REGEXP['brief'],
-                    'groups': Reference.REGEXP['groups'],
-                    'tags': Reference.REGEXP['tags'],
-                    'links': Reference.REGEXP['links']
+                    'data': Request.regexp['data'],
+                    'brief': Request.regexp['brief'],
+                    'groups': Request.regexp['groups'],
+                    'tags': Request.regexp['tags'],
+                    'links': Request.regexp['links']
                 }
             }
         }
@@ -283,7 +286,7 @@ class TestApiUpdateReference(object):
         assert result.status == falcon.HTTP_403
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('import-gitlog', 'update-regexp-utc')
@@ -300,21 +303,21 @@ class TestApiUpdateReference(object):
         is different.
         """
 
-        content = {
+        storage = {
             'data': [
-                Content.deepcopy(Reference.GITLOG)
+                Storage.gitlog
             ]
         }
-        content['data'][0]['links'] = Reference.REGEXP['links']
-        content['data'][0]['created'] = Content.GITLOG_TIME
-        content['data'][0]['updated'] = Content.REGEXP_TIME
-        content['data'][0]['uuid'] = Reference.GITLOG_UUID
-        content['data'][0]['digest'] = '915d0aa75703093ccb347755bfb597a16c0774b9b70626948dd378bd01310dec'
+        storage['data'][0]['links'] = Storage.regexp['links']
+        storage['data'][0]['created'] = Content.GITLOG_TIME
+        storage['data'][0]['updated'] = Content.REGEXP_TIME
+        storage['data'][0]['uuid'] = Reference.GITLOG_UUID
+        storage['data'][0]['digest'] = '915d0aa75703093ccb347755bfb597a16c0774b9b70626948dd378bd01310dec'
         request_body = {
             'data': {
                 'type': 'reference',
                 'attributes': {
-                    'links': Reference.REGEXP['links'],
+                    'links': Request.regexp['links'],
                 }
             }
         }
@@ -328,8 +331,8 @@ class TestApiUpdateReference(object):
             },
             'data': {
                 'type': 'reference',
-                'id': content['data'][0]['uuid'],
-                'attributes': content['data'][0]
+                'id': storage['data'][0]['uuid'],
+                'attributes': storage['data'][0]
             }
         }
         result = testing.TestClient(server.server.api).simulate_patch(
@@ -339,67 +342,51 @@ class TestApiUpdateReference(object):
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
-    @pytest.mark.usefixtures('import-gitlog', 'update-regexp-utc')
+    @pytest.mark.usefixtures('import-gitlog', 'update-regexp-utc', 'caller')
     def test_api_update_reference_007(server):
         """Update one reference with PUT request.
 
-        Try to update resource uuid by sending PUT /v1/references/{id}. This
-        must not work because the UUID cannot be changed by client.
+        Try to update resource ``uuid`` attribute with PUT /v1/references/{id}.
+        This must not work because the ``uuid`` attribute cannot be changed by
+        client.
         """
 
-        content = {
-            'data': [{
-                'category': 'reference',
-                'data': (),
-                'brief': '',
-                'description': '',
-                'name': '',
-                'groups': ('default',),
-                'tags': (),
-                'links': Reference.REGEXP['links'],
-                'source': '',
-                'versions': (),
-                'filename': '',
-                'created': Content.GITLOG_TIME,
-                'updated': Content.REGEXP_TIME,
-                'uuid': Reference.GITLOG_UUID,
-                'digest': '7e274a3e1266ee4fc0ce8eb7661868825fbcb22e132943f376c1716f26c106fd'
-            }]
+        storage = {
+            'data': [
+                Storage.gitlog
+            ]
         }
         request_body = {
             'data': {
                 'type': 'reference',
                 'attributes': {
-                    'links': content['data'][0]['links'],
+                    'links': storage['data'][0]['links'],
                     'uuid': '11111111-1111-1111-1111-111111111111'
                 }
             }
         }
-        expect_headers = {
-            'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '700'
-        }
+        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1117'}
+        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1156'}
         expect_body = {
-            'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/references/' + Reference.GITLOG_UUID
-            },
-            'data': {
-                'type': 'reference',
-                'id': content['data'][0]['uuid'],
-                'attributes': content['data'][0]
-            }
+            'meta': Content.get_api_meta(),
+            'errors': [{
+                'status': '400',
+                'statusString': '400 Bad Request',
+                'module': 'snippy.testing.testing:123',
+                'title': 'json media validation failed'
+            }]
         }
         result = testing.TestClient(server.server.api).simulate_put(
             path='/snippy/api/app/v1/references/5c2071094dbfaa33',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
-        assert result.status == falcon.HTTP_200
-        assert result.headers == expect_headers
+        assert result.status == falcon.HTTP_400
+        assert result.headers in (expect_headers_p2, expect_headers_p3)
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('import-gitlog', 'caller')
@@ -407,13 +394,14 @@ class TestApiUpdateReference(object):
         """Try to update reference with PUT request.
 
         Try to send PUT /v1/references/{id} to replace existing resource by
-        using digest as resource ID. The PUT request does not have mandatory
-        ``links`` attribute which is why the HTTP request must be rejected.
+        using digest as resource ``id`` in URI. The PUT request does not have
+        mandatory ``links`` attribute which is why the HTTP request must be
+        rejected.
         """
 
-        content = {
+        storage = {
             'data': [
-                Reference.GITLOG
+                Storage.gitlog
             ]
         }
         request_body = {
@@ -447,7 +435,7 @@ class TestApiUpdateReference(object):
         assert result.status == falcon.HTTP_400
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.usefixtures('import-gitlog', 'update-pytest-utc')
@@ -458,27 +446,27 @@ class TestApiUpdateReference(object):
         The PUT sets all but the mandatory ``links`` attribute to empty values.
         """
 
-        content = {
+        storage = {
             'data': [
-                Content.deepcopy(Reference.GITLOG)
+                Storage.gitlog
             ]
         }
-        content['data'][0]['brief'] = ''
-        content['data'][0]['description'] = ''
-        content['data'][0]['name'] = ''
-        content['data'][0]['groups'] = ()
-        content['data'][0]['tags'] = ()
-        content['data'][0]['source'] = ''
-        content['data'][0]['versions'] = ()
-        content['data'][0]['filename'] = ''
-        content['data'][0]['created'] = Content.GITLOG_TIME
-        content['data'][0]['updated'] = Content.PYTEST_TIME
-        content['data'][0]['digest'] = '54c493ade0f808e3d1b16bb606484a51bb0f7eb9c0592c46aea5196bd891881c'
+        storage['data'][0]['brief'] = ''
+        storage['data'][0]['description'] = ''
+        storage['data'][0]['name'] = ''
+        storage['data'][0]['groups'] = ()
+        storage['data'][0]['tags'] = ()
+        storage['data'][0]['source'] = ''
+        storage['data'][0]['versions'] = ()
+        storage['data'][0]['filename'] = ''
+        storage['data'][0]['created'] = Content.GITLOG_TIME
+        storage['data'][0]['updated'] = Content.PYTEST_TIME
+        storage['data'][0]['digest'] = '54c493ade0f808e3d1b16bb606484a51bb0f7eb9c0592c46aea5196bd891881c'
         request_body = {
             'data': {
                 'type': 'reference',
                 'attributes': {
-                    'links': content['data'][0]['links'],
+                    'links': storage['data'][0]['links'],
                     'brief': '',
                     'description': '',
                     'name': '',
@@ -500,8 +488,8 @@ class TestApiUpdateReference(object):
             },
             'data': {
                 'type': 'reference',
-                'id': content['data'][0]['uuid'],
-                'attributes': content['data'][0]
+                'id': storage['data'][0]['uuid'],
+                'attributes': storage['data'][0]
             }
         }
         result = testing.TestClient(server.server.api).simulate_put(
@@ -511,7 +499,7 @@ class TestApiUpdateReference(object):
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.skip(reason="OAS 2.0 does not support nullable")
@@ -523,22 +511,22 @@ class TestApiUpdateReference(object):
         The PATCH sets all but the mandatory field to empty values.
         """
 
-        content = {
+        storage = {
             'data': [
-                Content.deepcopy(Reference.GITLOG)
+                Storage.gitlog
             ]
         }
-        content['data'][0]['brief'] = ''
-        content['data'][0]['description'] = ''
-        content['data'][0]['name'] = ''
-        content['data'][0]['groups'] = ()
-        content['data'][0]['tags'] = ()
-        content['data'][0]['source'] = ''
-        content['data'][0]['versions'] = ()
-        content['data'][0]['filename'] = ''
-        content['data'][0]['created'] = Content.GITLOG_TIME
-        content['data'][0]['updated'] = Content.PYTEST_TIME
-        content['data'][0]['digest'] = '54c493ade0f808e3d1b16bb606484a51bb0f7eb9c0592c46aea5196bd891881c'
+        storage['data'][0]['brief'] = ''
+        storage['data'][0]['description'] = ''
+        storage['data'][0]['name'] = ''
+        storage['data'][0]['groups'] = ()
+        storage['data'][0]['tags'] = ()
+        storage['data'][0]['source'] = ''
+        storage['data'][0]['versions'] = ()
+        storage['data'][0]['filename'] = ''
+        storage['data'][0]['created'] = Content.GITLOG_TIME
+        storage['data'][0]['updated'] = Content.PYTEST_TIME
+        storage['data'][0]['digest'] = '54c493ade0f808e3d1b16bb606484a51bb0f7eb9c0592c46aea5196bd891881c'
         request_body = {
             'data': {
                 'type': 'reference',
@@ -564,8 +552,8 @@ class TestApiUpdateReference(object):
             },
             'data': {
                 'type': 'reference',
-                'id': content['data'][0]['uuid'],
-                'attributes': content['data'][0]
+                'id': storage['data'][0]['uuid'],
+                'attributes': storage['data'][0]
             }
         }
         result = testing.TestClient(server.server.api).simulate_patch(
@@ -575,7 +563,7 @@ class TestApiUpdateReference(object):
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @staticmethod
     @pytest.mark.skip(reason="OAS 2.0 does not support nullable")
@@ -590,13 +578,13 @@ class TestApiUpdateReference(object):
         point of view, the data is always empty.
         """
 
-        content = {
+        storage = {
             'data': [
-                Content.deepcopy(Reference.GITLOG)
+                Storage.gitlog
             ]
         }
-        content['data'][0]['created'] = Content.GITLOG_TIME
-        content['data'][0]['updated'] = Content.PYTEST_TIME
+        storage['data'][0]['created'] = Content.GITLOG_TIME
+        storage['data'][0]['updated'] = Content.PYTEST_TIME
         request_body = {
             'data': {
                 'type': 'reference',
@@ -615,8 +603,8 @@ class TestApiUpdateReference(object):
             },
             'data': {
                 'type': 'reference',
-                'id': content['data'][0]['uuid'],
-                'attributes': content['data'][0]
+                'id': storage['data'][0]['uuid'],
+                'attributes': storage['data'][0]
             }
         }
         result = testing.TestClient(server.server.api).simulate_patch(
@@ -626,10 +614,10 @@ class TestApiUpdateReference(object):
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(content)
+        Content.assert_storage(storage)
 
     @classmethod
     def teardown_class(cls):
-        """Teardown class."""
+        """Teardown tests."""
 
         Content.delete()

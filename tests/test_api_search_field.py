@@ -17,13 +17,14 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""test_api_search_field: Test GET resource attribute API."""
+"""test_api_search_field: Test GET /resource attribute API."""
 
 from falcon import testing
 import falcon
 import pytest
 
 from tests.testlib.content import Content
+from tests.testlib.content import Storage
 from tests.testlib.snippet import Snippet
 from tests.testlib.solution import Solution
 from tests.testlib.reference import Reference
@@ -39,7 +40,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
     def test_api_search_groups_001(server):
         """Get specific content based on ``groups`` attribute.
 
-        Call GET /v1/groups/docker to get all content from the docker group.
+        Send GET /v1/groups/docker to get all content from the docker group.
         In this case the query matches to three out of four contents.
         """
 
@@ -57,15 +58,15 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'snippet',
                 'id': Snippet.REMOVE_UUID,
-                'attributes': Snippet.REMOVE
+                'attributes': Storage.remove
             }, {
                 'type': 'snippet',
                 'id': Snippet.FORCED_UUID,
-                'attributes': Snippet.FORCED
+                'attributes': Storage.forced
             }, {
                 'type': 'solution',
                 'id': Solution.KAFKA_UUID,
-                'attributes': Solution.KAFKA
+                'attributes': Storage.dkafka
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -98,11 +99,11 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'reference',
                 'id': Reference.PYTEST_UUID,
-                'attributes': Reference.PYTEST
+                'attributes': Storage.pytest
             }, {
                 'type': 'solution',
                 'id': Solution.KAFKA_UUID,
-                'attributes': Solution.KAFKA
+                'attributes': Storage.dkafka
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -138,7 +139,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'solution',
                 'id': Solution.KAFKA_UUID,
-                'attributes': Solution.KAFKA
+                'attributes': Storage.dkafka
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -260,11 +261,11 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'snippet',
                 'id': Snippet.REMOVE_UUID,
-                'attributes': Snippet.REMOVE
+                'attributes': Storage.remove
             }, {
                 'type': 'snippet',
                 'id': Snippet.FORCED_UUID,
-                'attributes': Snippet.FORCED
+                'attributes': Storage.forced
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -333,15 +334,15 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'snippet',
                 'id': Snippet.REMOVE_UUID,
-                'attributes': Snippet.REMOVE
+                'attributes': Storage.remove
             }, {
                 'type': 'snippet',
                 'id': Snippet.FORCED_UUID,
-                'attributes': Snippet.FORCED
+                'attributes': Storage.forced
             }, {
                 'type': 'solution',
                 'id': Solution.KAFKA_UUID,
-                'attributes': Solution.KAFKA
+                'attributes': Storage.dkafka
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -374,7 +375,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'reference',
                 'id': Reference.PYTEST_UUID,
-                'attributes': Reference.PYTEST
+                'attributes': Storage.pytest
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -414,6 +415,6 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
     @classmethod
     def teardown_class(cls):
-        """Teardown class."""
+        """Teardown tests."""
 
         Content.delete()

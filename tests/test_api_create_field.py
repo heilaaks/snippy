@@ -26,7 +26,7 @@ import falcon
 import pytest
 
 from tests.testlib.content import Content
-from tests.testlib.reference import Reference
+from tests.testlib.content import Request
 
 pytest.importorskip('gunicorn')
 
@@ -42,15 +42,10 @@ class TestApiCreateField(object):
         Try to call not supported POST operation for the /v1/groups.
         """
 
-        content = {
-            'data': [
-                Reference.GITLOG
-            ]
-        }
         request_body = {
             'data': [{
                 'type': 'reference',
-                'attributes': content['data'][0]
+                'attributes': Request.gitlog
             }]
         }
         expect_headers = {
@@ -83,15 +78,10 @@ class TestApiCreateField(object):
         Try to call not supported POST operation for /v1/tags.
         """
 
-        content = {
-            'data': [
-                Reference.GITLOG
-            ]
-        }
         request_body = {
             'data': [{
                 'type': 'reference',
-                'attributes': content['data'][0]
+                'attributes': Request.gitlog
             }]
         }
         expect_headers = {
@@ -118,6 +108,6 @@ class TestApiCreateField(object):
 
     @classmethod
     def teardown_class(cls):
-        """Teardown class."""
+        """Teardown tests."""
 
         Content.delete()

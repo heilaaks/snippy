@@ -88,6 +88,7 @@
 
 ## SECURITY
    - [ ] Remove server name and version from HTTP responses. This would require overriding Gunicorn https://stackoverflow.com/a/21294524.
+   - [ ] How to bind inside container to specific IP? Binding to 127.0.0.1 makes the container unavailable because it is the loopback and does not lead anywhere. Is the only option a start-up script?
 
 ## FIX
    - [ ] Refactor rest.generate that now updates also headers. Body, content type and status are set in the main level but header are set in Generate which may be confusing.

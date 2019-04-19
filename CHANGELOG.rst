@@ -36,7 +36,7 @@ Bugfixes
 Security
 ~~~~~~~~
 
-* none
+* Disable Setuid/Setgid binaries from Docker container.
 
 0.9.0 (2019-02-02)
 ------------------

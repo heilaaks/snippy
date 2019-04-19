@@ -57,6 +57,7 @@ extras_server_pypy = (
     'psycopg2cffi==2.8.1'
 )
 extras_tests = (
+    'codecov==2.0.15',
     'flake8==3.7.7',
     'logging_tree==1.8',
     'mock==2.0.0',

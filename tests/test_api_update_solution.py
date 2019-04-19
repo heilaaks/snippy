@@ -417,6 +417,7 @@ class TestApiUpdateSolution(object):
             }
         }
         expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '4480'}
+        expect_headers_p34 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '4483'}
         expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '4584'}
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -432,7 +433,7 @@ class TestApiUpdateSolution(object):
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_400
-        assert result.headers in (expect_headers_p2, expect_headers_p3)
+        assert result.headers in (expect_headers_p2, expect_headers_p3, expect_headers_p34)
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(storage)
 

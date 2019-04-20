@@ -124,6 +124,7 @@ CMD ["--help"]
 #   For example OpenShift Enterprise runs containers using an arbitrarily
 #   assigned user ID [2].
 #
+#
 # USE CASES:
 #
 #   1. Running container with the same UID as in the host (unsecure)
@@ -188,7 +189,7 @@ CMD ["--help"]
 #      to 127.0.0.1 and port to 8080.
 #
 #
-# IMLEMENTATION
+# IMPLEMENTATION
 #
 #   1. Dockerfile layers
 #
@@ -330,16 +331,36 @@ CMD ["--help"]
 #
 #      The Snippy server should bind to the hostname of the container.
 #
-#   1. Because Alpine adduser does not support --no-log-init, the Snippy
-#      container is prone to disk exhaustion if UID is very large [3]. It
-#      is recommended to run the container with UID values below 65534.
+#   2. Because Alpine ``adduser`` does not support ``--no-log-init``, the
+#      Snippy container is prone to disk exhaustion if used UID is very
+#      large [3]. It is recommended to run the container with UID values
+#      below 65534.
 #
-#   2. Alpine base image is not able to support UID values over 256000 [6].
+#   3. Alpine base image is not able to support UID values over 256000 [6].
+#
+#
+# TODO
+#
+#   1. Add mount examples to store persistent volume on host.
+#
+#   2. Fix Snippy server bind to container IP 0.0.0.0.
+#
+#   3. Fix TODO comment about the UID/GID not set by default.
+#
+#   4. Add examples for --net=host and --privileged.
+#
+#   5. Add example to configured the exposed with with --net=host.
+#
+#   6. Add examples to connect the server to another container that runs PostgreSQL.
+#
+#   7. Add examples to connect the CLI to another container that runs PostgreSQL.
+#
+#   8. Add script that tests all the combinations.
 #
 #
 # LINTING IMAGES
 #
-#   1. Docker benc for security
+#   1. Docker bench for security
 #
 #      Most of the analyses are for host that runs the dockerd daemon since
 #      it is the most critical piece from container security point of view.
@@ -374,23 +395,6 @@ CMD ["--help"]
 #      anchore-cli image vuln heilaaks/snippy:latest
 #      anchore-cli image content heilaaks/snippy:latest
 #
-# TODO
-#
-#   1. Add mount examples to store persistent volume on host.
-#
-#   2. Fix Snippy server bind to container IP 0.0.0.0.
-#
-#   3. Fix TODO comment about the UID/GID not set by default.
-#
-#   3. Add examples for --net=host and --privileged.
-#
-#   4. Add example to configured the exposed with with --net=host.
-#
-#   4. Add examples to connect the server to another container that runs PostgreSQL.
-#
-#   5. Add examples to connect the CLI to another container that runs PostgreSQL.
-#
-#   6. Add script that tests all the combinations.
 #
 # REFERENCES
 #

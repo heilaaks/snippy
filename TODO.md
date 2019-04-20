@@ -1,4 +1,5 @@
 ## WORKING
+   - [ ] Add health API to respond to culr HC and write status to logs.
    - [ ] Swagger 3.0: Why the 'additionProperties: false' field did not affect swagger 3.0?
    - [ ] Swagger 2.0: Does not support nullable and this does not work with validation: test_api_update_reference_010/117. move to OAS3.0 to solve this?
    - [ ] Note in commit log that the Config() does not use jsonschema import because it is Server import. The Config must work in CLI mode with only Yaml.

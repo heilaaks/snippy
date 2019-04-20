@@ -8,9 +8,7 @@ ENV PATH=/usr/local/snippy/.local/bin:"${PATH}"
 ENV SNIPPY_GID=61999
 ENV SNIPPY_UID=61999
 ENV SNIPPY_LOG_JSON 1
-ENV SNIPPY_SERVER_IP=0.0.0.0
-ENV SNIPPY_SERVER_PORT=32768
-ENV SNIPPY_SERVER_HOST=${SNIPPY_SERVER_IP}:${SNIPPY_SERVER_PORT}
+ENV SNIPPY_SERVER_HOST=0.0.0.0:32768
 
 WORKDIR /usr/local/snippy
 
@@ -32,6 +30,7 @@ RUN addgroup \
         --ingroup snippy \
         noname && \
     apk add \
+        curl \
         python3 \
         py3-psycopg2 && \
     python3 -m pip install --upgrade \
@@ -64,32 +63,41 @@ RUN addgroup \
     rm -rf /var/cache/apk/ && \
     find / -perm +6000 -type f -exec chmod a-s {} \; || true
 
-HEALTHCHECK --interval=10s --timeout=5s CMD nc -zv ${SNIPPY_SERVER_IP} ${SNIPPY_SERVER_PORT} || exit 1
+HEALTHCHECK --interval=10s \
+            --timeout=3s \
+            CMD curl \
+                --fail \
+                --insecure \
+                --proto http,https \
+                ${SNIPPY_SERVER_HOST}/snippy/api/app/v1 || exit 1
 
-EXPOSE ${SNIPPY_SERVER_PORT}
+EXPOSE 32768
 
 USER noname
 
 ENTRYPOINT ["snippy"]
 CMD ["--help"]
+#ENTRYPOINT ["tail", "-f","/dev/null"]
 
 #
 # SECURITY HARDENING
 #
-#   The most critical parts from Snippy container security hardening has
-#   to be made in host that runs dockerd daemon and starts the container.
+#   The most critical parts from container security hardening have to be
+#   made in the host that runs the ``dockerd`` daemon.
 #
 #   Note that the author is not a security or Linux specialist. This is
-#   just a hobby project. If the explanations here are not correct, it
-#   indicates that there can be security problems when running Snippy
-#   container image.
+#   just a hobby project. If the explanations in this document are not
+#   correct, it indicates possible security vulnerability when running
+#   the Snippy Docker image.
 #
 #
 # TARGET GROUP
 #
-#   Defaults are defined for a casual user who want's to run Snippy with
-#   the same UID as in host to mount persistent storage volume without
-#   giving additional user permissions for the mount point in host.
+#   Snippy Dockerfile defaults are set for a casual user who wants to run
+#   the Snippy container image with the same Linux user (UID) as the user
+#   who starts the container with ``docker run``. This allows a user to
+#   mount a persistent volume from host for the container without having
+#   to create different user and file permissions for the mount point.
 #
 #
 # MINIMUM VERSION
@@ -101,28 +109,26 @@ CMD ["--help"]
 #
 # CONTAINER UID/GID
 #
-#   By default the Snippy docker image has non-deterministic UID and GID.
-#   The non-deterministic values are allocated at image compile time [2].
+#   By default, all docker image haave non-deterministic UID and GID. The
+#   non-deterministic values are allocated at image compile time [2].
 #
-#   A non-deterministic UID and GID are problems only when the container
-#   mounts a volume from host. If there is a non-deterministic UID, it is
-#   not trivial to give access rights from host to a process runing in
-#   container.
+#   Non-deterministic UID and GID are problems only when container mounts
+#   a volume from host. If there is a non-deterministic UID, it is not
+#   trivial to maintain file access rights in host for containers that
+#   require file access. For example if a host is a multi-tenant runtime
+#   environment with many containers, maintaining volume access rights
+#   based on non-deterministic UID and GID values is not feasible.
 #
-#   If a host is a multi-tenant runtime environment with many containers,
-#   maintaining volume access rights based on non-deterministic UID and
-#   GID values is not feasible.
-#
-#   If container user namespaces feature is activated in host dockerd [3],
+#   If Docker user namespaces feature is activated in host ``dockerd`` [3],
 #   it is possible to start a container with UID 0 (root). The UID 0 maps
 #   to specific UID range in host that does not have root privileges.
 #
 #   UID ranges are Linux kernel and distribution specific [4] and they can
-#   be configured. This means it is not feasible to know from which range
-#   to allocate container UID by default.
+#   be configured to have different ranges. This means it is not feasible
+#   to know in advance which ranges user prefers.
 #
-#   For example OpenShift Enterprise runs containers using an arbitrarily
-#   assigned user ID [2].
+#   For example OpenShift runs containers using an arbitrarily assigned
+#   user ID [2].
 #
 #
 # USE CASES:
@@ -182,11 +188,45 @@ CMD ["--help"]
 #          heilaaks/snippy -vv
 #      ```
 #
-#   4. Set IP and port visible in host that runs the container
+#   4. Change the IP and port visible in host that runs the container
 #
 #      The ``--publish`` command line option defines what is the IP and port
-#      that is visible in host. In these examples the host IP is configured
-#      to 127.0.0.1 and port to 8080.
+#      that is visible in host. The example below shows how the exposed port
+#      and IP address in the host can be changed to 173.23.22.212:80.
+#
+#      The ``/tcp`` in the ``publish`` option means that only TCP port in
+#      running container is mapped to 173.23.22.212:80. Because Snippy is a
+#      HTTP server, only TCP protocol is needed.
+#
+#      ```shell
+#      docker run \
+#          --publish=173.23.22.212:80:32768/tcp \
+#          --name snippy \
+#          --detach \
+#          heilaaks/snippy -vv
+#      ```
+#
+#   5. Use host network
+#
+#      This is not recommended configuration because it is not secure and
+#      breaks the container native design "assume nothing from host".
+#
+#      It is possible to bind the server IP directly from the host that runs
+#      the Snippy Docker continer. This configuration is prone to port
+#      conflicts since some other service in host may already use required
+#      port.
+#
+#      This example is the only valid reason to modify the Snippy server
+#      host and port in the container.
+#
+#      ```shell
+#      docker run \
+#          --env SNIPPY_SERVER_HOST=127.0.0.1:8080 \
+#          --net=host \
+#          --name snippy \
+#          --detach \
+#          heilaaks/snippy -vv
+#      ```
 #
 #
 # IMPLEMENTATION
@@ -196,6 +236,10 @@ CMD ["--help"]
 #      There is only one RUN layer in order to keep the image size roughly
 #      at 38MB. For example separating the same into three RUN layers, the
 #      image size would be 71MB.
+#
+#      The reason is likely that each intermediate RUN layer contains the
+#      files that are only removed last. It would be awkward to delete all
+#      the temporay files with each RUN layer.
 #
 #   2. Dockerfile configuration
 #
@@ -248,6 +292,7 @@ CMD ["--help"]
 #      and addgroup ``group`` are hardcoded to ``snippy``. The user and
 #      group names must be unique only withing the running container.
 #
+#      ```shell
 #      addgroup \
 #          --gid ${SNIPPY_GID} \
 #          snippy
@@ -261,6 +306,7 @@ CMD ["--help"]
 #          --uid ${SNIPPY_UID} \
 #          --ingroup snippy \
 #          noname
+#      ```
 #
 #   5. Container user file access privileges
 #
@@ -274,15 +320,19 @@ CMD ["--help"]
 #       not have any special permissions (unlike the root user) so there are
 #       no security concerns with this arrangement." [2]
 #
+#      ```shell
 #      chown -R noname:root /usr/local/snippy/ && \
 #      chmod -R g+rwX /usr/local/snippy/
+#      ```shell
 #
 #   6. Remove setuid/setgid bit from all binaries (defang)
 #
 #      There is no need to allow binaries to run with these privileges in
 #      container. Because ofthis, the bit is removed from all binaries.
 #
+#      ```shell
 #      find / -perm +6000 -type f -exec chmod a-s {} \; || true && \
+#      ```
 #
 #   7. Container user is operated only with UID and GID
 #
@@ -294,35 +344,63 @@ CMD ["--help"]
 #      Because of this, there is only a fixed noname allocated for the user
 #      in container.
 #
+#      ```shell
 #      USER noname
+#      ```
 #
-#   8. Exposed container port can be configured
+#   8. Periodic healthcheck
+#
+#      Healthcheck is made with curl that allows using either http or https
+#      as protocol. A ``nc`` command line tool is one option. The problem
+#      with the ``nc`` tool is that it requires IP address and port as a
+#      separate parameters. In case of Snippy command line options, the IP
+#      address and port are defined in one string which is not supported by
+#      the ``nc`` tool.
+#
+#      ```shell
+#      HEALTHCHECK --interval=10s \
+#                  --timeout=3s \
+#                  CMD curl \
+#                      --fail \
+#                      --insecure \
+#                      --proto http,https \
+#                      ${SNIPPY_SERVER_HOST}/snippy/api/app/v1 || exit 1
+#      ```
+#
+#
+#   8. Exposed container port can not be configured
 #
 #      The Snippy server in container image binds on port 32768 by default.
-#      The server port is exposed in the Dockerfile. The exposed port in the
-#      Dockefile serves only two purposes:
+#      The server port is exposed statically in the Dockerfile. The exposed
+#      port in the Dockefile serves only two purposes:
 #
-#        1. Default value for dockerd --publish option.
+#        1. Default value for dockerd ``--publish`` option.
 #        2. Documentation to user about the container bind port.
 #
 #      The default port is chosen to have different value than 80 or 8080
 #      because this clearly separates container port from the host port. The
-#      author always have problems to know which was the host port and which
-#      the quest port in command examples like ``--publish=8080:8080``.
+#      author always have problems to remember which was the host port and
+#      which the quest port in command examples like ``--publish=8080:8080``.
 #
 #      The port is just the first port from the ephemeral range. By default
 #      this does not matter because the Snippy container is never recommended
-#      to be run with ``--net=host``. This command option shares host network
-#      to container and exposes a risk for a port clash. If for some reason
-#      user wants to do this, the configuration option for the port is left
-#      open for user.
+#      to be run with the ``--net=host`` option. This command option shares
+#      host network to container and exposes possible security and port clash
+#      problems. If user for some reason wants to do this, it can be done.
+#      See the ``Use host network`` example for more information.
 #
-#      It is not possible to configured privileged port below 1024 without
+#      It is not possible to configure privileged ports below 1024 without
 #      running the container without ``--privileged`` option for dockerd. It
 #      is never recommended to use the ``--privileged`` when running Snippy
-#      container.
+#      container because it exposes security risk.
 #
-#      EXPOSE ${32768:-SNIPPY_SERVER_PORT}
+#      The exposed port is hard coded because when the ``--net=host`` option
+#      is used, published ports are discarded the the exposed default is not
+#      used in any way.
+#
+#      ```shell
+#      EXPOSE 32768
+#      ```
 #
 #
 # KNOWN SECURITY VULNERABILITIES AND PROBLEMS:
@@ -347,15 +425,13 @@ CMD ["--help"]
 #
 #   3. Fix TODO comment about the UID/GID not set by default.
 #
-#   4. Add examples for --net=host and --privileged.
+#   4. Add examples for --privileged to bind with --net=host to ports below 1024.
 #
-#   5. Add example to configured the exposed with with --net=host.
+#   5. Add examples to connect the server to another container that runs PostgreSQL.
 #
-#   6. Add examples to connect the server to another container that runs PostgreSQL.
+#   6. Add examples to connect the CLI to another container that runs PostgreSQL.
 #
-#   7. Add examples to connect the CLI to another container that runs PostgreSQL.
-#
-#   8. Add script that tests all the combinations.
+#   7. Add script that tests all the combinations.
 #
 #
 # LINTING IMAGES

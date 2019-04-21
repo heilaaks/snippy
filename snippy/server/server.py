@@ -64,7 +64,7 @@ class Server(object):  # pylint: disable=too-few-public-methods
         """Run Snippy API server."""
 
         options = {
-            'bind': '%s' % (Config.server_host),
+            'bind': Config.server_host,
             'ca_certs': Config.server_ssl_ca_cert,
             'certfile': Config.server_ssl_cert,
             'ciphers': 'ECDHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA',

@@ -43,7 +43,7 @@ class TestApiUpdateSolution(object):
     def test_api_update_solution_001(server):
         """Update one solution with PUT request.
 
-        Send PUT /v1/solutions/{id} to update existing resource with specified
+        Send PUT /solutions/{id} to update existing resource with specified
         digest. See 'updating content attributes' for the attribute list that
         can be changed by client.
         """
@@ -99,7 +99,7 @@ class TestApiUpdateSolution(object):
     def test_api_update_solution_002(server):
         """Update one solution with PUT request.
 
-        Send PUT /v1/solutions/{id} to update existing resource. The PUT
+        Send PUT /solutions/{id} to update existing resource. The PUT
         request contains only the mandatory data attribute. All other
         attributes must be set to their default values.
         """
@@ -160,7 +160,7 @@ class TestApiUpdateSolution(object):
     def test_api_update_solution_003(server):
         """Update one solution with PUT request.
 
-        Try to send PUT /v1/solutions/{id} to update resource with ``id`` in
+        Try to send PUT /solutions/{id} to update resource with ``id`` in
         URI that is not found.
         """
 
@@ -206,7 +206,7 @@ class TestApiUpdateSolution(object):
     def test_api_update_solution_004(server):
         """Try to update solution with malformed request.
 
-        Try to send PUT /v1/solutions/{id} to update resource with malformed
+        Try to send PUT /solutions/{id} to update resource with malformed
         JSON request.
         """
 
@@ -247,7 +247,7 @@ class TestApiUpdateSolution(object):
     def test_api_update_solution_005(server):
         """Try to update solution with malformed request.
 
-        Try to send PUT /v1/solutions/{id} to update resource with a client
+        Try to send PUT /solutions/{id} to update resource with a client
         generated resource ID. In this case the ID looks like a valid message
         digest.
         """
@@ -297,7 +297,7 @@ class TestApiUpdateSolution(object):
     def test_api_update_solution_006(server):
         """Try to update solution with malformed request.
 
-        Try to send PUT /v1/solutions/{id} to update solution with a client
+        Try to send PUT /solutions/{id} to update solution with a client
         generated resource ID. In this case the ID is empty string.
         """
 
@@ -346,7 +346,7 @@ class TestApiUpdateSolution(object):
     def test_api_update_solution_007(server):
         """Update one solution with PATCH request.
 
-        Send PATCH /v1/solutions/{id} to update existing resource with digest.
+        Send PATCH /solutions/{id} to update existing resource with digest.
         The PATCH request contains only the mandatory data attribute. All other
         attributes that can be updated must be returned with their previous
         values.
@@ -398,7 +398,7 @@ class TestApiUpdateSolution(object):
     def test_api_update_solution_008(server):
         """Update one solution with PUT request.
 
-        Try to update solution ``uuid`` attribute by sending PUT /v1/solutions.
+        Try to update solution ``uuid`` attribute by sending PUT /solutions.
         This must not work because the ``uuid`` cannot be changed by client.
         """
 

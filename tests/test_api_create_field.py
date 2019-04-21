@@ -39,7 +39,7 @@ class TestApiCreateField(object):
     def test_api_create_field_001(server):
         """Try to create ``groups`` attribute from API.
 
-        Try to call not supported POST operation for the /v1/groups.
+        Try to call not supported POST operation for the /groups.
         """
 
         request_body = {
@@ -75,7 +75,7 @@ class TestApiCreateField(object):
     def test_api_create_field_002(server):
         """Try to create ``tags`` attribute from API.
 
-        Try to call not supported POST operation for /v1/tags.
+        Try to call not supported POST operation for /tags.
         """
 
         request_body = {

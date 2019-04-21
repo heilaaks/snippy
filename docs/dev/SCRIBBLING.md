@@ -994,7 +994,7 @@ Good set on loggers: https://books.google.fi/books?id=7U1CIoOs5AkC&pg=PA357&lpg=
     $ pip install falcon
     $ python runner --server-host 127.0.0.1:8080
     $ curl 127.0.0.1:8080/api/hello
-    $ curl 127.0.0.1:8080/api/v1/hello
+    $ curl 127.0.0.1:8080/api/hello
 
     # Swagger
     > https://app.swaggerhub.com/apis/heilaaks1/snippy-rest_api/1.0.0
@@ -1061,7 +1061,7 @@ Good set on loggers: https://books.google.fi/books?id=7U1CIoOs5AkC&pg=PA357&lpg=
     $ curl -v -X OPTIONS "http://127.0.0.1:8080/api/snippy/rest/snippets/1234/brief"
 
     # Fix multiple fields
-    $ curl -X GET "https://app.swaggerhub.com/api/v1/snippets?sall=docker&sall=filebeat&sort=data&fields=data&fields=brief&fields=group" -H  "accept: application/json"
+    $ curl -X GET "https://app.swaggerhub.com/api/snippets?sall=docker&sall=filebeat&sort=data&fields=data&fields=brief&fields=group" -H  "accept: application/json"
 
     # Testing with Dredd
     > http://dredd.org/en/latest/quickstart.html
@@ -3465,16 +3465,16 @@ python snip.py create -c 'docker rm -v $(docker ps -a -q)' -b 'Remove all docker
                - [ ] Add --jws-expire-secs <seconds>
                - [ ] Add check which generates security log if the request was not over HTTPS when --secured is not used. When it is used, reject request.
                - [ ] Add paths
-                     /snippy/api/admin/v1/settings [server settings]
-                     /snippy/api/admin/v1/users    [server users]
-                     /snippy/api/auth/v1           [user authentication]
+                     /snippy/api/admin/settings [server settings]
+                     /snippy/api/admin/users    [server users]
+                     /snippy/api/auth           [user authentication]
          - [ ] Main: Register new user
-               - [ ] Add /snippy/api/admin/v1/users to create new user.
+               - [ ] Add /snippy/api/admin/users to create new user.
                - [ ] Add user table with uuid and hashed password
                - [ ] Add hash_password and verify password
          - [ ] Main: Authenticate registered user with JWT (or simple session ID?)
                - [ ] http://cryto.net/~joepie91/blog/2016/06/13/stop-using-jwt-for-sessions/ Simple is better?
-               - [ ] Add /snippy/api/auth/v1 for authentication
+               - [ ] Add /snippy/api/auth for authentication
                - [ ] Session ID
                      - [ ] sessionIdCookie_v1 = username ":" SHA256(username + global salt)
                - [ ] Add Authentication with JWT.

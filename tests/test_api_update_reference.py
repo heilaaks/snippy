@@ -43,7 +43,7 @@ class TestApiUpdateReference(object):
     def test_api_update_reference_001(server):
         """Update one reference with PUT request.
 
-        Send PUT /v1/references/{id} to update existing resource with digest.
+        Send PUT /references/{id} to update existing resource with digest.
         See 'updating content attributes' for the attribute list that can be
         changed by user.
         """
@@ -98,7 +98,7 @@ class TestApiUpdateReference(object):
     def test_api_update_reference_002(server):
         """Update one reference with PUT request.
 
-        Send PUT /v1/references/{id} to update existing resource. The PUT
+        Send PUT /references/{id} to update existing resource. The PUT
         request contains only the mandatory links attribute. All other
         attributes must be set to their default values in the HTTP response.
         """
@@ -158,7 +158,7 @@ class TestApiUpdateReference(object):
     def test_api_update_reference_003(server):
         """Update one reference with PUT request.
 
-        Try to send PUT /v1/references/{id} to update resource with ``id`` in
+        Try to send PUT /references/{id} to update resource with ``id`` in
         URI path that is not found.
         """
 
@@ -202,7 +202,7 @@ class TestApiUpdateReference(object):
     def test_api_update_reference_004(server):
         """Try to update reference with malformed request.
 
-        Try to send PUT /v1/references/{id} to update resource with malformed
+        Try to send PUT /references/{id} to update resource with malformed
         JSON request.
         """
 
@@ -243,7 +243,7 @@ class TestApiUpdateReference(object):
     def test_api_update_reference_005(server):
         """Try to update reference with malformed request.
 
-        Try to send PUT /v1/references/{id} to update reference with client
+        Try to send PUT /references/{id} to update reference with client
         generated resource ID. In this case the ID looks like a valid message
         digest.
         """
@@ -293,7 +293,7 @@ class TestApiUpdateReference(object):
     def test_api_update_reference_006(server):
         """Update one reference with PATCH request.
 
-        Send PATCH /v1/references/{id} to update existing snippet with digest.
+        Send PATCH /references/{id} to update existing snippet with digest.
         The PATCH request contains only mandatory links attribute. All other
         attributes that can be updated must be returned with their previous
         values.
@@ -349,7 +349,7 @@ class TestApiUpdateReference(object):
     def test_api_update_reference_007(server):
         """Update one reference with PUT request.
 
-        Try to update resource ``uuid`` attribute with PUT /v1/references/{id}.
+        Try to update resource ``uuid`` attribute with PUT /references/{id}.
         This must not work because the ``uuid`` attribute cannot be changed by
         client.
         """
@@ -393,7 +393,7 @@ class TestApiUpdateReference(object):
     def test_api_update_reference_008(server):
         """Try to update reference with PUT request.
 
-        Try to send PUT /v1/references/{id} to replace existing resource by
+        Try to send PUT /references/{id} to replace existing resource by
         using digest as resource ``id`` in URI. The PUT request does not have
         mandatory ``links`` attribute which is why the HTTP request must be
         rejected.
@@ -442,7 +442,7 @@ class TestApiUpdateReference(object):
     def test_api_update_reference_009(server):
         """Update reference with PUT request.
 
-        Send PUT /v1/references/{id} to replace existing resource with digest.
+        Send PUT /references/{id} to replace existing resource with digest.
         The PUT sets all but the mandatory ``links`` attribute to empty values.
         """
 
@@ -507,7 +507,7 @@ class TestApiUpdateReference(object):
     def test_api_update_reference_010(server):
         """Update reference with PATCH request.
 
-        Send PATCH /v1/references/{id} to update existing reference with digest.
+        Send PATCH /references/{id} to update existing reference with digest.
         The PATCH sets all but the mandatory field to empty values.
         """
 
@@ -571,7 +571,7 @@ class TestApiUpdateReference(object):
     def test_api_update_reference_011(server):
         """Update reference with PATCH request.
 
-        Send PATCH /v1/references/{id} to update existing resource with
+        Send PATCH /references/{id} to update existing resource with
         specified digest. The PATCH sets the data field empty. This should
         result OK. The data field is not used with references and it cannot
         contain any additional information for the client. From the client

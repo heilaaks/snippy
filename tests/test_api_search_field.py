@@ -40,7 +40,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
     def test_api_search_groups_001(server):
         """Get specific content based on ``groups`` attribute.
 
-        Send GET /v1/groups/docker to get all content from the docker group.
+        Send GET /groups/docker to get all content from the docker group.
         In this case the query matches to three out of four contents.
         """
 
@@ -81,7 +81,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
     def test_api_search_groups_002(server):
         """Get specific content based on ``groups`` attribute.
 
-        Call GET /v1/groups/docker,python to get content from the docker and
+        Call GET /groups/docker,python to get content from the docker and
         python groups with search all keywords and content limit applied.
         """
 
@@ -119,7 +119,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
     def test_api_search_groups_003(server):
         """Get specific content based on ``groups`` attribute.
 
-        Call GET /v1/groups/docker,python to get content from the docker and
+        Call GET /groups/docker,python to get content from the docker and
         python groups with search all keywords and limit applied. In this case
         the search is limited only to snippet and solution categories and the
         search hit from references should not be returned.
@@ -155,7 +155,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
     def test_api_search_groups_004(server):
         """Get specific content based on ``groups`` attribute.
 
-        Try to call GET /v1/groups/docker,python and limit search to content
+        Try to call GET /groups/docker,python and limit search to content
         categories defined in plural form. This must not work because only
         singular formas for search category ``scat`` is supported.
         """
@@ -191,7 +191,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
     def test_api_search_groups_005(server):
         """Try to get specific content based on ``groups`` attribute.
 
-        Try to call GET /v1/groups/missing with a group that is not found.
+        Try to call GET /groups/missing with a group that is not found.
         """
 
         expect_headers = {
@@ -219,7 +219,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
     def test_api_search_groups_006(server):
         """Try to get specific content based on ``groups`` attribute.
 
-        Try to call GET /v1/missing/docker with a field name that is not
+        Try to call GET /missing/docker with a field name that is not
         found.
         """
 
@@ -238,7 +238,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
     def test_api_search_groups_007(server):
         """Get specific content based on ``groups`` attribute.
 
-        Call GET /v1/groups/docker to get all content from the docker group.
+        Call GET /groups/docker to get all content from the docker group.
         In this case the search query parameter uuid is defined to match
         multiple contents and category is limited to snippets only. This is
         a different situation because the uuid is used as a search parameter,
@@ -281,7 +281,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
     def test_api_search_groups_008(server):
         """Get specific content based on ``groups`` attribute.
 
-        Try to call GET /v1/groups/docker to get all content from the docker
+        Try to call GET /groups/docker to get all content from the docker
         group. In this case one of the scat search keywords defining the
         category is not correct and error must be returned.
         """
@@ -317,7 +317,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
     def test_api_search_tags_001(server):
         """Get specific content based on ``tags`` attribute.
 
-        Call GET /v1/tags/moby to get all content with a moby tag.
+        Call GET /tags/moby to get all content with a moby tag.
         """
 
         expect_headers = {
@@ -357,7 +357,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
     def test_api_search_tags_002(server):
         """Get specific content based on ``tags`` attribute.
 
-        Call GET /v1/tags/volume,python to get all content with a volume or
+        Call GET /tags/volume,python to get all content with a volume or
         python tag.
         """
 
@@ -390,7 +390,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
     def test_api_search_tags_003(server):
         """Try to get specific content based on ``tags`` attribute.
 
-        Try to call GET /v1/tags/missing with a tag that is not found.
+        Try to call GET /tags/missing with a tag that is not found.
         """
 
         expect_headers = {

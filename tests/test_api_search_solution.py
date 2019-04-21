@@ -41,7 +41,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
     def test_api_search_solution_001(server):
         """Search solution with GET.
 
-        Send GET /v1/solutions and search keywords from all attributes. The
+        Send GET /solutions and search keywords from all attributes. The
         search query matches to two solutions and both of them are returned.
         The search is sorted based on one attribute. The search result limit
         defined in the search query is not exceeded.
@@ -81,7 +81,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
     def test_api_search_solution_002(server):
         """Search solution with GET.
 
-        Send GET /v1/solutions and search keywords from all attributes. The
+        Send GET /solutions and search keywords from all attributes. The
         search query matches to three solutions but limit defined in search
         query results only two of them sorted by the brief attribute. The
         sorting must be applied before limit is applied. The search is case
@@ -124,7 +124,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
     def test_api_search_solution_003(server):
         """Search solution with GET.
 
-        Send GET /v1/solutions and search keywords from all attributes. The
+        Send GET /solutions and search keywords from all attributes. The
         search query matches to two solutions but only one of them is returned
         because the limit parameter was set to one. In this case the sort is
         descending and the last match must be returned. The resulting
@@ -161,7 +161,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
     def test_api_search_solution_004(server):
         """Search solution with GET.
 
-        Send GET /v1/solutions and search keywords from all attributes but
+        Send GET /solutions and search keywords from all attributes but
         return only two fields. This syntax that separates the sorted fields
         causes the parameter to be processed in string context which must
         handle multiple attributes.
@@ -197,7 +197,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
     def test_api_search_solution_005(server):
         """Search solution with GET.
 
-        Send GET /v1/solutions and search keywords from all attributes. The
+        Send GET /solutions and search keywords from all attributes. The
         search query matches to three solutions but limit defined in search
         query results only two of them sorted by the created attribute in
         descending order and then based on brief attribute also in descending
@@ -238,7 +238,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
     def test_api_search_solution_006(server):
         """Search solution with GET.
 
-        Send GET /v1/solutions and search keywords from all attributes sorted
+        Send GET /solutions and search keywords from all attributes sorted
         with two fields. This syntax that separates the sorted fields causes
         the parameter to be processed in string context which must handle
         multiple attributes. In this case the search query matches only to
@@ -279,7 +279,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
     def test_api_search_solution_007(server):
         """Search solution with GET.
 
-        Try to send GET /v1/solutions with sort parameter set to attribute
+        Try to send GET /solutions with sort parameter set to attribute
         name that is not existing. The sort must fall to default sorting.
         """
 
@@ -309,7 +309,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
     def test_api_search_solution_008(server):
         """Search solution with GET.
 
-        Send GET /v1/solutions to return only defined attributes. In this case
+        Send GET /solutions to return only defined attributes. In this case
         the fields are defined by setting the 'fields' parameter multiple
         times.
         """
@@ -344,7 +344,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
     def test_api_search_solution_009(server):
         """Search solution with GET.
 
-        Try to send GET /v1/solutions with search keywords that do not result
+        Try to send GET /solutions with search keywords that do not result
         any results.
         """
 
@@ -374,7 +374,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
     def test_api_search_solution_010(server):
         """Search solution from tag fields.
 
-        Try to send GET /v1/solutions with search tag keywords that do not
+        Try to send GET /solutions with search tag keywords that do not
         result any matches.
         """
 
@@ -404,7 +404,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
     def test_api_search_solution_011(server):
         """Search solution from group fields.
 
-        Try to send GET /v1/solutions with search group keywords that do not
+        Try to send GET /solutions with search group keywords that do not
         result any matches.
         """
 
@@ -470,7 +470,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
     def test_api_search_solution_013(server):
         """Search solution with digets.
 
-        Try to send GET /v1/solutions/{id} with digest that cannot be found.
+        Try to send GET /solutions/{id} with digest that cannot be found.
         """
 
         expect_headers = {
@@ -498,7 +498,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
     def test_api_search_solution_014(server):
         """Search solution without search parameters.
 
-        Send GET /v1/solutions without defining search parameters. In this
+        Send GET /solutions without defining search parameters. In this
         case all content should be returned.
         """
 
@@ -536,7 +536,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
     def test_api_search_solution_015(server):
         """Search solution without search parameters.
 
-        Send GET /v1/solutions without defining search parameters. In this
+        Send GET /solutions without defining search parameters. In this
         case only one solution must be returned because the limit is set to
         one. Also the sorting based on brief field causes the last solution
         to be returned.
@@ -573,7 +573,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
     def test_api_search_solution_016(server):
         """Search solution with GET.
 
-        Send GET /v1/solutions and search keywords from all attributes. The
+        Send GET /solutions and search keywords from all attributes. The
         search query matches to two solutions and both of them are returned.
         The response JSON is sent as pretty printed.
         """
@@ -652,7 +652,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
     def test_api_search_solution_paginate_001(server):
         """Search solution with GET.
 
-        Send GET /v1/solution so that pagination is applied with limit zero.
+        Send GET /solution so that pagination is applied with limit zero.
         This is a special case that returns the metadata but the data list
         is empty. This query uses search all keywords with regexp . (dot)
         which matches to all solutions. The non-zero offset does not affect
@@ -686,7 +686,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
     def test_api_search_solution_field_001(server):
         """Get specific solution field.
 
-        Send GET /v1/solutions/{id}/data for existing solution.
+        Send GET /solutions/{id}/data for existing solution.
         """
 
         expect_headers = {
@@ -717,7 +717,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
     def test_api_search_solution_field_002(server):
         """Get specific solution field.
 
-        Send GET /v1/solutions/{id}/brief for existing solution.
+        Send GET /solutions/{id}/brief for existing solution.
         """
 
         expect_headers = {
@@ -748,7 +748,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
     def test_api_search_solution_field_003(server):
         """Get specific solution field.
 
-        Send GET /v1/solutions/{id}/groups for existing solution.
+        Send GET /solutions/{id}/groups for existing solution.
         """
 
         expect_headers = {
@@ -779,7 +779,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
     def test_api_search_solution_field_004(server):
         """Get specific solution field.
 
-        Send GET /v1/solutions/{id}/tags for existing solution.
+        Send GET /solutions/{id}/tags for existing solution.
         """
 
         expect_headers = {
@@ -810,7 +810,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
     def test_api_search_solution_field_005(server):
         """Get specific solution field.
 
-        Send GET /v1/solutions/{id}/lnks for existing solution.
+        Send GET /solutions/{id}/lnks for existing solution.
         """
 
         expect_headers = {
@@ -841,7 +841,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
     def test_api_search_solution_field_006(server):
         """Get specific solution field.
 
-        Try to send GET /v1/solutions/{id}/notexist for existing solution. In
+        Try to send GET /solutions/{id}/notexist for existing solution. In
         this case the field name does not exist.
         """
 
@@ -870,7 +870,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
     def test_api_search_solution_field_007(server):
         """Get specific solution field.
 
-        Try to send GET /v1/snippets/{id}/notexist for non existing resource
+        Try to send GET /snippets/{id}/notexist for non existing resource
         with invalid attribute.
         """
 

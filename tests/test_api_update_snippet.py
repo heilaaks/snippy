@@ -43,7 +43,7 @@ class TestApiUpdateSnippet(object):
     def test_api_update_snippet_001(server):
         """Update one snippet with PUT request.
 
-        Send PUT /v1/snippets/{id} to update existing resource with specified
+        Send PUT /snippets/{id} to update existing resource with specified
         digest. See 'updating content attributes' for the attribute list that
         can be changed by user.
         """
@@ -98,7 +98,7 @@ class TestApiUpdateSnippet(object):
     def test_api_update_snippet_002(server):
         """Update one snippet with PUT request.
 
-        Send PUT /v1/snippets/{id} to update existing resource with specified
+        Send PUT /snippets/{id} to update existing resource with specified
         digest. Only partial set of attributes that can be modified is sent
         in request.
         """
@@ -160,7 +160,7 @@ class TestApiUpdateSnippet(object):
     def test_api_update_snippet_003(server):
         """Update one snippet with PUT request.
 
-        Send PUT /v1/snippets/{id} to update existing resource with specified
+        Send PUT /snippets/{id} to update existing resource with specified
         digest. The PUT request contains only the mandatory data attribute.
         All other attributes must be set to their default values.
         """
@@ -220,7 +220,7 @@ class TestApiUpdateSnippet(object):
     def test_api_update_snippet_004(server):
         """Try to update snippet with malformed request.
 
-        Try to send PUT /v1/snippets/{id} to update resource with digest that
+        Try to send PUT /snippets/{id} to update resource with digest that
         is not found.
         """
 
@@ -268,7 +268,7 @@ class TestApiUpdateSnippet(object):
     def test_api_update_snippet_005(server):
         """Try to update snippet with malformed request.
 
-        Try to send PUT /v1/snippets/{id} to update snippet with malformed
+        Try to send PUT /snippets/{id} to update snippet with malformed
         JSON request.
         """
 
@@ -309,7 +309,7 @@ class TestApiUpdateSnippet(object):
     def test_api_update_snippet_006(server):
         """Updated snippet and verify created and updated timestamps.
 
-        Send PUT /v1/snippets/{id} to update existing resource with specified
+        Send PUT /snippets/{id} to update existing resource with specified
         digest. This test verifies that the created timestamp does not change
         and the updated timestamp changes when the content is updated.
         """
@@ -364,7 +364,7 @@ class TestApiUpdateSnippet(object):
     def test_api_update_snippet_007(server):
         """Update one snippet with PATCH request.
 
-        Send PATCH /v1/snippets/{id} to update existing resource with specified
+        Send PATCH /snippets/{id} to update existing resource with specified
         digest. The PATCH request contains only mandatory the data attribute.
         All other attributes must be returned with their previous stored values.
         """

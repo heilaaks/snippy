@@ -39,7 +39,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_001(server):
         """Search snippets with GET.
 
-        Send GET /v1/snippets and search keywords from all fields. The search
+        Send GET /snippets and search keywords from all fields. The search
         query matches to two snippets and both of them are returned. The
         search is sorted based on one field. The limit defined in the search
         query is not exceeded.
@@ -79,7 +79,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_002(server):
         """Search snippets with GET.
 
-        Send GET /v1/snippets and search keywords from all fields. The search
+        Send GET /snippets and search keywords from all fields. The search
         query matches to four snippets but limit defined in search query
         results only two of them sorted by the brief field. The sorting must
         be applied before limit is applied.
@@ -119,7 +119,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_003(server):
         """Search snippets with GET.
 
-        Send GET /v1/snippets and search keywords from all fields. The search
+        Send GET /snippets and search keywords from all fields. The search
         query matches to two snippets but only one of them is returned
         because the limit parameter was set to one. In this case the sort is
         descending and the last match must be returned. The resulting fields
@@ -156,7 +156,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_004(server):
         """Search snippets with GET.
 
-        Send GET /v1/snippets and search keywords from all fields but return
+        Send GET /snippets and search keywords from all fields but return
         only two fields. This syntax that separates the sorted fields causes
         the parameter to be processed in string context which must handle
         multiple fields.
@@ -193,7 +193,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_005(server):
         """Search snippets with GET.
 
-        Send GET /v1/snippets and search keywords from all fields. The search
+        Send GET /snippets and search keywords from all fields. The search
         query matches to four snippets but limit defined in search query
         results only two of them sorted by the utc field in descending order.
         """
@@ -232,7 +232,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_006(server):
         """Search snippets with GET.
 
-        Send GET /v1/snippets and search keywords from all fields sorted with
+        Send GET /snippets and search keywords from all fields sorted with
         two fields. This syntax that separates the sorted fields causes the
         parameter to be processed in string context which must handle multiple
         fields.
@@ -272,7 +272,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_007(server):
         """Search snippets with GET.
 
-        Try to send GET /v1/snippets with sort parameter set to field name
+        Try to send GET /snippets with sort parameter set to field name
         that does not exist. In this case sorting must fall to default
         sorting.
         """
@@ -303,7 +303,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_008(server):
         """Search snippets with GET.
 
-        Send GET /v1/snippets to return only defined fields. In this case the
+        Send GET /snippets to return only defined fields. In this case the
         fields are defined by setting the 'fields' parameter multiple times.
         """
 
@@ -337,7 +337,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_009(server):
         """Search snippets with GET.
 
-        Try to send GET /v1/snippets with search keywords that do not result
+        Try to send GET /snippets with search keywords that do not result
         any matches.
         """
 
@@ -367,7 +367,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_010(server):
         """Search snippets with GET from tag fields.
 
-        Try to send GET /v1/snippets with search tag keywords that do not
+        Try to send GET /snippets with search tag keywords that do not
         result any matches.
         """
 
@@ -397,7 +397,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_011(server):
         """Search snippet from groups fields.
 
-        Try to send GET /v1/snippets with search groups keywords that do not
+        Try to send GET /snippets with search groups keywords that do not
         result any matches.
         """
 
@@ -427,7 +427,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_012(server):
         """Search snippet with digets.
 
-        Send GET /v1/snippets/{id} to read a snippet based on digest. In this
+        Send GET /snippets/{id} to read a snippet based on digest. In this
         case the snippet is found. In this case the URI path contains 15 digit
         digest. The returned self link must be the 16 digit link.
         """
@@ -464,7 +464,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_013(server):
         """Search snippet with digets.
 
-        Try to send GET /v1/snippets/{id} with a digest that is not found.
+        Try to send GET /snippets/{id} with a digest that is not found.
         """
 
         expect_headers = {
@@ -492,7 +492,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_014(server):
         """Search snippet without search parameters.
 
-        Send GET /v1/snippets without defining search parameters. In this
+        Send GET /snippets without defining search parameters. In this
         case all content should be returned.
         """
 
@@ -530,7 +530,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_015(server):
         """Search snippet without search parameters.
 
-        Send GET /v1/snippets without defining search parameters. In this
+        Send GET /snippets without defining search parameters. In this
         case only one snippet must be returned because the limit is set to
         one. Also the sorting based on brief field causes the last snippet
         to be returned.
@@ -567,7 +567,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_016(server):
         """Search snippets with GET.
 
-        Send GET /v1/snippets and search keywords from all attributes. The
+        Send GET /snippets and search keywords from all attributes. The
         search query matches to two snippets and both of them are returned.
         The response JSON is sent as pretty printed.
 
@@ -609,7 +609,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_paginate_001(server):
         """Search snippets with GET.
 
-        Send GET /v1/snippets so that pagination is applied. The offset is
+        Send GET /snippets so that pagination is applied. The offset is
         zero and limit is bigger that the amount of search results so that
         all results fit into one response. Because all results fit into the
         same response, there is no need for next and prev links and those
@@ -663,7 +663,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_paginate_002(server):
         """Search snippets with GET.
 
-        Send GET /v1/snippets so that pagination is applied. The offset is
+        Send GET /snippets so that pagination is applied. The offset is
         zero and limit is smaller that the amount of search results so that
         all results do not fit into one response. Because this is the first
         page, the prev link must not be set.
@@ -709,7 +709,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_paginate_003(server):
         """Search snippets with GET.
 
-        Send GET /v1/snippets so that pagination is applied. The offset is
+        Send GET /snippets so that pagination is applied. The offset is
         non zero and second page is requested. The requested second page is
         the last page. Because of this, there next link must not be set.
         """
@@ -754,7 +754,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_paginate_004(server):
         """Search snippets with GET.
 
-        Send GET /v1/snippets so that pagination is applied. The offset is
+        Send GET /snippets so that pagination is applied. The offset is
         non zero and second page is requested. The requested second page is
         not the last page. In this case the last page has as many hits that
         will fit into one page (even last page). All pagination links must
@@ -798,7 +798,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_paginate_005(server):
         """Search snippets with GET.
 
-        Send GET /v1/snippets so that pagination is applied. The offset is
+        Send GET /snippets so that pagination is applied. The offset is
         non zero and second page is requested. The requested second page is
         not the last page. In this case the last page has less items than
         will fit to last page (uneven last page). Also the first page is
@@ -847,7 +847,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_paginate_006(server):
         """Search snippets with GET.
 
-        Send GET /v1/snippets so that pagination is applied. The offset is
+        Send GET /snippets so that pagination is applied. The offset is
         non zero and the last page is requested. Because original request
         was not started with  offset zero, the first and prev pages are not
         having offset based on limit. In here the offset is also exactly
@@ -890,7 +890,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_paginate_007(server):
         """Search snippets with GET.
 
-        Send GET /v1/snippets so that pagination is applied. The offset and
+        Send GET /snippets so that pagination is applied. The offset and
         limit are set so that the last page contains less hits than the limit
         and the requested page is not the last or the second last page.
         """
@@ -935,7 +935,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_paginate_008(server):
         """Search snippets with GET.
 
-        Try to send GET /v1/snippets with pagination offset that is the same
+        Try to send GET /snippets with pagination offset that is the same
         as the amount of snippets stored into the database.
         """
 
@@ -965,7 +965,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_paginate_009(server):
         """Search snippets with GET.
 
-        Try to send GET /v1/snippets with pagination offset that is one bigger
+        Try to send GET /snippets with pagination offset that is one bigger
         than the maximum amount of hits.
         """
 
@@ -995,7 +995,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_paginate_010(server):
         """Search snippets with GET.
 
-        Send GET /v1/snippets so that pagination is applied with limit zero.
+        Send GET /snippets so that pagination is applied with limit zero.
         This is a special case that returns the metadata but the data list
         is empty.
         """
@@ -1026,7 +1026,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_paginate_011(server):
         """Search snippets with GET.
 
-        Try to send GET /v1/snippets with negative offset.
+        Try to send GET /snippets with negative offset.
         """
 
         expect_headers = {
@@ -1055,7 +1055,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_paginate_012(server):
         """Search snippets with GET.
 
-        Try to send GET /v1/snippets with negative offset and limit.
+        Try to send GET /snippets with negative offset and limit.
         """
 
         expect_headers = {
@@ -1089,7 +1089,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_paginate_013(server):
         """Search snippets with GET.
 
-        Try to send GET /v1/snippets when offset and limit are not numbers.
+        Try to send GET /snippets when offset and limit are not numbers.
         """
 
         expect_headers = {
@@ -1123,7 +1123,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_field_001(server):
         """Get specific snippet field.
 
-        Send GET /v1/snippets/{id}/data for existing snippet.
+        Send GET /snippets/{id}/data for existing snippet.
         """
 
         expect_headers = {
@@ -1154,7 +1154,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_field_002(server):
         """Get specific snippet field.
 
-        Send GET /v1/snippets/{id}/brief for existing snippet. In this case
+        Send GET /snippets/{id}/brief for existing snippet. In this case
         the URI digest is only 10 octets. The returned link must contain 16
         octet digest in the link.
         """
@@ -1187,7 +1187,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_field_003(server):
         """Get specific snippet field.
 
-        Send GET /v1/snippets/{id}/groups for existing snippet.
+        Send GET /snippets/{id}/groups for existing snippet.
         """
 
         expect_headers = {
@@ -1219,7 +1219,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_field_004(server):
         """Get specific snippet field.
 
-        Send GET /v1/snippets/{id}/tags for existing snippet.
+        Send GET /snippets/{id}/tags for existing snippet.
         """
 
         expect_headers = {
@@ -1250,7 +1250,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_field_005(server):
         """Get specific snippet field.
 
-        Send GET /v1/snippets/{id}/links for existing snippet.
+        Send GET /snippets/{id}/links for existing snippet.
         """
 
         expect_headers = {
@@ -1281,7 +1281,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_field_006(server):
         """Get specific snippet field.
 
-        Try to send GET /v1/snippets/{id}/notexist for existing snippet. In
+        Try to send GET /snippets/{id}/notexist for existing snippet. In
         this case the field name does not exist.
         """
 
@@ -1310,7 +1310,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_field_007(server):
         """Get specific snippet field.
 
-        Try to send GET /v1/snippets/0101010101/brief for non existing
+        Try to send GET /snippets/0101010101/brief for non existing
         snippet with valid field.
         """
 
@@ -1339,7 +1339,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_field_008(server):
         """Get specific snippet field.
 
-        Send GET /v1/snippets/{id}/brief for existing snippet. In this case
+        Send GET /snippets/{id}/brief for existing snippet. In this case
         the URI id is full length UUID that must be found.
         """
 
@@ -1371,7 +1371,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_field_009(server):
         """Get specific snippet field.
 
-        Try to send GET /v1/snippets/{id} for existing snippet with short form
+        Try to send GET /snippets/{id} for existing snippet with short form
         from UUID. The short form must not be accepted and no results must be
         returned. The UUID is intended to be used as fully matching identity.
         """
@@ -1401,7 +1401,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_pytest_fixtures(server):
         """Test pytest fixtures with pytest specific mocking.
 
-        Send GET /v1/snippets and search keywords from all fields. The search
+        Send GET /snippets and search keywords from all fields. The search
         query matches to two snippets and both of them are returned. The
         search is sorted based on one field. The limit defined in the search
         query is not exceeded.
@@ -1441,7 +1441,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_pytest_fixtures2(server):
         """Test pytest fixtures with pytest specific mocking.
 
-        Send GET /v1/snippets and search keywords from all fields. The search
+        Send GET /snippets and search keywords from all fields. The search
         query matches to four snippets but limit defined in search query
         results only two of them sorted by the brief field. The sorting must
         be applied before limit is applied.

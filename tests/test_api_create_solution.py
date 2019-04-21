@@ -42,7 +42,7 @@ class TestApiCreateSolution(object):
     def test_api_create_solution_001(server):
         """Create one Solution resource.
 
-        Send POST /v1/solutions to create a new resource. Created resource
+        Send POST /solutions to create a new resource. Created resource
         is sent in the POST method resource ``data`` attribute as a list of
         objects. The HTTP response must send the created resource in the
         resource ``data`` attribute as list of objects.
@@ -84,7 +84,7 @@ class TestApiCreateSolution(object):
     def test_api_create_solution_002(server):
         """Create two Solutions resources.
 
-        Send POST /v1/solutions to create a new reference. Created resource
+        Send POST /solutions to create a new reference. Created resource
         is sent in the POST method resource ``data`` attribute as object. The
         HTTP response must send the created resource in the resource ``data``
         attribute as list of objects.
@@ -136,7 +136,7 @@ class TestApiCreateSolution(object):
     def test_api_create_solution_003(server):
         """Update Solution with POST that maps to PUT.
 
-        Send POST /v1/solutions/[id} to update existing resource with the
+        Send POST /solutions/[id} to update existing resource with the
         ``X-HTTP-Method-Override`` header that overrides the operation as
         PUT. In this case the created timestamp must remain in initial
         value and the updated timestamp must be updated to reflect the
@@ -204,7 +204,7 @@ class TestApiCreateSolution(object):
     def test_api_create_solution_004(server):
         """Update solution with POST that maps to PATCH.
 
-        Send POST /v1/solutions/db712a82662d6932 to update existing solution
+        Send POST /solutions/db712a82662d6932 to update existing solution
         with X-HTTP-Method-Override header that overrides the operation as
         PATCH.
 
@@ -256,7 +256,7 @@ class TestApiCreateSolution(object):
     def test_api_create_solution_005(server):
         """Update solution with POST that maps to DELETE.
 
-        Send POST /v1/solutions with X-HTTP-Method-Override header to delete
+        Send POST /solutions with X-HTTP-Method-Override header to delete
         solution. In this case the resource exists and the content is deleted.
         """
 
@@ -280,7 +280,7 @@ class TestApiCreateSolution(object):
     def test_api_create_solution_006(server):
         """Try to create solution with resource id.
 
-        Try to send POST /v1/solutions/{id} to create a new resource with
+        Try to send POST /solutions/{id} to create a new resource with
         resource ID in URL. The POST method is not overriden with custom
         ``X-HTTP-Method-Override`` header.
         """
@@ -318,7 +318,7 @@ class TestApiCreateSolution(object):
     def test_api_create_solution_007(server):
         """Try to create solution with malformed JSON request.
 
-        Try to send POST /v1/solutions to create new solution with malformed
+        Try to send POST /solutions to create new solution with malformed
         JSON request. In this case the top level json object is incorrect
         because it contains only an empty list.
         """
@@ -351,7 +351,7 @@ class TestApiCreateSolution(object):
     def test_api_create_solution_008(server):
         """Create one solution from API.
 
-        Try to send POST /v1/solutions to create new a resource with empty
+        Try to send POST /solutions to create new a resource with empty
         resource ``data`` attribute.
         """
 
@@ -395,7 +395,7 @@ class TestApiCreateSolution(object):
     def test_api_create_solution_009(server):
         """Create one solution from API.
 
-        Send POST /v1/solutions to create a new resource. In this case every
+        Send POST /solutions to create a new resource. In this case every
         attribute has additional leading and trailing whitespaces. Trimming
         must be done all fields with the exception of data field. In case of
         data field, there must be only one newline at the end of solution and

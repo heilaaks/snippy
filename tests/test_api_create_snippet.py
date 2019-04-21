@@ -44,7 +44,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_create_snippet_001(server):
         """Create one Snippet with POST.
 
-        Send POST /v1/snippets to create a new resource. The created snippet
+        Send POST /snippets to create a new resource. The created snippet
         is sent in the HTTP request ``data`` attribute as a list of objects.
         """
 
@@ -85,7 +85,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_create_snippet_002(server):
         """Create one Snippet with POST.
 
-        Send POST /v1/snippets to create a new resource. The created snippet
+        Send POST /snippets to create a new resource. The created snippet
         is sent in the POST request ``data`` attribute as an object. The HTTP
         response that contains the created resource must be received as a
         list of snippet objects.
@@ -128,7 +128,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_create_snippet_003(server):
         """Create one Snippet with POST.
 
-        Send POST /v1/snippets to create a new resource. In this case there
+        Send POST /snippets to create a new resource. In this case there
         is only part of the resource attributes that are defined.
 
         The ``tags`` attribute must be sorted and the tags trimmed when they
@@ -178,7 +178,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_create_snippet_004(server):
         """Create one Snippet with POST.
 
-        Send POST /v1/snippets to create a new resource. In this case snippet
+        Send POST /snippets to create a new resource. In this case snippet
         content data, tags and links attributes are defined in string context
         where each line is separated with a newline.
 
@@ -224,7 +224,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_create_snippet_005(server):
         """Create one Snippet with POST.
 
-        Send POST /v1/snippets to create a new resource. In this case snippet
+        Send POST /snippets to create a new resource. In this case snippet
         resource ``data`` attribute is defined as list where each line is a
         separate element in the list.
 
@@ -277,7 +277,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_create_snippet_006(server):
         """Create one Snippet with POST.
 
-        Send POST /v1/snippets to create a new resource. In this case the
+        Send POST /snippets to create a new resource. In this case the
         request resource has only the ``data`` attribute.
         """
 
@@ -333,7 +333,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_create_snippet_007(server):
         """Create two Snippets with POST.
 
-        Send POST /v1/snippets in list context to create new resources.
+        Send POST /snippets in list context to create new resources.
         """
 
         storage = {
@@ -382,7 +382,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_create_snippet_008(server):
         """Try to create snippet with malformed JSON request.
 
-        Try to send POST /v1/snippets to create a new resource with malformed
+        Try to send POST /snippets to create a new resource with malformed
         JSON request. In this case the top level json object is incorrect.
         """
 
@@ -412,7 +412,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_create_snippet_009(server):
         """Try to create snippet with malformed JSON request.
 
-        Try to send POST /v1/snippets to create a new resource with malformed
+        Try to send POST /snippets to create a new resource with malformed
         JSON request. In this case the top level data object type is not valid.
         """
 
@@ -456,7 +456,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_create_snippet_010(server):
         """Try to create snippet with malformed JSON request.
 
-        Try to send POST /v1/snippets to create new a resource with client
+        Try to send POST /snippets to create new a resource with client
         generated ``id``. This is not supported and it will generate error.
         """
 
@@ -494,7 +494,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_create_snippet_011(server):
         """Try to create snippet with malformed JSON request.
 
-        Try to send POST /v1/snippets to create two snippets. First one is
+        Try to send POST /snippets to create two snippets. First one is
         correctly defined but the second contains an error in the JSON data.
         This must not create any resources and the whole request must be
         considered erroneous.
@@ -534,7 +534,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_create_snippet_012(server):
         """Try to create snippet with malformed JSON request.
 
-        Try to send POST /v1/snippets to create two resources. First snippet
+        Try to send POST /snippets to create two resources. First snippet
         is correctly defind but the second one contains an error in the JSON
         data structure. The error is the client generated ``id`` that is not
         supported. This request must not create any resources and the whole
@@ -580,7 +580,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_create_snippet_013(server):
         """Update snippet with POST that maps to PUT.
 
-        Send POST /v1/snippets with X-HTTP-Method-Override header to update
+        Send POST /snippets with X-HTTP-Method-Override header to update
         resource. In this case the resource exists and the content is updated.
         """
 
@@ -624,7 +624,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_create_snippet_014(server):
         """Update snippet with POST that maps to PATCH.
 
-        Send POST /v1/snippets with the ``X-HTTP-Method-Override`` header to
+        Send POST /snippets with the ``X-HTTP-Method-Override`` header to
         update a resource. In this case the resource exists and the content
         is updated.
 
@@ -680,7 +680,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_create_snippet_015(server):
         """Update snippet with POST that maps to PATCH.
 
-        Send POST /v1/snippets with the ``X-HTTP-Method-Override`` header to
+        Send POST /snippets with the ``X-HTTP-Method-Override`` header to
         update a resource. All resource attributes are tried to be updated.
         This must generate HTTP error because it is not possible to update
         for example the ``uuid`` attribute by client.
@@ -738,7 +738,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_create_snippet_016(server):
         """Update snippet with POST that maps to DELETE.
 
-        Send POST /v1/snippets with the ``X-HTTP-Method-Override`` header to
+        Send POST /snippets with the ``X-HTTP-Method-Override`` header to
         delete a snippet. In this case the resource exists and the content is
         deleted.
         """
@@ -763,7 +763,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_create_snippet_017(server):
         """Try to create snippet with resource id.
 
-        Try to send POST /v1/snippets/{id} to create a new resource with the
+        Try to send POST /snippets/{id} to create a new resource with the
         resource ID in the URL. The POST method is not overriden with custom
         ``X-HTTP-Method-Override`` header.
         """
@@ -801,7 +801,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_create_snippet_018(server):
         """Create one snippet with POST.
 
-        Try to send POST /v1/snippets to create a new snippet with an empty
+        Try to send POST /snippets to create a new snippet with an empty
         resource ``data``. In case of snippets, the resulting error string is
         misleading because the only given attribute is ``data`` that is empty
         which maps the resource to a resource template.
@@ -852,7 +852,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_create_snippet_019(server):
         """Create and search snippet with unicode characters.
 
-        Send POST /v1/snippets to create a new resource. In this case resource
+        Send POST /snippets to create a new resource. In this case resource
         contains unicode characters in string and list fields. The content must
         be also returned correctly when searching with unicode characters.
         """
@@ -939,7 +939,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_create_snippet_020(server):
         """Create one Snippet resource.
 
-        Send POST /v1/snippets to create new resource. In this case all fields
+        Send POST /snippets to create new resource. In this case all fields
         have unnecessary leading and trailing whitespaces which are removed.
         Tags and links must be sorted.
         """
@@ -1004,7 +1004,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_create_snippet_021(server):
         """Create one Snippet resource.
 
-        Send POST /v1/snippets to create new resource with data that have line
+        Send POST /snippets to create new resource with data that have line
         breaks in the middle of the snippet which must not be interpolated to
         newlines.
         """
@@ -1061,7 +1061,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_create_snippet_022(server):
         """Create new snippet with duplicated content field values.
 
-        Send POST /v1/snippets to create a new resource. In this case the
+        Send POST /snippets to create a new resource. In this case the
         resource attributes contain duplicated values. For example, there is
         a tag 'python' included twice in the ``tags`` attribute. Only unique
         values in attributes in array context must be added.
@@ -1125,7 +1125,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_create_snippet_023(server):
         """Create one snippet with POST.
 
-        Send POST /v1/snippets to create a new resource. The ``groups`` field
+        Send POST /snippets to create a new resource. The ``groups`` field
         is not defined at all in the HTTP request. The default value for this
         attribute must be always added if no value is provided by client.
         """
@@ -1182,7 +1182,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_create_snippet_024(server):
         """Create one snippet from API.
 
-        Send POST /v1/snippets to create a new resource with invalid version
+        Send POST /snippets to create a new resource with invalid version
         string. The mathematical operator ``=`` is not supported. The equal
         operation must be ``==``. This causes the version to be stored as
         empty list.

@@ -38,7 +38,7 @@ class TestApiDeleteSnippet(object):
     def test_api_delete_snippet_001(server):
         """Delete snippet with digest.
 
-        Send DELETE /v1/snippets/{id} to delete one snippet. The ``id`` in URI
+        Send DELETE /snippets/{id} to delete one snippet. The ``id`` in URI
         that matches to one resource that is deleted.
         """
 
@@ -62,7 +62,7 @@ class TestApiDeleteSnippet(object):
     def test_api_delete_snippet_002(server):
         """Try to delete snippet.
 
-        Try to send DELETE /v1/snippet{id} with a ``id`` in URI that does not
+        Try to send DELETE /snippet{id} with a ``id`` in URI that does not
         exist.
         """
 
@@ -99,7 +99,7 @@ class TestApiDeleteSnippet(object):
     def test_api_delete_snippet_003(server):
         """Try to delete snippet.
 
-        Try to send DELETE /v1/snippets without ``id`` in URI that identifies
+        Try to send DELETE /snippets without ``id`` in URI that identifies
         the delete resource.
         """
 
@@ -135,7 +135,7 @@ class TestApiDeleteSnippet(object):
     def test_api_delete_snippet_004(server):
         """Delete snippet with UUID.
 
-        Send DELETE /v1/snippets/{id} to delete one snippet. The ``id`` in
+        Send DELETE /snippets/{id} to delete one snippet. The ``id`` in
         URI matches to one resource that is deleted.
         """
 

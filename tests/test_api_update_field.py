@@ -39,7 +39,7 @@ class TestApiCreateField(object):
     def test_api_update_field_001(server):
         """Try to update groups fields from API.
 
-        Try to send not supported PUT /v1/groups.
+        Try to send not supported PUT /groups.
         """
 
         request_body = {
@@ -75,7 +75,7 @@ class TestApiCreateField(object):
     def test_api_update_field_002(server):
         """Try to update tags fields from API.
 
-        Try to send not supported PUT /v1/tags.
+        Try to send not supported PUT /tags.
         """
 
         request_body = {

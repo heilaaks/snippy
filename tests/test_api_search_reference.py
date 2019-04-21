@@ -39,7 +39,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_001(server):
         """Search reference with GET.
 
-        Send GET /v1/references and search keywords from all attributes. The
+        Send GET /references and search keywords from all attributes. The
         search query matches to two references and both of them are returned.
         The search is sorted based on one attribute. The search result limit
         defined in the search query is not exceeded.
@@ -79,7 +79,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_002(server):
         """Search reference with GET.
 
-        Send GET /v1/references and search keywords from all attributes. The
+        Send GET /references and search keywords from all attributes. The
         search query matches to three references but limit defined in search
         query results only two of them sorted by the brief attribute. The
         sorting must be applied before limit is applied. The search is case
@@ -122,7 +122,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_003(server):
         """Search reference with GET.
 
-        Send GET /v1/references and search keywords from all attributes. The
+        Send GET /references and search keywords from all attributes. The
         search query matches to two references but only one of them is returned
         because the limit parameter was set to one. In this case the sort is
         descending and the last match must be returned. The resulting
@@ -159,7 +159,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_004(server):
         """Search reference with GET.
 
-        Send GET /v1/references and search keywords from all attributes but
+        Send GET /references and search keywords from all attributes but
         return only two fields. This syntax that separates the sorted fields
         causes the parameter to be processed in string context which must
         handle multiple attributes.
@@ -195,7 +195,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_005(server):
         """Search reference with GET.
 
-        Send GET /v1/references to return only defined attributes. In this case
+        Send GET /references to return only defined attributes. In this case
         the fields are defined by setting the 'fields' parameter multiple
         times.
         """
@@ -230,7 +230,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_006(server):
         """Search reference with GET.
 
-        Try to send GET /v1/references with search keywords that do not result
+        Try to send GET /references with search keywords that do not result
         any results.
         """
 
@@ -260,7 +260,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_007(server):
         """Search reference from tag fields.
 
-        Try to send GET /v1/references with search tag keywords that do not
+        Try to send GET /references with search tag keywords that do not
         result any matches.
         """
 
@@ -326,7 +326,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_009(server):
         """Search reference with digets.
 
-        Try to send GET /v1/references/{id} with digest that is not found.
+        Try to send GET /references/{id} with digest that is not found.
         """
 
         expect_headers = {
@@ -354,7 +354,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_010(server):
         """Search reference without search parameters.
 
-        Send GET /v1/references without defining search keywords. In this case
+        Send GET /references without defining search keywords. In this case
         all content should be returned.
         """
 
@@ -392,7 +392,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_011(server):
         """Search reference without search parameters.
 
-        Send GET /v1/references without defining search parameters.
+        Send GET /references without defining search parameters.
         In this case only one reference must be returned because the
         limit is set to one. Also the sorting based on brief field
         causes the last reference to be returned.
@@ -429,7 +429,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_012(server):
         """Search reference with GET.
 
-        Send GET /v1/references and search keywords from all attributes. The
+        Send GET /references and search keywords from all attributes. The
         search query matches to two references and both of them are returned.
         The response JSON is sent as pretty printed.
 
@@ -474,7 +474,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_paginate_001(server):
         """Search reference with GET.
 
-        Send GET /v1/reference so that pagination is applied with limit zero.
+        Send GET /reference so that pagination is applied with limit zero.
         This is a special case that returns the metadata but the data list
         is empty. This query uses sall parameter with regexp . (dot) which
         matches to all references. The non-zero offset does not affect to the
@@ -508,7 +508,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_field_001(server):
         """Get resource attribute.
 
-        Send GET /v1/references/{id}/category for existing reference.
+        Send GET /references/{id}/category for existing reference.
         """
 
         expect_headers = {
@@ -539,7 +539,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_field_002(server):
         """Get resource attribute.
 
-        Send GET /v1/references/́{id}/data for existing reference. In this
+        Send GET /references/́{id}/data for existing reference. In this
         case the digest is shorter than the default 16 octet digest.
         """
 
@@ -571,7 +571,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_field_003(server):
         """Get resource attribute.
 
-        Send GET /v1/references/{id}/brief for existing resource.
+        Send GET /references/{id}/brief for existing resource.
         """
 
         expect_headers = {
@@ -602,7 +602,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_field_004(server):
         """Get resource attribute.
 
-        Send GET /v1/references/{id}/description for existing resource.
+        Send GET /references/{id}/description for existing resource.
         """
 
         expect_headers = {
@@ -633,7 +633,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_field_005(server):
         """Get resource attribute.
 
-        Send GET /v1/references/{id}/name for existing resource.
+        Send GET /references/{id}/name for existing resource.
         """
 
         expect_headers = {
@@ -664,7 +664,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_field_006(server):
         """Get resource attribute.
 
-        Send GET /v1/references/{id}/groups for existing resource.
+        Send GET /references/{id}/groups for existing resource.
         """
 
         expect_headers = {
@@ -695,7 +695,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_field_007(server):
         """Get resource attribute.
 
-        Send GET /v1/references/{id}/tags for existing resource.
+        Send GET /references/{id}/tags for existing resource.
         """
 
         expect_headers = {
@@ -726,7 +726,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_field_008(server):
         """Get resource attribute.
 
-        Send GET /v1/references/{id}/links for existing resource.
+        Send GET /references/{id}/links for existing resource.
         """
 
         expect_headers = {
@@ -757,7 +757,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_field_009(server):
         """Get resource attribute.
 
-        Send GET /v1/references/{id}/source for existing resource.
+        Send GET /references/{id}/source for existing resource.
         """
 
         expect_headers = {
@@ -788,7 +788,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_field_010(server):
         """Get resource attribute.
 
-        Send GET /v1/references/{id}/versions for existing resource.
+        Send GET /references/{id}/versions for existing resource.
         """
 
         expect_headers = {
@@ -819,7 +819,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_field_011(server):
         """Get resource attribute.
 
-        Send GET /v1/references/{id}/filename for existing resource.
+        Send GET /references/{id}/filename for existing resource.
         """
 
         expect_headers = {
@@ -850,7 +850,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_field_012(server):
         """Get resource attribute.
 
-        Send GET /v1/references/{id}/created for existing resource.
+        Send GET /references/{id}/created for existing resource.
         """
 
         expect_headers = {
@@ -881,7 +881,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_field_013(server):
         """Get resource attribute.
 
-        Send GET /v1/references/{id}/updated for existing resource.
+        Send GET /references/{id}/updated for existing resource.
         """
 
         expect_headers = {
@@ -912,7 +912,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_field_014(server):
         """Get resource attribute.
 
-        Send GET /v1/references/{id}/uuid for existing resource.
+        Send GET /references/{id}/uuid for existing resource.
         """
 
         expect_headers = {
@@ -943,7 +943,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_field_015(server):
         """Get resource attribute.
 
-        Send GET /v1/references/{id}/digest for existing resource.
+        Send GET /references/{id}/digest for existing resource.
         """
 
         expect_headers = {
@@ -974,7 +974,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_field_016(server):
         """Get resource attribute.
 
-        Try to send GET /v1/references/{id}/notexist for existing reference.
+        Try to send GET /references/{id}/notexist for existing reference.
         In this case the attribute does not exist.
         """
 
@@ -1003,7 +1003,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_field_017(server):
         """Get resource attribute.
 
-        Try to send GET /v1/snippets/{id}/notexist for non existing
+        Try to send GET /snippets/{id}/notexist for non existing
         snippet with invalid attribute.
         """
 

@@ -44,7 +44,7 @@ class TestApiCreateReference(object):
     def test_api_create_reference_001(server):
         """Create one Reference resource.
 
-        Send POST /v1/references to create a new resource. Created resource
+        Send POST /references to create a new resource. Created resource
         is sent in the POST method resource ``data`` attribute as a list of
         objects. The HTTP response must send the created resource in the
         resource ``data`` attribute as list of objects.
@@ -87,7 +87,7 @@ class TestApiCreateReference(object):
     def test_api_create_reference_002(server):
         """Create one Reference reference.
 
-        Send POST /v1/references to create a new reference. Created resource
+        Send POST /references to create a new reference. Created resource
         is sent in the POST method resource ``data`` attribute as object. The
         HTTP response must send the created resource in the resource ``data``
         attribute as list of objects.
@@ -130,7 +130,7 @@ class TestApiCreateReference(object):
     def test_api_create_reference_003(server):
         """Create multiple Reference references.
 
-        Send POST /v1/references in a list context to create new resources.
+        Send POST /references in a list context to create new resources.
         The external UUID must not be created from the resource sent by the
         client. The Snippy server must allocate new UUID that is a resource
         identity. This resource identity is used also in the URI and it is
@@ -183,7 +183,7 @@ class TestApiCreateReference(object):
     def test_api_create_reference_004(server):
         """Update Reference resource with POST that maps to PUT.
 
-        Send POST /v1/references/{id} to update existing resource with the
+        Send POST /references/{id} to update existing resource with the
         ``X-HTTP-Method-Override`` header that maps the operation as PUT.
 
         In this case the resource ``created`` attribute must remain in the
@@ -235,7 +235,7 @@ class TestApiCreateReference(object):
     def test_api_create_reference_005(server):
         """Update Reference resource with POST that maps to PATCH.
 
-        Send POST /v1/references/{id} to update existing resource with the
+        Send POST /references/{id} to update existing resource with the
         ``X-HTTP-Method-Override`` header that overrides the POST method as
         PATCH. Only the attributes sent in the PATCH method must be changed.
 
@@ -292,7 +292,7 @@ class TestApiCreateReference(object):
     def test_api_create_reference_006(server):
         """Update Reference resource with POST that maps to DELETE.
 
-        Send POST /v1/references with the ``X-HTTP-Method-Override`` header to
+        Send POST /references with the ``X-HTTP-Method-Override`` header to
         delete a resource. In this case the resource exists and the content is
         deleted.
         """
@@ -317,7 +317,7 @@ class TestApiCreateReference(object):
     def test_api_create_reference_007(server):
         """Try to create a Reference resource.
 
-        Try to send POST /v1/references to create a new reference with empty
+        Try to send POST /references to create a new reference with empty
         content links. The links are mandatory in case of Reference content
         and the request must be rejected with an error.
         """
@@ -431,7 +431,7 @@ class TestApiCreateReference(object):
     def test_api_create_reference_009(server):
         """Create one Reference resource.
 
-        Send POST /v1/references to create a new resource. In the case there
+        Send POST /references to create a new resource. In the case there
         are multiple values in the ``groups`` attribute.
         """
 
@@ -473,7 +473,7 @@ class TestApiCreateReference(object):
     def test_api_create_reference_010(server):
         """Create one Reference resource.
 
-        Send POST /v1/references to create a new resource. In this case every
+        Send POST /references to create a new resource. In this case every
         attribute has additional leading and trailing whitespaces that must
         be trimmed when stored.
         """
@@ -538,7 +538,7 @@ class TestApiCreateReference(object):
     def test_api_create_reference_011(server):
         """Create one Reference resource.
 
-        Send POST /v1/references to create a new resource. In this case only
+        Send POST /references to create a new resource. In this case only
         the mandatory ``links`` attribute for Reference resource is defined.
         """
 
@@ -593,7 +593,7 @@ class TestApiCreateReference(object):
     def test_api_create_reference_012(server):
         """Create new reference with duplicated content field values.
 
-        Send POST /v1/references to create a new resource. In this case the
+        Send POST /references to create a new resource. In this case the
         resource attributes contain duplicated values. For example, there is
         a tag 'python' included twice in the ``tags`` attribute. Only unique
         values in attributes in array context must be added.

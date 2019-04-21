@@ -10,7 +10,7 @@ Breaking changes
 ~~~~~~~~~~~~~~~~
 
 * Change REST API endpoints `[2019.03.24]`_.
-* Change REST API base path default `[2019.04.21]`_.
+* Change REST API base path default `[2019.04.20]`_.
 * Change REST API JSON schema validation `[2019.04.14]`_.
 * Change REST API id attribute and queries with UUID `[2019.04.06]`_.
 * Change server base path command line option name `[2019.04.21]`_.
@@ -138,5 +138,5 @@ Security
 .. _`[2019.03.24]`: https://github.com/heilaaks/snippy/commit/063426d8c7bee05b620fa85cbf6ca81b1e96f45b
 .. _`[2019.04.06]`: https://github.com/heilaaks/snippy/commit/c9f2efda31294deb149014232780952f64bc3e9c
 .. _`[2019.04.14]`: https://github.com/heilaaks/snippy/commit/cd720fc4252abf68f61c080dd39143b6436067f4
-.. _`[2019.04.21]`: https://github.com/heilaaks/snippy/commit/3479f27e298cd09e37dd1e1bd58c6f67fc0b2f34
+.. _`[2019.04.20]`: https://github.com/heilaaks/snippy/commit/3479f27e298cd09e37dd1e1bd58c6f67fc0b2f34
 .. _`[2019.04.21]`: https://github.com/heilaaks/snippy/commit/5203f6060e8f6d394befb210ce707944f9494d49

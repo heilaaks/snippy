@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""test_api_hello: Test hello API and OPTIONS method."""
+"""test_api_hello: Test /hello API endpoints and OPTIONS method."""
 
 from falcon import testing
 import falcon
@@ -30,13 +30,13 @@ pytest.importorskip('gunicorn')
 
 
 class TestApiHello(object):  # pylint: disable=too-many-public-methods
-    """Test hello API and OPTIONS method."""
+    """Test /hello API endpoint and OPTIONS method."""
 
     @staticmethod
     def test_api_hello_api_001(server):
-        """Test hello API.
+        """Test server hello response.
 
-        Send GET /api/snippy/rest/ to get Hello response.
+        Send GET /api/snippy/rest/ to get server hello response.
         """
 
         expect_headers = {
@@ -51,9 +51,9 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
 
     @staticmethod
     def test_api_hello_api_002(server):
-        """Test hello API.
+        """Test server hello response.
 
-        Send GET /api/snippy/rest/hello to get hello!
+        Send GET /api/snippy/rest/hello to check if server is up.
         """
 
         expect_headers = {
@@ -69,7 +69,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
     @staticmethod
     @pytest.mark.usefixtures('mock-server')
     def test_api_hello_api_003():
-        """Test hello API with modified server base path configuration.
+        """Test server hello response.
 
         Send GET /api/snippy/ to get hello! In this case the server base path is
         changed from default and it is set in correct format.
@@ -80,7 +80,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
             'content-length': '243'
         }
         expect_body = {'meta': Content.get_api_meta()}
-        server = Snippy(['snippy', '--server-host', 'localhost:8080', '--server-base-path', '/api/snippy/'])
+        server = Snippy(['snippy', '--server-host', 'localhost:8080', '--server-base-path-rest', '/api/snippy/'])
         server.run()
         result = testing.TestClient(server.server.api).simulate_get('/api/snippy/')
         assert result.status == falcon.HTTP_200
@@ -92,7 +92,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
     @staticmethod
     @pytest.mark.usefixtures('mock-server')
     def test_api_hello_api_004():
-        """Test hello API with modified server base path configuration.
+        """Test server hello response.
 
         Send GET /api/snippy/ to get hello! In this case the server base path
         configuration is incorrect. The server base path must contain trailing
@@ -105,7 +105,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
             'content-length': '243'
         }
         expect_body = {'meta': Content.get_api_meta()}
-        server = Snippy(['snippy', '--server-host', 'localhost:8080', '--server-base-path', '/api/snippy'])
+        server = Snippy(['snippy', '--server-host', 'localhost:8080', '--server-base-path-rest', '/api/snippy'])
         server.run()
         result = testing.TestClient(server.server.api).simulate_get('/api/snippy/')
         assert result.status == falcon.HTTP_200
@@ -117,7 +117,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
     @staticmethod
     @pytest.mark.usefixtures('mock-server')
     def test_api_hello_api_005():
-        """Test hello API with modified server base path configuration.
+        """Test server hello response.
 
         Send GET /api/snippy/ to get hello! In this case the server base path
         configuration is incorrect. The server base path must contain leading
@@ -130,7 +130,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
             'content-length': '243'
         }
         expect_body = {'meta': Content.get_api_meta()}
-        server = Snippy(['snippy', '--server-host', 'localhost:8080', '--server-base-path', 'api/snippy/'])
+        server = Snippy(['snippy', '--server-host', 'localhost:8080', '--server-base-path-rest', 'api/snippy/'])
         server.run()
         result = testing.TestClient(server.server.api).simulate_get('/api/snippy/')
         assert result.status == falcon.HTTP_200
@@ -142,7 +142,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
     @staticmethod
     @pytest.mark.usefixtures('mock-server')
     def test_api_hello_api_006():
-        """Test hello API with modified server base path configuration.
+        """Test server hello response.
 
         Send GET /api/snippy/ to get hello! In this case the server base path
         configuration is incorrect. The server base path must contain leading
@@ -155,7 +155,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
             'content-length': '243'
         }
         expect_body = {'meta': Content.get_api_meta()}
-        server = Snippy(['snippy', '--server-host', 'localhost:8080', '--server-base-path', 'api/snippy'])
+        server = Snippy(['snippy', '--server-host', 'localhost:8080', '--server-base-path-rest', 'api/snippy'])
         server.run()
         result = testing.TestClient(server.server.api).simulate_get('/api/snippy')
         assert result.status == falcon.HTTP_200
@@ -167,7 +167,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
     @staticmethod
     @pytest.mark.usefixtures('mock-server')
     def test_api_hello_api_007():
-        """Test hello API with modified server base path configuration.
+        """Test server hello response.
 
         Send GET /api/snippy/rest/' to get hello! In this case the server base
         path is incorrect because it contains two slashes. This configuration
@@ -179,7 +179,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
             'content-length': '243'
         }
         expect_body = {'meta': Content.get_api_meta()}
-        server = Snippy(['snippy', '--server-host', 'localhost:8080', '--server-base-path', '/api//snippy'])
+        server = Snippy(['snippy', '--server-host', 'localhost:8080', '--server-base-path-rest', '/api//snippy'])
         server.run()
         result = testing.TestClient(server.server.api).simulate_get('/api/snippy/rest')
         assert result.status == falcon.HTTP_200
@@ -191,10 +191,10 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
     @staticmethod
     @pytest.mark.usefixtures('mock-server')
     def test_api_hello_api_008(caplog):
-        """Test hello API with modified server IP and port configuration.
+        """Test server hello response.
 
-        Send GET /api/app/v1 to get hello! In this case the server host is
-        changed from the default with command line option.
+        Send GET /api/snippy/rest/ to get hello! In this case the server host
+        is changed from the default with command line option.
         """
 
         expect_headers = {
@@ -215,7 +215,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
     @staticmethod
     @pytest.mark.usefixtures('mock-server')
     def test_api_hello_api_009(server):
-        """Test hello API with OPTIONS.
+        """Test HTTP OPTIONS with server hello response.
 
         Send OPTIONS /api/snippy/rest/ to get allowed methods.
         """
@@ -233,9 +233,9 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
     @staticmethod
     @pytest.mark.usefixtures('mock-server')
     def test_api_hello_api_010(server):
-        """Test snippets API with OPTIONS.
+        """Test HTTP OPTIONS with server hello response.
 
-        Send OPTIONS /v1/snippets to get allowed methods.
+        Send OPTIONS /snippets to get allowed methods.
         """
 
         expect_headers = {
@@ -251,9 +251,9 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
     @staticmethod
     @pytest.mark.usefixtures('mock-server')
     def test_api_hello_api_011(server):
-        """Test snippets digest API with OPTIONS.
+        """Test HTTP OPTIONS with /snippets/{id}.
 
-        Send OPTIONS /v1/snippets/{id} to get allowed methods.
+        Send OPTIONS /snippets/{id} to get allowed methods.
         """
 
         expect_headers = {
@@ -269,9 +269,9 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
     @staticmethod
     @pytest.mark.usefixtures('mock-server')
     def test_api_hello_api_012(server):
-        """Test snippets field API with OPTIONS.
+        """Test HTTP OPTIONS with /snippets/{id}/{attribute}.
 
-        Send OPTIONS /v1/snippets/{id}/{field} to get allowed methods.
+        Send OPTIONS /snippets/{id}/{field} to get allowed methods.
         """
 
         expect_headers = {
@@ -287,9 +287,9 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
     @staticmethod
     @pytest.mark.usefixtures('mock-server')
     def test_api_hello_api_013(server):
-        """Test fields groups API with OPTIONS.
+        """Test HTTP OPTIONS with /groups API endpoint.
 
-        Send OPTIONS /v1/groups/<groups> to get allowed methods.
+        Send OPTIONS /groups/{groups} to get allowed methods.
         """
 
         expect_headers = {
@@ -305,9 +305,9 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
     @staticmethod
     @pytest.mark.usefixtures('mock-server')
     def test_api_hello_api_014(server):
-        """Test fields tags API with OPTIONS.
+        """Test HTTP OPTIONS with /tags API endpoint.
 
-        Send OPTIONS /v1/tags/<tag> to get allowed methods.
+        Send OPTIONS /tags/{tag] to get allowed methods.
         """
 
         expect_headers = {
@@ -323,9 +323,9 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
     @staticmethod
     @pytest.mark.usefixtures('mock-server')
     def test_api_hello_api_015(server):
-        """Test fields keywords API with OPTIONS.
+        """Test HTTP OPTIONS with /groups API endpoint.
 
-        Send OPTIONS /v1/groups to get allowed methods for keywords API. Note
+        Send OPTIONS /groups to get allowed methods for keywords API. Note
         that this does not call the groups API but keywords API. The reason is
         that the route /groups does not have the parameter and in this case id
         does not lead to /groups but to /{keywords} API.
@@ -344,13 +344,13 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
     @staticmethod
     @pytest.mark.usefixtures('mock-server')
     def test_api_hello_api_016(caplog, osenviron):
-        """Test server startup with environment variable configuration.
+        """Test server configuration.
 
         Send GET /api/snippy/rest to get Hello response. In this case the
         server variables are changed with environment variables.
         """
 
-        osenviron.setenv('SNIPPY_SERVER_BASE_PATH', '/api/snippy/rest/v2')
+        osenviron.setenv('SNIPPY_SERVER_BASE_PATH_REST', '/api/snippy/rest/v2')
         osenviron.setenv('SNIPPY_SERVER_HOST', '127.0.0.1:8081')
         osenviron.setenv('SNIPPY_SERVER_MINIFY_JSON', 'True')
         osenviron.setenv('SNIPPY_STORAGE_TYPE', 'misconfig')  # Must be mapped to default.
@@ -366,7 +366,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
         server = Snippy(['snippy', '--debug'])
         server.run()
         result = testing.TestClient(server.server.api).simulate_get('/api/snippy/rest/v2/')
-        assert 'server_base_path=/api/snippy/rest/v2' in caplog.text
+        assert 'server_base_path_rest=/api/snippy/rest/v2' in caplog.text
         assert 'server_host=127.0.0.1:8081' in caplog.text
         assert 'server_minify_json=True' in caplog.text
         assert 'storage_type=sqlite' in caplog.text
@@ -386,7 +386,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
     @staticmethod
     @pytest.mark.usefixtures('mock-server')
     def test_api_hello_api_017(caplog, osenviron):
-        """Test server startup with environment and command line config.
+        """Test server configuration.
 
         Send GET /api/snippy/rest to get Hello response. In this case the
         server options are configured with environment variables and
@@ -394,7 +394,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
         and they must be used.
         """
 
-        osenviron.setenv('SNIPPY_SERVER_BASE_PATH', '/api/snippy/rest/v2')
+        osenviron.setenv('SNIPPY_SERVER_BASE_PATH_REST', '/api/snippy/rest/v2')
         osenviron.setenv('SNIPPY_SERVER_HOST', '127.0.0.1:8081')
         osenviron.setenv('SNIPPY_SERVER_MINIFY_JSON', 'False')
         osenviron.setenv('SNIPPY_LOG_MSG_MAX', '100')
@@ -403,10 +403,10 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
             'content-length': '199'
         }
         expect_body = {'meta': Content.get_api_meta()}
-        server = Snippy(['snippy', '--server-host', 'localhost:8080', '--server-base-path', '/api/snippy/rest/v3', '--server-minify-json', '--log-msg-max', '20', '--debug'])  # noqa pylint: disable=line-too-long
+        server = Snippy(['snippy', '--server-host', 'localhost:8080', '--server-base-path-rest', '/api/snippy/rest/v3', '--server-minify-json', '--log-msg-max', '20', '--debug'])  # noqa pylint: disable=line-too-long
         server.run()
         result = testing.TestClient(server.server.api).simulate_get('/api/snippy/rest/v3/')
-        assert 'server_base_path=/api/snippy/rest/v3' in caplog.text
+        assert 'server_base_path_rest=/api/snippy/rest/v3' in caplog.text
         assert 'server_host=localhost:8080' in caplog.text
         assert 'server_minify_json=True' in caplog.text
         assert 'storage_type=sqlite' in caplog.text

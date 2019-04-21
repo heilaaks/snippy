@@ -63,7 +63,7 @@ class TestUtCli(object):
         assert cli.search_filter is None
         assert cli.search_limit == Cli.LIMIT_DEFAULT_CLI
         assert cli.search_offset == 0
-        assert cli.server_base_path == '/api/snippy/rest/'
+        assert cli.server_base_path_rest == '/api/snippy/rest/'
         assert cli.server_host == ''
         assert not cli.server_minify_json
         assert cli.server_ssl_ca_cert is None

@@ -105,7 +105,7 @@ class Config(object):
         namespace.append('storage_file=...{}'.format(os.sep.join(os.path.normpath(cls.storage_file).split(os.sep)[5:])))
         namespace.append('storage_schema=..{}'.format(os.sep.join(os.path.normpath(cls.storage_schema).split(os.sep)[5:])))
         namespace.append('server_host={}'.format(cls.server_host))
-        namespace.append('server_base_path={}'.format(cls.server_base_path))
+        namespace.append('server_base_path_rest={}'.format(cls.server_base_path_rest))
         namespace.append('server_minify_json={}'.format(cls.server_minify_json))
         namespace.append('editor={}'.format(cls.editor))
         namespace.append('use_ansi={}'.format(cls.use_ansi))
@@ -150,7 +150,7 @@ class Config(object):
         }
 
         # Static server configurations.
-        cls.server_base_path = cls.source.server_base_path
+        cls.server_base_path_rest = cls.source.server_base_path_rest
         cls.server_minify_json = cls.source.server_minify_json
         cls.server_host = cls.source.server_host
         cls.server_ssl_cert = cls._ssl_file(cls.source.server_ssl_cert)

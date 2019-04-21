@@ -232,7 +232,7 @@ class Cli(ConfigSourceBase):
         server = parser.add_argument_group(title='server options')
         server.add_argument('--server-host', type=Parser.to_unicode, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
         server.add_argument('--server-minify-json', action='store_true', default=argparse.SUPPRESS, help=argparse.SUPPRESS)
-        server.add_argument('--server-base-path', type=Parser.to_unicode, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
+        server.add_argument('--server-base-path-rest', type=Parser.to_unicode, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
         server.add_argument('--server-ssl-cert', type=Parser.to_unicode, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
         server.add_argument('--server-ssl-key', type=Parser.to_unicode, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
         server.add_argument('--server-ssl-ca-cert', type=Parser.to_unicode, default=argparse.SUPPRESS, help=argparse.SUPPRESS)

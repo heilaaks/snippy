@@ -22,7 +22,6 @@
    - [ ] Fix JSON API v1.x requires links for collection responses too. Individual resource not found or attrbute results null otherwise empty list.
    - [ ] Fix changing URI with digest which may be bad practise?
    - [ ] Post references with data must be automatically set to links. Data is only mandatory in API specs. Not easy (?) to add conditional mandatory fields in OAS.
-   - [ ] change (?) default basepath to /api/snippy/v1.
    - [ ] Fix digest computation once things are setling down. Changing this forces changes to all tests and code that rely on digest.
    - [ ] Fix help text to use import --all instead of content specific commands. Or keep?
    - [ ] Starting the server again and import the default content again with --defaults causes server internal erro 500 because of UUID. The 500 should not be here because this is not internal error. Fix?
@@ -77,7 +76,6 @@
    - [ ] Add test client to measure performance of the server. The PyPy does not seem to work with api_performance test.
    - [ ] Add user management with a new user table that lins to contents table.
    - [ ] Add CORS https://stackoverflow.com/a/45183343
-   - [ ] Add /snippy/api/admin/v1/settings for log config. Same base /snippy/api/ for all routes.
    - [ ] Add limit to multilevel sort fields to two fields to avoid complex scenarios.
    - [ ] Add limits to all parameters: column array size, sort array size, etc.
    - [ ] Add support to print only selected fields, like brief and digest for CLI text output. Hard to generalize since layout e.g. contains header with three fields.

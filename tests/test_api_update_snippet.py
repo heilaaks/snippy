@@ -72,11 +72,11 @@ class TestApiUpdateSnippet(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1001'
+            'content-length': '999'
         }
         expect_body = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/' + Snippet.FORCED_UUID
+                'self': 'http://falconframework.org/api/snippy/rest/snippets/' + Snippet.FORCED_UUID
             },
             'data': {
                 'type': 'snippet',
@@ -85,7 +85,7 @@ class TestApiUpdateSnippet(object):
             }
         }
         result = testing.TestClient(server.server.api).simulate_put(
-            path='/snippy/api/app/v1/snippets/53908d68425c61dc',
+            path='/api/snippy/rest/snippets/53908d68425c61dc',
             headers={'accept': 'application/vnd.api+json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_200
@@ -134,11 +134,11 @@ class TestApiUpdateSnippet(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '702'
+            'content-length': '700'
         }
         expect_body = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/' + Snippet.FORCED_UUID
+                'self': 'http://falconframework.org/api/snippy/rest/snippets/' + Snippet.FORCED_UUID
             },
             'data': {
                 'type': 'snippet',
@@ -147,7 +147,7 @@ class TestApiUpdateSnippet(object):
             }
         }
         result = testing.TestClient(server.server.api).simulate_put(
-            path='/snippy/api/app/v1/snippets/53908d68425c61dc',
+            path='/api/snippy/rest/snippets/53908d68425c61dc',
             headers={'accept': 'application/vnd.api+json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_200
@@ -194,11 +194,11 @@ class TestApiUpdateSnippet(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '645'
+            'content-length': '643'
         }
         expect_body = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/' + Snippet.FORCED_UUID
+                'self': 'http://falconframework.org/api/snippy/rest/snippets/' + Snippet.FORCED_UUID
             },
             'data': {
                 'type': 'snippet',
@@ -207,7 +207,7 @@ class TestApiUpdateSnippet(object):
             }
         }
         result = testing.TestClient(server.server.api).simulate_put(
-            path='/snippy/api/app/v1/snippets/53908d68425c61dc',
+            path='/api/snippy/rest/snippets/53908d68425c61dc',
             headers={'accept': 'application/vnd.api+json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_200
@@ -255,7 +255,7 @@ class TestApiUpdateSnippet(object):
             }]
         }
         result = testing.TestClient(server.server.api).simulate_put(
-            path='/snippy/api/app/v1/snippets/101010101010101',
+            path='/api/snippy/rest/snippets/101010101010101',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_404
@@ -296,7 +296,7 @@ class TestApiUpdateSnippet(object):
             }]
         }
         result = testing.TestClient(server.server.api).simulate_put(
-            path='/snippy/api/app/v1/snippets/53908d68425c61dc',
+            path='/api/snippy/rest/snippets/53908d68425c61dc',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_400
@@ -337,11 +337,11 @@ class TestApiUpdateSnippet(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '764'
+            'content-length': '762'
         }
         expect_body = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/' + Snippet.FORCED_UUID
+                'self': 'http://falconframework.org/api/snippy/rest/snippets/' + Snippet.FORCED_UUID
             },
             'data': {
                 'type': 'snippet',
@@ -351,7 +351,7 @@ class TestApiUpdateSnippet(object):
         }
         expect_body['data']['attributes']['updated'] = Content.NETCAT_TIME
         result = testing.TestClient(server.server.api).simulate_put(
-            path='/snippy/api/app/v1/snippets/53908d68425c61dc',
+            path='/api/snippy/rest/snippets/53908d68425c61dc',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_200
@@ -389,11 +389,11 @@ class TestApiUpdateSnippet(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '888'
+            'content-length': '886'
         }
         expect_body = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/' + Snippet.FORCED_UUID
+                'self': 'http://falconframework.org/api/snippy/rest/snippets/' + Snippet.FORCED_UUID
             },
             'data': {
                 'type': 'snippet',
@@ -402,7 +402,7 @@ class TestApiUpdateSnippet(object):
             }
         }
         result = testing.TestClient(server.server.api).simulate_patch(
-            path='/snippy/api/app/v1/snippets/53908d68425c61dc',
+            path='/api/snippy/rest/snippets/53908d68425c61dc',
             headers={'accept': 'application/vnd.api+json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_200

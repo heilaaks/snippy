@@ -50,7 +50,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     LIMIT_DEFAULT_API = 20
     LIMIT_DEFAULT_CLI = 99
     OFFSET_DEFAULT = 0
-    SERVER_BASE_PATH = '/snippy/api/app/v1/'
+    SERVER_BASE_PATH = '/api/snippy/rest'
 
     def __init__(self, derived, parameters=None):
         self._logger = Logger.get_logger(__name__)

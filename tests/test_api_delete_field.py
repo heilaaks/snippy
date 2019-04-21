@@ -62,7 +62,7 @@ class TestApiDeleteField(object):
             }]
         }
         result = testing.TestClient(server.server.api).simulate_delete(
-            path='/snippy/api/app/v1/groups/docs,python',
+            path='/api/snippy/rest/groups/docs,python',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_405
@@ -98,7 +98,7 @@ class TestApiDeleteField(object):
             }]
         }
         result = testing.TestClient(server.server.api).simulate_delete(
-            path='/snippy/api/app/v1/tags/5',
+            path='/api/snippy/rest/tags/5',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_405

@@ -271,8 +271,8 @@ be expected. The API is documented in Swagger Hub `OpenAPI definitions`_.
 .. code-block:: text
 
    sudo docker run -d --net="host" --name snippy docker.io/heilaaks/snippy --server-host 127.0.0.1:8080 --log-json -vv
-   curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=2" -H "accept: application/vnd.api+json"
-   curl -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json"
+   curl -s -X GET "http://127.0.0.1:8080/api/snippy/rest/snippets?limit=2" -H "accept: application/vnd.api+json"
+   curl -X GET "http://127.0.0.1:8080/api/snippy/rest/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json"
 
 You can see the logs from the server from the default Docker log. If you do
 not want to read JSON logs, remove the ``--log-json`` parameter from the

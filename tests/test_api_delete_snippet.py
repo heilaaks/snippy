@@ -50,7 +50,7 @@ class TestApiDeleteSnippet(object):
         }
         expect_headers = {}
         result = testing.TestClient(server.server.api).simulate_delete(
-            path='/snippy/api/app/v1/snippets/f3fd167c64b6f97e',
+            path='/api/snippy/rest/snippets/f3fd167c64b6f97e',
             headers={'accept': 'application/json'})
         assert result.status == falcon.HTTP_204
         assert result.headers == expect_headers
@@ -87,7 +87,7 @@ class TestApiDeleteSnippet(object):
             }]
         }
         result = testing.TestClient(server.server.api).simulate_delete(
-            path='/snippy/api/app/v1/snippets/beefbeef',
+            path='/api/snippy/rest/snippets/beefbeef',
             headers={'accept': 'application/json'})
         assert result.status == falcon.HTTP_404
         assert result.headers == expect_headers
@@ -123,7 +123,7 @@ class TestApiDeleteSnippet(object):
             }]
         }
         result = testing.TestClient(server.server.api).simulate_delete(
-            path='/snippy/api/app/v1/snippets',
+            path='/api/snippy/rest/snippets',
             headers={'accept': 'application/vnd.api+json'})
         assert result.status == falcon.HTTP_404
         assert result.headers == expect_headers
@@ -146,7 +146,7 @@ class TestApiDeleteSnippet(object):
         }
         expect_headers = {}
         result = testing.TestClient(server.server.api).simulate_delete(
-            path='/snippy/api/app/v1/snippets/' + Snippet.FORCED_UUID,
+            path='/api/snippy/rest/snippets/' + Snippet.FORCED_UUID,
             headers={'accept': 'application/json'})
         assert result.status == falcon.HTTP_204
         assert result.headers == expect_headers

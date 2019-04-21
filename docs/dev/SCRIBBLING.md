@@ -951,11 +951,11 @@ ll
 snippy import -d 1abc5d4fe9022429 -f kubernetes-docker-log-driver-kafka.mkdn
 snippy search --solution --sall docker | grep -Ev '[^\s]+:'
 sudo docker run -d --net="host" --name snippy heilaaks/snippy --server-host 127.0.0.1:8080 --log-json -vv
-curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/" | python -m json.tool
-curl -s -X GET "http://127.0.0.1:8080//snippy/api/app/v1/uuid/1/brief"
-curl -v -X OPTIONS "http://127.0.0.1:8080/snippy/api/app/v1/snippets"
-curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=0" -H "accept: application/vnd.api+json"
-curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=security&limit=1" -H "accept: application/vnd.api+json"
+curl -s -X GET "http://127.0.0.1:8080/api/snippy/rest/" | python -m json.tool
+curl -s -X GET "http://127.0.0.1:8080//api/snippy/rest/uuid/1/brief"
+curl -v -X OPTIONS "http://127.0.0.1:8080/api/snippy/rest/snippets"
+curl -s -X GET "http://127.0.0.1:8080/api/snippy/rest/snippets?limit=0" -H "accept: application/vnd.api+json"
+curl -s -X GET "http://127.0.0.1:8080/api/snippy/rest/snippets?sall=security&limit=1" -H "accept: application/vnd.api+json"
 docker logs snippy
 docker stop snippy
 docker rm snippy
@@ -1039,26 +1039,26 @@ Good set on loggers: https://books.google.fi/books?id=7U1CIoOs5AkC&pg=PA357&lpg=
     #$ openapi2jsonschema https://github.com/heilaaks/snippy/blob/master/docs/dev/swagger-2.0.yml --stand-alone
 
     # Swagger API
-    $ curl -X GET "http://127.0.0.1:8080/snippy/api/app/v1/"
-    $ curl -X GET "http://127.0.0.1:8080/snippy/api/app/v1/hello"
-    $ curl -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=20" -H "accept: application/json"
-    $ curl -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker,filebeat&limit=20" -H "accept: application/json"
-    $ curl -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets/a516e2d6f8aa5c6f" -H "accept: application/json"
-    $ curl -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets/a516e2d6f8aa5c6f" -H "accept: application/json" | python -m json.tool
-    $ curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker,filebeat&limit=2" -H "accept: application/json" | python -m json.tool
-    $ curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker,filebeat&limit=20" -H "accept: application/json" | python -m json.tool
-    $ curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker,filebeat&limit=20&sort=-created" -H "accept: application/json"
-    $ curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker,filebeat&limit=10&sort=brief&sort=-created" -H "accept: application/json" | python -m json.tool
-    $ curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker,filebeat&limit=20&sort=brief&fields=brief,group" -H  "accept: application/json" | python -m json.tool
-    $ curl -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/json" | python -m json.tool
-    $ curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/security?limit=1" -H "accept: application/vnd.api+json"
+    $ curl -X GET "http://127.0.0.1:8080/api/snippy/rest/"
+    $ curl -X GET "http://127.0.0.1:8080/api/snippy/rest/hello"
+    $ curl -X GET "http://127.0.0.1:8080/api/snippy/rest/snippets?sall=docker&limit=20" -H "accept: application/json"
+    $ curl -X GET "http://127.0.0.1:8080/api/snippy/rest/snippets?sall=docker,filebeat&limit=20" -H "accept: application/json"
+    $ curl -X GET "http://127.0.0.1:8080/api/snippy/rest/snippets/a516e2d6f8aa5c6f" -H "accept: application/json"
+    $ curl -X GET "http://127.0.0.1:8080/api/snippy/rest/snippets/a516e2d6f8aa5c6f" -H "accept: application/json" | python -m json.tool
+    $ curl -s -X GET "http://127.0.0.1:8080/api/snippy/rest/snippets?sall=docker,filebeat&limit=2" -H "accept: application/json" | python -m json.tool
+    $ curl -s -X GET "http://127.0.0.1:8080/api/snippy/rest/snippets?sall=docker,filebeat&limit=20" -H "accept: application/json" | python -m json.tool
+    $ curl -s -X GET "http://127.0.0.1:8080/api/snippy/rest/snippets?sall=docker,filebeat&limit=20&sort=-created" -H "accept: application/json"
+    $ curl -s -X GET "http://127.0.0.1:8080/api/snippy/rest/snippets?sall=docker,filebeat&limit=10&sort=brief&sort=-created" -H "accept: application/json" | python -m json.tool
+    $ curl -s -X GET "http://127.0.0.1:8080/api/snippy/rest/snippets?sall=docker,filebeat&limit=20&sort=brief&fields=brief,group" -H  "accept: application/json" | python -m json.tool
+    $ curl -X GET "http://127.0.0.1:8080/api/snippy/rest/snippets?sall=docker&limit=2" -H "accept: application/json" | python -m json.tool
+    $ curl -s -X GET "http://127.0.0.1:8080/api/snippy/rest/security?limit=1" -H "accept: application/vnd.api+json"
 
     # Server OPTIONS
     $ curl -i -X OPTIONS http://127.0.0.1:8080
     $ curl -v -X OPTIONS "http://127.0.0.1:8080/"
-    $ curl -v -X OPTIONS "http://127.0.0.1:8080/snippy/api/app/v1/snippets"
-    $ curl -v -X OPTIONS "http://127.0.0.1:8080/snippy/api/app/v1/snippets/1234"
-    $ curl -v -X OPTIONS "http://127.0.0.1:8080/snippy/api/app/v1/snippets/1234/brief"
+    $ curl -v -X OPTIONS "http://127.0.0.1:8080/api/snippy/rest/snippets"
+    $ curl -v -X OPTIONS "http://127.0.0.1:8080/api/snippy/rest/snippets/1234"
+    $ curl -v -X OPTIONS "http://127.0.0.1:8080/api/snippy/rest/snippets/1234/brief"
 
     # Fix multiple fields
     $ curl -X GET "https://app.swaggerhub.com/api/v1/snippets?sall=docker&sall=filebeat&sort=data&fields=data&fields=brief&fields=group" -H  "accept: application/json"
@@ -1071,12 +1071,12 @@ Good set on loggers: https://books.google.fi/books?id=7U1CIoOs5AkC&pg=PA357&lpg=
     $ dredd snippy/data/server/openapi/swagger-2.0.yml http://127.0.0.1:8080 --dry-run
     $ dredd snippy/data/server/openapi/swagger.yml http://127.0.0.1:8080 --dry-run
 
-    $ curl -X POST "http://127.0.0.1:8080/snippy/api/app/v1/snippets" -H "Content-Type: application/json" -d '{}'
-    $ curl -X POST "http://127.0.0.1:8080/snippy/api/app/v1/snippets" -H "Content-Type: application/json" -d '{"data":["row1","row2"]}'
-    $ curl -X POST "http://127.0.0.1:8080/snippy/api/app/v1/snippets" -H "accept: application/vnd.api+json; charset=UTF-8" -H "Content-Type: application/vnd.api+json; charset=UTF-8" -d '{"data":[{"type": "snippet", "attributes": {"data": ["row1", "row2"]}}]}'
-    $ curl -X POST "http://127.0.0.1:8080/snippy/api/app/v1/snippets" -H "accept: application/vnd.api+json; charset=UTF-8" -H  "Content-Type: application/vnd.api+json; charset=UTF-8" -d "{  \"data\": [    {      \"type\": \"snippet\",      \"attributes\": {        \"data\": [          \"string\"        ],        \"brief\": \"string\",        \"group\": \"string\",        \"tags\": [          \"string\"        ],        \"links\": [          \"string\"        ],        \"category\": \"snippet\",        \"filename\": \"string\",        \"name\": \"string\",        \"versions\": \"string\",        \"created\": \"string\",        \"updated\": \"string\",        \"digest\": \"string\"      }    }  ]}"
-    $ curl -X POST "http://127.0.0.1:8080/snippy/api/app/v1/snippets" -H "Content-Type: application/json" -d '{"data":"occaecat veniam aliqua","links":["et dolore ipsum reprehenderit","cupidatat","Lorem aliquip quis dolor cillum","non quis adipisicing sunt esse","in"],"versions":"irure nulla laborum Duis"}'
-    $ curl -X POST "http://127.0.0.1:8080/snippy/api/app/v1/snippets" -H "Content-Type: application/vnd.api+json" -d '{"data":"occaecat veniam aliqua","links":["et dolore ipsum reprehenderit","cupidatat","Lorem aliquip quis dolor cillum","non quis adipisicing sunt esse","in"],"versions":"irure nulla laborum Duis"}'
+    $ curl -X POST "http://127.0.0.1:8080/api/snippy/rest/snippets" -H "Content-Type: application/json" -d '{}'
+    $ curl -X POST "http://127.0.0.1:8080/api/snippy/rest/snippets" -H "Content-Type: application/json" -d '{"data":["row1","row2"]}'
+    $ curl -X POST "http://127.0.0.1:8080/api/snippy/rest/snippets" -H "accept: application/vnd.api+json; charset=UTF-8" -H "Content-Type: application/vnd.api+json; charset=UTF-8" -d '{"data":[{"type": "snippet", "attributes": {"data": ["row1", "row2"]}}]}'
+    $ curl -X POST "http://127.0.0.1:8080/api/snippy/rest/snippets" -H "accept: application/vnd.api+json; charset=UTF-8" -H  "Content-Type: application/vnd.api+json; charset=UTF-8" -d "{  \"data\": [    {      \"type\": \"snippet\",      \"attributes\": {        \"data\": [          \"string\"        ],        \"brief\": \"string\",        \"group\": \"string\",        \"tags\": [          \"string\"        ],        \"links\": [          \"string\"        ],        \"category\": \"snippet\",        \"filename\": \"string\",        \"name\": \"string\",        \"versions\": \"string\",        \"created\": \"string\",        \"updated\": \"string\",        \"digest\": \"string\"      }    }  ]}"
+    $ curl -X POST "http://127.0.0.1:8080/api/snippy/rest/snippets" -H "Content-Type: application/json" -d '{"data":"occaecat veniam aliqua","links":["et dolore ipsum reprehenderit","cupidatat","Lorem aliquip quis dolor cillum","non quis adipisicing sunt esse","in"],"versions":"irure nulla laborum Duis"}'
+    $ curl -X POST "http://127.0.0.1:8080/api/snippy/rest/snippets" -H "Content-Type: application/vnd.api+json" -d '{"data":"occaecat veniam aliqua","links":["et dolore ipsum reprehenderit","cupidatat","Lorem aliquip quis dolor cillum","non quis adipisicing sunt esse","in"],"versions":"irure nulla laborum Duis"}'
     ```
 
 #######################################
@@ -1391,8 +1391,8 @@ python runner import --defaults --reference
     $ docker run heilaaks/snippy search --sall .
     $ docker run -d --net="host" --name snippy heilaaks/snippy --server-host 127.0.0.1:8080 --log-json -vv
     $ docker run -d --net="host" --name snippy heilaaks/snippy --server-host 127.0.0.1:8080 --storage-type postgresql --storage-host localhost:5432 --storage-database postgres --storage-user postgres --storage-password postgres --log-json -vv
-    $ curl -X POST "http://127.0.0.1:8080/snippy/api/app/v1/snippets" -H "accept: application/vnd.api+json; charset=UTF-8" -H "Content-Type: application/vnd.api+json; charset=UTF-8" -d '{"data":[{"type": "snippet", "attributes": {"data": ["row1", "row2"]}}]}'
-    $ curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets" -H "accept: application/vnd.api+json"
+    $ curl -X POST "http://127.0.0.1:8080/api/snippy/rest/snippets" -H "accept: application/vnd.api+json; charset=UTF-8" -H "Content-Type: application/vnd.api+json; charset=UTF-8" -d '{"data":[{"type": "snippet", "attributes": {"data": ["row1", "row2"]}}]}'
+    $ curl -s -X GET "http://127.0.0.1:8080/api/snippy/rest/snippets" -H "accept: application/vnd.api+json"
     $ docker logs snippy
     $ docker rm $(docker ps --all -q -f status=exited)
     $ docker images -q --filter dangling=true | xargs docker rmi
@@ -2326,8 +2326,8 @@ git update-index --no-assume-unchanged FILE_NAME # change back
           or uuid is used, it may match to multiple contents in search request.
           How ever, when user issues request like:
 
-            GET /snippy/api/app/v1/uuid/1/brief
-            GET /snippy/api/app/v1/digest/1/brief
+            GET /api/snippy/rest/uuid/1/brief
+            GET /api/snippy/rest/digest/1/brief
 
          it is considered that it is better to return error and tell the user why
          the request failed than return 200 OK with data set to 'null'.
@@ -2340,7 +2340,7 @@ git update-index --no-assume-unchanged FILE_NAME # change back
 
          This case is different if uuid or digest is used in query parameter like:
 
-           GET /snippy/api/app/v1/group/docker?scat=snippet&uuid=1
+           GET /api/snippy/rest/group/docker?scat=snippet&uuid=1
 
          In the above case, the result can be collection of resources if there are
          resources in snippet category which uuid start with 1.
@@ -2817,7 +2817,7 @@ git update-index --no-assume-unchanged FILE_NAME # change back
                 }]
             }
             result = testing.TestClient(server.server.api).simulate_post(
-                path='/snippy/api/app/v1/snippets',
+                path='/api/snippy/rest/snippets',
                 headers={'accept': 'application/json'},
                 body=json.dumps(request_body))
             assert result.status == falcon.HTTP_201
@@ -2857,7 +2857,7 @@ git update-index --no-assume-unchanged FILE_NAME # change back
             }
             expect_body = {
                 'links': {
-                    'self': 'http://falconframework.org/snippy/api/app/v1/snippets/a9e137c08aee0985'
+                    'self': 'http://falconframework.org/api/snippy/rest/snippets/a9e137c08aee0985'
                 },
                 'data': {
                     'type': 'snippet',
@@ -2866,7 +2866,7 @@ git update-index --no-assume-unchanged FILE_NAME # change back
                 }
             }
             result = testing.TestClient(server.server.api).simulate_post(
-                path='/snippy/api/app/v1/snippets/53908d68425c61dc',
+                path='/api/snippy/rest/snippets/53908d68425c61dc',
                 headers={'accept': 'application/vnd.api+json', 'X-HTTP-Method-Override': 'PATCH'},
                 body=json.dumps(request_body))
             assert result.status == falcon.HTTP_200

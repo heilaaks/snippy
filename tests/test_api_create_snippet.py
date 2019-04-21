@@ -72,7 +72,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/app/v1/snippets',
+            path='/api/snippy/rest/snippets',
             headers={'accept': 'application/vnd.api+json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_201
@@ -115,7 +115,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/app/v1/snippets',
+            path='/api/snippy/rest/snippets',
             headers={'accept': 'application/vnd.api+json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_201
@@ -165,7 +165,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/app/v1/snippets',
+            path='/api/snippy/rest/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_201
@@ -211,7 +211,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/app/v1/snippets',
+            path='/api/snippy/rest/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_400
@@ -264,7 +264,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/app/v1/snippets',
+            path='/api/snippy/rest/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_201
@@ -320,7 +320,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/app/v1/snippets',
+            path='/api/snippy/rest/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_201
@@ -369,7 +369,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/app/v1/snippets',
+            path='/api/snippy/rest/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_201
@@ -399,7 +399,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/app/v1/snippets',
+            path='/api/snippy/rest/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_400
@@ -443,7 +443,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/app/v1/snippets',
+            path='/api/snippy/rest/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_400
@@ -481,7 +481,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/app/v1/snippets',
+            path='/api/snippy/rest/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_403
@@ -521,7 +521,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/app/v1/snippets',
+            path='/api/snippy/rest/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_400
@@ -567,7 +567,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/app/v1/snippets',
+            path='/api/snippy/rest/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_403
@@ -598,11 +598,11 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '796'
+            'content-length': '794'
         }
         expect_body = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/' + Snippet.FORCED_UUID
+                'self': 'http://falconframework.org/api/snippy/rest/snippets/' + Snippet.FORCED_UUID
             },
             'data': {
                 'type': 'snippet',
@@ -611,7 +611,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             }
         }
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/app/v1/snippets/53908d68425c61dc',
+            path='/api/snippy/rest/snippets/53908d68425c61dc',
             headers={'accept': 'application/vnd.api+json', 'X-HTTP-Method-Override': 'PUT'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_200
@@ -654,11 +654,11 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '888'
+            'content-length': '886'
         }
         expect_body = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/' + Snippet.FORCED_UUID
+                'self': 'http://falconframework.org/api/snippy/rest/snippets/' + Snippet.FORCED_UUID
             },
             'data': {
                 'type': 'snippet',
@@ -667,7 +667,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             }
         }
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/app/v1/snippets/53908d68425c61dc',
+            path='/api/snippy/rest/snippets/53908d68425c61dc',
             headers={'accept': 'application/vnd.api+json', 'X-HTTP-Method-Override': 'PATCH'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_200
@@ -725,7 +725,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/app/v1/snippets/53908d68425c61dc',
+            path='/api/snippy/rest/snippets/53908d68425c61dc',
             headers={'accept': 'application/vnd.api+json', 'X-HTTP-Method-Override': 'PATCH'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_400
@@ -751,7 +751,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         }
         expect_headers = {}
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/app/v1/snippets/f3fd167c64b6f97e',
+            path='/api/snippy/rest/snippets/f3fd167c64b6f97e',
             headers={'accept': 'application/json', 'X-HTTP-Method-Override': 'DELETE'})
         assert result.status == falcon.HTTP_204
         assert result.headers == expect_headers
@@ -788,7 +788,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/app/v1/snippets/53908d68425c61dc',
+            path='/api/snippy/rest/snippets/53908d68425c61dc',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_400
@@ -839,7 +839,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/app/v1/snippets',
+            path='/api/snippy/rest/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_400
@@ -901,7 +901,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/app/v1/snippets',
+            path='/api/snippy/rest/snippets',
             headers={'accept': 'application/vnd.api+json', 'content-type': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body, ensure_ascii=False))
         assert result.status == falcon.HTTP_201
@@ -927,7 +927,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/snippets',
+            path='/api/snippy/rest/snippets',
             headers={'accept': 'application/vnd.api+json', 'content-type': 'application/vnd.api+json; charset=UTF-8'},
             query_string='sall=Düsseldorf&limit=20&sort=brief')
         assert result.status == falcon.HTTP_200
@@ -991,7 +991,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/app/v1/snippets',
+            path='/api/snippy/rest/snippets',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_201
@@ -1048,7 +1048,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/app/v1/snippets',
+            path='/api/snippy/rest/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_201
@@ -1112,7 +1112,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/app/v1/snippets',
+            path='/api/snippy/rest/snippets',
             headers={'accept': 'application/vnd.api+json', 'content-type': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body, ensure_ascii=False))
         assert result.status == falcon.HTTP_201
@@ -1169,7 +1169,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/app/v1/snippets',
+            path='/api/snippy/rest/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_201
@@ -1227,7 +1227,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/app/v1/snippets',
+            path='/api/snippy/rest/snippets',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_400

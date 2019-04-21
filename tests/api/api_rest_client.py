@@ -61,26 +61,26 @@ class RestApiPerformance(object):
 
             ## DELETE all snippets one by one by first requesting only digests.
             conn.request('GET',
-                         '/snippy/api/app/v1/snippets?limit=100&fields=digest')
+                         '/api/snippy/rest/snippets?limit=100&fields=digest')
             resp = conn.getresponse()
             body = json.loads(resp.read().decode())
             assert resp.status in (200, 404)
             if 'data' in body:
                 for resource_ in body['data']:
                     conn.request('DELETE',
-                                 'http://localhost:8080/snippy/api/app/v1/snippets/' + resource_['attributes']['digest'])
+                                 'http://localhost:8080/api/snippy/rest/snippets/' + resource_['attributes']['digest'])
                     resp = conn.getresponse()
                     assert resp.status == 204
 
             # GET all snippets to make sure that all are deleted
             conn.request('GET',
-                         '/snippy/api/app/v1/snippets?limit=100')
+                         '/api/snippy/rest/snippets?limit=100')
             resp = conn.getresponse()
             assert resp.status == 404
 
             # POST four snippets in list context.
             conn.request('POST',
-                         '/snippy/api/app/v1/snippets',
+                         '/api/snippy/rest/snippets',
                          json.dumps(snippets),
                          {'content-type':'application/json; charset=UTF-8'})
             resp = conn.getresponse()
@@ -89,14 +89,14 @@ class RestApiPerformance(object):
 
             # GET maximum of two snippets from whole snippet collection.
             conn.request('GET',
-                         '/snippy/api/app/v1/snippets?limit=2&sort=-brief')
+                         '/api/snippy/rest/snippets?limit=2&sort=-brief')
             resp = conn.getresponse()
             assert resp.status == 200
             assert len(json.loads(resp.read().decode())['data']) == 2
 
             ## GET maximum of four snippets from whole snippet collection with sall search.
             conn.request('GET',
-                         '/snippy/api/app/v1/snippets?sall=docker,swarm&limit=4&sort=brief')
+                         '/api/snippy/rest/snippets?sall=docker,swarm&limit=4&sort=brief')
             resp = conn.getresponse()
             assert resp.status == 200
             assert len(json.loads(resp.read().decode())['data']) == 3

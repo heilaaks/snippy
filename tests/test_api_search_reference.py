@@ -67,7 +67,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/references',
+            path='/api/snippy/rest/references',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             query_string='sall=commit%2Cregular&limit=20&sort=brief')
         assert result.status == falcon.HTTP_200
@@ -110,7 +110,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/references',
+            path='/api/snippy/rest/references',
             headers={'accept': 'application/json'},
             query_string='sall=PYTHON%2Cgit&limit=2&sort=brief')
         assert result.status == falcon.HTTP_200
@@ -147,7 +147,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/references',
+            path='/api/snippy/rest/references',
             headers={'accept': 'application/json'},
             query_string='sall=howto&limit=1&sort=-brief&fields=brief,category')
         assert result.status == falcon.HTTP_200
@@ -183,7 +183,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/references',
+            path='/api/snippy/rest/references',
             headers={'accept': 'application/json'},
             query_string='sall=howto&limit=1&sort=-brief&fields=brief%2Ccategory')
         assert result.status == falcon.HTTP_200
@@ -218,7 +218,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/references',
+            path='/api/snippy/rest/references',
             headers={'accept': 'application/json'},
             query_string='sall=howto&limit=1&sort=-brief&fields=brief&fields=category')
         assert result.status == falcon.HTTP_200
@@ -248,7 +248,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/references',
+            path='/api/snippy/rest/references',
             headers={'accept': 'application/json'},
             query_string='sall=notfound&limit=10&sort=-brief&fields=brief,category')
         assert result.status == falcon.HTTP_404
@@ -278,7 +278,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/references',
+            path='/api/snippy/rest/references',
             headers={'accept': 'application/json'},
             query_string='stag=notfound&limit=10&sort=-brief&fields=brief,category')
         assert result.status == falcon.HTTP_404
@@ -290,13 +290,13 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_008(server):
         """Search reference with digets.
 
-        Send GET /snippy/api/app/v1/references/{id} to get explicit reference
+        Send GET /api/snippy/rest/references/{id} to get explicit reference
         based on digest. In this case the reference is found.
         """
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '753'
+            'content-length': '751'
         }
         expect_body = {
             'meta': {
@@ -311,11 +311,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
                 'attributes': Storage.gitlog
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/references/' + Reference.GITLOG_UUID
+                'self': 'http://falconframework.org/api/snippy/rest/references/' + Reference.GITLOG_UUID
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/references/5c20',
+            path='/api/snippy/rest/references/5c20',
             headers={'accept': 'application/json'})
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
@@ -343,7 +343,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/references/101010101010101',
+            path='/api/snippy/rest/references/101010101010101',
             headers={'accept': 'application/json'})
         assert result.status == falcon.HTTP_404
         assert result.headers == expect_headers
@@ -380,7 +380,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/references',
+            path='/api/snippy/rest/references',
             headers={'accept': 'application/json'},
             query_string='limit=20&sort=brief')
         assert result.status == falcon.HTTP_200
@@ -416,7 +416,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/references',
+            path='/api/snippy/rest/references',
             headers={'accept': 'application/json'},
             query_string='limit=1&sort=-brief')
         assert result.status == falcon.HTTP_200
@@ -462,7 +462,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/references',
+            path='/api/snippy/rest/references',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             query_string='sall=python%2CGIT&limit=20&sort=brief')
         assert result.status == falcon.HTTP_200
@@ -496,7 +496,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             'data': [],
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/references',
+            path='/api/snippy/rest/references',
             headers={'accept': 'application/json'},
             query_string='sall=.&offset=4&limit=0&sort=brief')
         assert result.status == falcon.HTTP_200
@@ -513,7 +513,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '242'
+            'content-length': '240'
         }
         expect_body = {
             'data': {
@@ -524,11 +524,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/references/31cd5827-b6ef-4067-b5ac-3ceac07dde9f/category'
+                'self': 'http://falconframework.org/api/snippy/rest/references/31cd5827-b6ef-4067-b5ac-3ceac07dde9f/category'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/references/5c2071094dbfaa33/category',
+            path='/api/snippy/rest/references/5c2071094dbfaa33/category',
             headers={'accept': 'application/vnd.api+json'})
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
@@ -545,7 +545,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '225'
+            'content-length': '223'
         }
         expect_body = {
             'data': {
@@ -556,11 +556,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/references/31cd5827-b6ef-4067-b5ac-3ceac07dde9f/data'
+                'self': 'http://falconframework.org/api/snippy/rest/references/31cd5827-b6ef-4067-b5ac-3ceac07dde9f/data'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/references/5c20/data',
+            path='/api/snippy/rest/references/5c20/data',
             headers={'accept': 'application/vnd.api+json'})
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
@@ -576,7 +576,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '255'
+            'content-length': '253'
         }
         expect_body = {
             'data': {
@@ -587,11 +587,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/references/31cd5827-b6ef-4067-b5ac-3ceac07dde9f/brief'
+                'self': 'http://falconframework.org/api/snippy/rest/references/31cd5827-b6ef-4067-b5ac-3ceac07dde9f/brief'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/references/5c2071094dbfaa33/brief',
+            path='/api/snippy/rest/references/5c2071094dbfaa33/brief',
             headers={'accept': 'application/vnd.api+json'})
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
@@ -607,7 +607,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '239'
+            'content-length': '237'
         }
         expect_body = {
             'data': {
@@ -618,11 +618,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/references/31cd5827-b6ef-4067-b5ac-3ceac07dde9f/description'
+                'self': 'http://falconframework.org/api/snippy/rest/references/31cd5827-b6ef-4067-b5ac-3ceac07dde9f/description'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/references/5c2071094dbfaa33/description',
+            path='/api/snippy/rest/references/5c2071094dbfaa33/description',
             headers={'accept': 'application/vnd.api+json'})
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
@@ -638,7 +638,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '225'
+            'content-length': '223'
         }
         expect_body = {
             'data': {
@@ -649,11 +649,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/references/31cd5827-b6ef-4067-b5ac-3ceac07dde9f/name'
+                'self': 'http://falconframework.org/api/snippy/rest/references/31cd5827-b6ef-4067-b5ac-3ceac07dde9f/name'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/references/5c2071094dbfaa33/name',
+            path='/api/snippy/rest/references/5c2071094dbfaa33/name',
             headers={'accept': 'application/vnd.api+json'})
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
@@ -669,7 +669,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '234'
+            'content-length': '232'
         }
         expect_body = {
             'data': {
@@ -680,11 +680,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/references/31cd5827-b6ef-4067-b5ac-3ceac07dde9f/groups'
+                'self': 'http://falconframework.org/api/snippy/rest/references/31cd5827-b6ef-4067-b5ac-3ceac07dde9f/groups'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/references/5c2071094dbfaa33/groups',
+            path='/api/snippy/rest/references/5c2071094dbfaa33/groups',
             headers={'accept': 'application/vnd.api+json'})
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
@@ -700,7 +700,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '249'
+            'content-length': '247'
         }
         expect_body = {
             'data': {
@@ -711,11 +711,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/references/31cd5827-b6ef-4067-b5ac-3ceac07dde9f/tags'
+                'self': 'http://falconframework.org/api/snippy/rest/references/31cd5827-b6ef-4067-b5ac-3ceac07dde9f/tags'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/references/5c2071094dbfaa33/tags',
+            path='/api/snippy/rest/references/5c2071094dbfaa33/tags',
             headers={'accept': 'application/vnd.api+json'})
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
@@ -731,7 +731,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '269'
+            'content-length': '267'
         }
         expect_body = {
             'data': {
@@ -742,11 +742,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/references/31cd5827-b6ef-4067-b5ac-3ceac07dde9f/links'
+                'self': 'http://falconframework.org/api/snippy/rest/references/31cd5827-b6ef-4067-b5ac-3ceac07dde9f/links'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/references/5c2071094dbfaa33/links',
+            path='/api/snippy/rest/references/5c2071094dbfaa33/links',
             headers={'accept': 'application/vnd.api+json'})
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
@@ -762,7 +762,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '229'
+            'content-length': '227'
         }
         expect_body = {
             'data': {
@@ -773,11 +773,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/references/31cd5827-b6ef-4067-b5ac-3ceac07dde9f/source'
+                'self': 'http://falconframework.org/api/snippy/rest/references/31cd5827-b6ef-4067-b5ac-3ceac07dde9f/source'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/references/5c2071094dbfaa33/source',
+            path='/api/snippy/rest/references/5c2071094dbfaa33/source',
             headers={'accept': 'application/vnd.api+json'})
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
@@ -793,7 +793,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '233'
+            'content-length': '231'
         }
         expect_body = {
             'data': {
@@ -804,11 +804,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/references/31cd5827-b6ef-4067-b5ac-3ceac07dde9f/versions'
+                'self': 'http://falconframework.org/api/snippy/rest/references/31cd5827-b6ef-4067-b5ac-3ceac07dde9f/versions'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/references/5c2071094dbfaa33/versions',
+            path='/api/snippy/rest/references/5c2071094dbfaa33/versions',
             headers={'accept': 'application/vnd.api+json'})
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
@@ -824,7 +824,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '233'
+            'content-length': '231'
         }
         expect_body = {
             'data': {
@@ -835,11 +835,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/references/31cd5827-b6ef-4067-b5ac-3ceac07dde9f/filename'
+                'self': 'http://falconframework.org/api/snippy/rest/references/31cd5827-b6ef-4067-b5ac-3ceac07dde9f/filename'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/references/5c2071094dbfaa33/filename',
+            path='/api/snippy/rest/references/5c2071094dbfaa33/filename',
             headers={'accept': 'application/vnd.api+json'})
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
@@ -855,7 +855,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '263'
+            'content-length': '261'
         }
         expect_body = {
             'data': {
@@ -866,11 +866,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/references/31cd5827-b6ef-4067-b5ac-3ceac07dde9f/created'
+                'self': 'http://falconframework.org/api/snippy/rest/references/31cd5827-b6ef-4067-b5ac-3ceac07dde9f/created'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/references/5c2071094dbfaa33/created',
+            path='/api/snippy/rest/references/5c2071094dbfaa33/created',
             headers={'accept': 'application/vnd.api+json'})
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
@@ -886,7 +886,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '263'
+            'content-length': '261'
         }
         expect_body = {
             'data': {
@@ -897,11 +897,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/references/31cd5827-b6ef-4067-b5ac-3ceac07dde9f/updated'
+                'self': 'http://falconframework.org/api/snippy/rest/references/31cd5827-b6ef-4067-b5ac-3ceac07dde9f/updated'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/references/5c2071094dbfaa33/updated',
+            path='/api/snippy/rest/references/5c2071094dbfaa33/updated',
             headers={'accept': 'application/vnd.api+json'})
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
@@ -917,7 +917,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '261'
+            'content-length': '259'
         }
         expect_body = {
             'data': {
@@ -928,11 +928,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/references/31cd5827-b6ef-4067-b5ac-3ceac07dde9f/uuid'
+                'self': 'http://falconframework.org/api/snippy/rest/references/31cd5827-b6ef-4067-b5ac-3ceac07dde9f/uuid'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/references/5c2071094dbfaa33/uuid',
+            path='/api/snippy/rest/references/5c2071094dbfaa33/uuid',
             headers={'accept': 'application/vnd.api+json'})
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
@@ -948,7 +948,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '293'
+            'content-length': '291'
         }
         expect_body = {
             'data': {
@@ -959,11 +959,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/references/31cd5827-b6ef-4067-b5ac-3ceac07dde9f/digest'
+                'self': 'http://falconframework.org/api/snippy/rest/references/31cd5827-b6ef-4067-b5ac-3ceac07dde9f/digest'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/references/5c2071094dbfaa33/digest',
+            path='/api/snippy/rest/references/5c2071094dbfaa33/digest',
             headers={'accept': 'application/vnd.api+json'})
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
@@ -992,7 +992,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/references/5c2071094dbfaa33/notexist',
+            path='/api/snippy/rest/references/5c2071094dbfaa33/notexist',
             headers={'accept': 'application/vnd.api+json'})
         assert result.status == falcon.HTTP_400
         assert result.headers == expect_headers
@@ -1026,7 +1026,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/references/0101010101/notexist',
+            path='/api/snippy/rest/references/0101010101/notexist',
             headers={'accept': 'application/vnd.api+json'})
         assert result.status == falcon.HTTP_400
         assert result.headers == expect_headers

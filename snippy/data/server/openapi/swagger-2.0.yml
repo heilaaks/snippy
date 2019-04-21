@@ -1,11 +1,10 @@
 swagger: '2.0'
 
 info:
-  version: "1.0"
-  title: Snippy - Manage development notes and workflows
+  version: "0.10.0"
+  title: Snippy - Software development notes
   description: >-
-    Snippy is a software development notes manager. The tool allows documenting and
-    sharing development and troubleshooting solutions and workflows.
+    Snippy is a software development and maintenance notes manager. It allows organizing and sharing examples and solutions from self hosted or shared storage.
   termsOfService: "https://github.com/heilaaks/snippy"
   contact:
     email: "laaksonen.heikki.j@gmail.com"
@@ -14,7 +13,7 @@ info:
     url: "https://github.com/heilaaks/snippy/blob/master/LICENSE"
 schemes: ["http", "https"]
 host: "localhost:8080"
-basePath: "/api/snippy/v1"
+basePath: "/api/snippy/rest"
 paths:
   /{category}:
     post:

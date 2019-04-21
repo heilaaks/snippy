@@ -49,7 +49,7 @@ class TestApiDeleteSolution(object):
         }
         expect_headers = {}
         result = testing.TestClient(server.server.api).simulate_delete(
-            path='/snippy/api/app/v1/solutions/fffeaf31e98e68a',
+            path='/api/snippy/rest/solutions/fffeaf31e98e68a',
             headers={'accept': 'application/json'})
         assert result.headers == expect_headers
         assert result.status == falcon.HTTP_204
@@ -86,7 +86,7 @@ class TestApiDeleteSolution(object):
             }]
         }
         result = testing.TestClient(server.server.api).simulate_delete(
-            path='/snippy/api/app/v1/solutions/beefbeef',
+            path='/api/snippy/rest/solutions/beefbeef',
             headers={'accept': 'application/json'})
         assert result.status == falcon.HTTP_404
         assert result.headers == expect_headers
@@ -122,7 +122,7 @@ class TestApiDeleteSolution(object):
             }]
         }
         result = testing.TestClient(server.server.api).simulate_delete(
-            path='/snippy/api/app/v1/solutions',
+            path='/api/snippy/rest/solutions',
             headers={'accept': 'application/vnd.api+json'})
         assert result.status == falcon.HTTP_404
         assert result.headers == expect_headers

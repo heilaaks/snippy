@@ -1,18 +1,19 @@
 openapi: 3.0.1
 info:
-  title: Snippy - Manage development notes and workflows
-  description: Snippy is a software development notes manager. The tool allows documenting
-    and sharing development and troubleshooting solutions and workflows.
+  title: Snippy - Software development notes
+  description: Snippy is a software development and maintenance notes manager. It
+    allows organizing and sharing examples and solutions from self hosted or shared
+    storage.
   termsOfService: https://github.com/heilaaks/snippy
   contact:
     email: laaksonen.heikki.j@gmail.com
   license:
     name: GNU AGPLv3 or later
     url: https://github.com/heilaaks/snippy/blob/master/LICENSE
-  version: "1.0"
+  version: 0.10.0
 servers:
-- url: http://localhost:8080/api/snippy/v1
-- url: https://localhost:8080/api/snippy/v1
+- url: http://localhost:8080/api/snippy/rest
+- url: https://localhost:8080/api/snippy/rest
 paths:
   /{category}:
     get:

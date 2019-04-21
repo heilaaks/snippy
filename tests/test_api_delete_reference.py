@@ -50,7 +50,7 @@ class TestApiDeleteReference(object):
         }
         expect_headers = {}
         result = testing.TestClient(server.server.api).simulate_delete(
-            path='/snippy/api/app/v1/references/1f9d9496005736ef',
+            path='/api/snippy/rest/references/1f9d9496005736ef',
             headers={'accept': 'application/json'})
         assert result.status == falcon.HTTP_204
         assert result.headers == expect_headers
@@ -86,7 +86,7 @@ class TestApiDeleteReference(object):
             }]
         }
         result = testing.TestClient(server.server.api).simulate_delete(
-            path='/snippy/api/app/v1/references/beefbeef',
+            path='/api/snippy/rest/references/beefbeef',
             headers={'accept': 'application/json'})
         assert result.status == falcon.HTTP_404
         assert result.headers == expect_headers
@@ -122,7 +122,7 @@ class TestApiDeleteReference(object):
             }]
         }
         result = testing.TestClient(server.server.api).simulate_delete(
-            path='/snippy/api/app/v1/references',
+            path='/api/snippy/rest/references',
             headers={'accept': 'application/vnd.api+json'})
         assert result.status == falcon.HTTP_404
         assert result.headers == expect_headers
@@ -146,7 +146,7 @@ class TestApiDeleteReference(object):
         }
         expect_headers = {}
         result = testing.TestClient(server.server.api).simulate_delete(
-            path='/snippy/api/app/v1/references/' + Reference.GITLOG_UUID,
+            path='/api/snippy/rest/references/' + Reference.GITLOG_UUID,
             headers={'accept': 'application/json'})
         assert result.status == falcon.HTTP_204
         assert result.headers == expect_headers

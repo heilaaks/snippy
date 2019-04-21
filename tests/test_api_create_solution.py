@@ -71,7 +71,7 @@ class TestApiCreateSolution(object):
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/app/v1/solutions',
+            path='/api/snippy/rest/solutions',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_201
@@ -123,7 +123,7 @@ class TestApiCreateSolution(object):
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/app/v1/solutions',
+            path='/api/snippy/rest/solutions',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_201
@@ -178,11 +178,11 @@ class TestApiCreateSolution(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '3074'
+            'content-length': '3072'
         }
         expect_body = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/' + Solution.BEATS_UUID
+                'self': 'http://falconframework.org/api/snippy/rest/solutions/' + Solution.BEATS_UUID
             },
             'data': {
                 'type': 'solution',
@@ -191,7 +191,7 @@ class TestApiCreateSolution(object):
             }
         }
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/app/v1/solutions/db712a82662d6932',
+            path='/api/snippy/rest/solutions/db712a82662d6932',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8', 'X-HTTP-Method-Override': 'PUT'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_200
@@ -230,11 +230,11 @@ class TestApiCreateSolution(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '3144'
+            'content-length': '3142'
         }
         expect_body = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/' + Solution.BEATS_UUID
+                'self': 'http://falconframework.org/api/snippy/rest/solutions/' + Solution.BEATS_UUID
             },
             'data': {
                 'type': 'solution',
@@ -243,7 +243,7 @@ class TestApiCreateSolution(object):
             }
         }
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/app/v1/solutions/db712a82662d6932',
+            path='/api/snippy/rest/solutions/db712a82662d6932',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8', 'X-HTTP-Method-Override': 'PATCH'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_200
@@ -268,7 +268,7 @@ class TestApiCreateSolution(object):
         }
         expect_headers = {}
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/app/v1/solutions/fffeaf31e98e68a',
+            path='/api/snippy/rest/solutions/fffeaf31e98e68a',
             headers={'accept': 'application/json', 'X-HTTP-Method-Override': 'DELETE'})
         assert result.status == falcon.HTTP_204
         assert result.headers == expect_headers
@@ -305,7 +305,7 @@ class TestApiCreateSolution(object):
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/app/v1/solutions/53908d68425c61dc',
+            path='/api/snippy/rest/solutions/53908d68425c61dc',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_400
@@ -338,7 +338,7 @@ class TestApiCreateSolution(object):
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/app/v1/solutions',
+            path='/api/snippy/rest/solutions',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_400
@@ -382,7 +382,7 @@ class TestApiCreateSolution(object):
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/app/v1/solutions',
+            path='/api/snippy/rest/solutions',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_400
@@ -451,7 +451,7 @@ class TestApiCreateSolution(object):
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/app/v1/solutions',
+            path='/api/snippy/rest/solutions',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_201

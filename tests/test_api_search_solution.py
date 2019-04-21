@@ -69,7 +69,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/solutions',
+            path='/api/snippy/rest/solutions',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             query_string='sall=nginx%2CElastic&limit=20&sort=brief')
         assert result.status == falcon.HTTP_200
@@ -112,7 +112,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/solutions',
+            path='/api/snippy/rest/solutions',
             headers={'accept': 'application/json'},
             query_string='sall=debug%2Ctesting&limit=2&sort=brief')
         assert result.status == falcon.HTTP_200
@@ -149,7 +149,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/solutions',
+            path='/api/snippy/rest/solutions',
             headers={'accept': 'application/json'},
             query_string='sall=debug&limit=1&sort=-brief&fields=brief,category')
         assert result.status == falcon.HTTP_200
@@ -185,7 +185,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/solutions',
+            path='/api/snippy/rest/solutions',
             headers={'accept': 'application/json'},
             query_string='sall=debug&limit=1&sort=-brief&fields=brief%2Ccategory')
         assert result.status == falcon.HTTP_200
@@ -226,7 +226,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/solutions',
+            path='/api/snippy/rest/solutions',
             headers={'accept': 'application/json'},
             query_string='sall=docker,beats%2Cnmap&limit=2&sort=-created,-brief')
         assert result.headers == expect_headers
@@ -267,7 +267,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/solutions',
+            path='/api/snippy/rest/solutions',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&limit=2&sort=-created%2C-brief')
         assert result.status == falcon.HTTP_200
@@ -297,7 +297,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/solutions',
+            path='/api/snippy/rest/solutions',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cswarm&limit=20&sort=notexisting')
         assert result.status == falcon.HTTP_400
@@ -332,7 +332,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/solutions',
+            path='/api/snippy/rest/solutions',
             headers={'accept': 'application/json'},
             query_string='sall=debug&limit=1&sort=-brief&fields=brief&fields=category')
         assert result.status == falcon.HTTP_200
@@ -362,7 +362,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/solutions',
+            path='/api/snippy/rest/solutions',
             headers={'accept': 'application/json'},
             query_string='sall=notfound&limit=10&sort=-brief&fields=brief,category')
         assert result.status == falcon.HTTP_404
@@ -392,7 +392,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/solutions',
+            path='/api/snippy/rest/solutions',
             headers={'accept': 'application/json'},
             query_string='stag=notfound&limit=10&sort=-brief&fields=brief,category')
         assert result.status == falcon.HTTP_404
@@ -422,7 +422,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/solutions',
+            path='/api/snippy/rest/solutions',
             headers={'accept': 'application/json'},
             query_string='sgrp=notfound&limit=10&sort=-brief&fields=brief,category')
         assert result.status == falcon.HTTP_404
@@ -434,13 +434,13 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
     def test_api_search_solution_012(server):
         """Search solution with digets.
 
-        Send GET /snippy/api/app/v1/solutions/{id} to get explicit solution
+        Send GET /api/snippy/rest/solutions/{id} to get explicit solution
         based on digest. In this case the solution is found.
         """
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2601'
+            'content-length': '2599'
         }
         expect_body = {
             'meta': {
@@ -455,11 +455,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
                 'attributes': Storage.ebeats
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/' + Solution.BEATS_UUID
+                'self': 'http://falconframework.org/api/snippy/rest/solutions/' + Solution.BEATS_UUID
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/solutions/db712a82662d6932',
+            path='/api/snippy/rest/solutions/db712a82662d6932',
             headers={'accept': 'application/json'})
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
@@ -487,7 +487,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/solutions/101010101010101',
+            path='/api/snippy/rest/solutions/101010101010101',
             headers={'accept': 'application/json'})
         assert result.status == falcon.HTTP_404
         assert result.headers == expect_headers
@@ -524,7 +524,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/solutions',
+            path='/api/snippy/rest/solutions',
             headers={'accept': 'application/json'},
             query_string='limit=20&sort=brief')
         assert result.status == falcon.HTTP_200
@@ -560,7 +560,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/solutions',
+            path='/api/snippy/rest/solutions',
             headers={'accept': 'application/json'},
             query_string='limit=1&sort=-brief')
         assert result.status == falcon.HTTP_200
@@ -600,7 +600,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/solutions',
+            path='/api/snippy/rest/solutions',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             query_string='sall=nginx%2CElastic&limit=20&sort=brief')
         assert result.status == falcon.HTTP_200
@@ -637,7 +637,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/solutions',
+            path='/api/snippy/rest/solutions',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8', 'accept-encoding': 'gzip'},
             query_string='sall=nginx%2CElastic&limit=20&sort=brief')
         result_body = zlib.decompress(result.content, 16+zlib.MAX_WBITS).decode("utf-8")
@@ -674,7 +674,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             'data': [],
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/solutions',
+            path='/api/snippy/rest/solutions',
             headers={'accept': 'application/json'},
             query_string='sall=.&offset=4&limit=0&sort=brief')
         assert result.status == falcon.HTTP_200
@@ -691,7 +691,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1961'
+            'content-length': '1959'
         }
         expect_body = {
             'data': {
@@ -702,11 +702,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/21cd5827-b6ef-4067-b5ac-3ceac07dde9f/data'
+                'self': 'http://falconframework.org/api/snippy/rest/solutions/21cd5827-b6ef-4067-b5ac-3ceac07dde9f/data'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/solutions/db712a82662d6932/data',
+            path='/api/snippy/rest/solutions/db712a82662d6932/data',
             headers={'accept': 'application/vnd.api+json'})
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
@@ -722,7 +722,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '248'
+            'content-length': '246'
         }
         expect_body = {
             'data': {
@@ -733,11 +733,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/21cd5827-b6ef-4067-b5ac-3ceac07dde9f/brief'
+                'self': 'http://falconframework.org/api/snippy/rest/solutions/21cd5827-b6ef-4067-b5ac-3ceac07dde9f/brief'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/solutions/db712a82662d6932/brief',
+            path='/api/snippy/rest/solutions/db712a82662d6932/brief',
             headers={'accept': 'application/vnd.api+json'})
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
@@ -753,7 +753,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '234'
+            'content-length': '232'
         }
         expect_body = {
             'data': {
@@ -764,11 +764,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/21cd5827-b6ef-4067-b5ac-3ceac07dde9f/groups'
+                'self': 'http://falconframework.org/api/snippy/rest/solutions/21cd5827-b6ef-4067-b5ac-3ceac07dde9f/groups'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/solutions/db712a82662d6932/groups',
+            path='/api/snippy/rest/solutions/db712a82662d6932/groups',
             headers={'accept': 'application/vnd.api+json'})
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
@@ -784,7 +784,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '271'
+            'content-length': '269'
         }
         expect_body = {
             'data': {
@@ -795,11 +795,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/21cd5827-b6ef-4067-b5ac-3ceac07dde9f/tags'
+                'self': 'http://falconframework.org/api/snippy/rest/solutions/21cd5827-b6ef-4067-b5ac-3ceac07dde9f/tags'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/solutions/db712a82662d6932/tags',
+            path='/api/snippy/rest/solutions/db712a82662d6932/tags',
             headers={'accept': 'application/vnd.api+json'})
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
@@ -815,7 +815,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '311'
+            'content-length': '309'
         }
         expect_body = {
             'data': {
@@ -826,11 +826,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/21cd5827-b6ef-4067-b5ac-3ceac07dde9f/links'
+                'self': 'http://falconframework.org/api/snippy/rest/solutions/21cd5827-b6ef-4067-b5ac-3ceac07dde9f/links'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/solutions/db712a82662d6932/links',
+            path='/api/snippy/rest/solutions/db712a82662d6932/links',
             headers={'accept': 'application/vnd.api+json'})
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
@@ -859,7 +859,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/solutions/db712a82662d6932/notexist',
+            path='/api/snippy/rest/solutions/db712a82662d6932/notexist',
             headers={'accept': 'application/vnd.api+json'})
         assert result.status == falcon.HTTP_400
         assert result.headers == expect_headers
@@ -893,7 +893,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/solutions/0101010101/notexist',
+            path='/api/snippy/rest/solutions/0101010101/notexist',
             headers={'accept': 'application/vnd.api+json'})
         assert result.status == falcon.HTTP_400
         assert result.headers == expect_headers

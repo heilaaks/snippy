@@ -72,11 +72,11 @@ class TestApiUpdateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '700'
+            'content-length': '698'
         }
         expect_body = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/references/' + Reference.GITLOG_UUID
+                'self': 'http://falconframework.org/api/snippy/rest/references/' + Reference.GITLOG_UUID
             },
             'data': {
                 'type': 'reference',
@@ -85,7 +85,7 @@ class TestApiUpdateReference(object):
             }
         }
         result = testing.TestClient(server.server.api).simulate_put(
-            path='/snippy/api/app/v1/references/5c2071094dbfaa33',
+            path='/api/snippy/rest/references/5c2071094dbfaa33',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_200
@@ -132,11 +132,11 @@ class TestApiUpdateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '652'
+            'content-length': '650'
         }
         expect_body = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/references/' + Reference.GITLOG_UUID
+                'self': 'http://falconframework.org/api/snippy/rest/references/' + Reference.GITLOG_UUID
             },
             'data': {
                 'type': 'reference',
@@ -145,7 +145,7 @@ class TestApiUpdateReference(object):
             }
         }
         result = testing.TestClient(server.server.api).simulate_put(
-            path='/snippy/api/app/v1/references/5c2071094dbfaa33',
+            path='/api/snippy/rest/references/5c2071094dbfaa33',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_200
@@ -189,7 +189,7 @@ class TestApiUpdateReference(object):
             }]
         }
         result = testing.TestClient(server.server.api).simulate_put(
-            path='/snippy/api/app/v1/references/101010101010101',
+            path='/api/snippy/rest/references/101010101010101',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_404
@@ -230,7 +230,7 @@ class TestApiUpdateReference(object):
             }]
         }
         result = testing.TestClient(server.server.api).simulate_put(
-            path='/snippy/api/app/v1/references/5c2071094dbfaa33',
+            path='/api/snippy/rest/references/5c2071094dbfaa33',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_400
@@ -280,7 +280,7 @@ class TestApiUpdateReference(object):
             }]
         }
         result = testing.TestClient(server.server.api).simulate_put(
-            path='/snippy/api/app/v1/references/5c2071094dbfaa33',
+            path='/api/snippy/rest/references/5c2071094dbfaa33',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_403
@@ -323,11 +323,11 @@ class TestApiUpdateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '748'
+            'content-length': '746'
         }
         expect_body = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/references/' + Reference.GITLOG_UUID
+                'self': 'http://falconframework.org/api/snippy/rest/references/' + Reference.GITLOG_UUID
             },
             'data': {
                 'type': 'reference',
@@ -336,7 +336,7 @@ class TestApiUpdateReference(object):
             }
         }
         result = testing.TestClient(server.server.api).simulate_patch(
-            path='/snippy/api/app/v1/references/5c2071094dbfaa33',
+            path='/api/snippy/rest/references/5c2071094dbfaa33',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_200
@@ -380,7 +380,7 @@ class TestApiUpdateReference(object):
             }]
         }
         result = testing.TestClient(server.server.api).simulate_put(
-            path='/snippy/api/app/v1/references/5c2071094dbfaa33',
+            path='/api/snippy/rest/references/5c2071094dbfaa33',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_400
@@ -429,7 +429,7 @@ class TestApiUpdateReference(object):
             }]
         }
         result = testing.TestClient(server.server.api).simulate_put(
-            path='/snippy/api/app/v1/references/5c2071094dbfaa33',
+            path='/api/snippy/rest/references/5c2071094dbfaa33',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_400
@@ -480,11 +480,11 @@ class TestApiUpdateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '636'
+            'content-length': '634'
         }
         expect_body = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/references/' + Reference.GITLOG_UUID
+                'self': 'http://falconframework.org/api/snippy/rest/references/' + Reference.GITLOG_UUID
             },
             'data': {
                 'type': 'reference',
@@ -493,7 +493,7 @@ class TestApiUpdateReference(object):
             }
         }
         result = testing.TestClient(server.server.api).simulate_put(
-            path='/snippy/api/app/v1/references/5c2071094dbfaa33',
+            path='/api/snippy/rest/references/5c2071094dbfaa33',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_200
@@ -544,11 +544,11 @@ class TestApiUpdateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '636'
+            'content-length': '634'
         }
         expect_body = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/references/' + Reference.GITLOG_UUID
+                'self': 'http://falconframework.org/api/snippy/rest/references/' + Reference.GITLOG_UUID
             },
             'data': {
                 'type': 'reference',
@@ -557,7 +557,7 @@ class TestApiUpdateReference(object):
             }
         }
         result = testing.TestClient(server.server.api).simulate_patch(
-            path='/snippy/api/app/v1/references/5c2071094dbfaa33',
+            path='/api/snippy/rest/references/5c2071094dbfaa33',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_200
@@ -595,11 +595,11 @@ class TestApiUpdateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '693'
+            'content-length': '691'
         }
         expect_body = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/references/' + Reference.GITLOG_UUID
+                'self': 'http://falconframework.org/api/snippy/rest/references/' + Reference.GITLOG_UUID
             },
             'data': {
                 'type': 'reference',
@@ -608,7 +608,7 @@ class TestApiUpdateReference(object):
             }
         }
         result = testing.TestClient(server.server.api).simulate_patch(
-            path='/snippy/api/app/v1/references/5c2071094dbfaa33',
+            path='/api/snippy/rest/references/5c2071094dbfaa33',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_200

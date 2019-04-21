@@ -59,7 +59,7 @@ Run tests with PyPy
       pypy3 runner --help
       pypy3 runner import --defaults --all
       pypy3 runner --server-host 127.0.0.1:8080 -vv
-      curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=4" -H "accept: application/vnd.api+json"
+      curl -s -X GET "http://127.0.0.1:8080/api/snippy/rest/snippets?limit=4" -H "accept: application/vnd.api+json"
 
 Run tests with PostgreSQL
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -81,7 +81,7 @@ Run tests with HTTP server
       # Generate TLS sertificates for server.
       openssl req -x509 -newkey rsa:4096 -nodes -keyout server.key -out server.crt -days 356 -subj "/C=US/O=Snippy/CN=127.0.0.1"
       python runner --server-host 127.0.0.1:8080 -vv --server-ssl-cert ./server.crt --server-ssl-key ./server.key
-      curl -k -s -X GET "https://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json"
+      curl -k -s -X GET "https://127.0.0.1:8080/api/snippy/rest/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json"
 
 Test local installation
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -103,7 +103,7 @@ Test local installation
       snippy import --defaults --solutions --storage-path ${HOME}/devel/temp
       snippy import --defaults --references --storage-path ${HOME}/devel/temp
       snippy --server-host 127.0.0.1:8080 --storage-path ${HOME}/devel/temp &
-      curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=4" -H "accept: application/vnd.api+json"
+      curl -s -X GET "http://127.0.0.1:8080/api/snippy/rest/snippets?limit=4" -H "accept: application/vnd.api+json"
       pkill snippy
 
 Test docker installation
@@ -127,12 +127,12 @@ Test docker installation
 
       # Run server with Sqlite database.
       docker run -d --publish=127.0.0.1:8080:9090/tcp --name snippy heilaaks/snippy -vv
-      curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json"
+      curl -s -X GET "http://127.0.0.1:8080/api/snippy/rest/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json"
       docker logs snippy
       docker stop snippy
       docker rm snippy
       docker run -d --net="host" --name snippy heilaaks/snippy --server-host 127.0.0.1:8080 --log-json -vv
-      curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json"
+      curl -s -X GET "http://127.0.0.1:8080/api/snippy/rest/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json"
       docker logs snippy
       docker stop snippy
       docker rm snippy
@@ -146,8 +146,8 @@ Test docker installation
       # Run server with PostgreSQL database.
       docker run -d --net="host" --name snippy heilaaks/snippy --server-host 127.0.0.1:8080 --storage-type postgresql --storage-host localhost:5432 --storage-database postgres --storage-user postgres --storage-password postgres --defaults --log-json -vv
       docker run -d --publish=8080:8080 --name snippy heilaaks/snippy --storage-type postgresql --storage-host postgres:5432 --storage-database postgres --storage-user postgres --storage-password postgres --defaults --log-json -vv
-      curl -s -X POST "http://127.0.0.1:8080/snippy/api/app/v1/snippets" -H "accept: application/vnd.api+json; charset=UTF-8" -H "Content-Type: application/vnd.api+json; charset=UTF-8" -d '{"data":[{"type": "snippet", "attributes": {"data": ["docker ps"]}}]}'
-      curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json"
+      curl -s -X POST "http://127.0.0.1:8080/api/snippy/rest/snippets" -H "accept: application/vnd.api+json; charset=UTF-8" -H "Content-Type: application/vnd.api+json; charset=UTF-8" -d '{"data":[{"type": "snippet", "attributes": {"data": ["docker ps"]}}]}'
+      curl -s -X GET "http://127.0.0.1:8080/api/snippy/rest/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json"
       docker logs snippy
       docker stop snippy
       docker rm snippy
@@ -282,11 +282,11 @@ Release
       docker run heilaaks/snippy:latest --help
       docker run heilaaks/snippy:latest search --sall docker
       docker run -d --net="host" --name snippy heilaaks/snippy:latest --server-host 127.0.0.1:8080 -vv
-      curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json"
+      curl -s -X GET "http://127.0.0.1:8080/api/snippy/rest/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json"
       docker stop snippy
       docker rm snippy
       docker run -d --net="host" --name snippy heilaaks/snippy:latest --server-host 127.0.0.1:8080 --log-json -vv
-      curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json"
+      curl -s -X GET "http://127.0.0.1:8080/api/snippy/rest/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json"
       docker stop snippy
       docker rm snippy
 

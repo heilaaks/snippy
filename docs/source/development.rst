@@ -74,7 +74,7 @@ Apache Bench
 
     # Run HTTP server with sqlite backend with commit f9f418256fccaf7f4c1ee3651b21044aba9a8948 (v0.10.0 + 20 commits)
     docker run -d --net="host" --name snippy heilaaks/snippy:latest --server-host 127.0.0.1:8080 --defaults
-    ab -n 10000 -c 1 -k http://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=20
+    ab -n 10000 -c 1 -k http://127.0.0.1:8080/api/snippy/rest/snippets?limit=20
     This is ApacheBench, Version 2.3 <$Revision: 1826891 $>
     Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
     Licensed to The Apache Software Foundation, http://www.apache.org/
@@ -97,7 +97,7 @@ Apache Bench
     Server Hostname:        127.0.0.1
     Server Port:            8080
 
-    Document Path:          /snippy/api/app/v1/snippets?limit=20
+    Document Path:          /api/snippy/rest/snippets?limit=20
     Document Length:        31914 bytes
 
     Concurrency Level:      1
@@ -138,7 +138,7 @@ Apache Bench
 
     # Run HTTP server with sqlite backend with commit f9f418256fccaf7f4c1ee3651b21044aba9a8948 (v0.10.0 + 20 commits)
     docker run -d --net="host" --name snippy heilaaks/snippy:latest --server-host 127.0.0.1:8080 --defaults
-    /root/go/bin/hey -n 10000 -c 1 http://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=20
+    /root/go/bin/hey -n 10000 -c 1 http://127.0.0.1:8080/api/snippy/rest/snippets?limit=20
 
     Summary:
       Total:        45.1121 secs
@@ -185,7 +185,7 @@ Apache Bench
 
     # Run HTTPS server with sqlite backend with commit f9f418256fccaf7f4c1ee3651b21044aba9a8948 (v0.10.0 + 20 commits)
     python runner --server-host 127.0.0.1:8080 --server-ssl-cert ./server.crt --server-ssl-key ./server.key --defaults
-    /root/go/bin/hey -n 10000 -c 1 https://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=20
+    /root/go/bin/hey -n 10000 -c 1 https://127.0.0.1:8080/api/snippy/rest/snippets?limit=20
 
     Summary:
       Total:        90.7888 secs
@@ -233,7 +233,7 @@ Apache Bench
 
     # Run HTTP server with PostgreSQL backend with commit f9f418256fccaf7f4c1ee3651b21044aba9a8948 (v0.10.0 + 20 commits)
     docker run -d --net="host" --name snippy heilaaks/snippy --server-host 127.0.0.1:8080 --storage-type postgresql --storage-host localhost:5432 --storage-database postgres --storage-user postgres --storage-password postgres --defaults
-    ab -n 10000 -c 1 -k http://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=20
+    ab -n 10000 -c 1 -k http://127.0.0.1:8080/api/snippy/rest/snippets?limit=20
     This is ApacheBench, Version 2.3 <$Revision: 1826891 $>
     Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
     Licensed to The Apache Software Foundation, http://www.apache.org/
@@ -256,7 +256,7 @@ Apache Bench
     Server Hostname:        127.0.0.1
     Server Port:            8080
 
-    Document Path:          /snippy/api/app/v1/snippets?limit=20
+    Document Path:          /api/snippy/rest/snippets?limit=20
     Document Length:        31914 bytes
 
     Concurrency Level:      1
@@ -291,7 +291,7 @@ Apache Bench
 
     # Run HTTP server with PostgreSQL backend with commit f9f418256fccaf7f4c1ee3651b21044aba9a8948 (v0.10.0 + 20 commits)
     docker run -d --net="host" --name snippy heilaaks/snippy --server-host 127.0.0.1:8080 --storage-type postgresql --storage-host localhost:5432 --storage-database postgres --storage-user postgres --storage-password postgres --defaults
-    /root/go/bin/hey -n 10000 -c 1 http://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=20
+    /root/go/bin/hey -n 10000 -c 1 http://127.0.0.1:8080/api/snippy/rest/snippets?limit=20
 
     Summary:
       Total:        52.7001 secs
@@ -339,13 +339,13 @@ Apache Bench
     # HTTP server with PyPy and Sqlite as storage backed (comment psycopg2 out from setup)
     sudo pypy -m pip install --editable .[devel]
     pypy runner --server-host 127.0.0.1:8080 --defaults
-    /root/go/bin/hey -n 1000 -c 1 http://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=20
-    /root/go/bin/hey -n 1000 -c 1 http://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=20
-    /root/go/bin/hey -n 1000 -c 1 http://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=20
-    /root/go/bin/hey -n 1000 -c 1 http://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=20
-    /root/go/bin/hey -n 1000 -c 1 http://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=20
-    /root/go/bin/hey -n 10000 -c 1 http://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=20
-    /root/go/bin/hey -n 10000 -c 1 http://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=20
+    /root/go/bin/hey -n 1000 -c 1 http://127.0.0.1:8080/api/snippy/rest/snippets?limit=20
+    /root/go/bin/hey -n 1000 -c 1 http://127.0.0.1:8080/api/snippy/rest/snippets?limit=20
+    /root/go/bin/hey -n 1000 -c 1 http://127.0.0.1:8080/api/snippy/rest/snippets?limit=20
+    /root/go/bin/hey -n 1000 -c 1 http://127.0.0.1:8080/api/snippy/rest/snippets?limit=20
+    /root/go/bin/hey -n 1000 -c 1 http://127.0.0.1:8080/api/snippy/rest/snippets?limit=20
+    /root/go/bin/hey -n 10000 -c 1 http://127.0.0.1:8080/api/snippy/rest/snippets?limit=20
+    /root/go/bin/hey -n 10000 -c 1 http://127.0.0.1:8080/api/snippy/rest/snippets?limit=20
     
     Summary:
       Total:        21.4936 secs
@@ -392,12 +392,12 @@ Apache Bench
 
     # HTTPS server with PyPy and Sqlite as storage backed (comment psycopg2 out from setup)
     pypy runner --server-host 127.0.0.1:8080 --server-ssl-cert ./server.crt --server-ssl-key ./server.key --defaults
-    /root/go/bin/hey -n 1000 -c 1 https://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=20
-    /root/go/bin/hey -n 1000 -c 1 https://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=20
-    /root/go/bin/hey -n 1000 -c 1 https://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=20
-    /root/go/bin/hey -n 1000 -c 1 https://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=20
-    /root/go/bin/hey -n 1000 -c 1 https://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=20
-    /root/go/bin/hey -n 10000 -c 1 https://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=20
+    /root/go/bin/hey -n 1000 -c 1 https://127.0.0.1:8080/api/snippy/rest/snippets?limit=20
+    /root/go/bin/hey -n 1000 -c 1 https://127.0.0.1:8080/api/snippy/rest/snippets?limit=20
+    /root/go/bin/hey -n 1000 -c 1 https://127.0.0.1:8080/api/snippy/rest/snippets?limit=20
+    /root/go/bin/hey -n 1000 -c 1 https://127.0.0.1:8080/api/snippy/rest/snippets?limit=20
+    /root/go/bin/hey -n 1000 -c 1 https://127.0.0.1:8080/api/snippy/rest/snippets?limit=20
+    /root/go/bin/hey -n 10000 -c 1 https://127.0.0.1:8080/api/snippy/rest/snippets?limit=20
     
     Summary:
       Total:        108.0445 secs
@@ -447,10 +447,10 @@ Apache Bench
 
     # Bench POST with ab.
     {"data":[{"type":"snippet","attributes":{"data":["docker rm $(docker ps --all -q -f status=exited)"],"brief":"testing performance","name":"testing performance","groups":["default"],"tags":["test","performance"],"links":["https://jsonlint.com/"],"versions":["ab==1.0"],"filename":"ab.txt"}}]}
-    ab -p snippet.txt -T application/vnd.api+json -c 1 -n 1000 http://127.0.0.1:8080/snippy/api/app/v1/snippets
+    ab -p snippet.txt -T application/vnd.api+json -c 1 -n 1000 http://127.0.0.1:8080/api/snippy/rest/snippets
 
     # Bench POST with hey.
-    /root/go/bin/hey -m POST -T application/vnd.api+json -D snippet.txt -n 1000 -c 1 http://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=20
+    /root/go/bin/hey -m POST -T application/vnd.api+json -D snippet.txt -n 1000 -c 1 http://127.0.0.1:8080/api/snippy/rest/snippets?limit=20
     
     Summary:
       Total:        2.8403 secs
@@ -495,7 +495,7 @@ Apache Bench
     Status code distribution:
       [409] 1000 responses
     
-    /root/go/bin/hey -m POST -T application/vnd.api+json -D snippet.txt -n 1000 -c 1 http://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=20
+    /root/go/bin/hey -m POST -T application/vnd.api+json -D snippet.txt -n 1000 -c 1 http://127.0.0.1:8080/api/snippy/rest/snippets?limit=20
     
     Summary:
       Total:        2.8316 secs

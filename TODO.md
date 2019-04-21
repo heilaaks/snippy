@@ -5,7 +5,8 @@
    - [ ] Note in commit log that the Config() does not use jsonschema import because it is Server import. The Config must work in CLI mode with only Yaml.
    - [ ] Clean the jsonvalidator and the constant since those are not needed because swagger in use.
    - [ ] Can collection and resource validation for API merged together? Should be possible ...
-   - [ ] Add internal tests to support parsing of string or list (from cli) since API does not allow it anymore.
+   - [ ] Why there is a 48, "message": "listening at: http://0.0.0.0:32768 (1)" when started in container?
+   - [ ] Add internal tests to support parsing of string or list (from cli) since API does not allow it anymore.
    - [ ] Add schema validation for tests (not to sending side). Hide this into helper: assert_restapi.
    - [ ] Add data.id validation with schema instead of check in Validation().
    - [ ] Design and change /groups and /tags to GET groups and tags not content. Like unique tags and groups.

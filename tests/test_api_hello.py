@@ -36,7 +36,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
     def test_api_hello_api_001(server):
         """Test server hello response.
 
-        Send GET /api/snippy/rest/ to get server hello response.
+        Send GET /api/snippy/rest/ to get the server hello response.
         """
 
         expect_headers = {
@@ -53,7 +53,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
     def test_api_hello_api_002(server):
         """Test server hello response.
 
-        Send GET /api/snippy/rest/hello to check if server is up.
+        Send GET /api/snippy/rest/hello to get server hello response.
         """
 
         expect_headers = {
@@ -67,12 +67,30 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
         Content.assert_restapi(result.json, expect_body)
 
     @staticmethod
-    @pytest.mark.usefixtures('mock-server')
-    def test_api_hello_api_003():
+    def test_api_hello_api_003(server):
         """Test server hello response.
 
-        Send GET /api/snippy/ to get hello! In this case the server base path is
-        changed from default and it is set in correct format.
+        Try to send GET / to get server hello response. The server must not
+        respond from the root. All API routes start from the base path. This
+        avoids possible conflicts when running Snippy with other servers.
+        """
+
+        expect_headers = {
+            'content-type': 'application/vnd.api+json',
+            'content-length': '0'
+        }
+        result = testing.TestClient(server.server.api).simulate_get('/')
+        assert result.status == falcon.HTTP_404
+        assert result.headers == expect_headers
+
+    @staticmethod
+    @pytest.mark.usefixtures('mock-server')
+    def test_api_hello_api_004():
+        """Test server hello response.
+
+        Send GET /api/snippy/ to get server hello response. In this case the
+        server base path is changed from default and it is set in correct
+        format.
         """
 
         expect_headers = {
@@ -91,13 +109,13 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
 
     @staticmethod
     @pytest.mark.usefixtures('mock-server')
-    def test_api_hello_api_004():
+    def test_api_hello_api_005():
         """Test server hello response.
 
-        Send GET /api/snippy/ to get hello! In this case the server base path
-        configuration is incorrect. The server base path must contain trailing
-        slash which is missing from this test. The configuration must be
-        updated automatically and the API call must work.
+        Send GET /api/snippy/ to get server hello response. In this case server
+        base path configuration is incorrect. The server base path must contain
+        trailing slash which is missing from this test. The configuration must
+        be updated automatically and the API call must work.
         """
 
         expect_headers = {
@@ -116,13 +134,13 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
 
     @staticmethod
     @pytest.mark.usefixtures('mock-server')
-    def test_api_hello_api_005():
+    def test_api_hello_api_006():
         """Test server hello response.
 
-        Send GET /api/snippy/ to get hello! In this case the server base path
-        configuration is incorrect. The server base path must contain leading
-        slash which is missing from this test. The configuration must be
-        updated and the API call must work.
+        Send GET /api/snippy/ to get server hello response. In this case server
+        base path configuration is incorrect. The server base path must contain
+        leading slash which is missing from this test. The configuration must
+        be        updated and the API call must work.
         """
 
         expect_headers = {
@@ -141,13 +159,14 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
 
     @staticmethod
     @pytest.mark.usefixtures('mock-server')
-    def test_api_hello_api_006():
+    def test_api_hello_api_007():
         """Test server hello response.
 
-        Send GET /api/snippy/ to get hello! In this case the server base path
-        configuration is incorrect. The server base path must contain leading
-        and trailing slashes which are missing from this test. In this case the
-        configuration must be updated automatically and the API call must work.
+        Send GET /api/snippy/ to get server hello response. In this case the
+        server base path configuration is incorrect. The server base path must
+        contain leading and trailing slashes which are missing from this test.
+        In this case the configuration must be updated automatically and the
+        API call must work.
         """
 
         expect_headers = {
@@ -166,12 +185,12 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
 
     @staticmethod
     @pytest.mark.usefixtures('mock-server')
-    def test_api_hello_api_007():
+    def test_api_hello_api_008():
         """Test server hello response.
 
-        Send GET /api/snippy/rest/' to get hello! In this case the server base
-        path is incorrect because it contains two slashes. This configuration
-        error results the default base path configuration.
+        Send GET /api/snippy/rest/' to get server hello response. In this case
+        the server base path is incorrect because it contains two slashes. This
+        configuration error results the default base path configuration.
         """
 
         expect_headers = {
@@ -190,11 +209,11 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
 
     @staticmethod
     @pytest.mark.usefixtures('mock-server')
-    def test_api_hello_api_008(caplog):
+    def test_api_hello_api_009(caplog):
         """Test server hello response.
 
-        Send GET /api/snippy/rest/ to get hello! In this case the server host
-        is changed from the default with command line option.
+        Send GET /api/snippy/rest/ to get server hello response. In this case
+        the server host is changed from the default with command line option.
         """
 
         expect_headers = {
@@ -214,7 +233,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
 
     @staticmethod
     @pytest.mark.usefixtures('mock-server')
-    def test_api_hello_api_009(server):
+    def test_api_hello_api_010(server):
         """Test HTTP OPTIONS with server hello response.
 
         Send OPTIONS /api/snippy/rest/ to get allowed methods.
@@ -232,7 +251,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
 
     @staticmethod
     @pytest.mark.usefixtures('mock-server')
-    def test_api_hello_api_010(server):
+    def test_api_hello_api_011(server):
         """Test HTTP OPTIONS with server hello response.
 
         Send OPTIONS /snippets to get allowed methods.
@@ -250,7 +269,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
 
     @staticmethod
     @pytest.mark.usefixtures('mock-server')
-    def test_api_hello_api_011(server):
+    def test_api_hello_api_012(server):
         """Test HTTP OPTIONS with /snippets/{id}.
 
         Send OPTIONS /snippets/{id} to get allowed methods.
@@ -268,7 +287,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
 
     @staticmethod
     @pytest.mark.usefixtures('mock-server')
-    def test_api_hello_api_012(server):
+    def test_api_hello_api_013(server):
         """Test HTTP OPTIONS with /snippets/{id}/{attribute}.
 
         Send OPTIONS /snippets/{id}/{field} to get allowed methods.
@@ -286,7 +305,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
 
     @staticmethod
     @pytest.mark.usefixtures('mock-server')
-    def test_api_hello_api_013(server):
+    def test_api_hello_api_014(server):
         """Test HTTP OPTIONS with /groups API endpoint.
 
         Send OPTIONS /groups/{groups} to get allowed methods.
@@ -304,7 +323,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
 
     @staticmethod
     @pytest.mark.usefixtures('mock-server')
-    def test_api_hello_api_014(server):
+    def test_api_hello_api_015(server):
         """Test HTTP OPTIONS with /tags API endpoint.
 
         Send OPTIONS /tags/{tag] to get allowed methods.
@@ -322,7 +341,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
 
     @staticmethod
     @pytest.mark.usefixtures('mock-server')
-    def test_api_hello_api_015(server):
+    def test_api_hello_api_016(server):
         """Test HTTP OPTIONS with /groups API endpoint.
 
         Send OPTIONS /groups to get allowed methods for keywords API. Note
@@ -343,11 +362,11 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
 
     @staticmethod
     @pytest.mark.usefixtures('mock-server')
-    def test_api_hello_api_016(caplog, osenviron):
+    def test_api_hello_api_017(caplog, osenviron):
         """Test server configuration.
 
-        Send GET /api/snippy/rest to get Hello response. In this case the
-        server variables are changed with environment variables.
+        Send GET /api/snippy/rest to get server hello response. In this case
+        the server variables are changed with environment variables.
         """
 
         osenviron.setenv('SNIPPY_SERVER_BASE_PATH_REST', '/api/snippy/rest/v2')
@@ -385,11 +404,11 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
 
     @staticmethod
     @pytest.mark.usefixtures('mock-server')
-    def test_api_hello_api_017(caplog, osenviron):
+    def test_api_hello_api_018(caplog, osenviron):
         """Test server configuration.
 
-        Send GET /api/snippy/rest to get Hello response. In this case the
-        server options are configured with environment variables and
+        Send GET /api/snippy/rest to get server hello response. In this case
+        the server options are configured with environment variables and
         command line options. The command line option has higher precedence
         and they must be used.
         """

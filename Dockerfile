@@ -9,6 +9,7 @@ ENV SNIPPY_GID=61999
 ENV SNIPPY_UID=61999
 ENV SNIPPY_LOG_JSON 1
 ENV SNIPPY_SERVER_HOST=0.0.0.0:32768
+ENV SNIPPY_SERVER_BASE_PATH_REST=/api/snippy/rest
 
 WORKDIR /usr/local/snippy
 
@@ -69,7 +70,7 @@ HEALTHCHECK --interval=10s \
                 --fail \
                 --insecure \
                 --proto http,https \
-                ${SNIPPY_SERVER_HOST}/snippy/api/app/v1 || exit 1
+                ${SNIPPY_SERVER_HOST}${SNIPPY_SERVER_BASE_PATH_REST} || exit 1
 
 EXPOSE 32768
 
@@ -77,7 +78,6 @@ USER noname
 
 ENTRYPOINT ["snippy"]
 CMD ["--help"]
-#ENTRYPOINT ["tail", "-f","/dev/null"]
 
 #
 # SECURITY HARDENING
@@ -206,7 +206,21 @@ CMD ["--help"]
 #          heilaaks/snippy -vv
 #      ```
 #
-#   5. Use host network
+#   5. Change REST API server base path
+#
+#      It is possible to change Snippy REST API server base path. Configured
+#      base path must always start and end with a slash
+#
+#      ```shell
+#      docker run \
+#          --env SNIPPY_SERVER_BASE_PATH_REST=/api/ \
+#          --publish=127.0.0.1:8080:32768/tcp \
+#          --name snippy \
+#          --detach \
+#          heilaaks/snippy -vv
+#      ```
+#
+#   6. Use host network
 #
 #      This is not recommended configuration because it is not secure and
 #      breaks the container native design "assume nothing from host".

@@ -1,5 +1,8 @@
 ## WORKING
+   - [ ] Try ULID https://github.com/ahawker/ulid (does this support P2.7) or https://github.com/mdomke/python-ulid as in https://opensource.zalando.com/restful-api-guidelines/#resources
    - [ ] Add health API to respond to culr HC and write status to logs.
+   - [ ] Check good rules from https://opensource.zalando.com/restful-api-guidelines/#218
+   - [ ] Empty array values can unambiguously be represented as the empty list, [].
    - [ ] Swagger 3.0: Why the 'additionProperties: false' field did not affect swagger 3.0?
    - [ ] Swagger 2.0: Does not support nullable and this does not work with validation: test_api_update_reference_010/117. move to OAS3.0 to solve this?
    - [ ] Note in commit log that the Config() does not use jsonschema import because it is Server import. The Config must work in CLI mode with only Yaml.

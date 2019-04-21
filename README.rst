@@ -1,5 +1,12 @@
 |badge-pypiv| |badge-pys| |badge-pyv| |badge-cov| |badge-docs| |badge-build| |badge-pyup|
 
+Snippy
+======
+
+Snippy is a software development and maintenance notes manager. It allows
+organizing and sharing examples and solutions from self hosted or shared
+storage.
+
 Features
 ========
 

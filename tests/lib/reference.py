@@ -19,7 +19,7 @@
 
 """reference: Default references for testing."""
 
-from tests.testlib.helper import Helper
+from tests.lib.helper import Helper
 
 
 class Reference(object):  # pylint: disable=too-few-public-methods

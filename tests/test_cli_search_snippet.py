@@ -23,8 +23,8 @@ import pytest
 
 from snippy.cause import Cause
 from snippy.constants import Constants as Const
-from tests.testlib.content import Content
-from tests.testlib.helper import Helper
+from tests.lib.content import Content
+from tests.lib.helper import Helper
 
 
 class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods

@@ -23,9 +23,9 @@ from falcon import testing
 import falcon
 import pytest
 
-from tests.testlib.content import Content
-from tests.testlib.content import Storage
-from tests.testlib.snippet import Snippet
+from tests.lib.content import Content
+from tests.lib.content import Storage
+from tests.lib.snippet import Snippet
 
 pytest.importorskip('gunicorn')
 

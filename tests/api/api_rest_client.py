@@ -24,7 +24,7 @@ from __future__ import print_function
 import json
 import time
 
-from tests.testlib.snippet import Snippet
+from tests.lib.snippet import Snippet
 
 try:
     import http.client as httplib

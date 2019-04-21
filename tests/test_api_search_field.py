@@ -23,11 +23,11 @@ from falcon import testing
 import falcon
 import pytest
 
-from tests.testlib.content import Content
-from tests.testlib.content import Storage
-from tests.testlib.snippet import Snippet
-from tests.testlib.solution import Solution
-from tests.testlib.reference import Reference
+from tests.lib.content import Content
+from tests.lib.content import Storage
+from tests.lib.snippet import Snippet
+from tests.lib.solution import Solution
+from tests.lib.reference import Reference
 
 pytest.importorskip('gunicorn')
 

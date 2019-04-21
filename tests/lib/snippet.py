@@ -19,7 +19,7 @@
 
 """snippet: Default snippets for testing."""
 
-from tests.testlib.helper import Helper
+from tests.lib.helper import Helper
 
 
 class Snippet(object):  # pylint: disable=too-few-public-methods

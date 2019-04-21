@@ -25,8 +25,8 @@ from falcon import testing
 import falcon
 import pytest
 
-from tests.testlib.content import Content
-from tests.testlib.content import Request
+from tests.lib.content import Content
+from tests.lib.content import Request
 
 pytest.importorskip('gunicorn')
 

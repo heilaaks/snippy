@@ -26,10 +26,10 @@ import falcon
 import pytest
 
 from snippy.constants import Constants as Const
-from tests.testlib.content import Content
-from tests.testlib.content import Request
-from tests.testlib.content import Storage
-from tests.testlib.reference import Reference
+from tests.lib.content import Content
+from tests.lib.content import Request
+from tests.lib.content import Storage
+from tests.lib.reference import Reference
 
 pytest.importorskip('gunicorn')
 

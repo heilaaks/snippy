@@ -22,8 +22,8 @@
 import pytest
 
 from snippy.cause import Cause
-from tests.testlib.content import Content
-from tests.testlib.snippet import Snippet
+from tests.lib.content import Content
+from tests.lib.snippet import Snippet
 
 
 class TestCliUpdateSnippet(object):

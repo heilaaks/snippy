@@ -28,10 +28,10 @@ import yaml
 
 from snippy.cause import Cause
 from snippy.constants import Constants as Const
-from tests.testlib.content import Content
-from tests.testlib.reference import Reference
-from tests.testlib.snippet import Snippet
-from tests.testlib.solution import Solution
+from tests.lib.content import Content
+from tests.lib.reference import Reference
+from tests.lib.snippet import Snippet
+from tests.lib.solution import Solution
 
 
 class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods

@@ -91,7 +91,7 @@ setup(
     url=meta['__homepage__'],
     license=meta['__license__'],
     keywords='command solution snippet reference link snippet manager server console',
-    packages=find_packages(exclude=['tests', 'tests.testlib']),
+    packages=find_packages(exclude=['tests', 'tests.lib']),
     package_dir={'snippy': 'snippy'},
     package_data={
         'snippy': [

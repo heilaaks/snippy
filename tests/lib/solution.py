@@ -19,7 +19,7 @@
 
 """solution: Default solutions for testing."""
 
-from tests.testlib.helper import Helper
+from tests.lib.helper import Helper
 
 
 class Solution(object):  # pylint: disable=too-few-public-methods

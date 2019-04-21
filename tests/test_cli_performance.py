@@ -27,9 +27,9 @@ import mock
 import pytest
 
 from snippy.cause import Cause
-from tests.testlib.content import Content
-from tests.testlib.snippet import Snippet
-from tests.testlib.solution import Solution
+from tests.lib.content import Content
+from tests.lib.snippet import Snippet
+from tests.lib.solution import Solution
 
 
 class TestCliPerformance(object):

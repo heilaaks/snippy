@@ -24,7 +24,7 @@ import json
 import pytest
 
 from snippy.logger import Logger
-from tests.testlib.content import Field
+from tests.lib.content import Field
 
 
 class TestUtLogger(object):

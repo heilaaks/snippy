@@ -540,7 +540,7 @@ endif
         Change 4:
         format the timestamp that cannot be empty
 
-        from tests.testlib.helper import Helper
+        from tests.lib.helper import Helper
         content.get('created', Helper.IMPORT_TIME),
         content.get('updated', Helper.IMPORT_TIME),
 
@@ -876,7 +876,7 @@ endif
    import mock
    import pytest
    from snippy.snip import Snippy
-   from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
+   from tests.lib.sqlitedb_helper import SqliteDbHelper as Database
 
 
    class TestApiFramework(unittest.TestCase):

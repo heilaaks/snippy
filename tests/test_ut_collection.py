@@ -25,7 +25,7 @@ import pytest
 
 from snippy.constants import Constants as Const
 from snippy.content.collection import Collection
-from tests.testlib.helper import Helper
+from tests.lib.helper import Helper
 
 
 class TestUtCollection(object):

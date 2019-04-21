@@ -30,8 +30,8 @@ from subprocess import PIPE
 import pytest
 
 from snippy.cause import Cause
-from tests.testlib.content import Content
-from tests.testlib.content import Request
+from tests.lib.content import Content
+from tests.lib.content import Request
 
 try:
     import http.client as httplib

@@ -24,7 +24,7 @@ import falcon
 import pytest
 
 from snippy.snip import Snippy
-from tests.testlib.content import Content
+from tests.lib.content import Content
 
 pytest.importorskip('gunicorn')
 

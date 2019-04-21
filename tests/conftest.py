@@ -32,11 +32,11 @@ from snippy.constants import Constants as Const
 from snippy.content.collection import Collection
 from snippy.config.source.editor import Editor
 from snippy.snip import Snippy
-from tests.testlib.helper import Helper
-from tests.testlib.reference import Reference
-from tests.testlib.snippet import Snippet
-from tests.testlib.solution import Solution
-from tests.testlib.database import Database
+from tests.lib.helper import Helper
+from tests.lib.reference import Reference
+from tests.lib.snippet import Snippet
+from tests.lib.solution import Solution
+from tests.lib.database import Database
 
 # Calls to Config.utcnow()
 # =======================
@@ -885,8 +885,8 @@ def devel_file_data(mocker):
         'from snippy.config.config import Config',
         'from snippy.constants import Constants as Const',
         'from snippy.cause import Cause',
-        'from tests.testlib.snippet import Snippet',
-        'from tests.testlib.database import Database',
+        'from tests.lib.snippet import Snippet',
+        'from tests.lib.database import Database',
         '',
         '',
         'class TestWfImportSnippet(object):',

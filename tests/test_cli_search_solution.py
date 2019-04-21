@@ -23,8 +23,8 @@ import pytest
 
 from snippy.cause import Cause
 from snippy.constants import Constants as Const
-from tests.testlib.content import Content
-from tests.testlib.solution import Solution
+from tests.lib.content import Content
+from tests.lib.solution import Solution
 
 
 class TestCliSearchSolution(object):

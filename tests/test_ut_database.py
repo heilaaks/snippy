@@ -20,9 +20,9 @@
 """test_ut_database: Test Database() class."""
 
 from snippy.constants import Constants as Const
-from tests.testlib.content import Content
-from tests.testlib.database import Database as TDatabase
-from tests.testlib.snippet import Snippet
+from tests.lib.content import Content
+from tests.lib.database import Database as TDatabase
+from tests.lib.snippet import Snippet
 
 
 class TestUtDatabase(object):

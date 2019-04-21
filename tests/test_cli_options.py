@@ -29,8 +29,8 @@ from snippy.meta import __homepage__
 from snippy.meta import __version__
 from snippy.snip import Snippy
 from snippy.snip import main
-from tests.testlib.content import Content
-from tests.testlib.helper import Helper
+from tests.lib.content import Content
+from tests.lib.helper import Helper
 
 
 class TestCliOptions(object):

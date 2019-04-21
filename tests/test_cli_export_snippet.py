@@ -28,8 +28,8 @@ import yaml
 
 from snippy.cause import Cause
 from snippy.constants import Constants as Const
-from tests.testlib.content import Content
-from tests.testlib.snippet import Snippet
+from tests.lib.content import Content
+from tests.lib.snippet import Snippet
 
 
 class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods

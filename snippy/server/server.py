@@ -87,7 +87,6 @@ class Server(object):  # pylint: disable=too-few-public-methods
         fields = Fields(self.storage)
         self.api.req_options.media_handlers.update({'application/vnd.api+json': falcon.media.JSONHandler()})
         self.api.resp_options.media_handlers.update({'application/vnd.api+json': falcon.media.JSONHandler()})
-        self.api.add_route('/snippy', ApiHello())
         self.api.add_route(Config.server_base_path_rest.rstrip('/'), ApiHello())
         self.api.add_route(urljoin(Config.server_base_path_rest, 'hello'), ApiHello())
         self.api.add_route(urljoin(Config.server_base_path_rest, 'snippets'), ApiSnippets(snippet))

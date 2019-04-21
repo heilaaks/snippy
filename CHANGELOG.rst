@@ -38,6 +38,7 @@ Security
 ~~~~~~~~
 
 * Remove setuid/setgid bit from binaries in Docker image.
+* Fix server bind IP address in Docker container.
 
 0.9.0 (2019-02-02)
 ------------------

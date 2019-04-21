@@ -8,7 +8,7 @@ ENV PATH=/usr/local/snippy/.local/bin:"${PATH}"
 ENV SNIPPY_GID=61999
 ENV SNIPPY_UID=61999
 ENV SNIPPY_LOG_JSON 1
-ENV SNIPPY_SERVER_HOST=0.0.0.0:32768
+ENV SNIPPY_SERVER_HOST=container.hostname:32768
 ENV SNIPPY_SERVER_BASE_PATH_REST=/api/snippy/rest
 
 WORKDIR /usr/local/snippy
@@ -266,7 +266,24 @@ CMD ["--help"]
 #      two different places. But it is considered better than revealing
 #      this to user through ARG or ENV variable.
 #
-#   3. Container UID and GID are not defined by default
+#   3. Special tag to read container runtime IP address.
+#
+#      There are no other ways to get the container runtime IP address
+#      than doing a startup script that extracts the container IP address
+#      or resolving the address in code.
+#
+#      The intention is to survive without startup scripts. There are no
+#      known problem with those and they can start the container with the
+#      PID 1. How ever, author still doesn't like startup scripts so this
+#      is done in case.
+#
+#      The area itself is complicated so there can be issues with this
+#      approach. See ``The Snippy server in the container can bind to
+#      0.0.0.0.`` for security advisory.
+#
+#      ENV SNIPPY_SERVER_HOST=container.hostname:32768
+#
+#   4. Container UID and GID are not defined by default
 #
 #      Because of the supported use cases for default tager users and
 #      UID values being unpredictable, the container image does not set
@@ -288,7 +305,7 @@ CMD ["--help"]
 #            when those are set, the ``docker run`` with ``--user`` and
 #            without it works?
 #
-#   4. The container user is created as system user
+#   5. The container user is created as system user
 #
 #      Minimal user privileges are created with a system user that does
 #      not have home directory. Also user shell is set to /bin/false.
@@ -322,7 +339,7 @@ CMD ["--help"]
 #          noname
 #      ```
 #
-#   5. Container user file access privileges
+#   6. Container user file access privileges
 #
 #      "For an image to support running as an arbitrary user, directories and
 #       files that may be written to by processes in the image should be owned
@@ -339,7 +356,7 @@ CMD ["--help"]
 #      chmod -R g+rwX /usr/local/snippy/
 #      ```shell
 #
-#   6. Remove setuid/setgid bit from all binaries (defang)
+#   7. Remove setuid/setgid bit from all binaries (defang)
 #
 #      There is no need to allow binaries to run with these privileges in
 #      container. Because ofthis, the bit is removed from all binaries.
@@ -348,7 +365,7 @@ CMD ["--help"]
 #      find / -perm +6000 -type f -exec chmod a-s {} \; || true && \
 #      ```
 #
-#   7. Container user is operated only with UID and GID
+#   8. Container user is operated only with UID and GID
 #
 #      There is no user name allocated for the container. Only the UID and
 #      GID are relevant from security point of view and allocating specific
@@ -362,7 +379,7 @@ CMD ["--help"]
 #      USER noname
 #      ```
 #
-#   8. Periodic healthcheck
+#   9. Periodic healthcheck
 #
 #      Healthcheck is made with curl that allows using either http or https
 #      as protocol. A ``nc`` command line tool is one option. The problem
@@ -382,7 +399,7 @@ CMD ["--help"]
 #      ```
 #
 #
-#   8. Exposed container port can not be configured
+#  10. Exposed container port can not be configured
 #
 #      The Snippy server in container image binds on port 32768 by default.
 #      The server port is exposed statically in the Dockerfile. The exposed
@@ -419,9 +436,17 @@ CMD ["--help"]
 #
 # KNOWN SECURITY VULNERABILITIES AND PROBLEMS:
 #
-#   1. The Snippy server in the container binds to 0.0.0.0.
+#   1. The Snippy server in the container can bind to 0.0.0.0.
 #
-#      The Snippy server should bind to the hostname of the container.
+#      If there is a problem reading the container hostname and IP, the
+#      Snippy container still runs on the IP address 0.0.0.0. This is a
+#      security risk that should not be done in production.
+#
+#      If there are no problems reading the container address, the server
+#      binds to correct address.
+#
+#      There is a security level log message printed in case reading the
+#      container IP address failed and the server is run on 0.0.0.0.
 #
 #   2. Because Alpine ``adduser`` does not support ``--no-log-init``, the
 #      Snippy container is prone to disk exhaustion if used UID is very

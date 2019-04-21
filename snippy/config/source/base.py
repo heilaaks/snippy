@@ -630,6 +630,49 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self._server_base_path_rest = value  # pylint: disable=attribute-defined-outside-init
 
     @property
+    def server_host(self):
+        """Get server host IP and port"""
+
+        return self._server_host
+
+    @server_host.setter
+    def server_host(self, value):
+        """Validate server host IP and port.
+
+        This method handles a special case for a Docker container. There are
+        no other ways to read the container runtime IP address than creating
+        a startup scrip that reads it for example from /etc/hosts or doing it
+        from code. There may be an option to start the container with ``docker
+        run`` that extracts the IP but that is considered a hack.
+
+        Even though container startup scripts like entrypoint.sh are common
+        pattern, the intention is to survive without those.
+
+        Because of these reasons, there is a special keyword that triggers
+        reading the container hostname and then the related IP address.
+
+        In case there is an exception while reading the host IP address, the
+        0.0.0.0 is still used and the container is started. This is a security
+        risk and this should not be run in production like this. The default
+        behavior is for a casual user in order to provide a tool that works
+        out of the box.
+
+        Args:
+            value (str): Server host that contains IP address and port.
+        """
+
+        if 'container.hostname' in value:
+            import socket
+            try:
+                host = socket.gethostbyname(socket.gethostname())
+                value = value.replace('container.hostname', host)
+            except socket.error:
+                value = value.replace('container.hostname', '0.0.0.0')
+                self._logger.security('running container server on 0.0.0.0: {}'.format(value))
+
+        self._server_host = value  # pylint: disable=attribute-defined-outside-init
+
+    @property
     def identity(self):
         """Get content identity."""
 

@@ -1,33 +1,27 @@
 ## WORKING
-   - [ ] Why there is a 48, "message": "listening at: http://0.0.0.0:32768 (1)" when started in container?
-   - [ ] Add schema validation for tests (not to sending side). Hide this into helper: assert_restapi.
-   - [ ] Incorrect header does not leave logs. Test manually since this works differently that the tests? For example ab was missing '-T application/vnd.api+json' without this it did not work.
-   - [ ] Try ULID https://github.com/ahawker/ulid (does this support P2.7) or https://github.com/mdomke/python-ulid as in https://opensource.zalando.com/restful-api-guidelines/#resources
-   - [ ] Add health API to respond to culr HC and write status to logs.
-   - [ ] Check good rules from https://opensource.zalando.com/restful-api-guidelines/#218
    - [ ] Docker does not start if -vv is left out. Server does not see any parameters and exist. They env variables should be enought
    - [ ] Docker start command (server running) not in JSON? Start with "...heilaaks/snippy --server-host 127.0.0.1:8080"
+   - [ ] Add schema validation for tests (not to sending side). Hide this into helper: assert_restapi.
+   - [ ] Fix updating Markdown based solutions in text formats does not work because the Mkdn solution does not have text header and data structure.
+   - [ ] Starting the server again and import the default content again with --defaults causes server internal erro 500 because of UUID. The 500 should not be here because this is not internal error. Fix?
+   - [ ] Fix creating/updating resource with invalid versions. Check test_api_create_snippet_024. The seal() cannot check if Cause not is_is because it generates incorrect error. For example GET ../<valid digest>/error shows error that digest not foind. See test_api_search_reference_field_012. move the reast API based empty list check earlier in code to solve this.
+   - [ ] Incorrect header does not leave logs. Test manually since this works differently that the tests? For example ab was missing '-T application/vnd.api+json' without this it did not work.
+   - [ ] Try ULID https://github.com/ahawker/ulid (does this support P2.7) or https://github.com/mdomke/python-ulid as in https://opensource.zalando.com/restful-api-guidelines/#resources
+   - [ ] Add health API to respond to curl HC and write status to logs.
+   - [ ] Check good rules from https://opensource.zalando.com/restful-api-guidelines/#218
    - [ ] Empty array values can unambiguously be represented as the empty list, [].
    - [ ] Swagger 3.0: Why the 'additionProperties: false' field did not affect swagger 3.0?
    - [ ] Swagger 2.0: Does not support nullable and this does not work with validation: test_api_update_reference_010/117. move to OAS3.0 to solve this?
-   - [ ] Note in commit log that the Config() does not use jsonschema import because it is Server import. The Config must work in CLI mode with only Yaml.
    - [ ] Design and change /groups and /tags to GET groups and tags not content. Like unique tags and groups.
    - [ ] Check why test_api_create_snippet_004 has specific error length in Python 3.4.
-   - [ ] Fix updating Markdown based solutions in text formats does not work because the Mkdn solution does not have text header and data structure.
    - [ ] Config.get_resource creates external UUID usage when e.g resource is updated. Get rid of this (somehow) after UUID refactoring.
-   - [ ] PUT can be like POST if not resource: https://stackoverflow.com/a/35845343. Test and fix PUT to new resource --> no. because letting client to create resource ID is not good. PUT comes wiht {id}
    - [ ] Test export/import Mkdn snippet with partial comments. The export must have the <not documented> tag and import must remove it.
-   - [ ] Fix creating/updating resource with invalid versions. Check test_api_create_snippet_024. The seal() cannot check if Cause not is_is because it generates incorrect error. For example GET ../<valid digest>/error shows error that digest not foind. See test_api_search_reference_field_012. move the reast API based empty list check earlier in code to solve this.
    - [ ] Fix cli -f file to see if this goes ot content filename attribute. Should not. -f|--file and content.filename are not the same.
    - [ ] Add instructions to use local install dir and the export path for local bin if needed (add the ~./local/bin to path)
    - [ ] Fix somehow (?) the python runner search --sall 'test' --filter test -vv | grep --all?
    - [ ] Fix JSON API v1.x requires links for collection responses too. Individual resource not found or attrbute results null otherwise empty list.
-   - [ ] Fix changing URI with digest which may be bad practise?
-   - [ ] Post references with data must be automatically set to links. Data is only mandatory in API specs. Not easy (?) to add conditional mandatory fields in OAS.
    - [ ] Fix digest computation once things are setling down. Changing this forces changes to all tests and code that rely on digest.
    - [ ] Fix help text to use import --all instead of content specific commands. Or keep?
-   - [ ] Starting the server again and import the default content again with --defaults causes server internal erro 500 because of UUID. The 500 should not be here because this is not internal error. Fix?
-   - [ ] Fix it may be possile to validate collections so that it calls resource validatio. This would remove need to repeat the code to reset client UUID and digest in resource and collection validation.
    - [ ] Fix updating content without updates changes the updated timestamp. There is no need to store the content either.
    - [ ] Fix tox which seems to test on latest python 3.6 and not e.g. 3.4. Tox -e py34 // http://notes.webutvikling.org/darn-installation-of-python-3-4/
    - [ ] Add delete for wheel build directory for automation. If the folder exist this is a problem (at least used to be) see how to fail python release/building/something.

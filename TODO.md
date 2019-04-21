@@ -1,23 +1,21 @@
 ## WORKING
+   - [ ] Why there is a 48, "message": "listening at: http://0.0.0.0:32768 (1)" when started in container?
+   - [ ] Add schema validation for tests (not to sending side). Hide this into helper: assert_restapi.
+   - [ ] Incorrect header does not leave logs. Test manually since this works differently that the tests? For example ab was missing '-T application/vnd.api+json' without this it did not work.
    - [ ] Try ULID https://github.com/ahawker/ulid (does this support P2.7) or https://github.com/mdomke/python-ulid as in https://opensource.zalando.com/restful-api-guidelines/#resources
    - [ ] Add health API to respond to culr HC and write status to logs.
    - [ ] Check good rules from https://opensource.zalando.com/restful-api-guidelines/#218
+   - [ ] Docker does not start if -vv is left out. Server does not see any parameters and exist. They env variables should be enought
+   - [ ] Docker start command (server running) not in JSON? Start with "...heilaaks/snippy --server-host 127.0.0.1:8080"
    - [ ] Empty array values can unambiguously be represented as the empty list, [].
    - [ ] Swagger 3.0: Why the 'additionProperties: false' field did not affect swagger 3.0?
    - [ ] Swagger 2.0: Does not support nullable and this does not work with validation: test_api_update_reference_010/117. move to OAS3.0 to solve this?
    - [ ] Note in commit log that the Config() does not use jsonschema import because it is Server import. The Config must work in CLI mode with only Yaml.
-   - [ ] Clean the jsonvalidator and the constant since those are not needed because swagger in use.
-   - [ ] Can collection and resource validation for API merged together? Should be possible ...
-   - [ ] Why there is a 48, "message": "listening at: http://0.0.0.0:32768 (1)" when started in container?
-   - [ ] Add internal tests to support parsing of string or list (from cli) since API does not allow it anymore.
-   - [ ] Add schema validation for tests (not to sending side). Hide this into helper: assert_restapi.
-   - [ ] Add data.id validation with schema instead of check in Validation().
    - [ ] Design and change /groups and /tags to GET groups and tags not content. Like unique tags and groups.
-   - [ ] Incorrect header does not leave logs. Test manually since this works differently that the tests? For example ab was missing '-T application/vnd.api+json' without this it did not work.
    - [ ] Check why test_api_create_snippet_004 has specific error length in Python 3.4.
    - [ ] Fix updating Markdown based solutions in text formats does not work because the Mkdn solution does not have text header and data structure.
    - [ ] Config.get_resource creates external UUID usage when e.g resource is updated. Get rid of this (somehow) after UUID refactoring.
-   - [ ] PUT can be like POST if not resource: https://stackoverflow.com/a/35845343. Test and fix PUT to new resource.
+   - [ ] PUT can be like POST if not resource: https://stackoverflow.com/a/35845343. Test and fix PUT to new resource --> no. because letting client to create resource ID is not good. PUT comes wiht {id}
    - [ ] Test export/import Mkdn snippet with partial comments. The export must have the <not documented> tag and import must remove it.
    - [ ] Fix creating/updating resource with invalid versions. Check test_api_create_snippet_024. The seal() cannot check if Cause not is_is because it generates incorrect error. For example GET ../<valid digest>/error shows error that digest not foind. See test_api_search_reference_field_012. move the reast API based empty list check earlier in code to solve this.
    - [ ] Fix cli -f file to see if this goes ot content filename attribute. Should not. -f|--file and content.filename are not the same.

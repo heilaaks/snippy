@@ -35,21 +35,21 @@ class Schema(object):  # pylint: disable=too-few-public-methods
         self._logger = Logger.get_logger(__name__)
         self.validator = self._get_schema_validator()
 
-    def validate(self, media):
-        """Validate media against JSON schema.
+    def validate(self, document):
+        """Validate document against JSON schema.
 
         Args:
-            media (obj): JSON object that is validated against media.
+            document (obj): JSON document that is validated.
         """
 
         validated = False
         try:
-            self.validator.validate(media)
+            self.validator.validate(document)
             validated = True
         except ValidationError as error:
             minimized = ' '.join(str(error).split())
             Cause.push(Cause.HTTP_BAD_REQUEST, 'json media validation failed: {}'.format(minimized))
-            for error in self.validator.iter_errors(media):
+            for error in self.validator.iter_errors(document):
                 self._logger.debug('json media failure: {}'.format(error))
         except SchemaError as error:
             minimized = ' '.join(str(error).split())
@@ -80,7 +80,7 @@ class Validate(object):  # pylint: disable=too-few-public-methods
     ===========
 
     This class validates JSON REST API request. The validattion rules are
-    from the JSON API v1.0 specification.
+    from the JSON API v1.1 specification.
 
     Implemented Rules
     =================
@@ -91,113 +91,88 @@ class Validate(object):  # pylint: disable=too-few-public-methods
     2. "A server MUST return 403 Forbidden in response to an unsupported
         request to create a resource with a client-generated ID." [1]
 
-    [1] http://jsonapi.org/format/
+    3. All schema validations failures cause 400 Bad Request.
+
+    [1] https://jsonapi.org/format/1.1/
     """
 
     _logger = Logger.get_logger(__name__)
-    _jsonschema = Schema()
+    _schema = Schema()
 
     @classmethod
     def json_object(cls, request, identity=None):
         """Validate JSON API v1.0 object.
 
         Args:
-            request (dict): JSON object received from client.
-            identity (str): Partial or full message digest or UUID.
+            request (dict): JSON resource received from a client.
+            identity (str): Full length UUID or partial or full digest.
 
         Returns:
             tuple: List of validated resources received from client.
         """
 
         collection = []
-        is_collection = cls._is_collection(request.media)
-        if is_collection:
-            collection = cls._collection(request)
-        else:
-            collection = cls._resource(request, identity)
+        merge = False
+        if (request.method.lower() == 'patch' or
+                request.get_header('x-http-method-override', default=request.method).lower() == 'patch'):
+            merge = True
 
-        return collection
-
-    @classmethod
-    def _is_collection(cls, media):
-        """Test if media is collection."""
-
-        if 'data' in media and isinstance(media['data'], (list, tuple)):
-            return True
-
-        return False
-
-    @classmethod
-    def _resource(cls, request, identity):
-        """Validate JSON API v1.0 resource.
-
-        The identity is used to find corresponding resource from storage.
-        Resource identities digest and UUID from client must be never used
-        and they do not pass schema validation.
-
-        Args:
-            request (obj): JSON object received from client.
-            identity (str): Partial or full message digest or UUID.
-
-        Returns:
-            tuple: Validated resources in a list.
-        """
-
-        collection = []
-        if cls._jsonschema.validate(request.media):
-            if cls._is_valid_data(request.media['data']):
-                resource_ = request.media['data']['attributes']
-                resource_['identity'] = identity
-                resource_['digest'] = None
-                resource_['uuid'] = None
-                if (request.method.lower() == 'patch' or
-                        request.get_header('x-http-method-override', default=request.method).lower() == 'patch'):
-                    resource_['merge'] = True
-                collection.append(resource_)
-        else:
-            cls._logger.debug('invalid json media for resource', request.media)
-
-        return tuple(collection)
-
-    @classmethod
-    def _collection(cls, request):
-        """Validate JSON API v1.0 collection.
-
-        Message digest and UUID received from a client are never used.
-
-        Args:
-            request (obj): JSON object received from client.
-
-        Returns:
-            tuple: List of validated resources received from client.
-        """
-
-        collection = []
-        if cls._jsonschema.validate(request.media):
-            for data in request.media['data']:
+        if cls._schema.validate(request.media):
+            for data in cls._to_list(request.media['data']):
                 if cls._is_valid_data(data):
-                    data['digest'] = None
-                    data['uuid'] = None
-                    collection.append(data['attributes'])
+                    resource_ = data['attributes']
+                    resource_['identity'] = identity
+                    resource_['digest'] = None
+                    resource_['uuid'] = None
+                    resource_['merge'] = merge
+                    collection.append(resource_)
                 else:
                     collection = []
                     break
         else:
-            cls._logger.debug('invalid json media for collection', request.media)
+            cls._logger.debug('invalid json media for resource', request.media)
 
-        return tuple(collection)
+        return collection
+
+    @classmethod
+    def _to_list(cls, data):
+        """Transform resource data to list.
+
+        A client can send resource or collection in HTTP request. This method
+        always converts the top level ``data`` object to a list of resources.
+
+        Args:
+            data (dict): Top level JSON ``data`` property.
+
+        Returns:
+            tuple: List of attributes
+        """
+
+        if not isinstance(data, (list, tuple)):
+            return (data,)
+
+        return tuple(data)
 
     @staticmethod
     def _is_valid_data(data):
-        """Validata top level data object.
+        """Validata top level resource data.
+
+        Additional validation on top of JSON schema validation is done to be
+        able to generate other than 400 Bad Request HTTP response. The 400 is
+        the only HTTP error generated from JSON schema validation failures.
+
+        JSON API specification requires 403 Forbidden response if client tried
+        to generate resource ID.
 
         Args:
-            data (dict): JSON top level object that contains data in a dictionary.
+            data (dict): Top level JSON ``data`` property.
+
+        Returns:
+            bool: True if the data is valid.
         """
 
-        valid = True
         if 'id' in data:
             Cause.push(Cause.HTTP_FORBIDDEN, 'client generated resource id is not supported, remove member data.id')
-            valid = False
+            return False
 
-        return valid
+        return True

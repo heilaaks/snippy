@@ -1,8 +1,10 @@
 ## WORKING
-   - [ ] Remove tests from container.
+   - [ ] Add file mount examples for mounted sqlite DB.
    - [ ] docker run -ti heilaaks/snippy search --sall . starts the server. docker run -ti heilaaks/snippy --server-host="" search --sall . works If any of the create/delete is used, remove the server flag.
+   - [ ] Make pytest for docker startup commands from Dockerfile. Requires root and disable by default. Only manual run. Better to integrte to Pytest like performance tests.
    - [ ] Add --rmi to docker examples. This is good for error cases where the server does not start. Actually no, the --rm removes logs and those are needed in failures. For CLI commands this is good but not for server.
    - [ ] Add schema validation for tests (not to sending side). Hide this into helper: assert_restapi.
+   - [ ] Remove tests from container.
    - [ ] Fix updating Markdown based solutions in text formats does not work because the Mkdn solution does not have text header and data structure.
    - [ ] Starting the server again and import the default content again with --defaults causes server internal erro 500 because of UUID. The 500 should not be here because this is not internal error. Fix?
    - [ ] Fix creating/updating resource with invalid versions. Check test_api_create_snippet_024. The seal() cannot check if Cause not is_is because it generates incorrect error. For example GET ../<valid digest>/error shows error that digest not foind. See test_api_search_reference_field_012. move the reast API based empty list check earlier in code to solve this.

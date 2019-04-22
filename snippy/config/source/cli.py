@@ -21,7 +21,6 @@
 
 from __future__ import print_function
 
-import re
 import sys
 import argparse
 
@@ -144,22 +143,9 @@ class Cli(ConfigSourceBase):
         if args is None:
             args = []
         args = args[1:]  # Remove the first option that is the program name.
-        arguments = Cli._parse_args(self, args)
-        Cli._set_editor(arguments)
-        Cli._set_format(arguments)
-        # Using the tool from command line always updates existing content if
-        # it exists (merge). This prevents updating empty values on top of
-        # already created content attributes. The example below defines only
-        # `tags` attribute on top of existing content.
-        #
-        # $ snippy update -d f3fd167c64b6f97e --tags new,tags,from,cli
-        #
-        # The merge option has relevance only in API configuration source
-        # where it allows different behaviour between PUT and PATCH methods.
-        arguments['merge'] = True
-        self.init_conf(arguments)
+        self._read_conf(args)
 
-    def _parse_args(self, args):  # pylint: disable=too-many-statements,too-many-locals
+    def _read_conf(self, args):  # pylint: disable=too-many-statements,too-many-locals
         """Parse command line arguments.
 
         Args:
@@ -248,7 +234,7 @@ class Cli(ConfigSourceBase):
         server.add_argument('--storage-ssl-key', type=Parser.to_unicode, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
         server.add_argument('--storage-ssl-ca-cert', type=Parser.to_unicode, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
 
-        # The argparse module will exit with support options help or version
+        # The Argparse module will exit with support options help or version
         # and when argument parsing fails. The --no-ansi flag is needed before
         # custom help action. Because of this, help and positional arguments
         # are not included when the first set of options is parsed to read the
@@ -273,19 +259,43 @@ class Cli(ConfigSourceBase):
             arguments['failure'] = False
             arguments['failure_message'] = ''
         except SystemExit:
+            # The Argparse module will automatically print ``--help`` when the
+            # SystemExit exception is thrown. The pass from here is for clean
+            # exit.
+            #
+            # Do not add ``--help`` as a default command in Dockerfile after
+            # the entrypoint. It can be that all Docker container options are
+            # set from environment variables. Default help command makes it
+            # hard to handle command line option parsing failures combined with
+            # environment variables.
             arguments['failure'] = True
             arguments['failure_message'] = parser.snippy_failure_message
             self._logger.debug('cli: {}'.format(arguments['failure_message']))
 
-        # Print tool help if command line arguments are not provided. Logs are
-        # not printed from this branch because adding `-vv` or `--debug` option
-        # would not go in this branch since these are command line options.
-        if not args:
-            parser.print_help(sys.stdout)
-            arguments['failure'] = True
-            arguments['failure_message'] = 'no command line arguments'
+        self._set_editor(arguments)
+        self._set_format(arguments)
 
-        return arguments
+        # Using the tool from command line always updates existing content if
+        # it exists (merge). This prevents updating empty values on top of
+        # already created content attributes. The example below defines only
+        # `tags` attribute on top of existing content.
+        #
+        # $ snippy update -d f3fd167c64b6f97e --tags new,tags,from,cli
+        #
+        # The merge option has relevance only in API configuration source
+        # where it allows different behaviour between PUT and PATCH methods.
+        arguments['merge'] = True
+        self.init_conf(arguments)
+
+        # In case of command line usage, tool help is printed if there were
+        # no commnad line arguments.
+        #
+        # In case of server usage, it is normal to configure the server from
+        # environment variables and no help is needed.
+        if not self.run_server and not args:
+            parser.print_help(sys.stdout)
+            self.failure = True
+            self.failure_message = 'no command line arguments'
 
     @staticmethod
     def _set_editor(arguments):
@@ -336,53 +346,6 @@ class Cli(ConfigSourceBase):
         elif 'format' not in arguments:
             arguments['format'] = Const.CONTENT_FORMAT_MKDN
 
-    @classmethod
-    def read_arg(cls, option, default, args):
-        """Read command line argument directly from sys.argv.
-
-        This is intenden to be used only in special cases that are related to
-        debug options. The debug options are required for example to print logs
-        before parsing command line arguments.
-
-        This function supports only bool and integer values because there are
-        currently no other use cases.
-
-        This follows the standard command option parsing precedence:
-
-          1. Command line option.
-          2. Environment variable.
-          3. Hard coded default.
-
-        Args:
-            option (string): Command line option.
-            default: Default value if option is not configured.
-            args (list): Argument list received from command line.
-
-        Returns:
-            value: Value for the command line option.
-        """
-
-        value = Const.EMPTY
-        env_option = re.sub(r'''
-            ^[-]{0,2}    # Remove leading hyphens used to indicate command line option.
-            ''', '', option, flags=re.VERBOSE)
-        if isinstance(default, bool):
-            value = bool(option in args) or Cli.read_env(env_option, default)[1]
-        elif isinstance(default, int):
-            try:
-                if bool(option in args):
-                    value = int(args[args.index(option) + 1])
-                else:
-                    value = int(Cli.read_env(env_option, default)[1])
-                if value < 0:
-                    value = default
-            except (IndexError, ValueError):
-                value = default
-        else:
-            value = default
-
-        return value
-
 
 class CustomArgumentParser(argparse.ArgumentParser):
     """Customized Argument Parser to get the failure string."""
@@ -401,10 +364,13 @@ class CustomArgumentParser(argparse.ArgumentParser):
 
 
 class CustomHelpAction(argparse.Action):  # pylint: disable=too-few-public-methods
-    """Customised help action."""
+    """Customised help action.
+
+    Custom treatment for parameters after the ``--help```option.
+    """
 
     def __init__(self, *args, **kwargs):
-        """Store the tool --no-ansi option as attribute."""
+        """Store the ``--no-ansi`` option as a custom attribute."""
 
         self._no_ansi = kwargs.pop('no_ansi', False)
         super(CustomHelpAction, self).__init__(*args, **kwargs)

@@ -220,7 +220,7 @@ class Config(object):
         cls.failure_message = cls.source.failure_message
 
         # Server must be updated again because only the first init starts the server.
-        cls.run_server = bool(cls.source.server_host)
+        cls.run_server = cls.source.run_server
 
         # Parsed from defined configuration.
         cls.is_operation_create = bool(cls.operation == 'create')

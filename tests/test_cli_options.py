@@ -194,7 +194,27 @@ class TestCliOptions(object):
         Content.delete()
 
     @staticmethod
-    def test_help_option_004(capsys, caplog):
+    @pytest.mark.usefixtures('mock-server')
+    def test_help_option_004(capsys, caplog, osenviron):
+        """Test running only the snippy.
+
+        In this case the SNIPPY_SERVER_HOST configuration variable is set.
+        This should just start the server without printing help. This is a
+        use case for server installation in Docker containers where all
+        variables are coming from environment variables.
+        """
+
+        osenviron.setenv('SNIPPY_SERVER_HOST', '127.0.0.1:8081')
+        snippy = Snippy(['snippy'])
+        snippy.run()
+        out, err = capsys.readouterr()
+        assert out == Const.EMPTY
+        assert not err
+        assert not caplog.records[:]
+        Content.delete()
+
+    @staticmethod
+    def test_help_option_005(capsys, caplog):
         """Test printing help from console.
 
         Suppress tool help text with quiet mode even when there are no other
@@ -210,7 +230,28 @@ class TestCliOptions(object):
         Content.delete()
 
     @staticmethod
-    def test_help_option_005(capsys, caplog):
+    def test_help_option_006(capsys, caplog):
+        """Test invalid command line option.
+
+        Try to run snippy with invalid command line option.
+        """
+
+        output = (
+            'usage: snippy [-v, --version] [-h, --help] <operation> [<options>] [-vv] [-q]',
+            'snippy: error: unrecognized arguments: -a',
+            ''
+        )
+        snippy = Snippy(['snippy', '-a'])
+        snippy.run()
+        out, err = capsys.readouterr()
+        print(out)
+        assert out == Const.EMPTY
+        assert err == Const.NEWLINE.join(output)
+        assert not caplog.records[:]
+        Content.delete()
+
+    @staticmethod
+    def test_help_option_007(capsys, caplog):
         """Test printing examples from console.
 
         Print command examples from help.
@@ -226,7 +267,7 @@ class TestCliOptions(object):
 
     @staticmethod
     @pytest.mark.usefixtures('devel_file_list', 'devel_file_data')
-    def test_help_option_006(capsys, caplog):
+    def test_help_option_008(capsys, caplog):
         """Test printing test documentation from console.
 
         Print test cases. The --no-ansi option must be work when set before
@@ -258,7 +299,7 @@ class TestCliOptions(object):
 
     @staticmethod
     @pytest.mark.usefixtures('devel_file_list', 'devel_file_data')
-    def test_help_option_007(capsys, caplog):
+    def test_help_option_009(capsys, caplog):
         """Test printing test documentation from console.
 
         Print test cases. The --no-ansi option must work when set after
@@ -290,7 +331,7 @@ class TestCliOptions(object):
 
     @staticmethod
     @pytest.mark.usefixtures('devel_no_tests')
-    def test_help_option_008(capsys, caplog):
+    def test_help_option_010(capsys, caplog):
         """Print test documentation when testing package does not exist.
 
         Try to print tool test case reference documentation when tests are

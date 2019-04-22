@@ -30,7 +30,7 @@ from snippy.logger import Logger
 from snippy.meta import __version__
 
 
-class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
+class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes, too-many-public-methods
     """Base class for configuration sources."""
 
     CREATE = 'create'
@@ -51,6 +51,10 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     LIMIT_DEFAULT_CLI = 99
     OFFSET_DEFAULT = 0
     SERVER_BASE_PATH_REST = '/api/snippy/rest'
+
+    RE_MATCH_OPT_LEADING_HYPHENS = re.compile(r'''
+        ^[-]{0,2}    # Match leading hyphens used to indicate command line option.
+        ''', re.VERBOSE)
 
     def __init__(self, derived, parameters=None):
         self._logger = Logger.get_logger(__name__)
@@ -99,6 +103,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         namespace.append('quiet={}'.format(self.quiet))
         namespace.append('remove_fields={}'.format(self.remove_fields))
         namespace.append('reset_fields={}'.format(self.reset_fields))
+        namespace.append('run_server={}'.format(self.run_server))
         namespace.append('sall={}'.format(self.sall))
         namespace.append('scat={}'.format(self.scat))
         namespace.append('search_filter={}'.format(self.search_filter))
@@ -228,6 +233,10 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self.versions = parameters.get('versions', ())
         self.very_verbose = parameters.get(*self.read_env('vv', False))
         self._repr = self._get_repr()
+
+        # The flag that tells if Snippy server is run is set after the
+        # command line arguments and environment variables are parsed.
+        self.run_server = bool(self.server_host)
 
     @property
     def data(self):
@@ -595,6 +604,25 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         return tuple(self._reset_fields.keys())
 
     @property
+    def run_server(self):
+        """Get bool value that tells if Snippy server is run."""
+
+        return self._run_server
+
+    @run_server.setter
+    def run_server(self, value):
+        """Store flag that tells if server is run.
+
+        This flag is set after command line options have been parsed and
+        validated.
+
+        Args:
+            value (bool): Bool value that tells if server is run.
+        """
+
+        self._run_server = value  # pylint: disable=attribute-defined-outside-init
+
+    @property
     def server_base_path_rest(self):
         """Get REST API base path."""
 
@@ -700,14 +728,14 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     def read_env(cls, option, default):
         """Read parameter from optional environment variable.
 
-        Read parameter value from environment variable or return the given
-        default value. Environment variable names follow the same command
-        line option naming convesion with
+        Read parameter value from environment variable or return given default
+        value. Environment variable names follow the same command line option
+        naming convesion with modifications:
 
-          1. A ``SNIPPY_`` prefix is added,
-          2. Leading hyphens are removed.
-          3. Words splitted with hyphens are converted to underscores.
-          4. Command line option names are converted to full upper case.
+          1. Leading hyphens are removed.
+          2. Option casing is converted to full upper case.
+          3. Hyphens are replaced with underscores.
+          4. ``SNIPPY_`` prefix is added,
 
         For example corresponding environment variable for the ``--server-host``
         command line option is ``SNIPPY_SERVER_HOST``.
@@ -720,7 +748,12 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
             tuple: Same command line option name as received with value.
         """
 
-        value = os.getenv("SNIPPY_" + option.replace('-', '_').upper(), default)
+        # Remove leading hyphens to allow calling the method with the name
+        # of command line parameter. This helps finding related code.
+        option = cls.RE_MATCH_OPT_LEADING_HYPHENS.sub('', option)
+
+        # There is no need to convert string variables.
+        value = os.getenv('SNIPPY_' + option.replace('-', '_').upper(), default)
         if isinstance(default, bool):
             value = bool(value)
         elif isinstance(default, int):
@@ -734,3 +767,48 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
             value = Const.DB_SQLITE
 
         return (option, value)
+
+    @classmethod
+    def read_arg(cls, option, default, args):
+        """Read command line argument directly from sys.argv.
+
+        This is intenden to be used only in special cases that are related to
+        debug options. The debug options are required for example to print logs
+        before parsing command line arguments.
+
+        This function supports only bool and integer values because there are
+        currently no other use cases.
+
+        This follows the standard command option parsing precedence:
+
+          1. Command line option.
+          2. Environment variable.
+          3. Hard coded default.
+
+        Args:
+            option (string): Command line option.
+            default: Default value if option is not configured.
+            args (list): Argument list received from command line.
+
+        Returns:
+            int,bool: Value for the command line option.
+        """
+
+        value = Const.EMPTY
+        parameter = cls.RE_MATCH_OPT_LEADING_HYPHENS.sub('', option)
+        if isinstance(default, bool):
+            value = bool(option in args) or cls.read_env(parameter, default)[1]
+        elif isinstance(default, int):
+            try:
+                if bool(option in args):
+                    value = int(args[args.index(option) + 1])
+                else:
+                    value = int(cls.read_env(parameter, default)[1])
+                if value < 0:
+                    value = default
+            except (IndexError, ValueError):
+                value = default
+        else:
+            value = default
+
+        return value

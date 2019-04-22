@@ -77,7 +77,6 @@ EXPOSE 32768
 USER noname
 
 ENTRYPOINT ["snippy"]
-CMD ["--help"]
 
 #
 # SECURITY HARDENING
@@ -281,7 +280,9 @@ CMD ["--help"]
 #      approach. See ``The Snippy server in the container can bind to
 #      0.0.0.0.`` for security advisory.
 #
+#      ```shell
 #      ENV SNIPPY_SERVER_HOST=container.hostname:32768
+#      ```
 #
 #   4. Container UID and GID are not defined by default
 #
@@ -433,6 +434,19 @@ CMD ["--help"]
 #      EXPOSE 32768
 #      ```
 #
+#  11. No default command
+#
+#      Do not add default command ``--help``. This causes problems when the
+#      server configuration is defined only from environment variables that
+#      is the most common use case when running server from container.
+#
+#      From Snippy point of view, this implememntation makes the CLI and
+#      server side work in a similar manner. This helps to avoid container
+#      specific solutions in code and makes testing easier.
+#
+#      ```shell
+#      ENTRYPOINT ["snippy"]
+#      ```
 #
 # KNOWN SECURITY VULNERABILITIES AND PROBLEMS:
 #

@@ -1,5 +1,8 @@
 ## WORKING
-   - [ ] Docker does not start if -vv is left out. Server does not see any parameters and exist. They env variables should be enought
+   - [ ] Healtcheck broken after container.docker trick. Patch env from python? Likely does not work since curl not able to see?
+   - [ ] env does not need tuple and *?
+   - [ ] Add --rmi to docker examples. This is good for error cases where the server does not start.
+   - [ ] use command line syntax in env calls.
    - [ ] Docker start command (server running) not in JSON? Start with "...heilaaks/snippy --server-host 127.0.0.1:8080"
    - [ ] Add schema validation for tests (not to sending side). Hide this into helper: assert_restapi.
    - [ ] Fix updating Markdown based solutions in text formats does not work because the Mkdn solution does not have text header and data structure.

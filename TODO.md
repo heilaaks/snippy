@@ -1,6 +1,7 @@
 ## WORKING
+   - [ ] Remove tests from container.
    - [ ] Healtcheck broken after container.docker trick. Patch env from python? Likely does not work since curl not able to see?
-   - [ ] env does not need tuple and *?
+   - [ ] docker run -ti heilaaks/snippy search --sall . starts the server. docker run -ti heilaaks/snippy --server-host="" search --sall . works If any of the create/delete is used, remove the server flag.
    - [ ] Add --rmi to docker examples. This is good for error cases where the server does not start.
    - [ ] use command line syntax in env calls.
    - [ ] Docker start command (server running) not in JSON? Start with "...heilaaks/snippy --server-host 127.0.0.1:8080"

@@ -14,6 +14,7 @@ ENV SNIPPY_SERVER_BASE_PATH_REST=/api/snippy/rest
 WORKDIR /usr/local/snippy
 
 COPY snippy/ snippy/
+COPY docker-entrypoint.sh .
 COPY setup.py .
 COPY LICENSE .
 COPY README.rst .
@@ -46,15 +47,18 @@ RUN addgroup \
         --all \
         --server-host "" \
         -q && \
+    touch snippy-server-host && \
     chown -R noname:root /usr/local/snippy/ && \
     chmod -R g+rwX /usr/local/snippy/ && \
+    chmod 0550 /usr/local/snippy/docker-entrypoint.sh && \
+    chmod 0660 /usr/local/snippy/snippy-server-host && \
     find /usr/lib/python3.6 -type d -name __pycache__ -exec rm -r {} \+ && \
     find /usr/local/snippy/.local/bin ! -regex '\(.*snippy\|.*gunicorn\)' -type f -exec rm -f {} + && \
     python3 -m pip uninstall pip --yes && \
     apk del apk-tools && \
+    rm -f /usr/local/snippy/setup.py && \
     rm -rf /etc/apk/ && \
     rm -rf /usr/local/snippy/.cache && \
-    rm -rf /usr/local/snippy/setup.py && \
     rm -rf /usr/local/snippy/snippy && \
     rm -rf /lib/apk/ && \
     rm -rf /root/.cache && \
@@ -70,13 +74,13 @@ HEALTHCHECK --interval=10s \
                 --fail \
                 --insecure \
                 --proto http,https \
-                ${SNIPPY_SERVER_HOST}${SNIPPY_SERVER_BASE_PATH_REST} || exit 1
+                $(cat snippy-server-host)${SNIPPY_SERVER_BASE_PATH_REST} || exit 1
 
 EXPOSE 32768
 
 USER noname
 
-ENTRYPOINT ["snippy"]
+ENTRYPOINT ["./docker-entrypoint.sh"]
 
 #
 # SECURITY HARDENING
@@ -271,14 +275,47 @@ ENTRYPOINT ["snippy"]
 #      than doing a startup script that extracts the container IP address
 #      or resolving the address in code.
 #
-#      The intention is to survive without startup scripts. There are no
-#      known problem with those and they can start the container with the
-#      PID 1. How ever, author still doesn't like startup scripts so this
-#      is done in case.
+#      The problem would be much easier if the container would always bind
+#      to 0.0.0.0. But this is considered as a security risk since it is
+#      likely that security hardening is not done for host that runs the
+#      containers. Also it is likely that user may start the server with
+#      ``--net=host`` without changing the server IP which would lead the
+#      server to listen all the addresses in host.
+#
+#      In order to get both 1 and 2 to work simultaneously with the above
+#      security assumption, the startup script is the only option.
+#
+#         1. Server started with
+#            A) container defaults
+#            B) using --net=host and changing the SNIPPY_SERVER_HOST
+#         2. Container healthcheck working properly
+#
+#      - If user does not want to change the default and does not use host
+#        networking with ``--net=host``, it is not possible to set the
+#        server host environment variable without startup script or reading
+#        the hostname from code. If code reads the hostname, this is not
+#        available for the healtcheck without writing the information into
+#        a file. The code cannot update environment variables in runtime
+#        so that they would be visible for container that runs healthcheck.
+#
+#      - It would work through environment variables if the user would
+#        always define SNIPPY_SERVER_HOST environment variable. But this
+#        is considered too difficult to be practical without running the
+#        container with ``--net=host``.
+#
+#      - It could be possible to provide new hostname with ``--add-host``
+#        from ``docker run`` command. But this is again considered too
+#        difficult to be practical for target use case.
+#
+#      - The special tag ``container.hostname`` tells for the script that
+#        user did not set set the server IP and it must be read from the
+#        container runtime hostname IP.
 #
 #      The area itself is complicated so there can be issues with this
 #      approach. See ``The Snippy server in the container can bind to
-#      0.0.0.0.`` for security advisory.
+#      0.0.0.0.`` for security advisory. For example when Kubernetes or
+#      Swarm is taken into use with different networking models, it is
+#      suspected that there will be issues.
 #
 #      ```shell
 #      ENV SNIPPY_SERVER_HOST=container.hostname:32768
@@ -389,6 +426,9 @@ ENTRYPOINT ["snippy"]
 #      address and port are defined in one string which is not supported by
 #      the ``nc`` tool.
 #
+#      The server host with port is read from a file. See the ``Special tag
+#      to read container runtime IP address.`` for more information.
+#
 #      ```shell
 #      HEALTHCHECK --interval=10s \
 #                  --timeout=3s \
@@ -396,7 +436,7 @@ ENTRYPOINT ["snippy"]
 #                      --fail \
 #                      --insecure \
 #                      --proto http,https \
-#                      ${SNIPPY_SERVER_HOST}/snippy/api/app/v1 || exit 1
+#                      $(cat snippy-server-host)${SNIPPY_SERVER_BASE_PATH_REST} || exit 1
 #      ```
 #
 #
@@ -445,7 +485,7 @@ ENTRYPOINT ["snippy"]
 #      specific solutions in code and makes testing easier.
 #
 #      ```shell
-#      ENTRYPOINT ["snippy"]
+#      ENTRYPOINT ["./docker-entrypoint.sh"]
 #      ```
 #
 # KNOWN SECURITY VULNERABILITIES AND PROBLEMS:
@@ -474,17 +514,15 @@ ENTRYPOINT ["snippy"]
 #
 #   1. Add mount examples to store persistent volume on host.
 #
-#   2. Fix Snippy server bind to container IP 0.0.0.0.
+#   2. Fix TODO comment about the UID/GID not set by default.
 #
-#   3. Fix TODO comment about the UID/GID not set by default.
+#   3. Add examples for --privileged to bind with --net=host to ports below 1024.
 #
-#   4. Add examples for --privileged to bind with --net=host to ports below 1024.
+#   4. Add examples to connect the server to another container that runs PostgreSQL.
 #
-#   5. Add examples to connect the server to another container that runs PostgreSQL.
+#   5. Add examples to connect the CLI to another container that runs PostgreSQL.
 #
-#   6. Add examples to connect the CLI to another container that runs PostgreSQL.
-#
-#   7. Add script that tests all the combinations.
+#   6. Add script that tests all the combinations.
 #
 #
 # LINTING IMAGES

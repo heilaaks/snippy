@@ -67,8 +67,8 @@ class Logger(object):
     }
 
     # Use severity level names from RFC 5424 /1/. The level name is printed
-    # with one letter when debug logs are in text mode. In JSON format logs
-    # contain full length severity level name.
+    # with one letter when debug logs are in text mode. The JSON formatted
+    # logs will contain full length log severity level name.
     #
     # The security level is a custom log level only for security events.
     #
@@ -102,7 +102,7 @@ class Logger(object):
             name (str): Name of the module that requests a Logger.
 
         Returns:
-            CustomLoggerAdapter: Logger to be used by caller.
+            obj: CustomLoggerAdapter logger to be used by caller.
         """
 
         logger = logging.getLogger(name)
@@ -206,6 +206,9 @@ class Logger(object):
     def print_stdout(cls, message):
         """Print output to stdout.
 
+        Take care of nasty details like broken pipe when printing to
+        stdout.
+
         Args:
             message (str): Text string to be printed to stdout.
         """
@@ -243,14 +246,31 @@ class Logger(object):
     def print_status(cls, status):
         """Print status information like exit cause or server running.
 
+        Print user formatted log messages unless the JSON log formating
+        is enabled. The debug and very_verbose options have precedence
+        over the quiet option.
+
+        If JSON logs are used, the format of the log must always be JSON.
+        This is important for server installation where post processing of
+        logs might be done elsewhere and incorrectly formatted logs may be
+        discarded or cause errors.
+
+        In order to post process a JSON log, the dictionary structure must
+        always follow the same format. Because of this, the log is pushed
+        always as a debug level log regardless of the log level to get the
+        formatting done.
+
         Args:
             status (str): Status to be printed on stdout.
         """
 
-        if logging.getLogger('snippy').getEffectiveLevel() == logging.DEBUG:
-            if cls.CONFIG['very_verbose']:
-                status.lower()
+        if Logger.CONFIG['log_json'] and not cls.CONFIG['quiet']:
+            level = logging.getLogger('snippy').getEffectiveLevel()
+            logging.getLogger('snippy').setLevel(logging.DEBUG)
             Logger.get_logger().debug('%s', status)
+            logging.getLogger('snippy').setLevel(level)
+        elif logging.getLogger('snippy').getEffectiveLevel() == logging.DEBUG:
+            Logger.get_logger().debug(status)
         elif not cls.CONFIG['quiet']:
             cls.print_stdout(status)
 
@@ -265,7 +285,7 @@ class Logger(object):
             refresh_oid (bool): Define if operation ID is refreshed or not.
 
         Returns:
-            function: Timeit wrapper function for decorators.
+            obj: Timeit wrapper function for decorators.
         """
 
         def _timeit(method):
@@ -328,14 +348,19 @@ class Logger(object):
 class CustomLoggerAdapter(logging.LoggerAdapter):  # pylint: disable=too-few-public-methods
     """Custom logger adapter.
 
-    The logging.LoggerAdapter does not support custom log levels.
+    The logging.LoggerAdapter does not support custom log levels
+    and therefore they need to be implemented here.
     """
 
     def __init__(self, logger, extra):
         logging.LoggerAdapter.__init__(self, logger, extra)
 
     def security(self, msg, *args, **kwargs):
-        """Customer log level for security events."""
+        """Customer log level for security events.
+
+        Args:
+            msg (str): Log message as a string.
+        """
 
         self.log(logging.SECURITY, msg, *args, **kwargs)
 
@@ -350,7 +375,14 @@ class CustomFormatter(logging.Formatter):
         super(CustomFormatter, self).__init__(*args, **kwargs)
 
     def format(self, record):
-        """Format log record."""
+        """Format log record.
+
+        Args:
+            record (obj): Logging module LogRecord.
+
+        Returns:
+            str: Log string.
+        """
 
         # Debug option tries to print logs "as is" in full length. There is a
         # maximum limitation for logs for safety and security reasons. Very
@@ -379,16 +411,25 @@ class CustomFormatter(logging.Formatter):
         return log_string
 
     def formatTime(self, record, datefmt=None):
-        """Format log timestamp."""
+        """Format log timestamp.
 
-        # JSON logs are printed in ISO8601 format with UTC timestamps. All
-        # other logs are printed in local time with space between date and
-        # time instead of 'T' because of better readability.
-        #
-        # The ISO8601 formatted JSON timestamp is set in microseconds. It
-        # seems that the msecs field of the logging record contains mseconds
-        # as floating point number. It is assumed that the microseconds can
-        # be read by reading three significat digits after point.
+        JSON logs are printed in ISO8601 format with UTC timestamps. All
+        other logs are printed in local time with space between date and
+        time instead of 'T' because of better readability.
+
+        The ISO8601 formatted JSON timestamp is set in microseconds. It
+        seems that the msecs field of the logging record contains mseconds
+        as floating point number. It is assumed that the microseconds can
+        be read by reading three significat digits after point.
+
+        Args:
+            record (obj): Logging module LogRecord.
+            datefmt (str): Datetime format as accepted by time.strftime().
+
+        Returns:
+            str: Log timestamp in string format.
+        """
+
         if Logger.CONFIG['log_json']:
             timstamp = time.strftime('%Y-%m-%dT%H:%M:%S', time.gmtime(record.created))
             time_string = '%s.%d+00:00' % (timstamp, int(Const.TEXT_TYPE(record.msecs).replace('.', '')[:6]))
@@ -400,7 +441,11 @@ class CustomFormatter(logging.Formatter):
 
     @staticmethod
     def _jsonify(record):
-        """Create JSON string from log record."""
+        """Create JSON string from log record.
+
+        Args:
+            record (obj): Logging module LogRecord.
+        """
 
         log = OrderedDict()
 
@@ -415,7 +460,11 @@ class CustomFilter(logging.Filter):  # pylint: disable=too-few-public-methods
     """Customer log filter."""
 
     def filter(self, record):
-        """Filtering with dynamic operation ID setting."""
+        """Filtering with dynamic operation ID setting.
+
+        Args:
+            record (obj): Logging module LogRecord.
+        """
 
         record.oid = Logger.SERVER_OID
 

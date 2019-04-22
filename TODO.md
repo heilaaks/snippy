@@ -1,10 +1,7 @@
 ## WORKING
    - [ ] Remove tests from container.
-   - [ ] Healtcheck broken after container.docker trick. Patch env from python? Likely does not work since curl not able to see?
    - [ ] docker run -ti heilaaks/snippy search --sall . starts the server. docker run -ti heilaaks/snippy --server-host="" search --sall . works If any of the create/delete is used, remove the server flag.
-   - [ ] Add --rmi to docker examples. This is good for error cases where the server does not start.
-   - [ ] use command line syntax in env calls.
-   - [ ] Docker start command (server running) not in JSON? Start with "...heilaaks/snippy --server-host 127.0.0.1:8080"
+   - [ ] Add --rmi to docker examples. This is good for error cases where the server does not start. Actually no, the --rm removes logs and those are needed in failures. For CLI commands this is good but not for server.
    - [ ] Add schema validation for tests (not to sending side). Hide this into helper: assert_restapi.
    - [ ] Fix updating Markdown based solutions in text formats does not work because the Mkdn solution does not have text header and data structure.
    - [ ] Starting the server again and import the default content again with --defaults causes server internal erro 500 because of UUID. The 500 should not be here because this is not internal error. Fix?

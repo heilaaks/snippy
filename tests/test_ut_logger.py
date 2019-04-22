@@ -275,7 +275,82 @@ class TestUtLogger(object):
         assert caplog.records[0].msg == 'NOK: exit cause'
 
     @staticmethod
-    def test_logger_007(capsys):
+    def test_logger_007(capsys, caplog):
+        """Test print_status with JSON logger
+
+        Test case verifies print_status special treatment with JSON logs.
+        """
+
+        Logger.remove()
+
+        # Even when logs are disbled, the print_status must output the
+        # log in JSON format.
+        caplog.clear()
+        Logger.configure({
+            'debug': False,
+            'log_json': True,
+            'log_msg_max': Logger.DEFAULT_LOG_MSG_MAX,
+            'quiet': False,
+            'very_verbose': False
+        })
+        Logger.print_status('snippy server running at: 127.0.0.1:8080')
+        out, err = capsys.readouterr()
+        assert not err
+        assert json.loads(out.splitlines()[0])['message'] == 'snippy server running at: 127.0.0.1:8080'
+        assert caplog.records[0].msg == 'snippy server running at: 127.0.0.1:8080'
+        assert Field.is_iso8601(json.loads(out.splitlines()[0])['asctime'])
+
+        # Because the debug and very_verbose options are not set, the JSON
+        # log must not be printed because quiet is enabled.
+        caplog.clear()
+        Logger.configure({
+            'debug': False,
+            'log_json': True,
+            'log_msg_max': Logger.DEFAULT_LOG_MSG_MAX,
+            'quiet': True,
+            'very_verbose': False
+        })
+        Logger.print_status('snippy server running at: 127.0.0.1:8080')
+        out, err = capsys.readouterr()
+        assert not err
+        assert not out
+
+        # Because the debug option have precedence over the quiet option,
+        # the JSON log must be printed.
+        caplog.clear()
+        Logger.configure({
+            'debug': True,
+            'log_json': True,
+            'log_msg_max': Logger.DEFAULT_LOG_MSG_MAX,
+            'quiet': False,
+            'very_verbose': False
+        })
+        Logger.print_status('snippy server running at: 127.0.0.1:8080')
+        out, err = capsys.readouterr()
+        assert not err
+        assert json.loads(out.splitlines()[0])['message'] == 'snippy server running at: 127.0.0.1:8080'
+        assert caplog.records[0].msg == 'snippy server running at: 127.0.0.1:8080'
+        assert Field.is_iso8601(json.loads(out.splitlines()[0])['asctime'])
+
+        # Because the very_verbose option have precedence over the quiet
+        # option, the JSON log must be printed.
+        caplog.clear()
+        Logger.configure({
+            'debug': False,
+            'log_json': True,
+            'log_msg_max': Logger.DEFAULT_LOG_MSG_MAX,
+            'quiet': False,
+            'very_verbose': True
+        })
+        Logger.print_status('snippy server running at: 127.0.0.1:8080')
+        out, err = capsys.readouterr()
+        assert not err
+        assert json.loads(out.splitlines()[0])['message'] == 'snippy server running at: 127.0.0.1:8080'
+        assert caplog.records[0].msg == 'snippy server running at: 127.0.0.1:8080'
+        assert Field.is_iso8601(json.loads(out.splitlines()[0])['asctime'])
+
+    @staticmethod
+    def test_logger_008(capsys):
         """Test operation ID (OID).
 
         Test case verifies that operation ID (OID) refresh works.
@@ -300,7 +375,7 @@ class TestUtLogger(object):
         assert json.loads(out.splitlines()[0])['oid'] != json.loads(out.splitlines()[1])['oid']
 
     @staticmethod
-    def test_logger_008(capsys):
+    def test_logger_009(capsys):
         """Test Logger debugging.
 
         Test case verifies that debug methods works.
@@ -323,7 +398,7 @@ class TestUtLogger(object):
         assert 'snippy.tests.test_ut_logger' in out
 
     @staticmethod
-    def test_logger_009(capsys):
+    def test_logger_010(capsys):
         """Test removing snippy Logger handlers.
 
         Test case verifies that Logger.remove() does not delete other than
@@ -348,7 +423,7 @@ class TestUtLogger(object):
         assert 'Handler Stream' in out
 
     @staticmethod
-    def test_logger_010(capsys, caplog):
+    def test_logger_011(capsys, caplog):
         """Test logger advanced configuration.
 
         Test case verifies that log maximum message lenght can be configred
@@ -400,7 +475,7 @@ class TestUtLogger(object):
         assert caplog.records[1].appname == 'snippy'
 
     @staticmethod
-    def test_logger_011(logger, caplog, capsys):
+    def test_logger_012(logger, caplog, capsys):
         """Test logger security.
 
         Test case verifies that debug configuration is not printing extremely
@@ -426,7 +501,7 @@ class TestUtLogger(object):
         assert len(max(caplog.text.split(), key=len)) == len('variable' + 'a'*Logger.SECURITY_LOG_MSG_MAX) - len('variable')
 
     @staticmethod
-    def test_logger_012(capsys, caplog):
+    def test_logger_013(capsys, caplog):
         """Test custom security level.
 
         Test case verifies that custom security level is working.
@@ -454,7 +529,7 @@ class TestUtLogger(object):
         assert hasattr(caplog.records[0], 'oid')
 
     @staticmethod
-    def test_logger_013(capsys, caplog):
+    def test_logger_014(capsys, caplog):
         """Test failure handling.
 
         Test case verifies that log message length cannot exceed safety limits

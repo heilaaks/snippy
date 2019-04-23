@@ -47,7 +47,6 @@ RUN addgroup \
     snippy import \
         --defaults \
         --all \
-        --server-host "" \
         --storage-path /volume \
         -q && \
     touch snippy-server-host && \
@@ -95,8 +94,8 @@ ENTRYPOINT ["./docker-entrypoint.sh"]
 #
 #   Note that the author is not a security or Linux expert. This is a
 #   hobby project. If the reasons that justify the Dockerfile and the
-#   security design aspects are not correct, it is a sign that can be
-#   a security vulnerability or subpar user experience.
+#   security design aspects are not correct, it is a sign that there
+#   can be a security vulnerability.
 #
 #   The most critical parts from the container security hardening have
 #   to be done in host that runs the container runtime.
@@ -122,7 +121,7 @@ ENTRYPOINT ["./docker-entrypoint.sh"]
 #
 #   The target group is a casual user who just wants to run the Snippy
 #   Docker image with the same Linux user as the user who starts the
-#   container. This enables an easy way to mount a persistent volume
+#   container. This allows an easy way to mount a persistent volume
 #   from host.
 #
 #
@@ -136,7 +135,7 @@ ENTRYPOINT ["./docker-entrypoint.sh"]
 #
 # CONTAINER UID/GID
 #
-#   By default, all docker image haave non-deterministic UID and GID. The
+#   By default, all docker image have non-deterministic UID and GID. The
 #   non-deterministic values are allocated at image compile time [2].
 #
 #   Non-deterministic UID and GID are problems only when container mounts
@@ -146,13 +145,14 @@ ENTRYPOINT ["./docker-entrypoint.sh"]
 #   environment with many containers, maintaining volume access rights
 #   based on non-deterministic UID and GID values is not feasible.
 #
-#   If Docker user namespaces feature is activated in host ``dockerd`` [3],
-#   it is possible to start a container with UID 0 (root). The UID 0 maps
-#   to specific UID range in host that does not have root privileges.
+#   If Docker 'user namespaces' feature is activated in host Docker [3],
+#   it is possible to start a container with UID 0 (root) without mapping
+#   directly to a root user in host. The UID 0 in this case maps to a
+#   specific UID range in host that does not have root privileges.
 #
 #   UID ranges are Linux kernel and distribution specific [4] and they can
 #   be configured to have different ranges. This means it is not feasible
-#   to know in advance which ranges user prefers.
+#   to know in advance to which ranges user should be allocated.
 #
 #   For example OpenShift runs containers using an arbitrarily assigned
 #   user ID [1].
@@ -214,7 +214,7 @@ ENTRYPOINT ["./docker-entrypoint.sh"]
 #          heilaaks/snippy --defaults -vv
 #      ```
 #
-#   2. Running container with UID allocated from host without user namespaces
+#   2. Running container with a specific UID allocated from host
 #
 #      In this use case the UID in container directly maps to UID in host.
 #      The host UID that runs the container is assumed to be unprivileged
@@ -241,7 +241,7 @@ ENTRYPOINT ["./docker-entrypoint.sh"]
 #      different which would prevent the container to access to the host
 #      volume.
 #
-#   3. Running container with UID allocated from host with user namespaces
+#   3. Running container with UID allocated by 'user namespaces' feature
 #
 #      In this use case the UID in container does not map to UID in host.
 #      This use case assumes that container name user namespaces feature in
@@ -315,25 +315,81 @@ ENTRYPOINT ["./docker-entrypoint.sh"]
 #          heilaaks/snippy -vv
 #      ```
 #
+#   7. Use Docker container as a command line tool
+#
+#      It is possible search content with the help of Docker container like
+#      with the CLI version of the tool.
+#
+#      The procedure is different depending on the Snippy server storage:
+#
+#      1) Snippy server running local (Sqlite) storage inside container.
+#
+#         This example uses only the immutable container. This means that
+#         only the content imported by default into the Docker image can
+#         be searched.
+#
+#         In this use case the container is alive only during the command.
+#         Use the ``--rm`` option to remove the exited container after the
+#         command has been run.
+#
+#         There is no need to add a name for the the container. The name is
+#         just an extra parameter that is not needed and which may clash
+#         with existing names and fail the Docker command.
+#
+#         The Docker container will write JSON logs by default. The example
+#         below disables this so that the last 'OK' or 'NOK: *' is printed
+#         as normal text instead of JSON log.
+#
+#         ```shell
+#         # Example 1: Connect to a volume mount used by Snippy server.
+#         docker run \
+#             --rm \
+#             --env SNIPPY_LOG_JSON=0 \
+#             heilaaks/snippy search --sall docker
+#         ```
+#
+#      2) Snippy server running local (Sqlite) storage mounted from host.
+#
+#         If there is a Snippy server running and the container has mounted
+#         a volume from host, it is possible to access another server data
+#         by directly reading it's volume from the host. The ``--user`` and
+#         ``--volume`` must be defined correctly so that the container is
+#         able to read the volume allocated for the sever.
+#
+#         ```shell
+#         # Example 1: Connect to a volume mount used by Snippy server.
+#         docker run \
+#             --rm \
+#             --user $(id -u $(whoami)) \
+#             --volume /home/$(whoami)/.local/share/snippy:/volume \
+#             --env SNIPPY_LOG_JSON=0 \
+#             heilaaks/snippy search --sall docker
+#         ```
 #
 # IMPLEMENTATION
 #
 #   1. Dockerfile layers
 #
 #      There is only one RUN layer in order to keep the image size roughly
-#      at 38MB. For example separating the same into three RUN layers, the
-#      image size would be 71MB.
+#      at 38MB. Currently this increases the Docker image compilation time
+#      because the source code is copied before the RUN layer and all the
+#      modules and configurations are done again when they do not reallly
+#      change. This is accepted because the compilation is relative fast
+#      and the container size matters.
 #
-#      The reason is likely that each intermediate RUN layer contains the
-#      files that are only removed last. It would be awkward to delete all
-#      the temporay files with each RUN layer.
+#      For example separating the same layer into three RUN layers would
+#      increase the image size to 71MB. The reason is likely that each
+#      intermediate RUN layer contains the files that are only removed last.
+#      It would be awkward to delete all the temporay files with each RUN
+#      layer.
 #
 #   2. Dockerfile configuration
 #
 #      There is no know use case to justify users to be able to modify
 #      following settings in the Dockerfile:
 #
-#      - User and user group names. All that matters are the UID and GID.
+#      - User and user group names to add new user. All that matters are
+#        the UID and GID.
 #
 #      - Server installation location in container. It would be a security
 #        risk and unnecessary complication to define where the server is
@@ -535,7 +591,6 @@ ENTRYPOINT ["./docker-entrypoint.sh"]
 #                      $(cat snippy-server-host)${SNIPPY_SERVER_BASE_PATH_REST} || exit 1
 #      ```
 #
-#
 #  10. Exposed container port can not be configured
 #
 #      The Snippy server in container image binds on port 32768 by default.
@@ -608,15 +663,15 @@ ENTRYPOINT ["./docker-entrypoint.sh"]
 #
 # TODO
 #
-#   2. Fix TODO comment about the UID/GID not set by default.
+#   1. Fix TODO comment about the UID/GID not set by default.
 #
-#   3. Add examples for --privileged to bind with --net=host to ports below 1024.
+#   2. Add examples for --privileged to bind with --net=host to ports below 1024.
 #
-#   4. Add examples to connect the server to another container that runs PostgreSQL.
+#   3. Add examples to connect the server to another container that runs PostgreSQL.
 #
-#   5. Add examples to connect the CLI to another container that runs PostgreSQL.
+#   4. Add examples to connect the CLI to another container that runs PostgreSQL.
 #
-#   6. Add script that tests all the combinations.
+#   5. Add script that tests all the combinations.
 #
 #
 # LINTING IMAGES

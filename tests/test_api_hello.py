@@ -23,6 +23,8 @@ from falcon import testing
 import falcon
 import pytest
 
+from snippy.cause import Cause
+from snippy.constants import Constants as Const
 from snippy.snip import Snippy
 from tests.lib.content import Content
 
@@ -375,8 +377,8 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
         osenviron.setenv('SNIPPY_STORAGE_TYPE', 'misconfig')  # Must be mapped to default.
         osenviron.setenv('SNIPPY_LOG_MSG_MAX', 'misconfig')  # Must be mapped to default.
         osenviron.setenv('SNIPPY_LOG_JSON', '1')  # Must be mapped to True.
-        osenviron.setenv('SNIPPY_Q', 'T')  # Must be mapped to True.
-        osenviron.setenv('SNIPPY_PROFILE', 'True')
+        osenviron.setenv('SNIPPY_Q', 'True')  # Must be mapped to True.
+        osenviron.setenv('SNIPPY_PROFILE', 'False')
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '199'
@@ -395,7 +397,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
         assert 'log msg max: 80' in caplog.text     # Debug log settings are twice and both parsing must be correct.
         assert 'quiet=True' in caplog.text          # Debug log settings are twice and both parsing must be correct.
         assert 'quiet: True' in caplog.text         # Debug log settings are twice and both parsing must be correct.
-        assert 'profiler=True' in caplog.text
+        assert 'profiler=False' in caplog.text
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
@@ -417,6 +419,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
         osenviron.setenv('SNIPPY_SERVER_HOST', '127.0.0.1:8081')
         osenviron.setenv('SNIPPY_SERVER_MINIFY_JSON', 'False')
         osenviron.setenv('SNIPPY_LOG_MSG_MAX', '100')
+        osenviron.setenv('SNIPPY_LOG_JSON', '0')  # Must be mapped to False.
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '199'
@@ -431,11 +434,42 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
         assert 'storage_type=sqlite' in caplog.text
         assert 'log_msg_max=20' in caplog.text      # Debug log settings are twice and both parsing must be correct.
         assert 'log msg max: 20' in caplog.text     # Debug log settings are twice and both parsing must be correct.
+        assert 'log_json=False' in caplog.text      # Debug log settings are twice and both parsing must be correct.
+        assert 'json logs: False' in caplog.text    # Debug log settings are twice and both parsing must be correct.
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
         server.release()
         Content.delete()
+
+    @staticmethod
+    @pytest.mark.usefixtures('default-snippets', 'mock-server')
+    def test_api_hello_api_019(snippy, osenviron, capsys):
+        """Test search operation with server configuration.
+
+        When server is run in a Docker container, it must accept command
+        line operations without starting the server. In Docker container
+        the SERVER_HOST environment variable is set.
+        """
+
+        osenviron.setenv('SNIPPY_SERVER_HOST', '127.0.0.1:8081')
+        output = (
+            '1. Remove docker image with force @docker [53908d68425c61dc]',
+            '',
+            '   $ docker rm --force redis',
+            '',
+            '   # cleanup,container,docker,docker-ce,moby',
+            '   > https://docs.docker.com/engine/reference/commandline/rm/',
+            '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
+            '',
+            'OK',
+            ''
+        )
+        cause = snippy.run(['snippy', 'search', '--sall', 'redis', '--no-ansi'])
+        out, err = capsys.readouterr()
+        assert cause == Cause.ALL_OK
+        assert out == Const.NEWLINE.join(output)
+        assert not err
 
     @classmethod
     def teardown_class(cls):

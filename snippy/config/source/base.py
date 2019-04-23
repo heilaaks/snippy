@@ -614,11 +614,19 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
         """Store flag that tells if server is run.
 
         This flag is set after command line options have been parsed and
-        validated.
+        validated. If any of the command line operations like create or
+        search are used, it indicates that the server is not used. This
+        is a special case when container always has the ``server-host``
+        option set. If user wants just to run operations, it must work
+        also in container.
 
         Args:
             value (bool): Bool value that tells if server is run.
         """
+
+        if self.operation in self.OPERATIONS:
+            self._logger.debug('override server startup because of operation: {}'.format(self.operation))
+            value = False
 
         self._run_server = value  # pylint: disable=attribute-defined-outside-init
 
@@ -739,10 +747,26 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
         # of command line parameter. This helps finding related code.
         option = cls.RE_MATCH_OPT_LEADING_HYPHENS.sub('', option)
 
-        # There is no need to convert string variables.
+        # The getenv returns None if parameter was not set.
         value = os.getenv('SNIPPY_' + option.replace('-', '_').upper(), default)
+        if value is None:
+            return (option, default)
+
+        # There is no need to convert string variables because they can be
+        # returned directly. The bool typed environment variable gets True
+        # only if the value is read as expected.
+        #
+        # The environment variables are strings so value '0' will convert
+        # to boolean True because the string is not empty.
         if isinstance(default, bool):
-            value = bool(value)
+            try:
+                value = int(value)
+                value = bool(value)
+            except ValueError:
+                if value.lower() == 'true':
+                    value = True
+                else:
+                    value = default
         elif isinstance(default, int):
             try:
                 value = int(value)

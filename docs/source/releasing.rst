@@ -122,8 +122,8 @@ Test docker installation
       make docker
 
       # Run CLI commands with docker image.
-      docker run heilaaks/snippy --help
-      docker run heilaaks/snippy search --sall docker
+      docker run --rm --env SNIPPY_LOG_JSON=0 heilaaks/snippy --help
+      docker run --rm --env SNIPPY_LOG_JSON=0 heilaaks/snippy search --sall docker
 
       # Run server with Sqlite database.
       docker run -d --publish=127.0.0.1:8080:9090/tcp --name snippy heilaaks/snippy -vv

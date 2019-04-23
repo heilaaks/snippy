@@ -11,4 +11,7 @@ esac
 export SNIPPY_SERVER_HOST=${SERVER_HOST}
 echo "${SERVER_HOST}" > snippy-server-host
 
-exec snippy "$@"
+# Do not let user to configure storage path. There is
+# no need for it because 'docker run --volume' always
+# sets the host volume path.
+exec snippy --storage-path /volume "$@"

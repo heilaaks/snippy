@@ -1,5 +1,4 @@
 ## WORKING
-   - [ ] Add file mount examples for mounted sqlite DB.
    - [ ] docker run -ti heilaaks/snippy search --sall . starts the server. docker run -ti heilaaks/snippy --server-host="" search --sall . works If any of the create/delete is used, remove the server flag.
    - [ ] Make pytest for docker startup commands from Dockerfile. Requires root and disable by default. Only manual run. Better to integrte to Pytest like performance tests.
    - [ ] Add --rmi to docker examples. This is good for error cases where the server does not start. Actually no, the --rm removes logs and those are needed in failures. For CLI commands this is good but not for server.

@@ -40,20 +40,26 @@ RUN addgroup \
         setuptools && \
     python3 -m pip install \
         --user .[docker] && \
-    # Clean pycache before installing Snippy. This leaves only the needed cache files.
     find /usr/local/snippy/.local/lib -type d -name __pycache__ -exec rm -r {} \+ && \
+    find /usr/local/snippy/.local/bin ! -regex '\(.*snippy\)' -type f -exec rm -f {} + && \
+    mkdir -p /volume && \
+    rm -f /usr/local/snippy/.local/lib/python3.6/site-packages/snippy/data/storage/snippy.db && \
     snippy import \
         --defaults \
         --all \
         --server-host "" \
+        --storage-path /volume \
         -q && \
     touch snippy-server-host && \
     chown -R noname:root /usr/local/snippy/ && \
-    chmod -R g+rwX /usr/local/snippy/ && \
-    chmod 0550 /usr/local/snippy/docker-entrypoint.sh && \
-    chmod 0660 /usr/local/snippy/snippy-server-host && \
+    chown -R noname:root /volume/ && \
+    chmod -R ug=+rX-w,o-rwx /usr/local/snippy/ && \
+    chmod ug=+rX,o=-rwx /usr/local/snippy/.local/lib/python3.6/site-packages/snippy/data/server/openapi/schema && \
+    chmod ug=+rx-w,o=-rwx docker-entrypoint.sh && \
+    chmod ug=+rw-x,o=-rwx snippy-server-host && \
+    chmod ug=+rx-w,o=-rwx .local/bin/snippy && \
+    chmod ug=+rwX,o=-rwx /volume/snippy.db && \
     find /usr/lib/python3.6 -type d -name __pycache__ -exec rm -r {} \+ && \
-    find /usr/local/snippy/.local/bin ! -regex '\(.*snippy\|.*gunicorn\)' -type f -exec rm -f {} + && \
     python3 -m pip uninstall pip --yes && \
     apk del apk-tools && \
     rm -f /usr/local/snippy/setup.py && \
@@ -80,34 +86,52 @@ EXPOSE 32768
 
 USER noname
 
+
 ENTRYPOINT ["./docker-entrypoint.sh"]
+#ENTRYPOINT ["tail", "-f","/dev/null"]
 
 #
 # SECURITY HARDENING
 #
-#   The most critical parts from container security hardening have to be
-#   made in the host that runs the ``dockerd`` daemon.
+#   Note that the author is not a security or Linux expert. This is a
+#   hobby project. If the reasons that justify the Dockerfile and the
+#   security design aspects are not correct, it is a sign that can be
+#   a security vulnerability or subpar user experience.
 #
-#   Note that the author is not a security or Linux specialist. This is
-#   just a hobby project. If the explanations in this document are not
-#   correct, it indicates possible security vulnerability when running
-#   the Snippy Docker image.
+#   The most critical parts from the container security hardening have
+#   to be done in host that runs the container runtime.
+#
+#
+# TERMS
+#
+#   The documentation always refers to 'Docker' even though the correct
+#   term is 'The Moby Project' these days. The 'Docker' is the name of
+#   the company that created the Docker.
+#
+#   The documentation always refers to 'Docker' as a generic term. This
+#   covers 'containerd' runtime as well as the 'docker run' command. The
+#   goal is just to get the software running.
+#
+#   A 'host' always refers to the operating system that starts and runs
+#   Docker images.
+#
+#   A 'container' always refer to the Docker container itself.
 #
 #
 # TARGET GROUP
 #
-#   Snippy Dockerfile defaults are set for a casual user who wants to run
-#   the Snippy container image with the same Linux user (UID) as the user
-#   who starts the container with ``docker run``. This allows a user to
-#   mount a persistent volume from host for the container without having
-#   to create different user and file permissions for the mount point.
+#   The target group is a casual user who just wants to run the Snippy
+#   Docker image with the same Linux user as the user who starts the
+#   container. This enables an easy way to mount a persistent volume
+#   from host.
 #
 #
-# MINIMUM VERSION
+# MINIMUM VERSIONS
 #
-#   The minimum Docker version to run these examples is Docker 17.06. The
-#   examples use ``--mount`` option that has been available for standalone
-#   containers only from Docker 17.06 [1].
+#   The examples are tested with Docker version 18.05.0-ce. They likely
+#   work with other relatively recent versions as well.
+#
+#   Examples have been tested with Fedora 26 and Bash.
 #
 #
 # CONTAINER UID/GID
@@ -131,25 +155,63 @@ ENTRYPOINT ["./docker-entrypoint.sh"]
 #   to know in advance which ranges user prefers.
 #
 #   For example OpenShift runs containers using an arbitrarily assigned
-#   user ID [2].
+#   user ID [1].
 #
 #
 # USE CASES:
 #
 #   1. Running container with the same UID as in the host (unsecure)
 #
+#      In this case the user who starts the Docker container is the same
+#      as the the user who runs the Snippy server in the Docker container.
+#      That is, the user in the Docker image has the same privileges as
+#      the user in the host. This means that if there is a breach within
+#      the Docker container to the host, a malicious user will gain the
+#      same user privileges as the user who started the Docker container.
+#
 #      This is unsecure because user starting the container may be a root
 #      user. If the command example below is run as a root user, it starts
 #      the container with almost the same privileges as the root user in
 #      host. In this case only some of the Linux security capabilities are
-#      removed [6].
+#      removed from the running container [5].
+#
 #
 #      ```shell
+#      # Example 1: No persistent volume from host.
 #      docker run \
 #          --publish=127.0.0.1:8080:32768/tcp \
 #          --name snippy \
 #          --detach \
 #          heilaaks/snippy -vv
+#      ```
+#
+#      ```shell
+#
+#      In order to maintain stored data over restarts, a persistent volume
+#      must be mounted from the host. The directory path in the host must
+#      be absolute path. The example below will create new folder under
+#      user home directory. The Docker container is started with the same
+#      user (UID) that the user running the containers. This makes it
+#      possible to access the host volume from container. If different UID
+#      would be used in the container to run the Snippy server, it would
+#      not be able to access the volume mount from the host.
+#
+#      Because this creates a volume outside the Docker container, there
+#      are no default content in storage unless explicitly told. Because
+#      of this, there is the ``--defaults`` flag. This tells the Snippy
+#      server to import the default content when the server is started.
+#      If you do not want to use the default content, just leave the
+#      ``--defaults`` out from the command example.
+#
+#      # Example 2: Persistent volume is reserved from host.
+#      mkdir -p /home/$(whoami)/.local/share/snippy
+#      docker run \
+#          --user $(id -u $(whoami)) \
+#          --volume /home/$(whoami)/.local/share/snippy:/volume \
+#          --publish=127.0.0.1:8080:32768/tcp \
+#          --name snippy \
+#          --detach \
+#          heilaaks/snippy --defaults -vv
 #      ```
 #
 #   2. Running container with UID allocated from host without user namespaces
@@ -171,11 +233,19 @@ ENTRYPOINT ["./docker-entrypoint.sh"]
 #          heilaaks/snippy -vv
 #      ```
 #
+#      If persisted volume is needed in this use case, you can follow the
+#      example in the unsecure use case. Just define the user UID and neede
+#      volume permission for the user that is going to be used to run the
+#      Docker container. You must define the ``--user`  in the ``docker
+#      run`` command. Otherwise the Docker container user UID would be
+#      different which would prevent the container to access to the host
+#      volume.
+#
 #   3. Running container with UID allocated from host with user namespaces
 #
 #      In this use case the UID in container does not map to UID in host.
 #      This use case assumes that container name user namespaces feature in
-#      host dockerd [4] is activated.
+#      host dockerd [3] is activated.
 #
 #      This is the use case suited for multi-tenant environments and running
 #      multiple containers.
@@ -260,14 +330,24 @@ ENTRYPOINT ["./docker-entrypoint.sh"]
 #
 #   2. Dockerfile configuration
 #
-#      There is no need to allow configuration of user and group names.
-#      Also the server installation location in container is not relevant
-#      for runtime environment. Because of this, there are no environment
-#      variables that can be used to configure these options.
+#      There is no know use case to justify users to be able to modify
+#      following settings in the Dockerfile:
 #
-#      This causes for example the installation location to be set in
-#      two different places. But it is considered better than revealing
-#      this to user through ARG or ENV variable.
+#      - User and user group names. All that matters are the UID and GID.
+#
+#      - Server installation location in container. It would be a security
+#        risk and unnecessary complication to define where the server is
+#        installed in Docker container.
+#
+#      - Server storage location. If user wants to mount a volume from the
+#        host for persisnten storage, the ``--volume`` option defines the
+#        host directly. It would be a security risk and unnecessary
+#        complication to let user to define what directory Docker container
+#        uses for storage.
+#
+#      The design principle is to allow configuration through environment
+#      variables if there is a supported use case.
+#
 #
 #   3. Special tag to read container runtime IP address.
 #
@@ -382,17 +462,33 @@ ENTRYPOINT ["./docker-entrypoint.sh"]
 #      "For an image to support running as an arbitrary user, directories and
 #       files that may be written to by processes in the image should be owned
 #       by the root group and be read/writable by that group. Files to be
-#       executed should also have group execute permissions." [2]
+#       executed should also have group execute permissions." [1]
 #
 #      "Because the container user is always a member of the root group, the
 #       container user can read and write these files. The root group does
 #       not have any special permissions (unlike the root user) so there are
-#       no security concerns with this arrangement." [2]
+#       no security concerns with this arrangement." [1]
+#
+#      Because of the above, all files needed by the server in Docker container
+#      are owned by user ``noname`` or ``root``. If other user (GID) than the
+#      default user with defined GID in container, the user is still always
+#      parth of the root group.
+#
+#
+#      By default, only read for files and folders and execution for folders
+#      is granted for ``user`` and ``group`` file permissions. Then the files
+#      and folders are granted write and execution permission if needed.
 #
 #      ```shell
 #      chown -R noname:root /usr/local/snippy/ && \
-#      chmod -R g+rwX /usr/local/snippy/
-#      ```shell
+#      chown -R noname:root /volume/ && \
+#      chmod -R ug=+rX-w,o-rwx /usr/local/snippy/ && \
+#      chmod ug=+rX,o=-rwx /usr/local/snippy/.local/lib/python3.6/site-packages/snippy/data/server/openapi/schema && \
+#      chmod ug=+rx-w,o=-rwx docker-entrypoint.sh && \
+#      chmod ug=+rw-x,o=-rwx snippy-server-host && \
+#      chmod ug=+rx-w,o=-rwx .local/bin/snippy && \
+#      chmod ug=+rwX,o=-rwx /volume/snippy.db && \
+#      ```
 #
 #   7. Remove setuid/setgid bit from all binaries (defang)
 #
@@ -504,15 +600,13 @@ ENTRYPOINT ["./docker-entrypoint.sh"]
 #
 #   2. Because Alpine ``adduser`` does not support ``--no-log-init``, the
 #      Snippy container is prone to disk exhaustion if used UID is very
-#      large [3]. It is recommended to run the container with UID values
+#      large [2]. It is recommended to run the container with UID values
 #      below 65534.
 #
 #   3. Alpine base image is not able to support UID values over 256000 [6].
 #
 #
 # TODO
-#
-#   1. Add mount examples to store persistent volume on host.
 #
 #   2. Fix TODO comment about the UID/GID not set by default.
 #
@@ -565,19 +659,17 @@ ENTRYPOINT ["./docker-entrypoint.sh"]
 #
 # REFERENCES
 #
-# [1] https://docs.docker.com/storage/volumes/#choose-the--v-or---mount-flag
+# [1] https://docs.openshift.com/enterprise/3.2/creating_images/guidelines.html
 #
-# [2] https://docs.openshift.com/enterprise/3.2/creating_images/guidelines.html
-#
-# [3] https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#user
+# [2] https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#user
 #     "Users and groups in an image are assigned a non-deterministic UID/GID"
 #
-# [4] https://docs.docker.com/engine/security/userns-remap/
+# [3] https://docs.docker.com/engine/security/userns-remap/
 #
-# [5] http://www.linfo.org/uid.html
+# [4] http://www.linfo.org/uid.html
 #
-# [6] https://docs.docker.com/engine/security/security/#linux-kernel-capabilities
+# [5] https://docs.docker.com/engine/security/security/#linux-kernel-capabilities
 #     "By default Docker drops all capabilities except those needed."
 #
-# [7] https://bugs.busybox.net/show_bug.cgi?id=9811
+# [6] https://bugs.busybox.net/show_bug.cgi?id=9811
 #

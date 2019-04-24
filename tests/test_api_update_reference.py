@@ -177,7 +177,7 @@ class TestApiUpdateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '374'
+            'content-length': '377'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -218,8 +218,8 @@ class TestApiUpdateReference(object):
             'tags': Const.DELIMITER_TAGS.join(Request.regexp['tags']),
             'links': Const.DELIMITER_LINKS.join(Request.regexp['links'])
         }
-        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1254'}
-        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1294'}
+        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1257'}
+        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1297'}
         expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
@@ -268,7 +268,7 @@ class TestApiUpdateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '384'
+            'content-length': '387'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -368,8 +368,8 @@ class TestApiUpdateReference(object):
                 }
             }
         }
-        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1117'}
-        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1156'}
+        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1120'}
+        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1159'}
         expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
@@ -417,7 +417,7 @@ class TestApiUpdateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '387'
+            'content-length': '390'
         }
         expect_body = {
             'meta': Content.get_api_meta(),

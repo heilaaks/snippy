@@ -24,8 +24,8 @@ __description__ = 'Command, solution, reference and code snippet manager.'
 __email__ = 'laaksonen.heikki.j@gmail.com'
 __homepage__ = 'https://github.com/heilaaks/snippy'
 __license__ = 'GNU Affero General Public License v3 or later'
-__openapi__ = 'https://app.swaggerhub.com/apis/heilaaks/snippy/1.0'
 __title__ = 'snippy'
 __version__ = '0.10a0'
 
 __docs__ = 'http://snippy.readthedocs.io/en/v' + __version__ + '/'
+__openapi__ = 'https://app.swaggerhub.com/apis/heilaaks/snippy/' + __version__

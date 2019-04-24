@@ -6,6 +6,7 @@ Preparations
 
    #. Update Python setuptools, wheels and Twine.
    #. Update version number in meta.py.
+   #. Update version number in files that have 'https://app.swaggerhub.com/apis/heilaaks/snippy/0.10.0'
    #. Update version numbers in default content.
    #. Update the CHANGELOG.rst.
    #. Updated README.rst and documentation.

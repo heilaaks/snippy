@@ -354,7 +354,7 @@ fill a bug report based on contributing_ instructions.
 
 .. _contributing instructions: https://github.com/heilaaks/snippy/blob/master/CONTRIBUTING.rst
 
-.. _RESTish JSON API: https://app.swaggerhub.com/apis/heilaaks/snippy/1.0
+.. _RESTish JSON API: https://app.swaggerhub.com/apis/heilaaks/snippy/0.10.0
 
 .. _OpenAPI definitions: `RESTish JSON API`_
 

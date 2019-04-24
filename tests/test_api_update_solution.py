@@ -183,7 +183,7 @@ class TestApiUpdateSolution(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '374'
+            'content-length': '377'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -222,8 +222,8 @@ class TestApiUpdateSolution(object):
             'tags': Const.DELIMITER_TAGS.join(Request.dnginx['tags']),
             'links': Const.DELIMITER_LINKS.join(Request.dnginx['links'])
         }
-        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5710'}
-        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5568'}
+        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5713'}
+        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5571'}
         expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
@@ -272,7 +272,7 @@ class TestApiUpdateSolution(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '384'
+            'content-length': '387'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -321,7 +321,7 @@ class TestApiUpdateSolution(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '384'
+            'content-length': '387'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -416,9 +416,9 @@ class TestApiUpdateSolution(object):
                 }
             }
         }
-        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '4480'}
-        expect_headers_p34 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '4483'}
-        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '4584'}
+        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '4483'}
+        expect_headers_p34 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '4486'}
+        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '4587'}
         expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{

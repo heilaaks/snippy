@@ -243,7 +243,7 @@ class TestApiUpdateSnippet(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '374'
+            'content-length': '377'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -284,8 +284,8 @@ class TestApiUpdateSnippet(object):
             'tags': Const.DELIMITER_TAGS.join(Request.remove['tags']),
             'links': Const.DELIMITER_LINKS.join(Request.remove['links'])
         }
-        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1325'}
-        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1368'}
+        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1328'}
+        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1371'}
         expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{

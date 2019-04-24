@@ -74,7 +74,7 @@ class TestApiDeleteReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '367'
+            'content-length': '370'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -110,7 +110,7 @@ class TestApiDeleteReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '365'
+            'content-length': '368'
         }
         expect_body = {
             'meta': Content.get_api_meta(),

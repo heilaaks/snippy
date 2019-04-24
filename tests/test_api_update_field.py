@@ -50,7 +50,7 @@ class TestApiCreateField(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '364'
+            'content-length': '367'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -86,7 +86,7 @@ class TestApiCreateField(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '364'
+            'content-length': '367'
         }
         expect_body = {
             'meta': Content.get_api_meta(),

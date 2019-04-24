@@ -332,7 +332,7 @@ class TestApiCreateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '689'
+            'content-length': '692'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -384,7 +384,7 @@ class TestApiCreateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '580'}
+            'content-length': '583'}
         expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{

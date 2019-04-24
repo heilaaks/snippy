@@ -997,7 +997,7 @@ Good set on loggers: https://books.google.fi/books?id=7U1CIoOs5AkC&pg=PA357&lpg=
     $ curl 127.0.0.1:8080/api/hello
 
     # Swagger
-    > https://app.swaggerhub.com/apis/heilaaks1/snippy-rest_api/1.0.0
+    > https://app.swaggerhub.com/apis/heilaaks/snippy/0.10.0
 
     # Swagger to Sphinx
     $ .. swaggerv2doc:: ../dev/swagger-2.0.json

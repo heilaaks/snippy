@@ -162,7 +162,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '547'
+            'content-length': '550'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -196,7 +196,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '337'
+            'content-length': '340'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -288,7 +288,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '559'
+            'content-length': '562'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -395,7 +395,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '337'
+            'content-length': '340'
         }
         expect_body = {
             'meta': Content.get_api_meta(),

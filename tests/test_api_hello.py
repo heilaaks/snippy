@@ -43,7 +43,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '199'
+            'content-length': '202'
         }
         expect_body = {'meta': Content.get_api_meta()}
         result = testing.TestClient(server.server.api).simulate_get('/api/snippy/rest/')
@@ -60,7 +60,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '199'
+            'content-length': '202'
         }
         expect_body = {'meta': Content.get_api_meta()}
         result = testing.TestClient(server.server.api).simulate_get('/api/snippy/rest/hello')
@@ -97,7 +97,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '243'
+            'content-length': '246'
         }
         expect_body = {'meta': Content.get_api_meta()}
         server = Snippy(['snippy', '--server-host', 'localhost:8080', '--server-base-path-rest', '/api/snippy/'])
@@ -122,7 +122,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '243'
+            'content-length': '246'
         }
         expect_body = {'meta': Content.get_api_meta()}
         server = Snippy(['snippy', '--server-host', 'localhost:8080', '--server-base-path-rest', '/api/snippy'])
@@ -147,7 +147,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '243'
+            'content-length': '246'
         }
         expect_body = {'meta': Content.get_api_meta()}
         server = Snippy(['snippy', '--server-host', 'localhost:8080', '--server-base-path-rest', 'api/snippy/'])
@@ -173,7 +173,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '243'
+            'content-length': '246'
         }
         expect_body = {'meta': Content.get_api_meta()}
         server = Snippy(['snippy', '--server-host', 'localhost:8080', '--server-base-path-rest', 'api/snippy'])
@@ -197,7 +197,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '243'
+            'content-length': '246'
         }
         expect_body = {'meta': Content.get_api_meta()}
         server = Snippy(['snippy', '--server-host', 'localhost:8080', '--server-base-path-rest', '/api//snippy'])
@@ -220,7 +220,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '243'
+            'content-length': '246'
         }
         expect_body = {'meta': Content.get_api_meta()}
         server = Snippy(['snippy', '--server-host', 'localhost:8081', '--debug'])
@@ -381,7 +381,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
         osenviron.setenv('SNIPPY_PROFILE', 'False')
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '199'
+            'content-length': '202'
         }
         expect_body = {'meta': Content.get_api_meta()}
         server = Snippy(['snippy', '--debug'])
@@ -422,7 +422,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
         osenviron.setenv('SNIPPY_LOG_JSON', '0')  # Must be mapped to False.
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '199'
+            'content-length': '202'
         }
         expect_body = {'meta': Content.get_api_meta()}
         server = Snippy(['snippy', '--server-host', 'localhost:8080', '--server-base-path-rest', '/api/snippy/rest/v3', '--server-minify-json', '--log-msg-max', '20', '--debug'])  # noqa pylint: disable=line-too-long

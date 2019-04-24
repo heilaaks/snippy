@@ -1,21 +1,10 @@
 ## WORKING
-
-
-    - TODO: ADd meta for hello it contains meta + metaInfo
-
-   - Fix REST API response JSON schema
-   
-     The meta information in hello api and error API is the same. Because of this,
-     the metaError was renamed as metaInfo.
-
-   - [ ] Make function in helper to return the file.
-   - [ ] Make more tests for Docker use cases
-   - [ ] Check the https://stackoverflow.com/a/54787364 z/Z option for volume
-   - [ ] Change travis to use Makefile. This quarantees e.g make tests to be same everywhere.
    - [ ] Write simple healtcheck Python module and remove curl. This solves the file problem since the Python module can read env like Snippy.
+   - [ ] Make more tests for Docker use cases
+   - [ ] Check the https://stackoverflow.com/a/54787364 z/Z option for volume --> This is only for host running SELiux
+   - [ ] Change travis to use Makefile. This quarantees e.g make tests to be same everywhere.
    - [ ] Fix test case: test_quiet_option_001 it passes even when the search output is not printed on screen.
    - [ ] Make pytest for docker startup commands from Dockerfile. Requires root and disable by default. Only manual run. Better to integrte to Pytest like performance tests.
-   - [ ] Add schema validation for tests (not to sending side). Hide this into helper: assert_restapi.
    - [ ] Remove tests from container.
    - [ ] Fix updating Markdown based solutions in text formats does not work because the Mkdn solution does not have text header and data structure.
    - [ ] Starting the server again and import the default content again with --defaults causes server internal erro 500 because of UUID. The 500 should not be here because this is not internal error. Fix?

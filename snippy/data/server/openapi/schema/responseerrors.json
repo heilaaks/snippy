@@ -2,7 +2,7 @@
   "type": "object",
   "properties": {
     "meta": {
-      "$ref": "_definitions.json#/definitions/metaError"
+      "$ref": "_definitions.json#/definitions/metaInfo"
     },
     "errors": {
       "type": "array",

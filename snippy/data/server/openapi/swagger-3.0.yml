@@ -186,13 +186,13 @@ paths:
           content:
             application/vnd.api+json; charset=UTF-8:
               schema:
-                $ref: '#/components/schemas/errors'
+                $ref: '#/components/schemas/responseErrors'
         404:
           description: Resource not found
           content:
             application/vnd.api+json; charset=UTF-8:
               schema:
-                $ref: '#/components/schemas/errors'
+                $ref: '#/components/schemas/responseErrors'
         500:
           description: Internal server error
           content: {}
@@ -236,13 +236,13 @@ paths:
           content:
             '*/*':
               schema:
-                $ref: '#/components/schemas/errors'
+                $ref: '#/components/schemas/responseErrors'
         403:
           description: Using client generated ID is not supported
           content:
             '*/*':
               schema:
-                $ref: '#/components/schemas/errors'
+                $ref: '#/components/schemas/responseErrors'
         500:
           description: Internal server error
           content: {}
@@ -288,13 +288,13 @@ paths:
           content:
             application/vnd.api+json; charset=UTF-8:
               schema:
-                $ref: '#/components/schemas/errors'
+                $ref: '#/components/schemas/responseErrors'
         404:
           description: Resource not found
           content:
             application/vnd.api+json; charset=UTF-8:
               schema:
-                $ref: '#/components/schemas/errors'
+                $ref: '#/components/schemas/responseErrors'
         500:
           description: Internal server error
           content: {}
@@ -349,19 +349,19 @@ paths:
           content:
             application/vnd.api+json; charset=UTF-8:
               schema:
-                $ref: '#/components/schemas/errors'
+                $ref: '#/components/schemas/responseErrors'
         403:
           description: Using client generated ID is not supported
           content:
             application/vnd.api+json; charset=UTF-8:
               schema:
-                $ref: '#/components/schemas/errors'
+                $ref: '#/components/schemas/responseErrors'
         404:
           description: Resource not found
           content:
             application/vnd.api+json; charset=UTF-8:
               schema:
-                $ref: '#/components/schemas/errors'
+                $ref: '#/components/schemas/responseErrors'
         500:
           description: Internal server error
           content: {}
@@ -432,19 +432,19 @@ paths:
           content:
             application/vnd.api+json; charset=UTF-8:
               schema:
-                $ref: '#/components/schemas/errors'
+                $ref: '#/components/schemas/responseErrors'
         403:
           description: Using client generated ID is not supported
           content:
             application/vnd.api+json; charset=UTF-8:
               schema:
-                $ref: '#/components/schemas/errors'
+                $ref: '#/components/schemas/responseErrors'
         404:
           description: Resource not found
           content:
             application/vnd.api+json; charset=UTF-8:
               schema:
-                $ref: '#/components/schemas/errors'
+                $ref: '#/components/schemas/responseErrors'
         500:
           description: Internal server error
           content: {}
@@ -486,19 +486,19 @@ paths:
           content:
             '*/*':
               schema:
-                $ref: '#/components/schemas/errors'
+                $ref: '#/components/schemas/responseErrors'
         404:
           description: Resource not found
           content:
             '*/*':
               schema:
-                $ref: '#/components/schemas/errors'
+                $ref: '#/components/schemas/responseErrors'
         409:
           description: More than one resource found
           content:
             '*/*':
               schema:
-                $ref: '#/components/schemas/errors'
+                $ref: '#/components/schemas/responseErrors'
         500:
           description: Internal server error
           content: {}
@@ -553,19 +553,19 @@ paths:
           content:
             application/vnd.api+json; charset=UTF-8:
               schema:
-                $ref: '#/components/schemas/errors'
+                $ref: '#/components/schemas/responseErrors'
         403:
           description: Using client generated ID is not supported
           content:
             application/vnd.api+json; charset=UTF-8:
               schema:
-                $ref: '#/components/schemas/errors'
+                $ref: '#/components/schemas/responseErrors'
         404:
           description: Resource not found
           content:
             application/vnd.api+json; charset=UTF-8:
               schema:
-                $ref: '#/components/schemas/errors'
+                $ref: '#/components/schemas/responseErrors'
         500:
           description: Internal server error
           content: {}
@@ -776,16 +776,28 @@ paths:
           content:
             application/vnd.api+json; charset=UTF-8:
               schema:
-                $ref: '#/components/schemas/errors'
+                $ref: '#/components/schemas/responseErrors'
         404:
           description: Resource not found
           content:
             application/vnd.api+json; charset=UTF-8:
               schema:
-                $ref: '#/components/schemas/errors'
+                $ref: '#/components/schemas/responseErrors'
         500:
           description: Internal server error
           content: {}
+  /:
+    get:
+      tags:
+      - hello
+      summary: Server hello
+      responses:
+        200:
+          description: OK
+          content:
+            application/vnd.api+json; charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/responseHello'
 components:
   schemas:
     attributeBrief:
@@ -873,6 +885,33 @@ components:
         Optional filename. This attribute can be used for example to export the resource into file
         which name is defined by this attribute-
       default: ""
+    paginationLinks:
+      required:
+      - first
+      - last
+      - self
+      type: object
+      properties:
+        self:
+          type: string
+          description: Pagination link to this page.
+          format: uri
+        first:
+          type: string
+          description: Pagination link to first page.
+          format: uri
+        next:
+          type: string
+          description: Pagination link to next page.
+          format: uri
+        prev:
+          type: string
+          description: Pagination link to previous page.
+          format: uri
+        last:
+          type: string
+          description: Pagination link to last page.
+          format: uri
     responseAttributes:
       type: object
       properties:
@@ -940,6 +979,18 @@ components:
           type: string
         attributes:
           $ref: '#/components/schemas/responseAttributes'
+    responseErrors:
+      required:
+      - errors
+      - meta
+      type: object
+      properties:
+        meta:
+          $ref: '#/components/schemas/metaInfo'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/error'
     error:
       required:
       - module
@@ -973,45 +1024,6 @@ components:
         # Brief
 
         Automatically assigned UUID for the resource.
-    metaError:
-      required:
-      - homepage
-      - version
-      type: object
-      properties:
-        version:
-          type: string
-          description: Server version.
-        homepage:
-          type: string
-          description: Server homepage URL.
-    responseLinks:
-      required:
-      - first
-      - last
-      - self
-      type: object
-      properties:
-        self:
-          type: string
-          description: Pagination link to this page.
-          format: uri
-        first:
-          type: string
-          description: Pagination link to first page.
-          format: uri
-        next:
-          type: string
-          description: Pagination link to next page.
-          format: uri
-        prev:
-          type: string
-          description: Pagination link to previous page.
-          format: uri
-        last:
-          type: string
-          description: Pagination link to last page.
-          format: uri
     attributeName:
       type: string
       description: |
@@ -1084,7 +1096,27 @@ components:
           items:
             $ref: '#/components/schemas/responseData'
         links:
-          $ref: '#/components/schemas/responseLinks'
+          $ref: '#/components/schemas/paginationLinks'
+    metaInfo:
+      required:
+      - docs
+      - homepage
+      - openapi
+      - version
+      type: object
+      properties:
+        docs:
+          type: string
+          description: Location of the public documentation.
+        homepage:
+          type: string
+          description: Server homepage.
+        openapi:
+          type: string
+          description: OpenAPI specification.
+        version:
+          type: string
+          description: Server version.
     attributeCategory:
       type: string
       description: |
@@ -1119,6 +1151,13 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/responseData'
+    responseHello:
+      required:
+      - meta
+      type: object
+      properties:
+        meta:
+          $ref: '#/components/schemas/metaInfo'
     attributeLinks:
       type: array
       description: |
@@ -1133,18 +1172,6 @@ components:
         self:
           type: string
           description: Link pointing to resource.
-    errors:
-      required:
-      - errors
-      - meta
-      type: object
-      properties:
-        meta:
-          $ref: '#/components/schemas/metaError'
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/error'
     attributeData:
       type: array
       description: |
@@ -1160,6 +1187,12 @@ components:
         '*/*':
           schema:
             $ref: '#/components/schemas/responseCollectionGet'
+    200-hello:
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: '#/components/schemas/responseHello'
     201:
       description: Resource created
       content:
@@ -1171,7 +1204,7 @@ components:
       content:
         '*/*':
           schema:
-            $ref: '#/components/schemas/errors'
+            $ref: '#/components/schemas/responseErrors'
     200-resource:
       description: OK
       content:
@@ -1189,19 +1222,19 @@ components:
       content:
         '*/*':
           schema:
-            $ref: '#/components/schemas/errors'
+            $ref: '#/components/schemas/responseErrors'
     404:
       description: Resource not found
       content:
         '*/*':
           schema:
-            $ref: '#/components/schemas/errors'
+            $ref: '#/components/schemas/responseErrors'
     409:
       description: More than one resource found
       content:
         '*/*':
           schema:
-            $ref: '#/components/schemas/errors'
+            $ref: '#/components/schemas/responseErrors'
   parameters:
     offset:
       name: offset

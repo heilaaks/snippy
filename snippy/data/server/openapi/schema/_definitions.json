@@ -289,12 +289,42 @@
           }
         },
         "links": {
-          "$ref": "#/definitions/responseLinks"
+          "$ref": "#/definitions/paginationLinks"
         }
       },
       "required": [
         "meta",
         "data"
+      ]
+    },
+    "responseErrors": {
+      "type": "object",
+      "properties": {
+        "meta": {
+          "$ref": "#/definitions/metaInfo"
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/error"
+          }
+        }
+      },
+      "required": [
+        "meta",
+        "errors"
+      ]
+    },
+    "responseHello": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "meta": {
+          "$ref": "#/definitions/metaInfo"
+        }
+      },
+      "required": [
+        "meta"
       ]
     },
     "resourceLink": {
@@ -306,7 +336,7 @@
         }
       }
     },
-    "responseLinks": {
+    "paginationLinks": {
       "type": "object",
       "properties": {
         "self": {
@@ -368,21 +398,31 @@
         "total"
       ]
     },
-    "metaError": {
+    "metaInfo": {
       "type": "object",
       "properties": {
-        "version": {
+        "docs": {
           "type": "string",
-          "description": "Server version."
+          "description": "Location of the public documentation."
         },
         "homepage": {
           "type": "string",
-          "description": "Server homepage URL."
+          "description": "Server homepage."
+        },
+        "openapi": {
+          "type": "string",
+          "description": "OpenAPI specification."
+        },
+        "version": {
+          "type": "string",
+          "description": "Server version."
         }
       },
       "required": [
-        "version",
-        "homepage"
+        "docs",
+        "homepage",
+        "openapi",
+        "version"
       ]
     },
     "error": {
@@ -410,24 +450,6 @@
         "statusString",
         "module",
         "title"
-      ]
-    },
-    "errors": {
-      "type": "object",
-      "properties": {
-        "meta": {
-          "$ref": "#/definitions/metaError"
-        },
-        "errors": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/error"
-          }
-        }
-      },
-      "required": [
-        "meta",
-        "errors"
       ]
     }
   }

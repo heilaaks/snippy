@@ -22,16 +22,20 @@
 import io
 import os.path
 import re
+import sys
 
+import json
 import pkg_resources
+
+from jsonschema import Draft7Validator, RefResolver
 
 
 class Helper(object):
     """Generic helpers testing.
 
     This class intentionally copies some of the implementation from the
-    code. The intention is to avoid dependencies in this module to be
-    able to import this module anywhere.
+    production code. The purpose is to avoid dependencies in this module
+    to be able to import this module anywhere.
     """
 
     EXPORT_TIME = '2018-02-02T02:02:02.000001+00:00'
@@ -61,8 +65,8 @@ class Helper(object):
         \x1b[^m]*m    # Match all ANSI escape sequences.
         ''', re.VERBOSE)
 
-    @staticmethod
-    def read_template(filename):
+    @classmethod
+    def read_template(cls, filename):
         """Get default content template in text format.
 
         The returned template must be in the same format where external editor
@@ -76,11 +80,7 @@ class Helper(object):
             str: Empty template in the same format as for external editor.
         """
 
-        template = ''
-        filename = os.path.join(pkg_resources.resource_filename('snippy', 'data/templates'), filename)
-        with io.open(filename, encoding='utf-8') as infile:
-            template = infile.read()
-
+        template = cls._read_resource('data/templates', filename)
         template = re.sub(r'''
             <groups>    # Match groups tag.
             ''', 'default', template, flags=re.VERBOSE)
@@ -109,11 +109,69 @@ class Helper(object):
 
         return Helper.RE_MATCH_ANSI_ESCAPE_SEQUENCES.sub('', message)
 
+    @classmethod
+    def get_schema_validator(cls):
+        """Get JSON schema validator for REST API response.
+
+        Returns:
+            obj: Jsonschema draft7 validator.
+        """
+
+        response_resource = json.loads(cls._read_resource('data/server/openapi/schema', 'responseresource.json'))
+        response_collection_get = json.loads(cls._read_resource('data/server/openapi/schema', 'responsecollectionget.json'))
+        response_collection_post = json.loads(cls._read_resource('data/server/openapi/schema', 'responsecollectionpost.json'))
+        response_errors = json.loads(cls._read_resource('data/server/openapi/schema', 'responseerrors.json'))
+        response_hello = json.loads(cls._read_resource('data/server/openapi/schema', 'responsehello.json'))
+        schema = {
+            'oneOf': [
+                response_collection_get,
+                response_collection_post,
+                response_errors,
+                response_hello,
+                response_resource
+            ]
+        }
+
+        filepath = pkg_resources.resource_filename('snippy', 'data/server/openapi/schema/')
+        if not os.path.isdir(filepath):
+            print('NOK: cannot run test because server api response schema base uri is not accessible: {}'.format(filepath))
+            sys.exit(1)
+        server_schema_base_uri = 'file:' + filepath
+        Draft7Validator.check_schema(schema)
+        resolver = RefResolver(base_uri=server_schema_base_uri, referrer=schema)
+        validator = Draft7Validator(schema, resolver=resolver, format_checker=None)
+
+        return validator
+
+    @staticmethod
+    def _read_resource(path, filename):
+        """Read resource file.
+
+        Args:
+            path (str): Relative path under snippy project.
+            filename (str): Resource filename.
+
+        Returns:
+            str: File read into a string.
+        """
+
+        filename = os.path.join(pkg_resources.resource_filename('snippy', path), filename)
+        if not os.path.isfile(filename):
+            print('NOK: cannot run tests because snippy resource file is not accessible: {}'.format(filename))
+            sys.exit(1)
+
+        resource_file = ''
+        with io.open(filename, encoding='utf-8') as infile:
+            resource_file = infile.read()
+
+        return resource_file
+
 
 class Classproperty(object):  # pylint: disable=too-few-public-methods
     """Implement classproperty.
 
-    Implement decorator that mimics object property. See [1] for more details.
+    Implement decorator that mimics object property. See [1] for more
+    details.
 
     [1] https://stackoverflow.com/a/3203659
     """

@@ -11,7 +11,7 @@
       }
     },
     "links": {
-      "$ref": "_definitions.json#/definitions/responseLinks"
+      "$ref": "_definitions.json#/definitions/paginationLinks"
     }
   },
   "required": [

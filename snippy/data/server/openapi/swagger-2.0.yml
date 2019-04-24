@@ -210,6 +210,17 @@ paths:
           $ref: "#/responses/404"
         500:
           $ref: "#/responses/500"
+  /:
+    get:
+      tags:
+        - "hello"
+      summary: "Server hello"
+      description: ""
+      produces:
+        - "application/vnd.api+json; charset=UTF-8"
+      responses:
+        200:
+          $ref: "#/responses/200-hello"
 responses:
   "200-resource":
     description: OK
@@ -219,6 +230,10 @@ responses:
     description: OK
     schema:
       $ref: "#/definitions/responseCollectionGet"
+  "200-hello":
+    description: OK
+    schema:
+      $ref: "#/definitions/responseHello"
   "201":
     description: "Resource created"
     schema:
@@ -228,19 +243,19 @@ responses:
   "400":
     description: "Request not syntactically correct"
     schema:
-      $ref: '#/definitions/errors'
+      $ref: '#/definitions/responseErrors'
   "403":
     description: "Using client generated ID is not supported"
     schema:
-      $ref: '#/definitions/errors'
+      $ref: '#/definitions/responseErrors'
   "404":
     description: "Resource not found"
     schema:
-      $ref: '#/definitions/errors'
+      $ref: '#/definitions/responseErrors'
   "409":
     description: "More than one resource found"
     schema:
-      $ref: '#/definitions/errors'
+      $ref: '#/definitions/responseErrors'
   "500":
     description: "Internal server error"
 definitions:
@@ -509,17 +524,37 @@ definitions:
         items:
           $ref: '#/definitions/responseData'
       links:
-        $ref: '#/definitions/responseLinks'
+        $ref: '#/definitions/paginationLinks'
     required:
       - meta
       - data
+  responseErrors:
+    type: object
+    properties:
+      meta:
+        $ref: '#/definitions/metaInfo'
+      errors:
+        type: array
+        items:
+          $ref: '#/definitions/error'
+    required:
+      - meta
+      - errors
+  responseHello:
+    type: object
+    additionalProperties: false
+    properties:
+      meta:
+        $ref: '#/definitions/metaInfo'
+    required:
+      - meta
   resourceLink:
     type: object
     properties:
       self:
         type: string
         description: "Link pointing to resource."
-  responseLinks:
+  paginationLinks:
     type: object
     properties:
       self:
@@ -567,18 +602,26 @@ definitions:
       - limit
       - offset
       - total
-  metaError:
+  metaInfo:
     type: object
     properties:
+      docs:
+        type: string
+        description: "Location of the public documentation."
+      homepage:
+        type: string
+        description: "Server homepage."
+      openapi:
+        type: string
+        description: "OpenAPI specification."
       version:
         type: string
         description: "Server version."
-      homepage:
-        type: string
-        description: "Server homepage URL."
     required:
-      - version
+      - docs
       - homepage
+      - openapi
+      - version
 
   error:
     type: object
@@ -600,18 +643,6 @@ definitions:
       - statusString
       - module
       - title
-  errors:
-    type: object
-    properties:
-      meta:
-        $ref: '#/definitions/metaError'
-      errors:
-        type: array
-        items:
-          $ref: '#/definitions/error'
-    required:
-      - meta
-      - errors
 parameters:
   category:
     in: path

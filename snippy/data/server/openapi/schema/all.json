@@ -73,22 +73,25 @@
       "$ref": "_definitions.json#/definitions/responseCollectionGet"
     },
     {
+      "$ref": "_definitions.json#/definitions/responseErrors"
+    },
+    {
+      "$ref": "_definitions.json#/definitions/responseHello"
+    },
+    {
       "$ref": "_definitions.json#/definitions/resourceLink"
     },
     {
-      "$ref": "_definitions.json#/definitions/responseLinks"
+      "$ref": "_definitions.json#/definitions/paginationLinks"
     },
     {
       "$ref": "_definitions.json#/definitions/metaResponse"
     },
     {
-      "$ref": "_definitions.json#/definitions/metaError"
+      "$ref": "_definitions.json#/definitions/metaInfo"
     },
     {
       "$ref": "_definitions.json#/definitions/error"
-    },
-    {
-      "$ref": "_definitions.json#/definitions/errors"
     }
   ]
 }

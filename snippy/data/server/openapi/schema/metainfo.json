@@ -1,0 +1,28 @@
+{
+  "type": "object",
+  "properties": {
+    "docs": {
+      "type": "string",
+      "description": "Location of the public documentation."
+    },
+    "homepage": {
+      "type": "string",
+      "description": "Server homepage."
+    },
+    "openapi": {
+      "type": "string",
+      "description": "OpenAPI specification."
+    },
+    "version": {
+      "type": "string",
+      "description": "Server version."
+    }
+  },
+  "required": [
+    "docs",
+    "homepage",
+    "openapi",
+    "version"
+  ],
+  "$schema": "http://json-schema.org/schema#"
+}

@@ -86,7 +86,7 @@ Random notes and scribling during development.
    
    ```
    # Swagger editor
-   docker run -d -p 80:8080 swaggerapi/swagger-editor
+   docker run -d -p 9000:8080 swaggerapi/swagger-editor
    ```
       
    ```

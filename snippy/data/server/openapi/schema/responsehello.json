@@ -1,0 +1,13 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "meta": {
+      "$ref": "_definitions.json#/definitions/metaInfo"
+    }
+  },
+  "required": [
+    "meta"
+  ],
+  "$schema": "http://json-schema.org/schema#"
+}

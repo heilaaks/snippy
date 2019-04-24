@@ -1,7 +1,18 @@
 ## WORKING
+
+
+    - TODO: ADd meta for hello it contains meta + metaInfo
+
+   - Fix REST API response JSON schema
+   
+     The meta information in hello api and error API is the same. Because of this,
+     the metaError was renamed as metaInfo.
+
+   - [ ] Make function in helper to return the file.
    - [ ] Make more tests for Docker use cases
    - [ ] Check the https://stackoverflow.com/a/54787364 z/Z option for volume
    - [ ] Change travis to use Makefile. This quarantees e.g make tests to be same everywhere.
+   - [ ] Write simple healtcheck Python module and remove curl. This solves the file problem since the Python module can read env like Snippy.
    - [ ] Fix test case: test_quiet_option_001 it passes even when the search output is not printed on screen.
    - [ ] Make pytest for docker startup commands from Dockerfile. Requires root and disable by default. Only manual run. Better to integrte to Pytest like performance tests.
    - [ ] Add schema validation for tests (not to sending side). Hide this into helper: assert_restapi.

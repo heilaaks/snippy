@@ -29,6 +29,9 @@ import json
 import mock
 import pprintpp
 
+from jsonschema.exceptions import ValidationError
+from jsonschema.exceptions import SchemaError
+
 from snippy.config.config import Config
 from snippy.constants import Constants as Const
 from snippy.content.collection import Collection
@@ -80,6 +83,8 @@ class Content(object):  # pylint: disable=too-many-public-methods
     # Mocked UUID's
     UUID1 = Database.TEST_UUIDS_STR[0]
     UUID2 = Database.TEST_UUIDS_STR[1]
+
+    _schema = Helper.get_schema_validator()
 
     @staticmethod
     def store(content):
@@ -269,6 +274,15 @@ class Content(object):  # pylint: disable=too-many-public-methods
             result (dict): Result JSON from REST API.
             expect (dict): Excepted JSON in REST API response.
         """
+
+        try:
+            cls._schema.validate(result)
+        except ValidationError as error:
+            print('json validation error: {}'.format(error))
+            assert 0
+        except SchemaError as error:
+            print('json scbhema error: {}'.format(error))
+            assert 0
 
         result_dict = Content._get_result_restapi(result)
         expect_dict = Content._get_expect_restapi(expect)

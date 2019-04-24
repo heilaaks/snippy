@@ -20,8 +20,10 @@
 """conftest: Fixtures for pytest."""
 
 import json
+import traceback
 import uuid
 
+import docker
 import mock
 import pytest
 import yaml
@@ -298,6 +300,29 @@ def used_database(request):
     """Get used database."""
 
     return request.config.getoption("--snippy-db")
+
+@pytest.fixture(scope='function', name='docker')
+def docker_server(request):
+    """Control the server in docker."""
+
+    try:
+        client = docker.from_env()
+    except docker.errors.APIError:
+        print('docker test fixture create failed: {}'.format(traceback.format_exc()))
+
+    def fin():
+        """Clear the resources at the end."""
+
+        try:
+            for container in client.containers.list():
+                if 'snippy' in str(container.image):
+                    container.stop()
+                    container.remove()
+        except docker.errors.APIError:
+            print('docker test fixture release failed: {}'.format(traceback.format_exc()))
+    request.addfinalizer(fin)
+
+    return client
 
 # Logging
 @pytest.fixture(scope='function', name='logger')

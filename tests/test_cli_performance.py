@@ -35,7 +35,7 @@ from tests.lib.solution import Solution
 class TestCliPerformance(object):
     """Test CLI performance."""
 
-    @pytest.mark.serial
+    @pytest.mark.server
     @pytest.mark.usefixtures('isfile_true')
     def test_cli_performance(self, snippy_perf, capsys, caplog):
         """Test CLI performance.

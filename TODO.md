@@ -1,12 +1,8 @@
 ## WORKING
-   Fix running CLI commands with container
-    - examples in Dockerfile
-    - Fixed environment variables with value '0'.
-   
    - [ ] Make tests
+   - [ ] Check the https://stackoverflow.com/a/54787364 z/Z option for volume
    - [ ] Fix test case: test_quiet_option_001 it passes even when the search output is not printed on screen.
    - [ ] Make pytest for docker startup commands from Dockerfile. Requires root and disable by default. Only manual run. Better to integrte to Pytest like performance tests.
-   - [ ] Add --rmi to docker examples. This is good for error cases where the server does not start. Actually no, the --rm removes logs and those are needed in failures. For CLI commands this is good but not for server.
    - [ ] Add schema validation for tests (not to sending side). Hide this into helper: assert_restapi.
    - [ ] Remove tests from container.
    - [ ] Fix updating Markdown based solutions in text formats does not work because the Mkdn solution does not have text header and data structure.

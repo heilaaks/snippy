@@ -45,7 +45,7 @@ class TestApiPerformance(object):
     """Test REST API server performance."""
 
     @staticmethod
-    @pytest.mark.serial
+    @pytest.mark.server
     def test_server_performance():
         """Test API server performance.
 
@@ -162,7 +162,7 @@ class TestApiPerformance(object):
         assert runtime < 10
 
     @staticmethod
-    @pytest.mark.serial
+    @pytest.mark.server
     def test_server_logging():
         """Test server log configuration.
 

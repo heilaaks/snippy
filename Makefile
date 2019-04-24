@@ -88,23 +88,11 @@ devel-pypy:
 .PHONY: test
 test: test-sqlite
 
-test-all: test-sqlite test-postgresql
-
-test-sqlite:
-	$(PYTHON) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db sqlite
-
-test-sqlite-pypy:
-	$(PYPY) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db sqlite
-
-test-postgresql:
-	$(PYTHON) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db postgresql
-
-test-postgresql-pypy:
-	$(PYPY) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db postgresql
+test-all: test-sqlite test-postgresql test-docker
 
 test-fast:
 ifeq ($(PYTHON_VERSION), 3)
-	$(PYTHON) -m pytest -n auto -x ./tests/test_*.py --cov snippy -m "not serial"
+	$(PYTHON) -m pytest -n auto -x ./tests/test_*.py --cov snippy -m "not (server or docker)"
 else
 	@echo "##########################################################################"
 	@echo "Parallel tests are supported only with Python 3. Executing tests serially."
@@ -112,8 +100,26 @@ else
 	make test
 endif
 
+test-docker:
+	$(PYTHON) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db sqlite
+
+test-docker-only:
+	$(PYTHON) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db sqlite -m "docker"
+
+test-postgresql:
+	$(PYTHON) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db postgresql -m "not docker"
+
+test-postgresql-pypy:
+	$(PYPY) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db postgresql -m "not docker"
+
+test-sqlite:
+	$(PYTHON) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db sqlite -m "not docker"
+
+test-sqlite-pypy:
+	$(PYPY) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db sqlite -m "not docker"
+
 coverage:
-	$(PYTHON) -m pytest --cov=snippy --cov-branch --cov-report html tests/
+	$(PYTHON) -m pytest --cov=snippy --cov-branch --cov-report html tests/ -m "not docker"
 	$(PYTHON) -m pytest --cov=snippy tests/
 
 lint:

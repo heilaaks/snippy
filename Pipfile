@@ -20,6 +20,7 @@ sphinx-rtd-theme = "==0.4.3"
 sphinx = "==2.0.1"
 pytest = "==4.4.1"
 flake8 = "==3.7.7"
+docker = "==3.7.2"
 
 [packages]
 falcon = "==1.4.1"

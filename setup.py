@@ -58,6 +58,7 @@ extras_server_pypy = (
 )
 extras_tests = (
     'codecov==2.0.15',
+    'docker==3.7.2',
     'flake8==3.7.7',
     'logging_tree==1.8',
     'mock==2.0.0',

@@ -1,4 +1,6 @@
 ## WORKING
+   - [ ] Requests missing from test dependencies.
+   - [ ] No need for separate service. New command line switch can be used to do healtcheck !
    - [ ] Write simple healtcheck Python module and remove curl. This solves the file problem since the Python module can read env like Snippy.
    - [ ] Make more tests for Docker use cases
    - [ ] Check the https://stackoverflow.com/a/54787364 z/Z option for volume --> This is only for host running SELiux

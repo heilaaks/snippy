@@ -12,7 +12,7 @@ install:
 before_script:
   - 'ulimit -c unlimited -S'
 script:
-  - 'python -m pytest ./tests/test_*.py --cov snippy'
+  - 'python -m pytest ./tests/test_*.py --cov snippy' -m "not docker"
 after_success:
   - 'codecov'
 after_failure:

@@ -1,5 +1,5 @@
 # Disable default suffixes and rules to reduce spam with make --debug
-# option. This is a Python project and these are not needed.
+# option. This is a Python project and these builtins are not needed.
 MAKEFLAGS += --no-builtin-rules
 MAKEFLAGS += --no-builtin-variables
 
@@ -8,84 +8,60 @@ MAKEFLAGS += --no-builtin-variables
 
 PKG_MANAGER    := $(shell command -v dnf)
 PKG_COMMAND    := list installed
-PIP            := pip
 PYPY           := pypy3
 PYPY2_LIBS     := pypy pypy-devel postgresql-devel
 PYPY3_LIBS     := pypy3 pypy3-devel postgresql-devel
 PYTHON         := python
 PYTHON_VERSION := $(shell python -c 'import sys; print(sys.version_info[0])')
 
-.PHONY: clean
-clean: clean-build clean-pyc clean-test
-
-clean-build:
-	rm -drf .cache
-	rm -drf build
-	rm -drf dist
-	rm -drf docs/build/*
-	rm -drf pip-wheel-metadata
-	rm -drf snippy.egg-info
-	find . -name '*.egg-info' -exec rm -fr {} +
-	find . -name '*.egg' -exec rm -f {} +
-
-clean-pyc:
-	find . -name '*.pyc' -exec rm -f {} +
-	find . -name '*.pyo' -exec rm -f {} +
-	find . -name '*~' -exec rm -f {} +
-	find . -name '__pycache__' -exec rm -fr {} +
-
-clean-test:
-	rm -drf .cache
-	rm -drf .coverage
-	rm -drf .pytest_cache
-	rm -drf .tox
-	rm -drf htmlcov
-	rm -f .coverage.*
-	rm -f coverage.xml
-	rm -f pytestdebug.log
-
-clean-db:
-	> snippy/data/storage/snippy.db
-
+# Commands assume that they are run inside virtual environment. The new
+# pyproject.toml based PEP517 does not support --editable and it is not
+# possible to use --user install inside a virtual environment. If these
+# commands in the makefile are run outside of avirtual environment, the
+# install does a global install.
 install:
-	$(PIP) install .
+	$(PYTHON) -m pip install .
+
+install-devel:
+	$(PYTHON) -m pip install .[devel]
+
+install-devel-pypy:
+	@echo "##########################################################################"
+	@echo "Requires on Fedora:"
+	@echo "    dnf install pypy3 -y"
+	@echo "    dnf install pypy3-devel -y"
+	@echo "    dnf install postgresql-devel -y"
+	@echo "##########################################################################"
+	$(PYPY) -m pip install .[develpypy]
+
+install-server:
+	$(PYTHON) -m pip install .[server]
+
+install-server-pypy:
+	@echo "##########################################################################"
+	@echo "Requires on Fedora:"
+	@echo "    dnf install pypy3 -y"
+	@echo "    dnf install pypy3-devel -y"
+	@echo "    dnf install postgresql-devel -y"
+	@echo "##########################################################################"
+	$(PYPY) -m pip install .[serverpypy]
 
 upgrade:
-	$(PIP) install --upgrade .
+	$(PYTHON) -m pip install --upgrade .
+
+upgrade-wheel:
+	$(PYTHON) -m pip install pip setuptools wheel twine --upgrade
 
 uninstall:
-	$(PIP) uninstall --yes snippy
+	$(PYTHON) -m pip uninstall --yes snippy
 
-.PHONY: devel
-devel:
-	$(PIP) install --editable .[devel]
+outdated:
+	$(PYTHON) -m pip list --outdated
 
 .PHONY: docs
 docs:
 	make -C docs html
 
-server:
-	$(PIP) install --editable .[server]
-
-server-pypy:
-	@echo "##########################################################################"
-	@echo "Requires on Fedora:"
-	@echo "    dnf install pypy3 -y"
-	@echo "    dnf install pypy3-devel -y"
-	@echo "    dnf install postgresql-devel -y"
-	@echo "##########################################################################"
-	$(PYPY) -m pip install --editable .[serverpypy]
-
-devel-pypy:
-	@echo "##########################################################################"
-	@echo "Requires on Fedora:"
-	@echo "    dnf install pypy3 -y"
-	@echo "    dnf install pypy3-devel -y"
-	@echo "    dnf install postgresql-devel -y"
-	@echo "##########################################################################"
-	$(PYPY) -m pip install --editable .[develpypy]
-
-.PHONY: test
 test: test-sqlite
 
 test-all: test-sqlite test-postgresql test-docker
@@ -130,19 +106,46 @@ lint:
 pyflakes:
 	-$(PYTHON) -m pyflakes .
 
-outdated:
-	$(PIP) list --outdated
-
-.PHONY: schema
 schema:
 	openapi2jsonschema snippy/data/server/openapi/swagger-2.0.yml -o snippy/data/server/openapi/schema/
 
-.PHONY: docker
 docker: clean clean-db
 	docker build --build-arg http_proxy=${http_proxy} --build-arg https_proxy=${https_proxy} -t heilaaks/snippy .
 
 security-scan:
 	-bandit -r snippy | tee tests/bandit/bandit.txt
+
+.PHONY: clean
+clean: clean-build clean-pyc clean-test
+
+clean-build:
+	rm -drf .cache
+	rm -drf build
+	rm -drf dist
+	rm -drf docs/build/*
+	rm -drf pip-wheel-metadata
+	rm -drf snippy.egg-info
+	find . -name '*.egg-info' -exec rm -fr {} +
+	find . -name '*.egg' -exec rm -f {} +
+
+clean-pyc:
+	find . -name '*.pyc' -exec rm -f {} +
+	find . -name '*.pyo' -exec rm -f {} +
+	find . -name '*~' -exec rm -f {} +
+	find . -name '__pycache__' -exec rm -fr {} +
+
+clean-test:
+	rm -drf .cache
+	rm -drf .coverage
+	rm -drf .pytest_cache
+	rm -drf .tox
+	rm -drf htmlcov
+	rm -f .coverage.*
+	rm -f coverage.xml
+	rm -f pytestdebug.log
+
+clean-db:
+	> snippy/data/storage/snippy.db
 
 # $(call test-pypy-libs, pkg-manager, pkg-COMMAND, required-libs)
 #

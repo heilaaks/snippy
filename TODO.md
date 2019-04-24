@@ -1,6 +1,7 @@
 ## WORKING
-   - [ ] Make tests
-   - [ ] Check the https://stackoverflow.com/a/54787364 z/Z option for volume
+   - [ ] Make more tests for Docker use cases
+   - [ ] Check the https://stackoverflow.com/a/54787364 z/Z option for volume
+   - [ ] Change travis to use Makefile. This quarantees e.g make tests to be same everywhere.
    - [ ] Fix test case: test_quiet_option_001 it passes even when the search output is not printed on screen.
    - [ ] Make pytest for docker startup commands from Dockerfile. Requires root and disable by default. Only manual run. Better to integrte to Pytest like performance tests.
    - [ ] Add schema validation for tests (not to sending side). Hide this into helper: assert_restapi.

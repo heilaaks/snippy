@@ -11,7 +11,7 @@ for Python virtual environment like below:
 
     git clone https://github.com/heilaaks/snippy.git
     mkvirtualenv snippy
-    make devel
+    make install-devel
 
 The basic commands to run and test are:
 

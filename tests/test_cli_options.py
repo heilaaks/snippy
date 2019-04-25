@@ -506,7 +506,8 @@ class TestCliOptions(object):
         that the profile option prints lots for data.
         """
 
-        main(['snippy', 'search', '--sall', '.', '--profile'])
+        with pytest.raises(SystemExit):
+            main(['snippy', 'search', '--sall', '.', '--profile'])
         out, err = capsys.readouterr()
         assert 'Ordered by: cumulative time' in out
         assert not err

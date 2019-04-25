@@ -93,6 +93,7 @@ class Config(object):
         namespace.append('content_filename={}'.format(cls.content_filename))
         namespace.append('content_versions={}'.format(cls.content_versions))
         namespace.append('content_source={}'.format(cls.content_source))
+        namespace.append('run_healthcheck={}'.format(cls.run_healthcheck))
         namespace.append('search_all_kws={}'.format(cls.search_all_kws))
         namespace.append('search_cat_kws={}'.format(cls.search_cat_kws))
         namespace.append('search_tag_kws={}'.format(cls.search_tag_kws))
@@ -157,6 +158,10 @@ class Config(object):
         cls.server_ssl_key = cls._ssl_file(cls.source.server_ssl_key)
         cls.server_ssl_ca_cert = cls._ssl_file(cls.source.server_ssl_ca_cert)
 
+        # Server and healthchecks are started only once.
+        cls.run_server = cls.source.run_server
+        cls.run_healthcheck = cls.source.run_healthcheck
+
         # Dynamic configuration.
         cls.load(cls.source)
 
@@ -218,9 +223,6 @@ class Config(object):
         cls.use_ansi = not cls.source.no_ansi
         cls.failure = cls.source.failure
         cls.failure_message = cls.source.failure_message
-
-        # Server must be updated again because only the first init starts the server.
-        cls.run_server = cls.source.run_server
 
         # Parsed from defined configuration.
         cls.is_operation_create = bool(cls.operation == 'create')

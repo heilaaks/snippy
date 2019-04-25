@@ -103,6 +103,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
         namespace.append('quiet={}'.format(self.quiet))
         namespace.append('remove_fields={}'.format(self.remove_fields))
         namespace.append('reset_fields={}'.format(self.reset_fields))
+        namespace.append('run_healthcheck={}'.format(self.run_healthcheck))
         namespace.append('run_server={}'.format(self.run_server))
         namespace.append('sall={}'.format(self.sall))
         namespace.append('scat={}'.format(self.scat))
@@ -202,6 +203,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
         self.profiler = parameters.get(*self.read_env('profile', False))
         self.quiet = parameters.get(*self.read_env('q', False))
         self.remove_fields = parameters.get('fields', self.ATTRIBUTES)
+        self.run_healthcheck = parameters.get('server_healthcheck', False)
         self.sall = parameters.get('sall', None)
         self.scat = parameters.get('scat', None)
         self.search_filter = parameters.get('search_filter', None)
@@ -613,12 +615,18 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
     def run_server(self, value):
         """Store flag that tells if server is run.
 
-        This flag is set after command line options have been parsed and
-        validated. If any of the command line operations like create or
-        search are used, it indicates that the server is not used. This
-        is a special case when container always has the ``server-host``
-        option set. If user wants just to run operations, it must work
-        also in container.
+        This flag is set after all command line options have been parsed.
+
+        If content operations are used from the command line, the server
+        is not started. Using content operations tell that user wants to
+        operate content from command line, not run the server. This is a
+        special for Docker acontainer which always has the ``server-host``
+        environment variable set.
+
+        If healthcheck operation for the server is made, server is never
+        run. User may give the server host address with the healthcheck,
+        but the server itself is not started. This is related to a Docker
+        container healthcheck.
 
         Args:
             value (bool): Bool value that tells if server is run.
@@ -626,6 +634,9 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
 
         if self.operation in self.OPERATIONS:
             self._logger.debug('override server startup because of operation: {}'.format(self.operation))
+            value = False
+
+        if self.run_healthcheck:
             value = False
 
         self._run_server = value  # pylint: disable=attribute-defined-outside-init

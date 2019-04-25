@@ -222,6 +222,7 @@ class Cli(ConfigSourceBase):
         server.add_argument('--server-ssl-cert', type=Parser.to_unicode, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
         server.add_argument('--server-ssl-key', type=Parser.to_unicode, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
         server.add_argument('--server-ssl-ca-cert', type=Parser.to_unicode, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
+        server.add_argument('--server-healthcheck', action='store_true', default=argparse.SUPPRESS, help=argparse.SUPPRESS)
 
         # storage options
         server.add_argument('--storage-path', type=Parser.to_unicode, default=argparse.SUPPRESS, help=argparse.SUPPRESS)

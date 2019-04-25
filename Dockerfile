@@ -14,7 +14,6 @@ ENV SNIPPY_SERVER_BASE_PATH_REST=/api/snippy/rest
 WORKDIR /usr/local/snippy
 
 COPY snippy/ snippy/
-COPY docker-entrypoint.sh .
 COPY setup.py .
 COPY LICENSE .
 COPY README.rst .
@@ -32,7 +31,6 @@ RUN addgroup \
         --ingroup snippy \
         noname && \
     apk add \
-        curl \
         python3 \
         py3-psycopg2 && \
     python3 -m pip install --upgrade \
@@ -40,6 +38,7 @@ RUN addgroup \
         setuptools && \
     python3 -m pip install \
         --user .[docker] && \
+    find /usr/lib/python3.6 -type d -name __pycache__ -exec rm -r {} \+ && \
     find /usr/local/snippy/.local/lib -type d -name __pycache__ -exec rm -r {} \+ && \
     find /usr/local/snippy/.local/bin ! -regex '\(.*snippy\)' -type f -exec rm -f {} + && \
     mkdir -p /volume && \
@@ -49,16 +48,13 @@ RUN addgroup \
         --all \
         --storage-path /volume \
         -q && \
-    touch snippy-server-host && \
     chown -R noname:root /usr/local/snippy/ && \
     chown -R noname:root /volume/ && \
     chmod -R ug=+rX-w,o-rwx /usr/local/snippy/ && \
     chmod ug=+rX,o=-rwx /usr/local/snippy/.local/lib/python3.6/site-packages/snippy/data/server/openapi/schema && \
-    chmod ug=+rx-w,o=-rwx docker-entrypoint.sh && \
-    chmod ug=+rw-x,o=-rwx snippy-server-host && \
     chmod ug=+rx-w,o=-rwx .local/bin/snippy && \
-    chmod ug=+rwX,o=-rwx /volume/snippy.db && \
-    find /usr/lib/python3.6 -type d -name __pycache__ -exec rm -r {} \+ && \
+    chmod ugo=+rwx /volume && \
+    chmod ugo=+rw-x /volume/snippy.db && \
     python3 -m pip uninstall pip --yes && \
     apk del apk-tools && \
     rm -f /usr/local/snippy/setup.py && \
@@ -75,19 +71,16 @@ RUN addgroup \
 
 HEALTHCHECK --interval=10s \
             --timeout=3s \
-            CMD curl \
-                --fail \
-                --insecure \
-                --proto http,https \
-                $(cat snippy-server-host)${SNIPPY_SERVER_BASE_PATH_REST} || exit 1
+            CMD snippy \
+                --server-healthcheck \
+                --storage-path /volume
 
 EXPOSE 32768
 
 USER noname
 
 
-ENTRYPOINT ["./docker-entrypoint.sh"]
-#ENTRYPOINT ["tail", "-f","/dev/null"]
+ENTRYPOINT ["snippy", "--storage-path", "/volume"]
 
 #
 # SECURITY HARDENING
@@ -526,24 +519,27 @@ ENTRYPOINT ["./docker-entrypoint.sh"]
 #       no security concerns with this arrangement." [1]
 #
 #      Because of the above, all files needed by the server in Docker container
-#      are owned by user ``noname`` or ``root``. If other user (GID) than the
-#      default user with defined GID in container, the user is still always
-#      parth of the root group.
-#
+#      are owned by user ``noname`` or ``root``. If other user (UID) than the
+#      default user with defined UID in container, the user is still part of
+#      the root group.
 #
 #      By default, only read for files and folders and execution for folders
 #      is granted for ``user`` and ``group`` file permissions. Then the files
 #      and folders are granted write and execution permission if needed.
+#
+#      TODO: Why /volume requires o+rwx when --user 1000 from host is used?
+#            The /volume is owned by gu+rwX so it should work with UID that
+#            is not the 'noname' because those users are still part of root
+#            group.
 #
 #      ```shell
 #      chown -R noname:root /usr/local/snippy/ && \
 #      chown -R noname:root /volume/ && \
 #      chmod -R ug=+rX-w,o-rwx /usr/local/snippy/ && \
 #      chmod ug=+rX,o=-rwx /usr/local/snippy/.local/lib/python3.6/site-packages/snippy/data/server/openapi/schema && \
-#      chmod ug=+rx-w,o=-rwx docker-entrypoint.sh && \
-#      chmod ug=+rw-x,o=-rwx snippy-server-host && \
 #      chmod ug=+rx-w,o=-rwx .local/bin/snippy && \
-#      chmod ug=+rwX,o=-rwx /volume/snippy.db && \
+#      chmod ugo=+rwx /volume && \
+#      chmod ugo=+rw-x /volume/snippy.db && \
 #      ```
 #
 #   7. Remove setuid/setgid bit from all binaries (defang)
@@ -571,24 +567,53 @@ ENTRYPOINT ["./docker-entrypoint.sh"]
 #
 #   9. Periodic healthcheck
 #
-#      Healthcheck is made with curl that allows using either http or https
-#      as protocol. A ``nc`` command line tool is one option. The problem
-#      with the ``nc`` tool is that it requires IP address and port as a
-#      separate parameters. In case of Snippy command line options, the IP
-#      address and port are defined in one string which is not supported by
-#      the ``nc`` tool.
+#      The Docker healthcheck is made with own implementation. This allows
+#      the healthcheck to discover the running server exactly as the server
+#      code itself. This also removes the need to add new command line tools
+#      into the container.
 #
-#      The server host with port is read from a file. See the ``Special tag
-#      to read container runtime IP address.`` for more information.
+#      The problem is that the sever bind IP is:
+#
+#        1) Not know in Docker image compile time.
+#        2) Not easily available for user when Docker container is started.
+#        3) Not secured when server binds to 0.0.0.0.
+#        4) Not available easily inside container from hostname.
+#        5) Not easily available for curl/nc based healthcheck.
+#
+#      Option 2: Use external command line tools - curl/nc
+#
+#      Curl command would have to parse the container IP from host. This is
+#      likely a problem as well if DNS based IP discover is needed. This
+#      requires in practise a external script to parse the IP for curl to
+#      a file where curl reads it. This forces to have two implementations
+#      to read the container IP: one in script and one in code.
+#
+#      Also for example the ``nc`` command does not support host format
+#      IP:port.
+#
+#      The server supports HTTP and HTTPS and the HTTP scheme would have to
+#      be discovered somehow in external script.
+#
+#      There are two aspects in the problem: Server IP bind when user does
+#      not define the IP (container internal IP) and when the ``--net=host``
+#      is used. It is not easy to know when user defined the IP and when a
+#      default was used. There was a special tag in environment variable
+#      for the server host: 'container.host'. But this was awkward because
+#      it required external script, file management and starting the server
+#      with docker-entrypoint script.
+#
+#      Also when external tools like curl were used to do periodic health
+#      check, they failed when the server was loaded. It seems that the
+#      current implementation which uses the embedded healthceck survives
+#      the load tests. TODO: Reason for this is not understood.
 #
 #      ```shell
 #      HEALTHCHECK --interval=10s \
 #                  --timeout=3s \
-#                  CMD curl \
-#                      --fail \
-#                      --insecure \
-#                      --proto http,https \
-#                      $(cat snippy-server-host)${SNIPPY_SERVER_BASE_PATH_REST} || exit 1
+#                  CMD snippy \
+#                      --server-healthcheck \
+#                      --storage-path /volume
+#
 #      ```
 #
 #  10. Exposed container port can not be configured
@@ -635,8 +660,13 @@ ENTRYPOINT ["./docker-entrypoint.sh"]
 #      server side work in a similar manner. This helps to avoid container
 #      specific solutions in code and makes testing easier.
 #
+#      The storage path is not configurable for user. User can override the
+#      Dockerfile ENTRYPOINT but this won't work unless the new ENTRYPOINT
+#      defines the same ``--storage-path`` pointing to ``/volume``. See the
+#      ``Dockerfile configuration`` for configuration desing.
+#
 #      ```shell
-#      ENTRYPOINT ["./docker-entrypoint.sh"]
+#      ENTRYPOINT ["snippy", "--storage-path", "/volume"]
 #      ```
 #
 # KNOWN SECURITY VULNERABILITIES AND PROBLEMS:
@@ -665,13 +695,17 @@ ENTRYPOINT ["./docker-entrypoint.sh"]
 #
 #   1. Fix TODO comment about the UID/GID not set by default.
 #
-#   2. Add examples for --privileged to bind with --net=host to ports below 1024.
+#   2. Fix TODO comment about /volume and o+rwX requirement
 #
-#   3. Add examples to connect the server to another container that runs PostgreSQL.
+#   3. Fix TODO comment related to curl vs. Snippy healthcheck during load test.
 #
-#   4. Add examples to connect the CLI to another container that runs PostgreSQL.
+#   4. Add examples for --privileged to bind with --net=host to ports below 1024.
 #
-#   5. Add script that tests all the combinations.
+#   5. Add examples to connect the server to another container that runs PostgreSQL.
+#
+#   6. Add examples to connect the CLI to another container that runs PostgreSQL.
+#
+#   7. Add script that tests all the combinations.
 #
 #
 # LINTING IMAGES

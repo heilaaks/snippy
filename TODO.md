@@ -1,7 +1,7 @@
 ## WORKING
-   - [ ] Requests missing from test dependencies.
-   - [ ] No need for separate service. New command line switch can be used to do healtcheck !
-   - [ ] Write simple healtcheck Python module and remove curl. This solves the file problem since the Python module can read env like Snippy.
+   - [ ] Check if user is really needed in container. The user is always defined from host. and the user must be give for mounts. This should work without UID and GID in container.
+   - [ ] Check why the voluem requires o+wrx but the install location does not.
+   - [ ] Make docker tests run parallel. Now the container removal is based on image name that is not good. must be based on container hash.
    - [ ] Make more tests for Docker use cases
    - [ ] Check the https://stackoverflow.com/a/54787364 z/Z option for volume --> This is only for host running SELiux
    - [ ] Change travis to use Makefile. This quarantees e.g make tests to be same everywhere.

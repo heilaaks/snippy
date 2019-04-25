@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""snippy: command, solution, reference and code snippet manager."""
+"""Snippy is a software development and maintenance notes manager."""
 
 import sys
 
@@ -33,16 +33,21 @@ from snippy.storage.storage import Storage
 
 
 class Snippy(object):
-    """Command and solution management."""
+    """Software development and maintenance notes manager."""
 
-    def __init__(self, args=None):
+    def __init__(self, args):
         Config.init(args)
+        self._exit_code = 0
         self._logger = Logger.get_logger(__name__)
         self.storage = Storage()
         self.server = None
 
     def run(self, args=None):
-        """Run Snippy."""
+        """Run service.
+
+        Args:
+            list: Command line arguments.
+        """
 
         if args:
             Config.load(Cli(args))
@@ -54,13 +59,15 @@ class Snippy(object):
 
         if Config.run_server:
             self._run_server()
+        elif Config.run_healthcheck:
+            self._run_healthcheck()
         else:
             self._run_cli()
 
         return Cause.reset()
 
     def release(self):
-        """Release instance."""
+        """Release service resource."""
 
         self.storage.disconnect()
         Cause.reset()
@@ -68,7 +75,7 @@ class Snippy(object):
         Logger.reset()
 
     def _run_cli(self):
-        """Run command line session."""
+        """Run CLI command."""
 
         if Config.is_category_snippet:
             Snippet(self.storage).run()
@@ -84,7 +91,7 @@ class Snippy(object):
         Cause.print_message()
 
     def _run_server(self):
-        """Run API server."""
+        """Run server."""
 
         try:
             from snippy.server.server import Server
@@ -97,6 +104,18 @@ class Snippy(object):
             Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'install snippy as a server in order to run api server')
             Cause.print_message()
 
+    def _run_healthcheck(self):
+        """Run server healthcheck."""
+
+        from snippy.server.health.check import Check
+
+        self._exit_code = Check().run()
+
+    def exit(self):
+        """Exit service wrapper."""
+
+        sys.exit(self._exit_code)
+
 
 def main(args=None):
     """Run Snippy."""
@@ -107,6 +126,7 @@ def main(args=None):
     snippy = Snippy(args)
     snippy.run()
     snippy.release()
+    snippy.exit()
 
 
 if __name__ == "__main__":

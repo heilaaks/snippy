@@ -28,6 +28,11 @@ import mock
 import pytest
 import yaml
 
+try:
+    import http.client as httplib
+except ImportError:
+    import httplib
+
 from snippy.cause import Cause
 from snippy.config.config import Config
 from snippy.constants import Constants as Const
@@ -323,6 +328,14 @@ def docker_server(request):
     request.addfinalizer(fin)
 
     return client
+
+@pytest.fixture(scope='function', name='healthcheck')
+def mock_httplib(mocker):
+    """Mock the healthcheck."""
+
+    healthcheck = mocker.patch.object(httplib, 'HTTPConnection', return_value=MockHTTPConnection())
+
+    return healthcheck
 
 # Logging
 @pytest.fixture(scope='function', name='logger')
@@ -860,12 +873,6 @@ def isfile_mock(mocker):
 def mock_os_environ(monkeypatch):
     """Mock os.environe."""
 
-    #mocker.patch('snippy.content.migrate.os.path.isfile', return_value=True)
-    #return mocker.patch.object('snippy.config.source.base.os.environ')
-    #return mocker.patch.object('snippy.config.source.base.os', 'getenv')
-    ##return mocker.patch('os.getenv')
-    #return mocker.patch.dict('snippy.config.source.base.os.environ')
-
     return monkeypatch
 
 ## editor
@@ -1062,3 +1069,27 @@ def _mock_uuids(mocker):
 
     mocker.patch.object(uuid, 'uuid1', side_effect=Database.TEST_UUIDS)
     mocker.patch.object(uuid, 'uuid4', side_effect=Database.TEST_UUIDS)
+
+
+class MockHTTPConnection(httplib.HTTPConnection):
+    """Mock for the httplib."""
+
+    def __init__(self, *args, **kwargs): # pylint: disable=super-init-not-called, unused-argument
+        self.status = 0
+
+    def request(self, *args, **kwargs):  # pylint: disable=arguments-differ, unused-argument
+        """Mock for httplib.request method."""
+
+        return
+
+    def getresponse(self, *args, **kwargs):  # pylint: disable=arguments-differ, unused-argument
+        """Mock for httplib.getresponse."""
+
+        self.status = 200
+
+        return self
+
+    def close(self, *args, **kwargs):  # pylint: disable=arguments-differ, unused-argument
+        """Mock for httplib.close."""
+
+        return

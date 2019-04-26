@@ -199,6 +199,50 @@ class TestApiDocker(object):  # pylint: disable=too-few-public-methods
             command=['search', '--sgrp', 'elasticsearch', '--sall', 'plugins', '--no-ansi'])
         assert stdout.decode() == Const.NEWLINE.join(output)
 
+    @pytest.mark.docker
+    def test_docker_server_005(self, docker):
+        """Test server in Docker.
+
+        Verify that docker container can be run when the container filesystem
+        is set to readonly. The server requires always a remporary folder where
+        to write server healthcheck. Because of this, there must be the tmpfs.
+
+        This is related to Gunigorn server and functionality related to [1].
+
+        This corresponds to use case:
+
+        ```shell
+        docker run \
+            --user 1000 \
+            --publish=127.0.0.1:8080:32768/tcp \
+            --name snippy \
+            --read-only \
+            --tmpfs /tmp \
+            --detach \
+            heilaaks/snippy --server-readonly
+        ```
+
+        [1] http://docs.gunicorn.org/en/stable/faq.html#blocking-os-fchmod
+        """
+
+        container = docker.containers.run(
+            detach=True,
+            user=1000,
+            read_only=True,
+            tmpfs={'/tmp': '', '/tmp': 'size=1M,uid=1000'},
+            ports={'32768/tcp': '32771'},
+            image='heilaaks/snippy:latest',
+            command=['--server-readonly'])
+        self._wait_server(container)
+        result = requests.get('http://127.0.0.1:32771/api/snippy/rest/snippets?limit=20')
+        container.stop()
+        logs = container.logs().decode().splitlines()
+        container.remove()
+        assert result.status_code == 200
+        assert result.json()['meta']['count'] == 20
+        assert result.json()['meta']['limit'] == 20
+        assert len(logs) == 2
+
     @staticmethod
     def _wait_server(container):
         """Wait untill the server has started.

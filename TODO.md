@@ -1,6 +1,10 @@
 ## WORKING
+   - [ ] Fix the Dockerfile documentation after latest changes.
+   - [ ] Check: "Lastly, the final USER declaration in the Dockerfile should specify the user ID (numeric value) and not the user name. This allows OpenShift Enterprise to validate the authority the image is attempting to run with and prevent running images that are trying to run as root, because running containers as a privileged user exposes potential security holes. If the image does not specify a USER, it inherits the USER from the parent image."
+   - [ ] Check -u $(id -u ${USER}):$(id -g ${USER}). Test by setting the GID as well.
+   - [ ] Why posting on container with mount frmo host causes response with many resources? Fix!
    - [ ] Check if user is really needed in container. The user is always defined from host. and the user must be give for mounts. This should work without UID and GID in container.
-   - [ ] Check why the voluem requires o+wrx but the install location does not.
+   - [ ] Check why the voluem requires o+wrx but the install location does not.
    - [ ] Make docker tests run parallel. Now the container removal is based on image name that is not good. must be based on container hash.
    - [ ] Make more tests for Docker use cases
    - [ ] Check the https://stackoverflow.com/a/54787364 z/Z option for volume --> This is only for host running SELiux

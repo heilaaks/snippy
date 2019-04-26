@@ -5,8 +5,6 @@ ENV LANG C.UTF-8
 ENV PYTHONUSERBASE=/usr/local/snippy/.local
 ENV PATH=/usr/local/snippy/.local/bin:"${PATH}"
 
-ENV SNIPPY_GID=61999
-ENV SNIPPY_UID=61999
 ENV SNIPPY_LOG_JSON 1
 ENV SNIPPY_SERVER_HOST=container.hostname:32768
 ENV SNIPPY_SERVER_BASE_PATH_REST=/api/snippy/rest
@@ -18,43 +16,28 @@ COPY setup.py .
 COPY LICENSE .
 COPY README.rst .
 
-RUN addgroup \
-        --gid ${SNIPPY_GID} \
-        snippy && \
-    adduser \
-        --system \
-        --disabled-password \
-        --no-create-home \
-        --shell /bin/false \
-        --gecos "" \
-        --uid ${SNIPPY_UID} \
-        --ingroup snippy \
-        noname && \
-    apk add \
+RUN apk add \
         python3 \
         py3-psycopg2 && \
     python3 -m pip install --upgrade \
         pip \
         setuptools && \
-    python3 -m pip install \
-        --user .[docker] && \
+    python3 -m pip install --user \
+        .[docker] && \
     find /usr/lib/python3.6 -type d -name __pycache__ -exec rm -r {} \+ && \
     find /usr/local/snippy/.local/lib -type d -name __pycache__ -exec rm -r {} \+ && \
     find /usr/local/snippy/.local/bin ! -regex '\(.*snippy\)' -type f -exec rm -f {} + && \
-    mkdir -p /volume && \
+    mkdir /volume && \
     rm -f /usr/local/snippy/.local/lib/python3.6/site-packages/snippy/data/storage/snippy.db && \
     snippy import \
         --defaults \
         --all \
         --storage-path /volume \
         -q && \
-    chown -R noname:root /usr/local/snippy/ && \
-    chown -R noname:root /volume/ && \
-    chmod -R ug=+rX-w,o-rwx /usr/local/snippy/ && \
-    chmod ug=+rX,o=-rwx /usr/local/snippy/.local/lib/python3.6/site-packages/snippy/data/server/openapi/schema && \
-    chmod ug=+rx-w,o=-rwx .local/bin/snippy && \
-    chmod ugo=+rwx /volume && \
-    chmod ugo=+rw-x /volume/snippy.db && \
+    chmod -R g=+rX-w,uo-rwx /usr/local/snippy/ && \
+    chmod g=+rwX,uo=-rwx /volume && \
+    chmod g=+rx-w,uo=-rwx .local/bin/snippy && \
+    chmod g=+rw-x,uo=-rwx /volume/snippy.db && \
     python3 -m pip uninstall pip --yes && \
     apk del apk-tools && \
     rm -f /usr/local/snippy/setup.py && \
@@ -73,25 +56,26 @@ HEALTHCHECK --interval=10s \
             --timeout=3s \
             CMD snippy \
                 --server-healthcheck \
+                --server-readonly \
                 --storage-path /volume
 
 EXPOSE 32768
 
-USER noname
-
-
 ENTRYPOINT ["snippy", "--storage-path", "/volume"]
 
 #
-# SECURITY HARDENING
+# CONTAINER IMAGE SECURITY HARDENING
 #
-#   Note that the author is not a security or Linux expert. This is a
-#   hobby project. If the reasons that justify the Dockerfile and the
-#   security design aspects are not correct, it is a sign that there
-#   can be a security vulnerability.
+#   Author is not security or Linux expert. This is just a hobby project.
+#   If this documentation for the Snippy container security hardening is
+#   not correct, it indicates a security vulnerability or problems to run
+#   the container image in some runtime environments.
 #
-#   The most critical parts from the container security hardening have
-#   to be done in host that runs the container runtime.
+#   The most critical parts from the container security hardening has to
+#   be done in the host that runs the container runtime.
+#
+#   You can run the Snippy container image with root privileges. There is
+#   nothing that prevents this.
 #
 #
 # TERMS
@@ -101,29 +85,29 @@ ENTRYPOINT ["snippy", "--storage-path", "/volume"]
 #   the company that created the Docker.
 #
 #   The documentation always refers to 'Docker' as a generic term. This
-#   covers 'containerd' runtime as well as the 'docker run' command. The
-#   goal is just to get the software running.
+#   covers 'containerd' runtime as well as the 'docker run' command.
 #
-#   A 'host' always refers to the operating system that starts and runs
-#   Docker images.
+#   A 'host' always refers to the host operating system that starts and
+#   runs container images.
 #
 #   A 'container' always refer to the Docker container itself.
 #
 #
 # TARGET GROUP
 #
-#   The target group is a casual user who just wants to run the Snippy
-#   Docker image with the same Linux user as the user who starts the
-#   container. This allows an easy way to mount a persistent volume
-#   from host.
+#   The target group is a casual user who wants to run the Snippy Docker
+#   container with the same Linux user (UID) as the user who starts the
+#   container. This allows an easy way to mount a persistent volume from
+#   host.
 #
 #
 # MINIMUM VERSIONS
 #
 #   The examples are tested with Docker version 18.05.0-ce. They likely
-#   work with other relatively recent versions as well.
+#   work with other relatively recent versions from Docker.
 #
-#   Examples have been tested with Fedora 26 and Bash.
+#   Examples have been tested with Fedora 26 and Bash. There is a test
+#   case ``test_api_docker`` that verifies some of the use cases.
 #
 #
 # CONTAINER UID/GID
@@ -254,7 +238,43 @@ ENTRYPOINT ["snippy", "--storage-path", "/volume"]
 #          heilaaks/snippy -vv
 #      ```
 #
-#   4. Change the IP and port visible in host that runs the container
+#   4. Running container with readonly filesystem
+#
+#      It is possible to run the server with readonly filesystem if the
+#      container is started with ``--tmpfs /tmp``. The server must have a
+#      temporary folder to write a server own heartbeat [7].
+#
+#      The ``--tmpfs`` option does not allow any configuration like size of
+#      the tmpfs or file permissions. The option also does not work with the
+#      Docker swarm. If there is a use case where the ``--tmpfs`` cannot be
+#      used, the same can be done with the ``--mount`` option which allows
+#      limits in size, file permissions and works with Docker swarm. The
+#      ``--tmpfs`` is used here because it is easier to configure.
+#
+#      ```shell
+#      Example : Run with the same UID as the user who starts the container.
+#      docker run \
+#          --publish=127.0.0.1:8080:32768/tcp \
+#          --name snippy \
+#          --read-only \
+#          --tmpfs /tmp \
+#          --detach \
+#          heilaaks/snippy --server-readonly
+#      ```
+#
+#      ```shell
+#      Example 2: Run with UID defined from host.
+#      docker run \
+#          --user 1000 \
+#          --publish=127.0.0.1:8080:32768/tcp \
+#          --name snippy \
+#          --read-only \
+#          --tmpfs /tmp \
+#          --detach \
+#          heilaaks/snippy --server-readonly
+#      ```
+#
+#   5. Change the IP and port visible in host that runs the container
 #
 #      The ``--publish`` command line option defines what is the IP and port
 #      that is visible in host. The example below shows how the exposed port
@@ -272,7 +292,7 @@ ENTRYPOINT ["snippy", "--storage-path", "/volume"]
 #          heilaaks/snippy -vv
 #      ```
 #
-#   5. Change REST API server base path
+#   6. Change REST API server base path
 #
 #      It is possible to change Snippy REST API server base path. Configured
 #      base path must always start and end with a slash
@@ -286,7 +306,7 @@ ENTRYPOINT ["snippy", "--storage-path", "/volume"]
 #          heilaaks/snippy -vv
 #      ```
 #
-#   6. Use host network
+#   7. Use host network
 #
 #      This is not recommended configuration because it is not secure and
 #      breaks the container native design "assume nothing from host".
@@ -308,7 +328,7 @@ ENTRYPOINT ["snippy", "--storage-path", "/volume"]
 #          heilaaks/snippy -vv
 #      ```
 #
-#   7. Use Docker container as a command line tool
+#   8. Use Docker container as a command line tool
 #
 #      It is possible search content with the help of Docker container like
 #      with the CLI version of the tool.
@@ -762,3 +782,6 @@ ENTRYPOINT ["snippy", "--storage-path", "/volume"]
 #
 # [6] https://bugs.busybox.net/show_bug.cgi?id=9811
 #
+# [7] http://docs.gunicorn.org/en/stable/faq.html#blocking-os-fchmod
+#
+# [8] https://docs.docker.com/storage/tmpfs/

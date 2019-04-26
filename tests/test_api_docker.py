@@ -229,7 +229,7 @@ class TestApiDocker(object):  # pylint: disable=too-few-public-methods
             detach=True,
             user=1000,
             read_only=True,
-            tmpfs={'/tmp': '', '/tmp': 'size=1M,uid=1000'},
+            tmpfs={'/tmp': 'size=1M,uid=1000'},
             ports={'32768/tcp': '32771'},
             image='heilaaks/snippy:latest',
             command=['--server-readonly'])

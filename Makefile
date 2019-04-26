@@ -17,13 +17,16 @@ PYTHON_VERSION := $(shell python -c 'import sys; print(sys.version_info[0])')
 # Commands assume that they are run inside virtual environment. The new
 # pyproject.toml based PEP517 does not support --editable and it is not
 # possible to use --user install inside a virtual environment. If these
-# commands in the makefile are run outside of avirtual environment, the
-# install does a global install.
+# commands in the Makefile are run outside of a virtual environment, the
+# install does global install.
 install:
 	$(PYTHON) -m pip install .
 
 install-devel:
 	$(PYTHON) -m pip install .[devel]
+
+install-test:
+	$(PYTHON) -m pip install .[test]
 
 install-devel-pypy:
 	@echo "##########################################################################"

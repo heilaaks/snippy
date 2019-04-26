@@ -35,6 +35,6 @@ RUN pip install pytest==3.3.1 && \
     apt-get install -y gdb python-dbg && \
     pip install -e .[test] && \
     pip install -r requirements.txt
-RUN python3.4 -m pytest ./tests/test_*.py --cov snippy; exit 0
+RUN python3.4 -m pytest ./tests/test_*.py  -m "not (server or docker)" -vv --cov snippy; exit 0
 
 ENTRYPOINT ["tail", "-f", "/dev/null"]

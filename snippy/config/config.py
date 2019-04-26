@@ -108,6 +108,7 @@ class Config(object):
         namespace.append('server_host={}'.format(cls.server_host))
         namespace.append('server_base_path_rest={}'.format(cls.server_base_path_rest))
         namespace.append('server_minify_json={}'.format(cls.server_minify_json))
+        namespace.append('server_readonly={}'.format(cls.server_readonly))
         namespace.append('editor={}'.format(cls.editor))
         namespace.append('use_ansi={}'.format(cls.use_ansi))
 
@@ -151,6 +152,7 @@ class Config(object):
         }
 
         # Static server configurations.
+        cls.server_readonly = cls.source.server_readonly
         cls.server_base_path_rest = cls.source.server_base_path_rest
         cls.server_minify_json = cls.source.server_minify_json
         cls.server_host = cls.source.server_host
@@ -479,11 +481,14 @@ class Config(object):
 
         if os.path.exists(storage_path) and os.access(storage_path, os.W_OK):
             storage_file = os.path.join(storage_path, 'snippy.db')
+        elif cls.source.server_readonly and os.path.exists(storage_path) and os.access(storage_path, os.R_OK):
+            cls._logger.debug('running server in readonly mode')
+            storage_file = os.path.join(storage_path, 'snippy.db')
         else:
             # This is a special case which prevents additional error log after
             # tool is already about to exit with help text from the CLI parser.
             if not cls.source.failure:
-                Logger.print_status('NOK: cannot run because content storage path is not accessible: {}'.format(storage_path))
+                Logger.print_status('NOK: cannot run because content storage path is not writable: {}'.format(storage_path))
             sys.exit(1)
 
         return storage_file

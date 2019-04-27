@@ -1,13 +1,29 @@
 language: python
-python:
-  - "2.7"
-  - "3.4"
-  - "3.5"
-  - "3.6"
-  - "3.7"
+dist: xenial
 install:
-  - "make install-test"
-script:
-  - "make test-ci"
+    - "make install-test"
+jobs:
+  include:
+    - stage: test
+      script:
+        - "make test-ci"
+      python: "2.7"
+    - stage: test
+      script:
+        - "make test-ci"
+      python: "3.4"
+    - stage: test
+      script:
+        - "make test-ci"
+      python: "3.5"
+    - stage: test
+      script:
+        - "make test-ci"
+      python: "3.6"
+    - stage: test
+      script:
+        - "make test-ci"
+      python: "3.7"
 after_success:
   - codecov
+

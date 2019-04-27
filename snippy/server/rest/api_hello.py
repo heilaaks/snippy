@@ -17,10 +17,9 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""api_hello: JSON REST API for hello endpoint."""
+"""api_hello: JSON REST API for hello API endpoint."""
 
-import falcon
-
+from snippy.cause import Cause
 from snippy.logger import Logger
 from snippy.server.rest.base import ApiResource
 from snippy.server.rest.generate import Generate
@@ -48,7 +47,7 @@ class ApiHello(ApiResource):
         self._logger.debug('run: %s %s', request.method, request.uri)
         response.content_type = ApiResource.MEDIA_JSON_API
         response.body = Generate.dumps(hello)
-        response.status = falcon.HTTP_200
+        response.status = Cause.http_status()
         self._logger.debug('end: %s %s', request.method, request.uri)
 
     @Logger.timeit(refresh_oid=True)
@@ -56,6 +55,6 @@ class ApiHello(ApiResource):
         """Respond with allowed methods for Hello!"""
 
         self._logger.debug('run: %s %s', request.method, request.uri)
-        response.status = falcon.HTTP_200
+        response.status = Cause.http_status()
         response.set_header('Allow', 'GET')
         self._logger.debug('end: %s %s', request.method, request.uri)

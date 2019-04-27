@@ -432,7 +432,7 @@ ENTRYPOINT ["snippy", "--storage-path", "/volume"]
 #         # Example 1: Connect to a volume mount used by Snippy server.
 #         docker run \
 #             --rm \
-#             --user $(id -u $(whoami)) \
+#             --user $(id -u) \
 #             --volume /home/$(whoami)/.local/share/snippy:/volume \
 #             --env SNIPPY_LOG_JSON=0 \
 #             heilaaks/snippy search --sall docker

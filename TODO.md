@@ -1,4 +1,5 @@
 ## WORKING
+   - [ ] Gunicorn logs are now error snippy.server.gunicorn.error when should be debug.
    - [ ] Why posting on container with mount frmo host causes response with many resources? Fix!
    - [ ] Make docker tests run parallel. Now the container removal is based on image name that is not good. must be based on container hash.
    - [ ] Make more tests for Docker use cases

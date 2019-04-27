@@ -1,5 +1,5 @@
 FROM alpine:3.9
-LABEL maintainer "laaksonen.heikki.j@gmail.com"
+LABEL maintainer "https://github.com/heilaaks/snippy"
 
 ENV LANG C.UTF-8
 ENV PYTHONUSERBASE=/usr/local/snippy/.local
@@ -34,10 +34,10 @@ RUN apk add \
         --all \
         --storage-path /volume \
         -q && \
-    chmod -R g=+rX-w,uo-rwx /usr/local/snippy/ && \
-    chmod g=+rwX,uo=-rwx /volume && \
-    chmod g=+rx-w,uo=-rwx .local/bin/snippy && \
-    chmod g=+rw-x,uo=-rwx /volume/snippy.db && \
+    chmod -R go=+rX-w,u-rwx /usr/local/snippy/ && \
+    chmod go=+rwX,u=-rwx /volume && \
+    chmod go=+rx-w,u=-rwx .local/bin/snippy && \
+    chmod go=+rw-x,u=-rwx /volume/snippy.db && \
     python3 -m pip uninstall pip --yes && \
     apk del apk-tools && \
     rm -f /usr/local/snippy/setup.py && \
@@ -221,7 +221,7 @@ ENTRYPOINT ["snippy", "--storage-path", "/volume"]
 #          heilaaks/snippy -vv
 #      ```
 #
-#   2. Starting the server with UID defined from host
+#   2. Starting the server with UID or GID defined from host
 #
 #      In this use case the UID defined by host will override the value set
 #      in the ``USER`` instruction in the Dockerfile. This allows defining
@@ -237,13 +237,11 @@ ENTRYPOINT ["snippy", "--storage-path", "/volume"]
 #          heilaaks/snippy -vv
 #      ```
 #
-#      Starting the container with other than root GID 0 is not supported.
-#      The example below will fail. The reason is that the file permissions
-#      in the container are set for root group. There is no logic to change
-#      this in the container.
+#      It is also possible to defined the GID with UID when starting the
+#      server container.
 #
 #      ```shell
-#      # Example 2: Try to start container with other than root GID (FAIL).
+#      # Example 2: Run container services with UID 1000 and GID 1001.
 #      docker run \
 #          --user 1000:1001 \
 #          --publish=127.0.0.1:8080:32768/tcp \
@@ -547,39 +545,42 @@ ENTRYPOINT ["snippy", "--storage-path", "/volume"]
 #
 #   4. Container user file access privileges
 #
-#      "For an image to support running as an arbitrary user, directories and
-#       files that may be written to by processes in the image should be owned
-#       by the root group and be read/writable by that group. Files to be
-#       executed should also have group execute permissions." [3]
+#      Changing the file permissions in container is not as critical as it
+#      sounds. The design is to understand what is needed an why and try to
+#      set a minimal permissions for the files. The most important from the
+#      file permission point of view is that if malicious user gains access
+#      to the container filesystem, there are no additional tools to try to
+#      break to host that runs the container.
 #
-#      "Because the container user is always a member of the root group, the
-#       container user can read and write these files. The root group does
-#       not have any special permissions (unlike the root user) so there are
-#       no security concerns with this arrangement." [3]
+#      The processes in container can be run with any UID or GID. By default
+#      the GID is the root GID 0. The only cases when the GID can be other
+#      than the root GID:
 #
-#      The above statement may not be valid anymore when the docker feature
-#      ``rootles mode`` [10] is used. In this case, the behaviour is unknown
-#      for example for containers running in different hosts with different
-#      users and groups defined by ``rootles mode`` feature.
+#      1) When user defines the GID explicitly with ``--user`` option.
+#      2) When Docker ``user namespaces`` feature is used. [4]
+#      3) When Docker ``rootles mode`` feature is used. [10]
 #
-#      Because of the above as fo now, all the files needed by the server in
-#      the container are owned by the ``root`` group. If other user (UID) than
-#      the default user (UID) defined in Dockerfile with ``ÙSER``, the user
-#      is still part of the root group (GID 0).
+#      Because of the above, all the files needed by the server in container
+#      are owned by ``group`` and ``others``. The only reason why files are
+#      owned by ``others`` is a case when the GID is changed to a different
+#      value than allocated for the ``dockerd`` in host. In this case the
+#      user in the container is not part of ``group`` file permission set.
+#      This scenario to require ``others`` file permissions is possible only
+#      with above options 1) and 2).
 #
-#      By default, only read for files and folders and execution for folders
-#      is granted for ``group`` file permissions. Then the files and folders
-#      are granted with write and execution permission as needed.
+#      If other UID than the default value defined in the Dockerfile with
+#      the ``USER`` instruction is used, the user in container is still
+#      part of the root group (GID 0) in most cases.
 #
 #      Note that if a volume is mounted from host, the host directory file
 #      permissions are visible in container, not the ones that are defined
 #      in the Dockerfile.
 #
 #      ```shell
-#      chmod -R g=+rX-w,uo-rwx /usr/local/snippy/ && \
-#      chmod g=+rwX,uo=-rwx /volume && \
-#      chmod g=+rx-w,uo=-rwx .local/bin/snippy && \
-#      chmod g=+rw-x,uo=-rwx /volume/snippy.db && \
+#      chmod -R go=+rX-w,u-rwx /usr/local/snippy/
+#      chmod go=+rwX,u=-rwx /volume
+#      chmod go=+rx-w,u=-rwx .local/bin/snippy
+#      chmod go=+rw-x,u=-rwx /volume/snippy.db
 #      ```
 #
 #   5. Remove setuid/setgid bit from all binaries (defang)
@@ -588,7 +589,7 @@ ENTRYPOINT ["snippy", "--storage-path", "/volume"]
 #      container. Because ofthis, the bit is removed from all binaries.
 #
 #      ```shell
-#      find / -perm +6000 -type f -exec chmod a-s {} \; || true && \
+#      find / -perm +6000 -type f -exec chmod a-s {} \; || true
 #      ```
 #
 #   6. Periodic healthcheck

@@ -27,6 +27,7 @@ Bugfixes
 ~~~~~~~~
 
 * Fix install requirement for PyYAML version.
+* Fix multiple server startup problem in Docker container.
 * Fix creating new content with prefilled templates.
 * Fix exporting and importing content template.
 * Fix error when content matching to a text template is saved.

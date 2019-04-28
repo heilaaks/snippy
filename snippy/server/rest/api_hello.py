@@ -20,6 +20,7 @@
 """api_hello: JSON REST API for hello API endpoint."""
 
 from snippy.cause import Cause
+from snippy.config.config import Config
 from snippy.logger import Logger
 from snippy.server.rest.base import ApiResource
 from snippy.server.rest.generate import Generate
@@ -32,9 +33,30 @@ from snippy.meta import __version__
 class ApiHello(ApiResource):
     """Hello API."""
 
-    @Logger.timeit(refresh_oid=True)
     def on_get(self, request, response, _sall=None, _stag=None, _sgrp=None):
-        """Get Hello!"""
+        """Get server /hello API endpoint.
+
+        The route is not measured and logs must not be printed from here if
+        request came from the server healthcheck from the same host. This is
+        the case when Docker container hosts the server and the healtcheck in
+        the same container but in different processes.
+
+        If the server in Docker container uses the ``--net=host`` option, it
+        prevents the logs from HTTP request to this API endpoints because the
+        server and host use the same network. This is accepted behaviour.
+
+        As of now, it is considered that constant server healthcheck must not
+        flood the logs with successful healthcheck. This would lose important
+        logs for troubleshooting.
+
+        For the normal /hello API call the logs must be printed in order to
+        trace calls and problems with the /hello API. It is considered that
+        external clients will use the /hello instead of the server base path.
+
+        The logs are disabled based on local IP address to generate logs for
+        remote healtchecks. External clients may try to flood the server so
+        it is important to log the external events.
+        """
 
         hello = {
             'meta': {
@@ -44,11 +66,13 @@ class ApiHello(ApiResource):
                 'openapi': __openapi__
             }
         }
-        self._logger.debug('run: %s %s', request.method, request.uri)
+        if request.netloc != Config.server_host:
+            self._logger.debug('run: %s %s', request.method, request.uri)
         response.content_type = ApiResource.MEDIA_JSON_API
         response.body = Generate.dumps(hello)
         response.status = Cause.http_status()
-        self._logger.debug('end: %s %s', request.method, request.uri)
+        if request.netloc != Config.server_host:
+            self._logger.debug('end: %s %s', request.method, request.uri)
 
     @Logger.timeit(refresh_oid=True)
     def on_options(self, request, response, _sall=None, _stag=None, _sgrp=None):

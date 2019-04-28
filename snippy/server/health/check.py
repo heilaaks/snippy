@@ -60,7 +60,7 @@ class Check(object):  # pylint: disable=too-few-public-methods
             scheme = 'http://'
             conn = httplib.HTTPConnection(Config.server_host, timeout=2)
 
-        url = scheme + Config.server_host + Config.server_base_path_rest
+        url = scheme + Config.server_host + Config.server_base_path_rest + 'hello'
         exit_code = 1
         try:
             conn.request(method='GET', url=url)

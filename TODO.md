@@ -1,40 +1,35 @@
 ## WORKING
-   - [ ] Security log printed incorrectly from GET limit=20 when -vv JSON enabled. The -vv should already truncate the log. Change or warn?
-   - [ ] Make docker tests run parallel. Now the container removal is based on image name that is not good. must be based on container hash.
-   - [ ] Make more tests for Docker use cases
-   - [ ] Check the https://stackoverflow.com/a/54787364 z/Z option for volume --> This is only for host running SELiux
-   - [ ] Change travis to use Makefile. This quarantees e.g make tests to be same everywhere.
-   - [ ] Fix test case: test_quiet_option_001 it passes even when the search output is not printed on screen.
-   - [ ] Make pytest for docker startup commands from Dockerfile. Requires root and disable by default. Only manual run. Better to integrte to Pytest like performance tests.
-   - [ ] Remove tests from container.
    - [ ] Fix updating Markdown based solutions in text formats does not work because the Mkdn solution does not have text header and data structure.
    - [ ] Starting the server again and import the default content again with --defaults causes server internal erro 500 because of UUID. The 500 should not be here because this is not internal error. Fix?
    - [ ] Fix creating/updating resource with invalid versions. Check test_api_create_snippet_024. The seal() cannot check if Cause not is_is because it generates incorrect error. For example GET ../<valid digest>/error shows error that digest not foind. See test_api_search_reference_field_012. move the reast API based empty list check earlier in code to solve this.
    - [ ] Incorrect header does not leave logs. Test manually since this works differently that the tests? For example ab was missing '-T application/vnd.api+json' without this it did not work.
-   - [ ] Try ULID https://github.com/ahawker/ulid (does this support P2.7) or https://github.com/mdomke/python-ulid as in https://opensource.zalando.com/restful-api-guidelines/#resources
-   - [ ] Add health API to respond to curl HC and write status to logs.
+   - [ ] Design and change /groups and /tags to GET groups and tags not content. Like unique tags and groups.
+   - [ ] Fix cli -f file to see if this goes ot content filename attribute. Should not. -f|--file and content.filename are not the same.
+   - [ ] Fix tox and Python 3.4. Tox -e py34 // http://notes.webutvikling.org/darn-installation-of-python-3-4/
+   - [ ] Add bash completion to Snippy. Check example from Poetry. Check git argcomplete which is used also by Pytest.
+   - [ ] Security log printed incorrectly from GET limit=20 when -vv JSON enabled. The -vv should already truncate the log. Change or warn?
+   - [ ] Make docker tests run parallel. Now the container removal is based on image name that is not good. must be based on container hash.
+   - [ ] Make more tests for Docker use cases
+   - [ ] Fix test case: test_quiet_option_001 it passes even when the search output is not printed on screen.
+   - [ ] Remove test cases from container.
+   - [ ] Add health API to send server health with statistics.
    - [ ] Check good rules from https://opensource.zalando.com/restful-api-guidelines/#218
    - [ ] Empty array values can unambiguously be represented as the empty list, [].
    - [ ] Swagger 3.0: Why the 'additionProperties: false' field did not affect swagger 3.0?
    - [ ] Swagger 2.0: Does not support nullable and this does not work with validation: test_api_update_reference_010/117. move to OAS3.0 to solve this?
-   - [ ] Design and change /groups and /tags to GET groups and tags not content. Like unique tags and groups.
    - [ ] Check why test_api_create_snippet_004 has specific error length in Python 3.4.
    - [ ] Config.get_resource creates external UUID usage when e.g resource is updated. Get rid of this (somehow) after UUID refactoring.
    - [ ] Test export/import Mkdn snippet with partial comments. The export must have the <not documented> tag and import must remove it.
-   - [ ] Fix cli -f file to see if this goes ot content filename attribute. Should not. -f|--file and content.filename are not the same.
    - [ ] Add instructions to use local install dir and the export path for local bin if needed (add the ~./local/bin to path)
    - [ ] Fix somehow (?) the python runner search --sall 'test' --filter test -vv | grep --all?
    - [ ] Fix JSON API v1.x requires links for collection responses too. Individual resource not found or attrbute results null otherwise empty list.
    - [ ] Fix digest computation once things are setling down. Changing this forces changes to all tests and code that rely on digest.
    - [ ] Fix help text to use import --all instead of content specific commands. Or keep?
    - [ ] Fix updating content without updates changes the updated timestamp. There is no need to store the content either.
-   - [ ] Fix tox and Python 3.4. Tox -e py34 // http://notes.webutvikling.org/darn-installation-of-python-3-4/
    - [ ] Add delete for wheel build directory for automation. If the folder exist this is a problem (at least used to be) see how to fail python release/building/something.
    - [ ] Refactor Makefile to have python|python3|pypy|pypy3 as ${PYTHON}.
    - [ ] How to compile psycopg2 for PyPY?
    - [ ] Fix PyPy 5.5.0 (Python 3.3) that does not have sqlite uri=True and does not have server 'ssl_version': ssl.PROTOCOL_TLSv1_2. Otherwise tests pass with exception of schema validation errors. works with later Pypy would be the best quess.
-   - [ ] Add bash completion to Snippy. Check example from Poetry. Check git argcomplete which is used also by Pytest.
-   - [ ] Why starting server calls collection initialization 4 times?
    - [ ] Config get_resource could return empty Resource instead of None in failure. This is now related to new migrate refactoring that prevents migrating template resources.
    - [ ] Fix (remove) the LANG in Alpine based dockerfile? Is this useless as MUSL does not support locales? https://github.com/gliderlabs/docker-alpine/issues/144
    - [ ] Fix server silent startup failure if for example the port is reserved. How to get proper error cause for user?
@@ -61,12 +56,13 @@
    - [ ] Fix (optimize) Import all and the storage reads and returns all imported data that is not actually used in any way.
    - [ ] Fix (optimize) migrate and dump. The dump_dict is not needed in case of text and mkdn because those methods do not need the dict format but produce string directly.
    - [x] Fix (optimize) digest computation for Resource.
-   - [ ] Fix (optimize) POST API with multiple contents. Now each content in collection is *.run with own resources. The create supports collection so this should work.
-   - [ ] Fix (optimize) the order of SQL columns. Fixed length columns first. This should ? allow database to optimize the length of data. Is this the case?
+   - [ ] Fix (optimize) POST API with multiple contents. Now each content in collection is *.run with own resources. The create supports collection so this should work. This is hard due to how Api/Cli is made. Maybe not worth of it.
+   - [ ] Fix (optimize) the order of SQL columns. Fixed length columns first. This should ? allow database to optimize the length of data. Is this the case? Now the order is "logical". Maybe unnecessary optimization. Measure first.
    - [ ] Fix (optimize) the Mkdn and Text parsing. The parsers and Resource() do the input data formatting. Parsers when data read and Resource() when set. This is good now to avoid data format problems.
    - [ ] Fix (optimize) Why GET with limit=20 is much slower than limit=1? Even POST with one resource is much faster than GET with limit=20 (Sqlite in tests). The test produced 409 from trying to POST the same content in loop.
 
 ## FEATURES
+   - [ ] Add CORS https://stackoverflow.com/a/45183343. This is needed to make the server usable at all?
    - [ ] Add decsription, name, versions and source to CLI? Or does this make the CLI too bloated? These can be updated via editor or REST API.
    - [ ] Add support for CockroachDB.
    - [ ] Add support to store any content in YAML files when server starts. Give path to folder that contains yaml files and import all?
@@ -76,7 +72,6 @@
    - [ ] Add Travis CI for PyPy version v6.0 for Python 3 when it comes https://github.com/travis-ci/travis-ci/issues/9542
    - [ ] Add test client to measure performance of the server. The PyPy does not seem to work with api_performance test.
    - [ ] Add user management with a new user table that lins to contents table.
-   - [ ] Add CORS https://stackoverflow.com/a/45183343
    - [ ] Add limit to multilevel sort fields to two fields to avoid complex scenarios.
    - [ ] Add limits to all parameters: column array size, sort array size, etc.
    - [ ] Add support to print only selected fields, like brief and digest for CLI text output. Hard to generalize since layout e.g. contains header with three fields.
@@ -174,6 +169,7 @@
    - [ ] Update documents.
 
 ## BUBLING UNDER
+   - [ ] Try ULID https://github.com/ahawker/ulid (does this support P2.7) or https://github.com/mdomke/python-ulid as in https://opensource.zalando.com/restful-api-guidelines/#resources
    - [ ] Add 'internal server errors' from logger scribling to Sphinx docs. Check that this part is there.
    - [ ] Add optional extra fields for logging.warning('test', extra={'foo': 'bar'}) which might be good for json. What fields to add?
    - [ ] There is a pylint bug that it does not see see Python decorators being used with underscore // https://github.com/PyCQA/pylint/issues/409

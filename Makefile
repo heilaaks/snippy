@@ -70,11 +70,7 @@ test: test-sqlite
 test-all: test-sqlite test-postgresql test-docker
 
 test-ci:
-ifeq ($(PYTHON_VERSION), 3)
-	$(PYTHON) -m pytest -x ./tests/test_*.py -m "not (server or docker)" --cov snippy -n auto
-else
 	$(PYTHON) -m pytest -x ./tests/test_*.py -m "not (server or docker)" --cov snippy
-endif
 
 test-fast:
 ifeq ($(PYTHON_VERSION), 3)

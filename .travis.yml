@@ -28,6 +28,5 @@ jobs:
         - "make test-ci"
       python: "3.7"
 after_success:
-    - coverage combine
     - codecov
 

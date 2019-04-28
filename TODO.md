@@ -1,8 +1,8 @@
 ## WORKING
-   - [ ] Fix Dockerfile base path ending to /
    - [ ] Why posting on container with mount frmo host causes response with many resources? Fix!
    - [ ] Security log printed incorrectly from GET limit=20 when -vv JSON enabled. The -vv should already truncate the log. Change or warn?
    - [ ] Make docker tests run parallel. Now the container removal is based on image name that is not good. must be based on container hash.
+   - [ ] Fix the uid text to note that host always rules and container never overrides.
    - [ ] Make more tests for Docker use cases
    - [ ] Check the https://stackoverflow.com/a/54787364 z/Z option for volume --> This is only for host running SELiux
    - [ ] Change travis to use Makefile. This quarantees e.g make tests to be same everywhere.

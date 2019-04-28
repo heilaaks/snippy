@@ -7,7 +7,7 @@ ENV PATH=/usr/local/snippy/.local/bin:"${PATH}"
 
 ENV SNIPPY_LOG_JSON 1
 ENV SNIPPY_SERVER_HOST=container.hostname:32768
-ENV SNIPPY_SERVER_BASE_PATH_REST=/api/snippy/rest
+ENV SNIPPY_SERVER_BASE_PATH_REST=/api/snippy/rest/
 
 WORKDIR /usr/local/snippy
 
@@ -216,7 +216,7 @@ ENTRYPOINT ["snippy", "--storage-path", "/volume"]
 #          --publish=127.0.0.1:8080:32768/tcp \
 #          --name snippy \
 #          --detach \
-#          heilaaks/snippy -vv
+#          heilaaks/snippy --debug
 #      ```
 #
 #   2. Starting the server with UID or GID defined from host
@@ -232,7 +232,7 @@ ENTRYPOINT ["snippy", "--storage-path", "/volume"]
 #          --publish=127.0.0.1:8080:32768/tcp \
 #          --name snippy \
 #          --detach \
-#          heilaaks/snippy -vv
+#          heilaaks/snippy --debug
 #      ```
 #
 #      It is also possible to defined the GID with UID when starting the
@@ -245,7 +245,7 @@ ENTRYPOINT ["snippy", "--storage-path", "/volume"]
 #          --publish=127.0.0.1:8080:32768/tcp \
 #          --name snippy \
 #          --detach \
-#          heilaaks/snippy -vv
+#          heilaaks/snippy --debug
 #      ```
 #
 #      In order be able to maintain the updated content in Snippy container,
@@ -272,7 +272,7 @@ ENTRYPOINT ["snippy", "--storage-path", "/volume"]
 #          --publish=127.0.0.1:8080:32768/tcp \
 #          --name snippy \
 #          --detach \
-#          heilaaks/snippy --defaults -vv
+#          heilaaks/snippy --defaults --debug
 #      ```
 #
 #   3. Starting the service with UID allocated by 'user namespaces' feature
@@ -292,7 +292,7 @@ ENTRYPOINT ["snippy", "--storage-path", "/volume"]
 #          --publish=127.0.0.1:8080:32768/tcp \
 #          --name snippy \
 #          --detach \
-#          heilaaks/snippy -vv
+#          heilaaks/snippy --debug
 #      ```
 #
 #   4. Running container with a readonly filesystem
@@ -346,13 +346,13 @@ ENTRYPOINT ["snippy", "--storage-path", "/volume"]
 #          --publish=173.23.22.212:80:32768/tcp \
 #          --name snippy \
 #          --detach \
-#          heilaaks/snippy -vv
+#          heilaaks/snippy --debug
 #      ```
 #
 #   6. Change REST API server base path
 #
-#      It is possible to change Snippy REST API server base path. Configured
-#      base path must always start and end with a slash
+#      It is possible to change the Snippy REST API server base path. The
+#      server API base path must always start and end with a slash.
 #
 #      ```shell
 #      docker run \
@@ -360,7 +360,7 @@ ENTRYPOINT ["snippy", "--storage-path", "/volume"]
 #          --publish=127.0.0.1:8080:32768/tcp \
 #          --name snippy \
 #          --detach \
-#          heilaaks/snippy -vv
+#          heilaaks/snippy --debug
 #      ```
 #
 #   7. Use host network
@@ -382,7 +382,7 @@ ENTRYPOINT ["snippy", "--storage-path", "/volume"]
 #          --net=host \
 #          --name snippy \
 #          --detach \
-#          heilaaks/snippy -vv
+#          heilaaks/snippy --debug
 #      ```
 #
 #   8. Use Docker container as a command line tool

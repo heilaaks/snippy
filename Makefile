@@ -70,7 +70,7 @@ test: test-sqlite
 test-all: test-sqlite test-postgresql test-docker
 
 test-ci:
-	$(PYTHON) -m pytest -x ./tests/test_*.py -m "not (server or docker)"
+	$(PYTHON) -m pytest -x ./tests/test_*.py -m "not (server or docker)" --cov snippy
 
 test-fast:
 ifeq ($(PYTHON_VERSION), 3)

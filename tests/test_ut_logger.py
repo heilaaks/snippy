@@ -39,7 +39,7 @@ class TestUtLogger(object):
         The logs must be text formatted lines that are not truncated.
         """
 
-        # Log levels
+        # Test log levels.
         logger.security('testing security level')
         logger.critical('testing critical level')
         logger.error('testing error level')
@@ -47,7 +47,7 @@ class TestUtLogger(object):
         logger.info('testing info level')
         logger.debug('testing debug level')
 
-        # Log length
+        # Test log message length.
         logger.warning('abcdefghij'*100)
 
         out, err = capsys.readouterr()
@@ -78,7 +78,7 @@ class TestUtLogger(object):
             'very_verbose': False
         })
 
-        # Log levels
+        # Test log levels.
         logger.security('testing security level')
         logger.critical('testing critical level')
         logger.error('testing error level')
@@ -86,7 +86,7 @@ class TestUtLogger(object):
         logger.info('testing info level')
         logger.debug('testing debug level')
 
-        # Log length
+        # Test log message length.
         logger.warning('abcdefghij'*100)
 
         out, err = capsys.readouterr()
@@ -426,8 +426,8 @@ class TestUtLogger(object):
     def test_logger_011(capsys, caplog):
         """Test logger advanced configuration.
 
-        Test case verifies that log maximum message lenght can be configred
-        and that the configuration can be changed. The case also verifies that
+        Test case verifies that log maximum message length can be configred
+        and that the configuration can be changed. The case also tests that
         static logger fields are not changed when logger is reconfigured.
         """
 
@@ -479,8 +479,8 @@ class TestUtLogger(object):
         """Test logger security.
 
         Test case verifies that debug configuration is not printing extremely
-        long logs. These are prevented for safety and security reasons. There
-        must be a security event logged.
+        long log messages. These are prevented for safety and security reasons.
+        There must be a security event logged.
         """
 
         Logger.configure({
@@ -504,7 +504,7 @@ class TestUtLogger(object):
     def test_logger_013(capsys, caplog):
         """Test custom security level.
 
-        Test case verifies that custom security level is working.
+        Test case verifies that the custom ``security`` level is working.
         """
 
         Logger.remove()
@@ -533,7 +533,7 @@ class TestUtLogger(object):
         """Test failure handling.
 
         Test case verifies that log message length cannot exceed safety limits
-        that are defined for security reasons. Because the very verbose mode
+        that are defined for a security reasons. Because the very verbose mode
         is used, the log messages are limited to default length.
         """
 
@@ -564,3 +564,46 @@ class TestUtLogger(object):
         assert caplog.records[1].msg.islower()
         assert caplog.records[2].msg.islower()
         assert caplog.records[3].msg.islower()
+
+    @staticmethod
+    def test_logger_015(capsys):
+        """Test logs from Gunicorn.
+
+        Test case verifies that log log messages from Gunicorn are converted
+        correctly to Snippy server logs. The informative logs from Gunicorn
+        must be converted to debug level logs. All other log level must be
+        kept the same.
+        """
+
+        Logger.remove()
+        Logger.configure({
+            'debug': True,
+            'log_json': True,
+            'log_msg_max': Logger.DEFAULT_LOG_MSG_MAX,
+            'quiet': False,
+            'very_verbose': False
+        })
+        logger = Logger.get_logger('snippy.server.gunicorn')
+
+        # Test log levels.
+        logger.security('testing security level')
+        logger.critical('testing critical level')
+        logger.error('testing error level')
+        logger.warning('testing warning level')
+        logger.info('testing info level')
+        logger.debug('testing debug level')
+
+        out, err = capsys.readouterr()
+        assert not err
+        assert json.loads(out.splitlines()[0])['levelno'] == 60
+        assert json.loads(out.splitlines()[0])['levelname'] == 'security'
+        assert json.loads(out.splitlines()[1])['levelno'] == 50
+        assert json.loads(out.splitlines()[1])['levelname'] == 'crit'
+        assert json.loads(out.splitlines()[2])['levelno'] == 40
+        assert json.loads(out.splitlines()[2])['levelname'] == 'err'
+        assert json.loads(out.splitlines()[3])['levelno'] == 30
+        assert json.loads(out.splitlines()[3])['levelname'] == 'warning'
+        assert json.loads(out.splitlines()[4])['levelno'] == 10
+        assert json.loads(out.splitlines()[4])['levelname'] == 'debug'
+        assert json.loads(out.splitlines()[5])['levelno'] == 10
+        assert json.loads(out.splitlines()[5])['levelname'] == 'debug'

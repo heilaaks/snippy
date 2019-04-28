@@ -1,6 +1,4 @@
 ## WORKING
-   - [ ] Check the coverall and multiprocessing https://stackoverflow.com/questions/28297497/python-code-coverage-and-multiprocessing/36863654#36863654
-   - [ ] Gunicorn logs are now error snippy.server.gunicorn.error when should be debug.
    - [ ] It mighd be a good idea not to use the real database in healthcheck. This may leak something or cause concurrency problems. Remove the neeed for --storage-path with healthcheck. Would be good to get rid of the server-readonly also.
    - [ ] Why posting on container with mount frmo host causes response with many resources? Fix!
    - [ ] Make docker tests run parallel. Now the container removal is based on image name that is not good. must be based on container hash.
@@ -100,7 +98,6 @@
    - [ ] Fix timestamp usage to be Datetime native. Now the created and updated times are strings. It may be usefull in future (no use case now) to have Datetime objects instead of strings.
    - [ ] Fix the internal primary key UUID. It has MAC address which is same for multiple containers? //https://docs.docker.com/engine/reference/run/#network-settings
    - [ ] Fix long description in Markdown format does not support keeping paragraph. The description supports only one paragraph that is wrapped for Markdown. Fix or ok? Read only one paragrap. This is good for example for solution which may have longer Description chapter as own header.
-   - [ ] Fix Gunicorn info logs to debug somehow?
    - [ ] Fix Fields class. It may not have to be inherited like now. The operation ID refresh and logs are problematic now because the Fields logs would refresh OID to be different than with the base class logs. How?
    - [ ] Fix (by using OAS3.0?) swagger yaml since it uses 3.0. Componentst and etc should be under defintions // https://stackoverflow.com/questions/47293855/swagger-schema-error-should-not-have-additional-properties
    - [ ] Fix it seems that python can do like Config.parameternewparameter which adds new parameter in case of typo. Can this be prevented?

@@ -377,6 +377,12 @@ class CustomFormatter(logging.Formatter):
     def format(self, record):
         """Format log record.
 
+        Gunicorn logs have special conversion for info level logs. In order
+        to follow the Snippy logging standard, which defines the usage of
+        debug level, Gunicorn informative logs are converted to debug level
+        logs. Warning and error levels do not get converted because in these
+        cases the level is considered relevant for user.
+
         Args:
             record (obj): Logging module LogRecord.
 
@@ -385,10 +391,10 @@ class CustomFormatter(logging.Formatter):
         """
 
         # Debug option tries to print logs "as is" in full length. There is a
-        # maximum limitation for logs for safety and security reasons. Very
-        # verbose option truncates logs in order to try to guarantee one log
-        # per line. In case of the very verbose option, log message is printed
-        # fully with lower case characters.
+        # maximum limitation for log message for safety and security reasons.
+        # Very verbose option truncates log message in order to try to keep
+        # one log per line for easier log reading. In case of the very verbose
+        # option, log message is printed with all lower case letters.
         if record.args:
             record.msg = record.msg % record.args
             if len(record.msg) > Logger.SECURITY_LOG_MSG_MAX:
@@ -401,6 +407,10 @@ class CustomFormatter(logging.Formatter):
             record.msg = record.msg.replace('\n', ' ').replace('\r', '')
             record.msg = record.msg[:self._snippy_msg_max] + (record.msg[self._snippy_msg_max:] and self._snippy_msg_end)
             record.msg = record.msg.lower()
+
+        if record.name == 'snippy.server.gunicorn' and record.levelno == logging.INFO:
+            record.levelname = 'debug'
+            record.levelno = logging.DEBUG
 
         if Logger.CONFIG['log_json']:
             log_string = super(CustomFormatter, self).format(record)
@@ -475,19 +485,27 @@ class CustomGunicornLogger(GunicornLogger):  # pylint: disable=too-few-public-me
     """Custom logger for Gunicorn HTTP server."""
 
     def setup(self, cfg):
-        """Custom setup."""
+        """Custom setup.
+
+        Disable all handlers under the 'gunicorn' namespace and prevent log
+        propagation to root logger. The loggers under the 'snippy' namespace
+        will take care of the log writing for Gunicorn server.
+
+        Both Gunicor error and access log categories are printed from the same
+        namespace. In case of 'snippy.server.gunicorn.error', informative logs
+        in JSON format would have this in the class ``name`` attribute which
+        is considered to be misleading for other than error logs.
+
+        Args:
+            cfg (obj): The Gunicorn server class Config() object.
+        """
 
         super(CustomGunicornLogger, self).setup(cfg)
-
-        # Disable all handlers under 'gunicorn' namespace and prevent log
-        # propagation to root logger. The loggers under 'snippy' namespace
-        # will take care of the log writing for Gunicorn.
         self._remove_handlers(self.error_log)
         self._remove_handlers(self.access_log)
         logging.getLogger('gunicorn').propagate = False
-
-        self.error_log = Logger.get_logger('snippy.server.gunicorn.error')
-        self.access_log = Logger.get_logger('snippy.server.gunicorn.access')
+        self.error_log = Logger.get_logger('snippy.server.gunicorn')
+        self.access_log = Logger.get_logger('snippy.server.gunicorn')
 
     @staticmethod
     def _remove_handlers(logger):

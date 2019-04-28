@@ -118,57 +118,62 @@ ENTRYPOINT ["snippy", "--storage-path", "/volume"]
 # CONTAINER UID/GID AND USERS
 #
 #   This is the most imporant thing to understand from container security
-#   and resource management point of view. This also explains why the host
-#   is in critical position to define the container runtime environment
-#   security hardening correctly.
+#   and resource management point of view. This also explains why host is
+#   in a critical position to securely run a container based application.
 #
-#   User name visible in container do not matter. The only things that
-#   matters are the user UID and GID. In order to avoid misleading what
-#   is the user in question, Dockerfile should always operate on UID and
-#   GID numerical values.
+#   The user name visible in a container does not matter. The only things
+#   that matters are the user UID and GID. In order to avoid misleading
+#   what is the container user from security point of view, a Dockerfile
+#   should always use numerical UID and GID values.
 #
-#   The host and the docker service that start a container decide what are
-#   the UID and GID to run service(s) in container. This is done by:
+#   Host and the docker that starts a container dictate what are the UID
+#   and GID values in container to run service(s). This is done by:
 #
 #     1. Explicitly set by the ``--user``` option for docker run command.
-#     2. Implicitly set by Docker Linux 'user namespaces' feature [4].
+#     2. Explicitly set by Docker Linux 'user namespaces' feature [4].
 #     3. Implicitly set to the same value as the user who runs container.
 #
 #   By default, all docker images have non-deterministic UID and GID. The
 #   non-deterministic values are allocated at image compile time [2].
 #
-#   Container can change the UID with explicit ``USER`` instruction in the
-#   Dockerfile. If the ``USER`` instruction is set to a specific UID value,
-#   the container is run with that UID. The explicitly set UID may or may
-#   not exist in the host. If the used UID value exists by accident in the
-#   host, the user in container will gain almost the same privileges as the
-#   user in host [6]. It is 'almost' because docker drops some of the Linux
-#   capabilities from containers. In case of a security breach from running
-#   container to host, user will gain same privileges as the user in host.
+#   If host does not define the UID and GID with options 1 or 2, container
+#   can change the UID with explicit ``USER`` instruction in a Dockerfile.
+#   If the ``USER`` instruction is set to a specific UID value, container
+#   is run with that UID (if host did not explicitly define the UID). The
+#   explicitly set UID in Dockerfile may or may not exist in the host. If
+#   the used UID value exists by accident in the host, user in container
+#   will gain almost the same privileges as the user in host [6]. It is
+#   'almost' because docker drops some of the Linux capabilities from
+#   containers. In case of a security breach from running container to
+#   host, user will gain same privileges as the user in host.
 #
 #   Security hardening guidelines for host recommend that the ``dockerd``
 #   is run by the root user in host. When the ``dockerd`` is run by the
 #   root (UID 0), the default UID and GID are from the root user (UID and
 #   GID 0) to run containers. This explains why the user in container is
-#   always part of the root group.
+#   always part of the root group if host did not explicitly define GID
+#   to something else than the root group with options 1 or 2.
 #
-#   There is a feature ``rootles mode`` [10] which brings a non-root mode for
-#   the ``dockerd``. When this feature is used, the UID and GID in container
-#   can be something else than root (0) by default. It is not know how this
-#   impacts for Dockerfile security hardening. For example when multiple
-#   hosts are run with different user (UID and GID). In this case the GID
-#   is not a root group anymore and it can be different for each container.
+#   There is a feature ``rootles mode`` [10] which brings a non-root mode
+#   for the ``dockerd``. When this feature is in use, the UID and GID in
+#   container can be something else than root (0) by default. It is not
+#   know how this impacts the Dockerfile security hardening. For example
+#   when multiple hosts are run with different user (UID and GID). In this
+#   case the GID is not a root group anymore and it can be different for
+#   every container. How ever, this should not be a different case than
+#   the option 1 where host sets the ``--user`` with GID for other group
+#   than a root group.
 #
-#   The UID and GID are problems only because of:
+#   The UID and GID are problems only (mainly?) because of:
 #
-#     1. Security breach where user (UID) breaks out from container to host.
-#     2. Allocating resources like volumes from host.
+#     1. Security breach where user (UID) breaks out from a container.
+#     2. Allocating resources like volumes from host for containers.
 #
-#   From security point of view it is important that the UID used in the
-#   container does not match any privileged user in the host. From resource
-#   management point of view for multi-tenant runtime environments, it is
+#   From security point of view, it is important that the UID used in the
+#   container does not match to any privileged user in the host. From a
+#   resource management point of view for multi-tenant environments, it is
 #   important to have deterministic UID and GID that can be managed by the
-#   operator who runs the host.
+#   operator who runs the infrastructure.
 #
 #   Non-deterministic UID and GID are problems only when container mounts
 #   a volume from host. If there is a non-deterministic UID, it is not
@@ -187,7 +192,7 @@ ENTRYPOINT ["snippy", "--storage-path", "/volume"]
 #   to know in advance to which ranges user should be allocated.
 #
 #   For example OpenShift runs containers using an arbitrarily assigned
-#   user ID [3].
+#   UIDs [3].
 #
 #
 # USE CASES:

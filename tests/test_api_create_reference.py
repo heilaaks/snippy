@@ -77,7 +77,8 @@ class TestApiCreateReference(object):
             path='/api/snippy/rest/references',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
-        assert result.status == falcon.HTTP_201
+        print(result.json)
+        #assert result.status == falcon.HTTP_201
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(storage)
@@ -85,7 +86,7 @@ class TestApiCreateReference(object):
     @staticmethod
     @pytest.mark.usefixtures('create-gitlog-utc')
     def test_api_create_reference_002(server):
-        """Create one Reference reference.
+        """Create one Reference resource.
 
         Send POST /references to create a new reference. Created resource
         is sent in the POST method resource ``data`` attribute as object. The
@@ -651,6 +652,83 @@ class TestApiCreateReference(object):
             path='/api/snippy/rest/references',
             headers={'accept': 'application/vnd.api+json', 'content-type': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body, ensure_ascii=False))
+        assert result.status == falcon.HTTP_201
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(storage)
+
+    @staticmethod
+    @pytest.mark.usefixtures('create-gitlog-utc', 'create-pytest-utc')
+    def test_api_create_reference_013(server):
+        """Create two References with two POST methods.
+
+        Send POST /references twice to create two new references. In this case
+        the HTTP response for each POST request must contain only the created
+        resource.
+        """
+
+        storage = {
+            'data': [
+                Storage.gitlog
+            ]
+        }
+        storage['data'][0]['uuid'] = Content.UUID1
+        request_body = {
+            'data': {
+                'type': 'reference',
+                'attributes': Request.gitlog
+            }
+        }
+        expect_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '580'
+        }
+        expect_body = {
+            'data': [{
+                'type': 'reference',
+                'id': Content.UUID1,
+                'attributes': storage['data'][0]
+            }]
+        }
+        result = testing.TestClient(server.server.api).simulate_post(
+            path='/api/snippy/rest/references',
+            headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
+            body=json.dumps(request_body))
+        assert result.status == falcon.HTTP_201
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(storage)
+
+        storage = {
+            'data': [
+                Storage.pytest,
+                Storage.gitlog
+            ]
+        }
+        storage['data'][0]['uuid'] = Content.UUID2
+        storage['data'][1]['uuid'] = Content.UUID1
+        request_body = {
+            'data': {
+                'type': 'reference',
+                'attributes': Request.pytest
+            }
+        }
+        expect_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '587'
+        }
+        expect_body = {
+            'data': [{
+                'type': 'reference',
+                'id': Content.UUID2,
+                'attributes': storage['data'][0]
+            }]
+        }
+        result = testing.TestClient(server.server.api).simulate_post(
+            path='/api/snippy/rest/references',
+            headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
+            body=json.dumps(request_body))
+        print(result.json)
         assert result.status == falcon.HTTP_201
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)

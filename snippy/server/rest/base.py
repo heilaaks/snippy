@@ -22,13 +22,21 @@
 from snippy.cause import Cause
 from snippy.config.config import Config
 from snippy.config.source.api import Api
+from snippy.content.collection import Collection
 from snippy.logger import Logger
 from snippy.server.rest.generate import Generate
 from snippy.server.rest.validate import Validate
 
 
 class ApiResource(object):
-    """Base class for the resource API endpoints."""
+    """Base class for server API endpoints.
+
+    Note that only one object is actually created from this class. The
+    object is created when the routes are defined for the HTTP server.
+    The server will call the same object all the time. This means that
+    the ``Cause()`` must be reset after each HTTP request to get cause
+    only for one HTTP request.
+    """
 
     # JSON API v1.0 specification media header. Additional character set is a
     # deviation from the specification. It is considered very useful so that
@@ -45,25 +53,25 @@ class ApiResource(object):
         """Create new resource.
 
         Args:
-            request (object): Falcon Request.
-            response (object): Falcon Response.
+            request (obj): Falcon Request().
+            response (obj): Falcon Response().
         """
 
         self._logger.debug('run: %s %s', request.method, request.uri)
-        collection = Validate.json_object(request)
-        for resource in collection:
+        collection = Collection()
+        data = Validate.json_object(request)
+        for resource in data:
             api = Api(self._category, Api.CREATE, resource)
             Config.load(api)
-            self._content.run()
+            self._content.run(collection)
         if Cause.is_ok():
             response.content_type = ApiResource.MEDIA_JSON_API
-            response.body = Generate.collection(self._content.collection, request, response)
+            response.body = Generate.collection(collection, request, response)
             response.status = Cause.http_status()
         else:
             response.content_type = ApiResource.MEDIA_JSON_API
             response.body = Generate.error(Cause.json_message())
             response.status = Cause.http_status()
-
         Cause.reset()
         self._logger.debug('end: %s %s', request.method, request.uri)
 
@@ -72,8 +80,8 @@ class ApiResource(object):
         """Update content.
 
         Args:
-            request (object): Falcon Request.
-            response (object): Falcon Response.
+            request (obj): Falcon Request().
+            response (obj): Falcon Response().
         """
 
         ApiNotImplemented.send(request, response)
@@ -83,8 +91,8 @@ class ApiResource(object):
         """Search resources.
 
         Args:
-            request (object): Falcon Request.
-            response (object): Falcon Response.
+            request (obj): Falcon Request().
+            response (obj): Falcon Response().
             sall (str): Search all ``sall`` path parameter.
             stag (str): Search tags ``stag`` path parameter.
             sgrp (str): Search groups ``sgrp`` path parameter.
@@ -119,8 +127,8 @@ class ApiResource(object):
         """Delete resource.
 
         Args:
-            request (object): Falcon Request.
-            response (object): Falcon Response.
+            request (obj): Falcon Request().
+            response (obj): Falcon Response().
         """
 
         self._logger.debug('run: %s %s', request.method, request.uri)
@@ -138,8 +146,8 @@ class ApiResource(object):
         """Respond with allowed methods.
 
         Args:
-            request (object): Falcon Request.
-            response (object): Falcon Response.
+            request (obj): Falcon Request().
+            response (obj): Falcon Response().
             sall (str): Search all ``sall`` path parameter.
             stag (str): Search tags ``stag`` path parameter.
             sgrp (str): Search groups ``sgrp`` path parameter.
@@ -162,8 +170,8 @@ class ApiResourceId(object):
         """Update resource.
 
         Args:
-            request (object): Falcon Request.
-            response (object): Falcon Response.
+            request (obj): Falcon Request().
+            response (obj): Falcon Response().
             identity (str): Partial or full message digest or UUID.
         """
 
@@ -192,8 +200,8 @@ class ApiResourceId(object):
         specifications. See the Snippy documentation for more information.
 
         Args:
-            request (object): Falcon Request.
-            response (object): Falcon Response.
+            request (obj): Falcon Request().
+            response (obj): Falcon Response().
             identity (str): Partial or full message digest or UUID.
         """
 
@@ -222,8 +230,8 @@ class ApiResourceId(object):
         """Delete resource based on the resource ID.
 
         Args:
-            request (object): Falcon Request.
-            response (object): Falcon Response.
+            request (obj): Falcon Request().
+            response (obj): Falcon Response().
             identity (str): Partial or full message digest or UUID.
         """
 
@@ -247,8 +255,8 @@ class ApiResourceId(object):
         """Update resource based on the resource ID.
 
         Args:
-            request (object): Falcon Request.
-            response (object): Falcon Response.
+            request (obj): Falcon Request().
+            response (obj): Falcon Response().
             identity (str): Partial or full message digest or UUID.
         """
 
@@ -275,8 +283,8 @@ class ApiResourceId(object):
         """Update partial resource based on resource ID.
 
         Args:
-            request (object): Falcon Request.
-            response (object): Falcon Response.
+            request (obj): Falcon Request().
+            response (obj): Falcon Response().
             identity (str): Partial or full message digest or UUID.
         """
 
@@ -291,8 +299,8 @@ class ApiResourceId(object):
         """Respond with allowed methods.
 
         Args:
-            request (object): Falcon Request.
-            response (object): Falcon Response.
+            request (obj): Falcon Request().
+            response (obj): Falcon Response().
             identity (str): Partial or full message digest or UUID.
         """
 
@@ -317,8 +325,8 @@ class ApiResourceIdField(object):
         specifications. See the Snippy documentation for more information.
 
         Args:
-            request (object): Falcon Request.
-            response (object): Falcon Response.
+            request (obj): Falcon Request().
+            response (obj): Falcon Response().
             identity (str): Partial or full message digest or UUID.
             field (str): Resource attribute.
         """
@@ -349,8 +357,8 @@ class ApiResourceIdField(object):
         """Respond with allowed methods.
 
         Args:
-            request (object): Falcon Request.
-            response (object): Falcon Response.
+            request (obj): Falcon Request().
+            response (obj): Falcon Response().
             identity (str): Partial or full message digest or UUID.
             field (str): Resource attribute.
         """
@@ -367,8 +375,8 @@ class ApiNotImplemented(object):  # pylint: disable=too-few-public-methods
         """Send standard 405 Not Allowed HTTP response.
 
         Args:
-            request (object): Falcon Request.
-            response (object): Falcon Response.
+            request (obj): Falcon Request().
+            response (obj): Falcon Response().
         """
 
         Cause.push(Cause.HTTP_METHOD_NOT_ALLOWED, 'fields api does not support method: {}'.format(request.method))

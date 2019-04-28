@@ -1,5 +1,4 @@
 ## WORKING
-   - [ ] Why posting on container with mount frmo host causes response with many resources? Fix!
    - [ ] Security log printed incorrectly from GET limit=20 when -vv JSON enabled. The -vv should already truncate the log. Change or warn?
    - [ ] Make docker tests run parallel. Now the container removal is based on image name that is not good. must be based on container hash.
    - [ ] Make more tests for Docker use cases

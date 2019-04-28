@@ -34,7 +34,7 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
         self._category = category
         self._run_cli = run_cli
         self._storage = storage
-        self._collection = Collection()
+        self._collection = None
 
     @property
     def collection(self):
@@ -191,11 +191,13 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
             self._storage.import_content(collection)
 
     @Logger.timeit
-    def run(self):
+    def run(self, collection=Collection()):
         """Run operation."""
 
         self._logger.debug('run: %s :content', self._category)
+
         Config.content_category = self._category
+        self.collection = collection
         if Config.is_operation_create:
             self.create()
         elif Config.is_operation_search:
@@ -212,5 +214,3 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
             Cause.push(Cause.HTTP_BAD_REQUEST, 'unknown operation for: {}'.format(self._category))
 
         self._logger.debug('end: %s :content', self._category)
-
-        return self.collection

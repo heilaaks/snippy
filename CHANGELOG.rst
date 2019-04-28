@@ -28,6 +28,7 @@ Bugfixes
 
 * Fix install requirement for PyYAML version.
 * Fix multiple server startup problems in Docker container.
+* Fix POST HTTP response when multiple POST requests were processed.
 * Fix creating new content with prefilled templates.
 * Fix exporting and importing content template.
 * Fix error when content matching to a text template is saved.
@@ -41,6 +42,11 @@ Security
 * Remove setuid/setgid bit from binaries in Docker image.
 * Remove unnecessary file permissions in Docker image.
 * Change IP address where server binds in Docker container.
+
+Documentation
+~~~~~~~~~~~~~
+
+* Add containerized server example usage in Dockerfile.
 
 0.9.0 (2019-02-02)
 ------------------

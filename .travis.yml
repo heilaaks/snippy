@@ -4,6 +4,7 @@ install:
     - "python -m pip install pluggy==0.9.0"
     - "python -m pip install codecov==2.0.15"
     - "make install-test"
+cache: pip
 jobs:
   include:
     - stage: test

@@ -100,9 +100,6 @@ class Database(object):
         if not self._connection:
             self._connection = self._connect()
 
-        if not self._connection:
-            Config.failure = True
-
     def disconnect(self):
         """Close database connection."""
 
@@ -501,8 +498,12 @@ class Database(object):
         """Create the database."""
 
         connection = None
-        schema = Const.EMPTY
         location = Config.storage_file
+        if not location:
+            self._logger.debug('database not connected')
+            return connection
+
+        schema = Const.EMPTY
         storage_schema = Config.storage_schema
         if os.path.isfile(storage_schema):
             with open(storage_schema, 'rt') as schema_file:
@@ -553,6 +554,9 @@ class Database(object):
                 cursor.execute(schema)
         except (sqlite3.Error, psycopg2.Error) as error:
             self._set_error(error)
+
+        if not connection:
+            Config.failure = True
 
         return connection
 

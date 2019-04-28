@@ -474,6 +474,9 @@ class Config(object):
     def _storage_file(cls):
         """Construct store file with absolute path."""
 
+        if cls.source.run_healthcheck:
+            return ''
+
         if Config.storage_path:
             storage_path = Config.storage_path
         else:

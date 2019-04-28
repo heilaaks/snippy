@@ -1,5 +1,4 @@
 ## WORKING
-   - [ ] It mighd be a good idea not to use the real database in healthcheck. This may leak something or cause concurrency problems. Remove the neeed for --storage-path with healthcheck. Would be good to get rid of the server-readonly also.
    - [ ] Why posting on container with mount frmo host causes response with many resources? Fix!
    - [ ] Make docker tests run parallel. Now the container removal is based on image name that is not good. must be based on container hash.
    - [ ] Make more tests for Docker use cases

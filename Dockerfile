@@ -55,9 +55,7 @@ RUN apk add \
 HEALTHCHECK --interval=10s \
             --timeout=3s \
             CMD snippy \
-                --server-healthcheck \
-                --server-readonly \
-                --storage-path /volume
+                --server-healthcheck
 
 EXPOSE 32768
 
@@ -638,9 +636,7 @@ ENTRYPOINT ["snippy", "--storage-path", "/volume"]
 #      HEALTHCHECK --interval=10s \
 #                  --timeout=3s \
 #                  CMD snippy \
-#                      --server-healthcheck \
-#                      --server-readonly \
-#                      --storage-path /volume
+#                      --server-healthcheck
 #      ```
 #
 #  7. Exposed container port can not be configured

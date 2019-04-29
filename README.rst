@@ -84,7 +84,7 @@ Related work
    :target: https://pyup.io/repos/github/heilaaks/snippy/
 
 .. |badge-docker| image:: https://images.microbadger.com/badges/image/heilaaks/snippy.svg
-   :target: https://microbadger.com/images/heilaaks/snippy
+   :target: https://hub.docker.com/r/heilaaks/snippy
 
 .. _REST API server: https://app.swaggerhub.com/apis/heilaaks/snippy/0.10.0
 

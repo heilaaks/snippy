@@ -13,7 +13,7 @@ Please describe the fault briefly. The details are in the last chapter.
 
 **Steps to reproduce**
 
-If possible, please add copy paste the steps to reproduce the behavior.
+If possible, please add copy paste steps to reproduce the behavior.
 
 **Expected behavior**
 

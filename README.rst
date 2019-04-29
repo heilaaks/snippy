@@ -1,4 +1,4 @@
-|badge-pypiv| |badge-pys| |badge-pyv| |badge-cov| |badge-docs| |badge-build| |badge-pyup| |badge-docker|
+|badge-pypiv| |badge-pys| |badge-pyv| |badge-cov| |badge-docs| |badge-build| |badge-docker|
 
 Snippy
 ======

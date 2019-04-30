@@ -1287,6 +1287,88 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+    @staticmethod
+    @pytest.mark.usefixtures('default-snippets')
+    def test_cli_search_snippet_043(snippy, capsys):
+        """Search snippets with search shortcut.
+
+        Search snippets with only the search operation followed by search
+        keywords.
+        """
+
+        output = (
+            '1. Remove docker image with force @docker [53908d68425c61dc]',
+            '',
+            '   $ docker rm --force redis',
+            '',
+            '   # cleanup,container,docker,docker-ce,moby',
+            '   > https://docs.docker.com/engine/reference/commandline/rm/',
+            '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
+            '',
+            'OK',
+            ''
+        )
+        cause = snippy.run(['snippy', 'search', 'redis', '--no-ansi'])
+        out, err = capsys.readouterr()
+        assert cause == Cause.ALL_OK
+        assert out == Const.NEWLINE.join(output)
+        assert not err
+
+    @staticmethod
+    @pytest.mark.usefixtures('default-snippets')
+    def test_cli_search_snippet_044(snippy, capsys):
+        """Search snippets with search shortcut.
+
+        Search snippets with the search shortcut. In this case the search
+        matches to two resources but the ``--limit`` option limits printed
+        resources to one.
+        """
+
+        output = (
+            '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+            '',
+            '   $ docker rm --volumes $(docker ps --all --quiet)',
+            '',
+            '   # cleanup,container,docker,docker-ce,moby',
+            '   > https://docs.docker.com/engine/reference/commandline/rm/',
+            '',
+            'OK',
+            ''
+        )
+        cause = snippy.run(['snippy', 'search', '.', '--limit', '1', '--no-ansi'])
+        out, err = capsys.readouterr()
+        assert cause == Cause.ALL_OK
+        assert out == Const.NEWLINE.join(output)
+        assert not err
+
+    @staticmethod
+    @pytest.mark.usefixtures('default-snippets', 'import-netcat')
+    def test_cli_search_snippet_045(snippy, capsys):
+        """Search snippets with search shortcut.
+
+        Search snippets with the search shortcut. In this case the search all
+        is used but the ``--sgrp`` limits the search to a category that has
+        only one resource.
+        """
+
+        output = (
+            '1. Test if specific port is open @linux [f3fd167c64b6f97e]',
+            '',
+            '   $ nc -v 10.183.19.189 443',
+            '   $ nmap 10.183.19.189',
+            '',
+            '   # linux,netcat,networking,port',
+            '   > https://www.commandlinux.com/man-page/man1/nc.1.html',
+            '',
+            'OK',
+            ''
+        )
+        cause = snippy.run(['snippy', 'search', '.', '--sgrp', 'linux', '--no-ansi'])
+        out, err = capsys.readouterr()
+        assert cause == Cause.ALL_OK
+        assert out == Const.NEWLINE.join(output)
+        assert not err
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

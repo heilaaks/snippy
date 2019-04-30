@@ -240,14 +240,18 @@ class Cli(ConfigSourceBase):
         # and when argument parsing fails. The --no-ansi flag is needed before
         # custom help action. Because of this, help and positional arguments
         # are not included when the first set of options is parsed to read the
-        # needed flags for help commads.
+        # needed flags for the custom help command.
         #
         # Positional arguments are not included into the first parsing in
         # order to get the --help <option> combination to work. The <option>
         # after the --help would be parsed as positional argument and that
         # would fail the parsing.
+        #
+        # There is a custom shortcut to allow quick search without any search
+        # options. When the shortcut is used, the search is made based on the
+        # ``--sall`` option.
         try:
-            arguments, _ = parser.parse_known_args(args)
+            arguments, unknown_args = parser.parse_known_args(args)
             arguments = vars(arguments)
 
             # positional arguments
@@ -257,7 +261,14 @@ class Cli(ConfigSourceBase):
             # support options
             support.add_argument('-h', '--help', nargs='?', action=CustomHelpAction, no_ansi=arguments.get('no_ansi', False), help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
 
-            arguments = vars(parser.parse_args(args))
+            # Positional arguments and support options that are not yet parsed.
+            valid_args = operations + ('-h', '--help')
+
+            if self._use_search_shortcut(unknown_args, valid_args):
+                arguments = vars(parser.parse_known_args(args)[0])
+                arguments['sall'] = unknown_args[1:]
+            else:
+                arguments = vars(parser.parse_args(args))
             arguments['failure'] = False
             arguments['failure_message'] = ''
         except SystemExit:
@@ -298,6 +309,28 @@ class Cli(ConfigSourceBase):
             parser.print_help(sys.stdout)
             self.failure = True
             self.failure_message = 'no command line arguments'
+
+    @staticmethod
+    def _use_search_shortcut(unknown_args, valid_args):
+        """Test if a search shortcut is used.
+
+        Decide if shorcut for content search is used. The argument parsing is
+        made in two phases. This method is intended to be used between the
+        first and second phase. The unknown arguments are from the first phase
+        and the valid arguments are to be validated in the last phase.
+
+        Args:
+            unknown_args (list): List of unknown arguments.
+            valid_args (list): List of valid arguments.
+
+        Returns:
+            bool: True if search shortcut is used.
+        """
+
+        if not set(unknown_args).issubset(valid_args) and unknown_args and unknown_args[0] == 'search':
+            return True
+
+        return False
 
     @staticmethod
     def _set_editor(arguments):

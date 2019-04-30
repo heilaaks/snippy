@@ -18,6 +18,7 @@ Breaking changes
 New features
 ~~~~~~~~~~~~
 
+* Add search shortcut for command line interface.
 * Add support for ``name``, ``source`` and ``versions`` content fields.
 * Add ``gzip`` compression support for REST API responses.
 * Add option to import all default content when server is started.
@@ -34,6 +35,7 @@ Bugfixes
 * Fix error when content matching to a text template is saved.
 * Fix duplicated content field values when updating content.
 * Fix default value setting to ``groups`` field if no value was given.
+* Fix error message from duplicated content when defaults imported again.
 * All commits in `0.10.0`_.
 
 Security

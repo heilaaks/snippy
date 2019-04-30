@@ -150,7 +150,6 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--reference', '-f', './all-references.txt'])
             assert cause == Cause.ALL_OK
-            print(Content.output())
             Content.assert_storage(content)
             mock_file.assert_called_once_with('./all-references.txt', 'r')
 

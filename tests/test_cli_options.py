@@ -244,7 +244,6 @@ class TestCliOptions(object):
         snippy = Snippy(['snippy', '-a'])
         snippy.run()
         out, err = capsys.readouterr()
-        print(out)
         assert out == Const.EMPTY
         assert err == Const.NEWLINE.join(output)
         assert not caplog.records[:]

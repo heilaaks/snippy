@@ -1209,7 +1209,6 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/api/snippy/rest/snippets/54e41e9b52/groups',
             headers={'accept': 'application/vnd.api+json'})
-        print(result.json)
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)

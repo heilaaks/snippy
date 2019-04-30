@@ -77,8 +77,7 @@ class TestApiCreateReference(object):
             path='/api/snippy/rest/references',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
-        print(result.json)
-        #assert result.status == falcon.HTTP_201
+        assert result.status == falcon.HTTP_201
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(storage)
@@ -728,7 +727,6 @@ class TestApiCreateReference(object):
             path='/api/snippy/rest/references',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
-        print(result.json)
         assert result.status == falcon.HTTP_201
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)

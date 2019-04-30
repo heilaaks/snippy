@@ -201,8 +201,9 @@ class Database(object):
             execute(query, qargs)
             stored = True
         except (sqlite3.IntegrityError, psycopg2.IntegrityError):
-            self._logger.info('database integrity error with query: {}'.format(query))
-            self._logger.info('database integrity error with query arguments: {}'.format(qargs))
+            if not Config.defaults:
+                self._logger.info('database integrity error with query: {}'.format(query))
+                self._logger.info('database integrity error with query arguments: {}'.format(qargs))
             for resource in collection:
                 try:
                     execute(query, [resource.dump_qargs()])
@@ -444,7 +445,7 @@ class Database(object):
         if self._connection:
             query = ('SELECT * FROM contents WHERE data={0}'.format(self._placeholder))
             qargs = [Const.DELIMITER_DATA.join(map(Const.TEXT_TYPE, data))]
-            self._logger.debug('running select data query: %s :with qargs: %s', query, qargs)
+            self._logger.debug('search content with data attribute: %s' % qargs)
             try:
                 with closing(self._connection.cursor()) as cursor:
                     cursor.execute(query, qargs)
@@ -455,7 +456,7 @@ class Database(object):
         else:
             Cause.push(Cause.HTTP_500, 'internal error prevented searching from database')
 
-        self._logger.debug('selected rows %s', rows)
+        self._logger.debug('selected rows:\n%s', rows)
 
         return collection
 
@@ -750,7 +751,7 @@ class Database(object):
         digest = self._get_digest(resource)
         match = self._catch_violating_column.search(str(error))
         if match:
-            if match.group('column') == 'uuid':
+            if match.group('column') == 'uuid' and not Config.defaults:
                 cause = Cause.HTTP_500
             else:
                 cause = Cause.HTTP_CONFLICT
@@ -758,9 +759,10 @@ class Database(object):
         else:
             self._logger.info('database integrity error parse failure: {}'.format(error))
             Cause.push(Cause.HTTP_CONFLICT, 'content already exist with digest: {:.16}'.format(digest))
-        self._logger.info('database integrity error from database: {}'.format(traceback.format_exc()))
-        self._logger.info('database integrity error from resource: {}'.format(Logger.remove_ansi(str(resource))))
-        self._logger.info('database integrity error stack trace: {}'.format(traceback.format_stack(limit=20)))
+        if not Config.defaults:
+            self._logger.info('database integrity error from database: {}'.format(traceback.format_exc()))
+            self._logger.info('database integrity error from resource: {}'.format(Logger.remove_ansi(str(resource))))
+            self._logger.info('database integrity error stack trace: {}'.format(traceback.format_stack(limit=20)))
 
     def _set_data_error(self, error):
         """Set data error.

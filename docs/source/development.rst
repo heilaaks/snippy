@@ -68,7 +68,7 @@ Apache Bench
     # Install testing tools.
     dnf install httpd-tools
     go get -u github.com/rakyll/hey
-    
+
     # Generate TLS server certificates
     openssl req -x509 -newkey rsa:4096 -nodes -keyout server.key -out server.crt -days 356 -subj "/C=US/O=Snippy/CN=127.0.0.1"
 
@@ -346,17 +346,17 @@ Apache Bench
     /root/go/bin/hey -n 1000 -c 1 http://127.0.0.1:8080/api/snippy/rest/snippets?limit=20
     /root/go/bin/hey -n 10000 -c 1 http://127.0.0.1:8080/api/snippy/rest/snippets?limit=20
     /root/go/bin/hey -n 10000 -c 1 http://127.0.0.1:8080/api/snippy/rest/snippets?limit=20
-    
+
     Summary:
       Total:        21.4936 secs
       Slowest:      0.0139 secs
       Fastest:      0.0017 secs
       Average:      0.0021 secs
       Requests/sec: 465.2553
-      
+
       Total data:   319140000 bytes
       Size/request: 31914 bytes
-    
+
     Response time histogram:
       0.002 [1]     |
       0.003 [9489]  |
@@ -369,8 +369,8 @@ Apache Bench
       0.011 [2]     |
       0.013 [0]     |
       0.014 [1]     |
-    
-    
+
+
     Latency distribution:
       10% in 0.0018 secs
       25% in 0.0019 secs
@@ -379,14 +379,14 @@ Apache Bench
       90% in 0.0021 secs
       95% in 0.0029 secs
       99% in 0.0071 secs
-    
+
     Details (average, fastest, slowest):
       DNS+dialup:   0.0001 secs, 0.0017 secs, 0.0139 secs
       DNS-lookup:   0.0000 secs, 0.0000 secs, 0.0000 secs
       req write:    0.0000 secs, 0.0000 secs, 0.0002 secs
       resp wait:    0.0020 secs, 0.0016 secs, 0.0127 secs
       resp read:    0.0000 secs, 0.0000 secs, 0.0004 secs
-    
+
     Status code distribution:
       [200] 10000 responses
 
@@ -398,17 +398,17 @@ Apache Bench
     /root/go/bin/hey -n 1000 -c 1 https://127.0.0.1:8080/api/snippy/rest/snippets?limit=20
     /root/go/bin/hey -n 1000 -c 1 https://127.0.0.1:8080/api/snippy/rest/snippets?limit=20
     /root/go/bin/hey -n 10000 -c 1 https://127.0.0.1:8080/api/snippy/rest/snippets?limit=20
-    
+
     Summary:
       Total:        108.0445 secs
       Slowest:      0.0409 secs
       Fastest:      0.0075 secs
       Average:      0.0108 secs
       Requests/sec: 92.5545
-      
+
       Total data:   319140000 bytes
       Size/request: 31914 bytes
-    
+
     Response time histogram:
       0.008 [1]     |
       0.011 [7368]  |
@@ -421,8 +421,8 @@ Apache Bench
       0.034 [0]     |
       0.038 [1]     |
       0.041 [1]     |
-    
-    
+
+
     Latency distribution:
       10% in 0.0078 secs
       25% in 0.0079 secs
@@ -431,14 +431,14 @@ Apache Bench
       90% in 0.0215 secs
       95% in 0.0217 secs
       99% in 0.0226 secs
-    
+
     Details (average, fastest, slowest):
       DNS+dialup:   0.0067 secs, 0.0075 secs, 0.0409 secs
       DNS-lookup:   0.0000 secs, 0.0000 secs, 0.0000 secs
       req write:    0.0000 secs, 0.0000 secs, 0.0002 secs
       resp wait:    0.0039 secs, 0.0021 secs, 0.0180 secs
       resp read:    0.0001 secs, 0.0001 secs, 0.0007 secs
-    
+
     Status code distribution:
       [200] 10000 responses
 
@@ -451,17 +451,17 @@ Apache Bench
 
     # Bench POST with hey.
     /root/go/bin/hey -m POST -T application/vnd.api+json -D snippet.txt -n 1000 -c 1 http://127.0.0.1:8080/api/snippy/rest/snippets?limit=20
-    
+
     Summary:
       Total:        2.8403 secs
       Slowest:      0.0255 secs
       Fastest:      0.0027 secs
       Average:      0.0028 secs
       Requests/sec: 352.0781
-      
+
       Total data:   494000 bytes
       Size/request: 494 bytes
-    
+
     Response time histogram:
       0.003 [1]     |
       0.005 [994]   |
@@ -474,8 +474,8 @@ Apache Bench
       0.021 [1]     |
       0.023 [0]     |
       0.025 [1]     |
-    
-    
+
+
     Latency distribution:
       10% in 0.0027 secs
       25% in 0.0027 secs
@@ -484,29 +484,29 @@ Apache Bench
       90% in 0.0029 secs
       95% in 0.0030 secs
       99% in 0.0035 secs
-    
+
     Details (average, fastest, slowest):
       DNS+dialup:   0.0001 secs, 0.0027 secs, 0.0255 secs
       DNS-lookup:   0.0000 secs, 0.0000 secs, 0.0000 secs
       req write:    0.0000 secs, 0.0000 secs, 0.0002 secs
       resp wait:    0.0027 secs, 0.0026 secs, 0.0246 secs
       resp read:    0.0000 secs, 0.0000 secs, 0.0003 secs
-    
+
     Status code distribution:
       [409] 1000 responses
-    
+
     /root/go/bin/hey -m POST -T application/vnd.api+json -D snippet.txt -n 1000 -c 1 http://127.0.0.1:8080/api/snippy/rest/snippets?limit=20
-    
+
     Summary:
       Total:        2.8316 secs
       Slowest:      0.0184 secs
       Fastest:      0.0027 secs
       Average:      0.0028 secs
       Requests/sec: 353.1552
-      
+
       Total data:   494000 bytes
       Size/request: 494 bytes
-    
+
     Response time histogram:
       0.003 [1]     |
       0.004 [987]   |
@@ -519,8 +519,8 @@ Apache Bench
       0.015 [0]     |
       0.017 [0]     |
       0.018 [1]     |
-    
-    
+
+
     Latency distribution:
       10% in 0.0027 secs
       25% in 0.0027 secs
@@ -529,14 +529,14 @@ Apache Bench
       90% in 0.0029 secs
       95% in 0.0030 secs
       99% in 0.0045 secs
-    
+
     Details (average, fastest, slowest):
       DNS+dialup:   0.0001 secs, 0.0027 secs, 0.0184 secs
       DNS-lookup:   0.0000 secs, 0.0000 secs, 0.0000 secs
       req write:    0.0000 secs, 0.0000 secs, 0.0003 secs
       resp wait:    0.0027 secs, 0.0025 secs, 0.0167 secs
       resp read:    0.0000 secs, 0.0000 secs, 0.0003 secs
-    
+
     Status code distribution:
       [409] 1000 responses
 
@@ -552,7 +552,8 @@ Modules
 snippy.logger
 ~~~~~~~~~~~~~
 
-**Service**
+Description
+```````````
 
 Logger class offers logger for each caller based on the given module name. The
 configuration is controlled by global settings that are inherited by every
@@ -561,52 +562,21 @@ logger.
 The effective log level for all the loggers created under the 'snippy' logger
 namespace is inherited from the root logger which controls the log level. This
 relies on that the module level logger does not set the level and it remains
-as NOTSET. This causes module level logger to propagate the log record to parent
-where it eventually reaches the 'snippy' top level namespace that is just below
-the 'root' logger.
+as ``NOTSET``. This causes module level logger to propagate the log record to
+parent where it eventually reaches the ``snippy`` top level namespace that is
+just below the ``root`` logger.
 
-**Behaviour**
+Design
+``````
 
-By default, there are no logs printed to the users. This applies also to error
-logs.
+.. note::
 
-There are two levels of logging verbosity. All logs are printed in full length
-without filters with the --debug option. The -vv (very verbose) option prints
-limited length log messages in lower case letters.
+   This chapter describes the Snippy logging design and rules, not the Logger
+   class behaviour.
 
-There are two formats for logs: text (default) and JSON. JSON logs can be enabled
-with --log-json option. A JSON log has more information fields than text formatted
-log. When -vv option is used with JSON logs, it truncates log message in the same
-way as with text logs.
+.. note::
 
-Timestamps are in local time with text formatted logs. In case of JSON logs, the
-timestamp is in GMT time zone and it follows strictly the ISO8601 format. Both
-timestamps are in millisecond granularity.
-
-The log levels are are from Python logger but they follow severity level names
-from `RFC 5424 <https://en.wikipedia.org/wiki/Syslog#Severity_level>`_. There is
-a custom security level reserved only for security events.
-
-All logs include operation ID that uniquely identifies all logs within specific
-operation. The operation ID must be refreshed by logger user after each operation
-is completed or the method must be wrapped with @Logger.timeit decorator which
-takes care of the OID refreshing.
-
-All logs including Gunicorn server logs, are formatted to match format defined in
-this logger.
-
-All logs are printed to stdout.
-
-**Security**
-
-There is a custom security level above critical level. This log level must be
-used only when there is a suspected security related event.
-
-There is a hard maximum for log messages length for safety and security reasons.
-This tries to prevent extremely long log messages which may cause problems for
-the server.
-
-**Rules**
+   The are the logging rules that must be followed.
 
    #. Only OK or NOK with cause text must be printed with default settings.
    #. There must be no logs printed to user.
@@ -619,19 +589,92 @@ the server.
    #. All external libraries must follow the same log format.
    #. All logs must be printed to stdout.
 
-**Examples**
+**Overview**
 
-   .. code-block:: text
+There are two levels of logging verbosity. All logs are printed in full length
+without modifications with the ``--debug`` option unless the maximum log message
+length for safety and security reason is exceeded. The very verbose option ``-vv``
+prints limited length log messages with all lower case letters.
 
-      # Variable printed at the end of log message is separated with colon.
-      2018-06-03 19:20:54.838 snippy[5756] [d] [b339bab5]: configured option server: true
+There are two formats for logs: text (default) and JSON. JSON logs can be enabled
+with the ``--log-json`` option. A JSON log has more information fields than the
+text formatted log. When the ``-vv`` option is used with JSON logs, it truncates
+log message in the same way as with the text logs.
 
-      # Variable printed in the middle of log message is separated colons and
-      # space from both sides. The purpose is to provide possibility to allow
-      # log message post processing and to parse variables from log messages.
-      2018-06-03 19:20:54.838 snippy[5756] [d] [b339bab5]: server ip: 127.0.0.1 :and port: 8080
+All logs including Gunicorn server logs, are formatted to match format defined in
+this logger.
 
-.. autoclass:: snippy.logger.Logger
+All logs are printed to stdout with the exception of command line parse failures
+that are printed to stdout.
+
+Text logs are optimized for a local development done by for humans and JSON logs
+for automation and analytics.
+
+There are no logs printed to users by default. This applies also to error logs.
+
+**Timestamps**
+
+Timestamps are in local time with text formatted logs. In case of JSON logs, the
+timestamp is in GMT time zone and it follows strictly the ISO8601 format. Text
+log timestamp is presented in millisecond granularity and JSON log in microsecond
+granularity.
+
+Python 2 does not support timezone parsing. The ``%z`` directive is available only
+from Python 3.2 onwards. From Python 3.7 and onwards, the datetime ``strptime`` is
+able to parse timezone in format that includes colon delimiter in UTC offset.
+
+>>> import datetime
+>>>
+>>> timestamp = '2018-02-02T02:02:02.000001+00:00'
+>>>
+>>> # Python 3.7 and later
+>>> datetime.datetime.strptime(timestamp, '%Y-%m-%dT%H:%M:%S.%f%z')
+>>>
+>>> # Python 3 before 3.7
+>>> timestamp = timestamp.replace('+00:00', '+0000')
+>>> datetime.datetime.strptime(timestamp, '%Y-%m-%dT%H:%M:%S.%f%z')
+>>>
+>>> # Python 2.7
+>>> timestamp = timestamp[:-6]  # Remove last '+00:00'.
+>>> datetime.datetime.strptime(timestamp, '%Y-%m-%dT%H:%M:%S.%f')
+
+**Log levels**
+
+The log levels are are from Python logger but they follow severity level names
+from `RFC 5424 <https://en.wikipedia.org/wiki/Syslog#Severity_level>`_. There is
+a custom security level reserved only for security events.
+
+**Operation ID (OID)**
+
+All logs include operation ID that uniquely identifies all logs within specific
+operation. The operation ID must be refreshed by logger user after each operation
+is completed or the method must be wrapped with the ``@Logger.timeit`` decorator
+which takes care of the OID refreshing.
+
+Security
+````````
+
+There is a custom security level above critical level. This log level must be
+used only when there is a suspected security related event.
+
+There is a hard maximum for log messages length for safety and security reasons.
+This tries to prevent extremely long log messages which may cause problems for
+the server.
+
+Examples
+````````
+
+.. code-block:: text
+
+  # Variable printed at the end of log message is separated with colon.
+  2018-06-03 19:20:54.838 snippy[5756] [d] [b339bab5]: configured option server: true
+  
+  # Variable printed in the middle of log message is separated colons and
+  # space from both sides. The purpose is to provide possibility to allow
+  # log message post processing and to parse variables from log messages.
+  2018-06-03 19:20:54.838 snippy[5756] [d] [b339bab5]: server ip: 127.0.0.1 :and port: 8080
+
+.. automodule:: snippy.logger
    :members:
    :member-order: bysource
 

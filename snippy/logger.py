@@ -22,6 +22,8 @@
 from __future__ import print_function
 
 import logging
+import pprint
+import re
 import sys
 import time
 from collections import OrderedDict
@@ -40,7 +42,7 @@ except ImportError:
 
 
 class Logger(object):
-    """Global logging services."""
+    """Global logging service."""
 
     # Default maximum length of log message.
     DEFAULT_LOG_MSG_MAX = 80
@@ -54,8 +56,12 @@ class Logger(object):
     # Unique operation ID that identifies logs for each operation.
     SERVER_OID = format(getrandbits(32), "08x")
 
-    # Custom log format
+    # Custom log format.
     LOG_FORMAT = '%(asctime)s %(appname)s[%(process)04d] [%(levelname).1s] [%(oid)s]: %(message)s'
+
+    RE_MATCH_LEADING_WHITESPACES = re.compile(r'''
+        (^\s+)    # Match leading whitespaces on every line of a multiline string.
+        ''', re.MULTILINE | re.VERBOSE)
 
     # Global logger configuration.
     CONFIG = {
@@ -85,18 +91,18 @@ class Logger(object):
     # For example 'broken pipe' errors with grep can cause these when logs
     # are enabled.
     #
-    # There was an effort to implement custom StreamHandler to write log
+    # There was an effort to implement a custom StreamHandler to write log
     # messages to stderr instead of stdout if there is a broken pipe error.
-    # The problem was the 'broken pipe' exception does not exist in Python 2
-    # and thus making generic code is difficult.
+    # The problem was that the 'broken pipe' exception does not exist in
+    # Python 2 and thus making a generic code is difficult.
     logging.raiseExceptions = False
 
     @classmethod
     def get_logger(cls, name=__name__):
         """Get logger.
 
-        A custom logger adapater is returned to support custom level with
-        additional logging parameters.
+        A custom logger adapater is returned to support a custom log level
+        and additional logging parameters.
 
         Args:
             name (str): Name of the module that requests a Logger.
@@ -120,9 +126,9 @@ class Logger(object):
     def configure(cls, config):
         """Set and update logger configuration.
 
-        The debug and very_verbose options have precedence over the
-        quiet option. That is, if any of the debug options are enabled,
-        quiet option does not have effect.
+        The ``debug`` and ``very_verbose`` options have precedence over the
+        ``quiet`` option. That is, either of the debug options are enabled,
+        the quiet option does not have any effect.
 
         Args:
             config (dict): Logger configuration dictionary.
@@ -246,8 +252,8 @@ class Logger(object):
     def print_status(cls, status):
         """Print status information like exit cause or server running.
 
-        Print user formatted log messages unless the JSON log formating
-        is enabled. The debug and very_verbose options have precedence
+        Print user formatted log messages unless the JSON log formating is
+        enabled. The ``debug`` and ``very_verbose`` options have precedence
         over the quiet option.
 
         If JSON logs are used, the format of the log must always be JSON.
@@ -348,8 +354,8 @@ class Logger(object):
 class CustomLoggerAdapter(logging.LoggerAdapter):  # pylint: disable=too-few-public-methods
     """Custom logger adapter.
 
-    The logging.LoggerAdapter does not support custom log levels
-    and therefore they need to be implemented here.
+    The logging.LoggerAdapter does not support custom log levels and
+    therefore they need to be implemented here.
     """
 
     def __init__(self, logger, extra):
@@ -377,6 +383,24 @@ class CustomFormatter(logging.Formatter):
     def format(self, record):
         """Format log record.
 
+        Text logs are optimized for a local development done by for humans
+        and JSON logs for automation and analytics. Text logs are printed
+        by default unless the ``log_json`` option is activated.
+
+        The ``debug`` option prints logs "as is" in full length unless the
+        log message security limit is reached. Text logs are pretty printed
+        with the debug option.
+
+        The ``very_verbose`` option truncates log message to try to keep one
+        log per line for easier reading. The very verbose option prints the
+        whole log in all lower case letters. The very verbose option is made
+        for a local development to provide faster overview of logs compared
+        to debug option output.
+
+        There is a maximum limitation for log message for safety and security
+        reasons. The security maximum is tested after the very verbose option
+        because it already truncates the log.
+
         Gunicorn logs have special conversion for info level logs. In order
         to follow the Snippy logging standard, which defines the usage of
         debug level, Gunicorn informative logs are converted to debug level
@@ -390,33 +414,45 @@ class CustomFormatter(logging.Formatter):
             str: Log string.
         """
 
-        # Debug option tries to print logs "as is" in full length. There is a
-        # maximum limitation for log message for safety and security reasons.
-        # Very verbose option truncates log message in order to try to keep
-        # one log per line for easier log reading. In case of the very verbose
-        # option, log message is printed with all lower case letters.
+        # Pretty print logs. This is feasible only for logs with arguments.
+        # Multiline logs with and without arguments are indented when debug
+        # option is enabled for text logs.
+        if not Logger.CONFIG['log_json'] and (Logger.CONFIG['debug'] and record.args):
+            args = list(record.args)
+            for i, arg in enumerate(args):
+                if isinstance(arg, (list, tuple)):
+                    args[i] = pprint.pformat(arg)
+            record.msg = record.msg % tuple(args)
+            record.msg = record.msg.replace('\n', '\n' + ' ' * 8)
+            record.args = None
+        elif Logger.CONFIG['debug'] and not Logger.CONFIG['log_json'] and not record.args:
+            record.msg = Logger.RE_MATCH_LEADING_WHITESPACES.sub('', record.msg)
+            record.msg = record.msg.replace('\n', '\n' + ' ' * 8)
+
+        # Combine log messages with arguments to one log message string.
         if record.args:
             record.msg = record.msg % record.args
-            if len(record.msg) > Logger.SECURITY_LOG_MSG_MAX:
-                Logger.get_logger().security('long log message detected and truncated: {0}, {1:.{2}}'.format(
-                    len(record.msg), record.msg, Logger.DEFAULT_LOG_MSG_MAX))
-                record.msg = record.msg[:self._snippy_msg_max_security] + (record.msg[self._snippy_msg_max_security:] and
-                                                                           self._snippy_msg_end)
             record.args = None
+
+        # Make Gunicorn server to follow Snippy logging rules.
+        if record.name == 'snippy.server.gunicorn' and record.levelno == logging.INFO:
+            record.levelname = 'debug'
+            record.levelno = logging.DEBUG
+
         if Logger.CONFIG['very_verbose']:
             record.msg = record.msg.replace('\n', ' ').replace('\r', '')
             record.msg = record.msg[:self._snippy_msg_max] + (record.msg[self._snippy_msg_max:] and self._snippy_msg_end)
             record.msg = record.msg.lower()
 
-        if record.name == 'snippy.server.gunicorn' and record.levelno == logging.INFO:
-            record.levelname = 'debug'
-            record.levelno = logging.DEBUG
+        if len(record.msg) > Logger.SECURITY_LOG_MSG_MAX:
+            Logger.get_logger().security('long log message detected and truncated: {0}, {1:.{2}}'.format(
+                len(record.msg), record.msg, Logger.DEFAULT_LOG_MSG_MAX))
+            record.msg = record.msg[:self._snippy_msg_max_security] + (record.msg[self._snippy_msg_max_security:] and
+                                                                       self._snippy_msg_end)
 
+        log_string = super(CustomFormatter, self).format(record)
         if Logger.CONFIG['log_json']:
-            log_string = super(CustomFormatter, self).format(record)
             log_string = self._jsonify(record)
-        else:
-            log_string = super(CustomFormatter, self).format(record)
 
         return log_string
 
@@ -432,12 +468,34 @@ class CustomFormatter(logging.Formatter):
         as floating point number. It is assumed that the microseconds can
         be read by reading three significat digits after point.
 
+        Python 2 does not support timezone parsing. The ``%z`` directive is
+        available only from Python 3.2 onwards. From Python 3.7 and onwards,
+        the datetime ``strptime`` is able to parse timezone in format that
+        includes colon delimiter in UTC offset.
+
         Args:
             record (obj): Logging module LogRecord.
             datefmt (str): Datetime format as accepted by time.strftime().
 
         Returns:
             str: Log timestamp in string format.
+
+        Examples
+        --------
+        >>> import datetime
+        >>>
+        >>> timestamp = '2018-02-02T02:02:02.000001+00:00'
+        >>>
+        >>> # Python 3.7 and later
+        >>> datetime.datetime.strptime(timestamp, '%Y-%m-%dT%H:%M:%S.%f%z')
+        >>>
+        >>> # Python 3 before 3.7
+        >>> timestamp = timestamp.replace('+00:00', '+0000')
+        >>> datetime.datetime.strptime(timestamp, '%Y-%m-%dT%H:%M:%S.%f%z')
+        >>>
+        >>> # Python 2.7
+        >>> timestamp = timestamp[:-6]  # Remove last '+00:00'.
+        >>> datetime.datetime.strptime(timestamp, '%Y-%m-%dT%H:%M:%S.%f')
         """
 
         if Logger.CONFIG['log_json']:
@@ -458,8 +516,18 @@ class CustomFormatter(logging.Formatter):
         """
 
         log = OrderedDict()
-
-        fields = ['asctime', 'appname', 'process', 'oid', 'levelno', 'levelname', 'name', 'lineno', 'thread', 'message']
+        fields = (
+            'asctime',
+            'appname',
+            'process',
+            'oid',
+            'levelno',
+            'levelname',
+            'name',
+            'lineno',
+            'thread',
+            'message'
+        )
         for field in fields:
             log[field] = record.__dict__.get(field)
 
@@ -470,7 +538,7 @@ class CustomFilter(logging.Filter):  # pylint: disable=too-few-public-methods
     """Customer log filter."""
 
     def filter(self, record):
-        """Filtering with dynamic operation ID setting.
+        """Filtering with dynamic operation ID (OID) setting.
 
         Args:
             record (obj): Logging module LogRecord.
@@ -509,7 +577,11 @@ class CustomGunicornLogger(GunicornLogger):  # pylint: disable=too-few-public-me
 
     @staticmethod
     def _remove_handlers(logger):
-        """Remove handlers."""
+        """Remove handlers.
+
+        Args:
+            logger (obj): Logger object returned from logging.getLogger.
+        """
 
         handlers = logger.handlers
         for handler in handlers:

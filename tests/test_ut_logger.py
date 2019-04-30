@@ -607,3 +607,103 @@ class TestUtLogger(object):
         assert json.loads(out.splitlines()[4])['levelname'] == 'debug'
         assert json.loads(out.splitlines()[5])['levelno'] == 10
         assert json.loads(out.splitlines()[5])['levelname'] == 'debug'
+
+    @staticmethod
+    def test_logger_016(caplog):
+        """Test pretty printing logs.
+
+        In case of debug when JSON logs are not enabled, the logs are pretty
+        printed.
+        """
+
+        Logger.remove()
+        Logger.configure({
+            'debug': True,
+            'log_json': False,
+            'log_msg_max': Logger.DEFAULT_LOG_MSG_MAX,
+            'quiet': False,
+            'very_verbose': False
+        })
+        logger = Logger.get_logger('snippy.' + __name__)
+        row = [(
+            '0d364a0e-6b63-11e9-b176-2c4d54508088',
+            'reference',
+            'https://writingfordevelopers.substack.com/p/how-to-write-commit-messages\n'
+            'https://chris.beams.io/posts/git-commit/',
+            'How to write commit messages',
+            '',
+            '',
+            'git',
+            'commit,git,howto,message,scm',
+            'https://writingfordevelopers.substack.com/p/how-to-write-commit-messages\n'
+            'https://chris.beams.io/posts/git-commit/',
+            '',
+            '',
+            '',
+            '2018-06-22T13:10:33.295299+00:00',
+            '2018-06-27T10:10:16.553052+00:00',
+            '33da9768-1257-4419-b6df-881e19f07bbc',
+            '6d221115da7b95409c59164632893a57419666135c08151ddbf0be976f3b20a3'
+        )]
+        output_p3 = (
+            "format database row:",
+            "        [('0d364a0e-6b63-11e9-b176-2c4d54508088',",
+            "          'reference',",
+            "          'https://writingfordevelopers.substack.com/p/how-to-write-commit-messages\\n'",
+            "          'https://chris.beams.io/posts/git-commit/',",
+            "          'How to write commit messages',",
+            "          '',",
+            "          '',",
+            "          'git',",
+            "          'commit,git,howto,message,scm',",
+            "          'https://writingfordevelopers.substack.com/p/how-to-write-commit-messages\\n'",
+            "          'https://chris.beams.io/posts/git-commit/',",
+            "          '',",
+            "          '',",
+            "          '',",
+            "          '2018-06-22T13:10:33.295299+00:00',",
+            "          '2018-06-27T10:10:16.553052+00:00',",
+            "          '33da9768-1257-4419-b6df-881e19f07bbc',",
+            "          '6d221115da7b95409c59164632893a57419666135c08151ddbf0be976f3b20a3')]"
+        )
+        output_p2 = (
+            "format database row:",
+            "        [('0d364a0e-6b63-11e9-b176-2c4d54508088',",
+            "          'reference',",
+            "          'https://writingfordevelopers.substack.com/p/how-to-write-commit-messages\\nhttps://chris.beams.io/posts/git-commit/',",
+            "          'How to write commit messages',",
+            "          '',",
+            "          '',",
+            "          'git',",
+            "          'commit,git,howto,message,scm',",
+            "          'https://writingfordevelopers.substack.com/p/how-to-write-commit-messages\\nhttps://chris.beams.io/posts/git-commit/',",
+            "          '',",
+            "          '',",
+            "          '',",
+            "          '2018-06-22T13:10:33.295299+00:00',",
+            "          '2018-06-27T10:10:16.553052+00:00',",
+            "          '33da9768-1257-4419-b6df-881e19f07bbc',",
+            "          '6d221115da7b95409c59164632893a57419666135c08151ddbf0be976f3b20a3')]"
+        )
+
+        # Log is pretty printed.
+        logger.debug('format database row:\n%s', row)
+
+        assert '\n'.join(output_p3) in caplog.text or '\n'.join(output_p2) in caplog.text
+
+        caplog.clear()
+        Logger.configure({
+            'debug': True,
+            'log_json': True,
+            'log_msg_max': Logger.DEFAULT_LOG_MSG_MAX,
+            'quiet': False,
+            'very_verbose': False
+        })
+
+        output = (
+            "format database row:",
+            "[('0d364a0e-6b63-11e9-b176-2c4d54508088', 'reference', 'https://writingfordevelopers.substack.com/p/how-to-write-commit-messages\\nhttps://chris.beams.io/posts/git-commit/', 'How to write commit messages', '', '', 'git', 'commit,git,howto,message,scm', 'https://writingfordevelopers.substack.com/p/how-to-write-commit-messages\\nhttps://chris.beams.io/posts/git-commit/', '', '', '', '2018-06-22T13:10:33.295299+00:00', '2018-06-27T10:10:16.553052+00:00', '33da9768-1257-4419-b6df-881e19f07bbc', '6d221115da7b95409c59164632893a57419666135c08151ddbf0be976f3b20a3')]"  # noqa pylint: disable=line-too-long
+        )
+        # Log is not pretty printed because JSON logs are actived.
+        logger.debug('format database row:\n%s', row)
+        assert '\n'.join(output) in caplog.text

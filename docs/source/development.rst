@@ -1,6 +1,80 @@
 Development
 ===========
 
+Installation
+------------
+
+The installation instrunctions are for Fedora 30 and Bash shell. Similar
+command likely work with any Linux distribution.
+
+.. code:: bash
+
+    # Install Python versions.
+    sudo dnf install python27
+    sudo dnf install python34
+    sudo dnf install python35
+    sudo dnf install python36
+    sudo dnf install python37
+
+    # Install Python virtual environments.
+    pip install pipenv --user
+    pip install virtualenvwrapper --user
+
+    # Configure virtualenv wrapper.
+    vi ~/.bashrc
+       export WORKON_HOME=/home/heilaaks/devel/.virtualenvs
+       source /home/heilaaks/.local/bin/virtualenvwrapper.sh
+    source ~/.bashrc
+
+    # Create virtual environments for each Python version.
+    mkvirtualenv --python /usr/bin/python2.7 p27-snippy
+    mkvirtualenv --python /usr/bin/python3.4 p34-snippy
+    mkvirtualenv --python /usr/bin/python3.5 p35-snippy
+    mkvirtualenv --python /usr/bin/python3.6 p36-snippy
+    mkvirtualenv --python /usr/bin/python3.7 p37-snippy
+    workon
+
+    # Install Docker-CE.
+    sudo dnf -y install dnf-plugins-core
+    sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+    sudo dnf install docker-ce docker-c e-cli containerd.io
+
+    # Configure git.
+    git config --global user.name "Heikki Laaksonen"
+    git config --global user.email laaksonen.heikki.j@gmail.com
+    git config --list
+
+    # Configure vim for Git
+    sudo dnf -y install vim-enhanced
+
+    # Create SSH keys.
+    cd ~
+    ssh-keygen -t rsa -b 4096 -C "laaksonen.heikki.j@gmail.com"
+    eval "$(ssh-agent -s)"
+    ssh-add ~/.ssh/id_rsa
+    cat ~/.ssh/id_rsa.pub
+
+    # Create GPG keys. Email address must match to the email address
+    # used in GitLab.
+    # https://help.github.com/articles/generating-a-new-gpg-key/
+    # https://help.github.com/articles/telling-git-about-your-gpg-key/
+    # https://stackoverflow.com/a/42265848
+    gpg2 --list-secret-keys --keyid-format LONG
+    gpg2 --default-new-key-algo rsa4096 --gen-key
+    gpg2 --list-secret-keys --keyid-format LONG
+    gpg2 --armor --export <key>
+    git config commit.gpgsign true
+    git config --global gpg.program gpg2
+
+    # Configure virtualenv wrapper.
+    vi ~/.bashrc
+       export GPG_TTY=$(tty)
+
+    # Commit
+    git commit -S -s
+    git log --show-signature -1
+
+
 Quick Start
 -----------
 
@@ -668,7 +742,7 @@ Examples
 
   # Variable printed at the end of log message is separated with colon.
   2018-06-03 19:20:54.838 snippy[5756] [d] [b339bab5]: configured option server: true
-  
+
   # Variable printed in the middle of log message is separated colons and
   # space from both sides. The purpose is to provide possibility to allow
   # log message post processing and to parse variables from log messages.

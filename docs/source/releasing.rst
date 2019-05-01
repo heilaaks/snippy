@@ -41,8 +41,8 @@ Preparations
 
       # Manual: Set the current development version and the new tagged
       #         versions in Makefile.
-      DEV_VERSION := 0.10a0
-      TAG_VERSION := 0.10.0
+      DEV_VERSION := 0.11a0
+      TAG_VERSION := 0.11.0
 
       # Run release preparations.
       make prepare-release -s
@@ -58,6 +58,9 @@ Preparations
           # for each storage backend because the server uses the same
           # storage as rest of the tests.
           make test-release
+
+          # Manually grep versions
+          grep -rn -e 0.11.0 ./
 
 Run tests with PyPy
 ~~~~~~~~~~~~~~~~~~~
@@ -262,14 +265,14 @@ Release
 
    .. code-block:: text
 
-      git tag -a v0.10.0 -m "Add new release 0.1.0"
-      git push -u origin v0.10.0
+      git tag -a v0.11.0 -m "Add new release 0.11.0"
+      git push -u origin v0.11.0
 
 #. Release in PyPI
 
    .. code-block:: text
 
-      make cleana-all
+      make clean-all
       python setup.py sdist bdist_wheel
       twine upload dist/*
 
@@ -289,16 +292,18 @@ Release
    .. code-block:: text
 
       su
+      docker stop snippy
+      docker rm snippy
       docker rmi --force $(docker images --filter=reference="*/snippy*:*" -q)
       docker rm $(docker ps --all -q -f status=exited)
       docker images -q --filter dangling=true | xargs docker rmi
       docker images
       make docker
       docker login docker.io
-      docker tag 86961c480391 docker.io/heilaaks/snippy:v0.10.0
-      docker tag 86961c480391 docker.io/heilaaks/snippy:latest
+      docker tag 766a6c58974a docker.io/heilaaks/snippy:v0.11.0
+      docker tag 766a6c58974a docker.io/heilaaks/snippy:latest
       docker images
-      docker push docker.io/heilaaks/snippy:v0.10.0
+      docker push docker.io/heilaaks/snippy:v0.11.0
       docker push docker.io/heilaaks/snippy:latest
 
 #. Test Docker release

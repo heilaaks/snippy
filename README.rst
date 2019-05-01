@@ -86,6 +86,6 @@ Related work
 .. |badge-docker| image:: https://images.microbadger.com/badges/image/heilaaks/snippy.svg
    :target: https://hub.docker.com/r/heilaaks/snippy
 
-.. _REST API server: https://app.swaggerhub.com/apis/heilaaks/snippy/0.10.0
+.. _REST API server: https://app.swaggerhub.com/apis/heilaaks/snippy/0.11.0
 
 .. _development: https://snippy.readthedocs.io/en/latest/development.html

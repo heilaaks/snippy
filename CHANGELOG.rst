@@ -3,8 +3,36 @@
 Release history
 ===============
 
-0.10.0 (2019-05-01)
+0.11.0 (development)
 --------------------
+
+Breaking changes
+~~~~~~~~~~~~~~~~
+
+* none
+
+New features
+~~~~~~~~~~~~
+
+* none
+
+Bugfixes
+~~~~~~~~
+
+* none
+
+Security
+~~~~~~~~
+
+* none
+
+Documentation
+~~~~~~~~~~~~~
+
+* none
+
+0.10.0 (2019-05-01)
+-------------------
 
 Breaking changes
 ~~~~~~~~~~~~~~~~

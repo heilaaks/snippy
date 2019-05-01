@@ -84,4 +84,4 @@ before starting the server.
    snippy import --defaults --solution --storage-path ${HOME}/devel/temp
    snippy --server-host 127.0.0.1:8080 --storage-path ${HOME}/devel/temp -vv
 
-.. _OpenAPI definitions: https://app.swaggerhub.com/apis/heilaaks/snippy/0.10.0
+.. _OpenAPI definitions: https://app.swaggerhub.com/apis/heilaaks/snippy/0.11.0

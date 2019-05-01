@@ -6,7 +6,7 @@ MAKEFLAGS += --no-builtin-variables
 # Run all commands in one shell.
 .ONESHELL:
 
-DEV_VERSION    := 0.10a0
+DEV_VERSION    := 0.11a0
 TAG_VERSION    := 0.10.0
 
 PKG_MANAGER    := $(shell command -v dnf)
@@ -65,6 +65,13 @@ upgrade-tool-version: clean-all
 	$(PYTHON) runner export --defaults --all -q
 	! grep -rn -e ${DEV_VERSION} --exclude=releasing.rst --exclude=Makefile ./
 	@echo "$$(date +'%Y-%m-%dT%H:%M:%S'): Updated tool version ${DEV_VERSION} to ${TAG_VERSION}"
+
+upgrade-tool-version-devel: clean-all
+	sed -i -r "s/${TAG_VERSION}/${DEV_VERSION}/" ./snippy/meta.py
+	$(PYTHON) runner import --defaults --all -q
+	$(PYTHON) runner export --defaults --all -q
+	! grep -rn -e ${TAG_VERSION} --exclude=CHANGELOG.rst --exclude=Makefile --exclude=releasing.rst ./
+	@echo "$$(date +'%Y-%m-%dT%H:%M:%S'): Updated tool version ${TAG_VERSION} to ${DEV_VERSION}"
 
 prepare-release:
 	make upgrade-wheel

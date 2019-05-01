@@ -10,7 +10,7 @@ info:
   license:
     name: GNU AGPLv3 or later
     url: https://github.com/heilaaks/snippy/blob/master/LICENSE
-  version: 0.10.0
+  version: 0.11.0
 servers:
 - url: http://localhost:8080/api/snippy/rest
 - url: https://localhost:8080/api/snippy/rest

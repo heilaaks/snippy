@@ -998,6 +998,7 @@ Good set on loggers: https://books.google.fi/books?id=7U1CIoOs5AkC&pg=PA357&lpg=
 
     # Swagger
     > https://app.swaggerhub.com/apis/heilaaks/snippy/0.10.0
+    > https://app.swaggerhub.com/apis/heilaaks/snippy/0.11.0
 
     # Swagger to Sphinx
     $ .. swaggerv2doc:: ../dev/swagger-2.0.json

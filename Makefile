@@ -56,7 +56,7 @@ upgrade:
 	$(PYTHON) -m pip install --upgrade .
 
 upgrade-wheel:
-	$(PYTHON) -m pip install pip setuptools wheel twine --upgrade > /dev/null
+	$(PYTHON) -m pip install pip setuptools wheel twine --upgrade --user
 	@echo "$$(date +'%Y-%m-%dT%H:%M:%S'): Updated setuptools twine and wheel to latest"
 
 upgrade-tool-version: clean-all
@@ -105,10 +105,7 @@ test-fast:
 ifeq ($(PYTHON_VERSION), 3)
 	$(PYTHON) -m pytest -n auto -x ./tests/test_*.py --cov snippy -m "not (server or docker)"
 else
-	@echo "##########################################################################"
-	@echo "Parallel tests are supported only with Python 3. Executing tests serially."
-	@echo "##########################################################################"
-	make test
+	$(PYTHON) -m pytest -x ./tests/test_*.py --cov snippy -m "not (server or docker)"
 endif
 
 test-docker:

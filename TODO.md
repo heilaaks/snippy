@@ -1,6 +1,7 @@
 ## WORKING
    - [ ] Fix updating Markdown based solutions in text formats does not work because the Mkdn solution does not have text header and data structure.
    - [ ] Fix test_logger_016. The P3 is not correct? The links in p2 are in the same elemnet separated with \n that should be the case with P3.
+   - [ ] Why container --server-host command line option does not work (healthcheck)? docker run -d --net="host" --name snippy heilaaks/snippy --server-host 127.0.0.1:8080 --log-json -vv
    - [ ] Starting the server again and import the default content again with --defaults causes server internal erro 500 because of UUID. The 500 should not be here because this is not internal error. Fix?
    - [ ] Fix creating/updating resource with invalid versions. Check test_api_create_snippet_024. The seal() cannot check if Cause not is_is because it generates incorrect error. For example GET ../<valid digest>/error shows error that digest not foind. See test_api_search_reference_field_012. move the reast API based empty list check earlier in code to solve this.
    - [ ] Incorrect header does not leave logs. Test manually since this works differently that the tests? For example ab was missing '-T application/vnd.api+json' without this it did not work.
@@ -61,6 +62,13 @@
    - [ ] Fix (optimize) the order of SQL columns. Fixed length columns first. This should ? allow database to optimize the length of data. Is this the case? Now the order is "logical". Maybe unnecessary optimization. Measure first.
    - [ ] Fix (optimize) the Mkdn and Text parsing. The parsers and Resource() do the input data formatting. Parsers when data read and Resource() when set. This is good now to avoid data format problems.
    - [ ] Fix (optimize) Why GET with limit=20 is much slower than limit=1? Even POST with one resource is much faster than GET with limit=20 (Sqlite in tests). The test produced 409 from trying to POST the same content in loop.
+
+## RELEASING
+   - [ ] Document user must be able to run Docker. Add instructions.
+   - [ ] Automate PostgreSQL startup.
+   - [ ] Remove running snippy container before testing.
+   - [ ] Use make upgrade-wheel PYTHON=pypy3 instead of PYPY targets. Change setup so that it looks the python version and there are no pypy specific extras (like the server)
+   - [ ] Snippy asciinema semi faked prompt fails with rest api responses. The prompt is in the same line as the last curly bracket from rest api response.
 
 ## FEATURES
    - [ ] Add CORS https://stackoverflow.com/a/45183343. This is needed to make the server usable at all?

@@ -6,6 +6,9 @@ MAKEFLAGS += --no-builtin-variables
 # Run all commands in one shell.
 .ONESHELL:
 
+DEV_VERSION    := 0.10a0
+TAG_VERSION    := 0.10.0
+
 PKG_MANAGER    := $(shell command -v dnf)
 PKG_COMMAND    := list installed
 PYPY           := pypy3
@@ -53,7 +56,20 @@ upgrade:
 	$(PYTHON) -m pip install --upgrade .
 
 upgrade-wheel:
-	$(PYTHON) -m pip install pip setuptools wheel twine --upgrade
+	$(PYTHON) -m pip install pip setuptools wheel twine --upgrade > /dev/null
+	@echo "$$(date +'%Y-%m-%dT%H:%M:%S'): Updated setuptools twine and wheel to latest"
+
+upgrade-tool-version: clean-all
+	sed -i -r "s/${DEV_VERSION}/${TAG_VERSION}/" ./snippy/meta.py
+	$(PYTHON) runner import --defaults --all -q
+	$(PYTHON) runner export --defaults --all -q
+	! grep -rn -e ${DEV_VERSION} --exclude=releasing.rst --exclude=Makefile ./
+	@echo "$$(date +'%Y-%m-%dT%H:%M:%S'): Updated tool version ${DEV_VERSION} to ${TAG_VERSION}"
+
+prepare-release:
+	make upgrade-wheel
+	make upgrade-tool-version
+	make test-release
 
 uninstall:
 	$(PYTHON) -m pip uninstall --yes snippy
@@ -69,8 +85,14 @@ test: test-sqlite
 
 test-all: test-sqlite test-postgresql test-docker
 
-test-ci:
-	$(PYTHON) -m pytest -x ./tests/test_*.py -m "not (server or docker)" --cov snippy
+test-ci: test-sqlite
+
+test-release: clean-all test-sqlite test-postgresql test-docker test-tox lint docs test-release-wheel
+	@echo "$$(date +'%Y-%m-%dT%H:%M:%S'): All automated tests and checks run"
+
+test-release-wheel: clean-all
+	$(PYTHON) setup.py sdist bdist_wheel
+	twine check dist/*
 
 test-fast:
 ifeq ($(PYTHON_VERSION), 3)
@@ -83,9 +105,6 @@ else
 endif
 
 test-docker:
-	$(PYTHON) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db sqlite
-
-test-docker-only:
 	$(PYTHON) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db sqlite -m "docker"
 
 test-postgresql:
@@ -100,22 +119,25 @@ test-sqlite:
 test-sqlite-pypy:
 	$(PYPY) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db sqlite -m "not docker"
 
+test-tox:
+	tox
+
 coverage:
-	$(PYTHON) -m pytest --cov=snippy --cov-branch --cov-report html tests/ -m "not docker"
+	$(PYTHON) -m pytest --cov=snippy --cov-branch --cov-report html tests/ -m "not (server or docker)"
 	$(PYTHON) -m pytest --cov=snippy tests/
 
 lint:
-	-$(PYTHON) -m pylint --jobs=0 --rcfile tests/pylint/pylint-snippy-tests.rc tests/ | tee tests/pylint/pylint-snippy-tests.txt
-	-$(PYTHON) -m pylint --jobs=0 --rcfile tests/pylint/pylint-snippy.rc snippy/ | tee tests/pylint/pylint-snippy.txt
-	-$(PYTHON) -m flake8 --config tests/flake8/flake8.ini snippy
+	$(PYTHON) -m pylint --jobs=0 --rcfile tests/pylint/pylint-snippy-tests.rc tests/ | tee tests/pylint/pylint-snippy-tests.txt
+	$(PYTHON) -m pylint --jobs=0 --rcfile tests/pylint/pylint-snippy.rc snippy/ | tee tests/pylint/pylint-snippy.txt
+	$(PYTHON) -m flake8 --config tests/flake8/flake8.ini snippy
 
 pyflakes:
-	-$(PYTHON) -m pyflakes .
+	$(PYTHON) -m pyflakes .
 
 schema:
 	openapi2jsonschema snippy/data/server/openapi/swagger-2.0.yml -o snippy/data/server/openapi/schema/
 
-docker: clean clean-db
+docker: clean-all
 	docker build --build-arg http_proxy=${http_proxy} --build-arg https_proxy=${https_proxy} -t heilaaks/snippy .
 
 security-scan:
@@ -123,6 +145,8 @@ security-scan:
 
 .PHONY: clean
 clean: clean-build clean-pyc clean-test
+
+clean-all: clean clean-db
 
 clean-build:
 	rm -drf .cache

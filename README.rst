@@ -39,8 +39,8 @@ To install as a server, run:
 Usage
 =====
 
-.. image:: https://asciinema.org/a/Mcg6d2d6R9V5cScoW6nsGtzZ7.png
-    :target: https://asciinema.org/a/Mcg6d2d6R9V5cScoW6nsGtzZ7
+.. image:: https://asciinema.org/a/pRd8Cf6WUGb1ioB7TPFdTq8Fb.png
+    :target: https://asciinema.org/a/pRd8Cf6WUGb1ioB7TPFdTq8Fb
     :alt: Snippy in action!
 
 Contributing

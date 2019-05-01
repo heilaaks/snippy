@@ -3,7 +3,7 @@
 Release history
 ===============
 
-0.10.0 (development)
+0.10.0 (2019-05-01)
 --------------------
 
 Breaking changes

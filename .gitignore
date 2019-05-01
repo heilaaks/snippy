@@ -26,3 +26,7 @@ docs/build/
 *.swo
 *.swn
 
+# TLS certificates
+server.crt
+server.key
+

@@ -39,7 +39,7 @@ extras_docs = (
     'sphinx-autobuild==0.7.1'
 )
 extras_server = (
-    'falcon==1.4.1',
+    'falcon==2.0.0',
     'gunicorn==19.9.0',
     'jsonschema==3.0.1',
     'psycopg2-binary==2.8.2'

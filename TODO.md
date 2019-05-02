@@ -8,7 +8,10 @@
    - [ ] Design and change /groups and /tags to GET groups and tags not content. Like unique tags and groups.
    - [ ] Fix cli -f file to see if this goes ot content filename attribute. Should not. -f|--file and content.filename are not the same.
    - [ ] Fix tox and Python 3.4. Tox -e py34 // http://notes.webutvikling.org/darn-installation-of-python-3-4/
-   - [ ] Add bash completion to Snippy. Check example from Poetry. Check git argcomplete which is used also by Pytest.
+   - [ ] Add bash completion to Snippy. Check example from Poetry. Check git argcomplete which is used also by Pytest. // https://iridakos.com/tutorials/2018/03/01/bash-programmable-completion-tutorial.html
+   
+        sudo cp snippy.bash-completion /etc/bash_completion.d/
+   
    - [ ] Security log printed incorrectly from GET limit=20 when -vv JSON enabled. The -vv should already truncate the log. Change or warn?
    - [ ] Make docker tests run parallel. Now the container removal is based on image name that is not good. must be based on container hash.
    - [ ] Make more tests for Docker use cases

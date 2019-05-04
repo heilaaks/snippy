@@ -562,7 +562,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         Content.assert_restapi(result.json, expect_body)
 
     @staticmethod
-    @pytest.mark.parametrize('server', [['--server-host', 'localhost:8080', '-q']], indirect=True)
+    @pytest.mark.parametrize('server', [['server', '--server-host', 'localhost:8080', '-q']], indirect=True)
     @pytest.mark.usefixtures('default-snippets')
     def test_api_search_snippet_016(server):
         """Search snippets with GET.

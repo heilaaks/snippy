@@ -254,8 +254,11 @@ class Cli(ConfigSourceBase):
             arguments, unknown_args = parser.parse_known_args(args)
             arguments = vars(arguments)
 
-            # positional arguments
-            operations = ('create', 'search', 'update', 'delete', 'export', 'import')
+            # Positional arguments.
+            #
+            # The 'server' operation is hidden on purpose. User has to know that
+            # it exists. The main scope are the Snippy command line operations.
+            operations = ('create', 'search', 'update', 'delete', 'export', 'import', 'server')
             parser.add_argument('operation', nargs='?', choices=operations, metavar='  {create,search,update,delete,export,import}')
 
             # support options

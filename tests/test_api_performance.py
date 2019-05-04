@@ -78,7 +78,7 @@ class TestApiPerformance(object):
 
         # Clear the real database and run the real server.
         call(['make', 'clean-db'])
-        server = Popen(['python', './runner', '--server-host', 'localhost:8080', '--server-minify-json'], stdout=PIPE, stderr=PIPE)
+        server = Popen(['python', './runner', 'server', '--server-host', 'localhost:8080', '--server-minify-json'], stdout=PIPE, stderr=PIPE)
         time.sleep(1)  # Wait untill server is up.
         snippets = {
             'data': [
@@ -173,7 +173,7 @@ class TestApiPerformance(object):
 
         # Clear the real database and run the real server.
         call(['make', 'clean-db'])
-        server = Popen(['python', './runner', '--server-host', 'localhost:8080', '-vv'], stdout=PIPE, stderr=PIPE)
+        server = Popen(['python', './runner', 'server', '--server-host', 'localhost:8080', '-vv'], stdout=PIPE, stderr=PIPE)
         time.sleep(1)  # Wait untill server up.
         snippets = {
             'data': [

@@ -61,7 +61,7 @@ EXPOSE 32768
 
 USER 232768
 
-ENTRYPOINT ["snippy", "--storage-path", "/volume"]
+ENTRYPOINT ["snippy", "server", "--storage-path", "/volume"]
 
 #
 # CONTAINER IMAGE SECURITY HARDENING

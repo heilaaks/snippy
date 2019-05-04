@@ -100,7 +100,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
             'content-length': '246'
         }
         expect_body = {'meta': Content.get_api_meta()}
-        server = Snippy(['snippy', '--server-host', 'localhost:8080', '--server-base-path-rest', '/api/snippy/'])
+        server = Snippy(['snippy', 'server', '--server-host', 'localhost:8080', '--server-base-path-rest', '/api/snippy/'])
         server.run()
         result = testing.TestClient(server.server.api).simulate_get('/api/snippy')
         assert result.status == falcon.HTTP_200
@@ -125,7 +125,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
             'content-length': '246'
         }
         expect_body = {'meta': Content.get_api_meta()}
-        server = Snippy(['snippy', '--server-host', 'localhost:8080', '--server-base-path-rest', '/api/snippy'])
+        server = Snippy(['snippy', 'server', '--server-host', 'localhost:8080', '--server-base-path-rest', '/api/snippy'])
         server.run()
         result = testing.TestClient(server.server.api).simulate_get('/api/snippy')
         assert result.status == falcon.HTTP_200
@@ -150,7 +150,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
             'content-length': '246'
         }
         expect_body = {'meta': Content.get_api_meta()}
-        server = Snippy(['snippy', '--server-host', 'localhost:8080', '--server-base-path-rest', 'api/snippy/'])
+        server = Snippy(['snippy', 'server', '--server-host', 'localhost:8080', '--server-base-path-rest', 'api/snippy/'])
         server.run()
         result = testing.TestClient(server.server.api).simulate_get('/api/snippy')
         assert result.status == falcon.HTTP_200
@@ -176,7 +176,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
             'content-length': '246'
         }
         expect_body = {'meta': Content.get_api_meta()}
-        server = Snippy(['snippy', '--server-host', 'localhost:8080', '--server-base-path-rest', 'api/snippy'])
+        server = Snippy(['snippy', 'server', '--server-host', 'localhost:8080', '--server-base-path-rest', 'api/snippy'])
         server.run()
         result = testing.TestClient(server.server.api).simulate_get('/api/snippy')
         assert result.status == falcon.HTTP_200
@@ -200,7 +200,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
             'content-length': '246'
         }
         expect_body = {'meta': Content.get_api_meta()}
-        server = Snippy(['snippy', '--server-host', 'localhost:8080', '--server-base-path-rest', '/api//snippy'])
+        server = Snippy(['snippy', 'server', '--server-host', 'localhost:8080', '--server-base-path-rest', '/api//snippy'])
         server.run()
         result = testing.TestClient(server.server.api).simulate_get('/api/snippy/rest')
         assert result.status == falcon.HTTP_200
@@ -223,7 +223,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
             'content-length': '246'
         }
         expect_body = {'meta': Content.get_api_meta()}
-        server = Snippy(['snippy', '--server-host', 'localhost:8081', '--debug'])
+        server = Snippy(['snippy', 'server', '--server-host', 'localhost:8081', '--debug'])
         server.run()
         result = testing.TestClient(server.server.api).simulate_get('/api/snippy/rest')
         assert 'server_host=localhost:8081' in caplog.text
@@ -425,7 +425,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
             'content-length': '202'
         }
         expect_body = {'meta': Content.get_api_meta()}
-        server = Snippy(['snippy', '--server-host', 'localhost:8080', '--server-base-path-rest', '/api/snippy/rest/v3', '--server-minify-json', '--log-msg-max', '20', '--debug'])  # noqa pylint: disable=line-too-long
+        server = Snippy(['snippy', 'server', '--server-host', 'localhost:8080', '--server-base-path-rest', '/api/snippy/rest/v3', '--server-minify-json', '--log-msg-max', '20', '--debug'])  # noqa pylint: disable=line-too-long
         server.run()
         result = testing.TestClient(server.server.api).simulate_get('/api/snippy/rest/v3')
         assert 'server_base_path_rest=/api/snippy/rest/v3' in caplog.text

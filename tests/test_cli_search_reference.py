@@ -49,7 +49,7 @@ class TestCliSearchReference(object):
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--reference', '--sall', 'regexp', '--no-ansi'])
+        cause = snippy.run(['snippy', 'search', '--scat', 'reference', '--sall', 'regexp', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -64,7 +64,7 @@ class TestCliSearchReference(object):
         """
 
         output = 'NOK: cannot find content with given search criteria' + Const.NEWLINE
-        cause = snippy.run(['snippy', 'search', '--reference', '--sall', 'notfound', '--no-ansi'])
+        cause = snippy.run(['snippy', 'search', '--scat', 'reference', '--sall', 'notfound', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == 'NOK: cannot find content with given search criteria'
         assert out == output
@@ -87,7 +87,7 @@ class TestCliSearchReference(object):
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--reference', '--digest', '5c20', '--no-ansi'])
+        cause = snippy.run(['snippy', 'search', '--scat', 'reference', '--digest', '5c20', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -110,7 +110,7 @@ class TestCliSearchReference(object):
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--reference', '--uuid', '31cd5827-b6ef-4067-b5ac-3ceac07dde9f', '--no-ansi'])
+        cause = snippy.run(['snippy', 'search', '--scat', 'reference', '--uuid', '31cd5827-b6ef-4067-b5ac-3ceac07dde9f', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -128,7 +128,7 @@ class TestCliSearchReference(object):
         """
 
         output = 'NOK: cannot find content with given search criteria\n'
-        cause = snippy.run(['snippy', 'search', '--reference', '--uuid', '31cd5827-b6ef-4067-b5ac-3ceac07dde9', '--no-ansi'])
+        cause = snippy.run(['snippy', 'search', '--scat', 'reference', '--uuid', '31cd5827-b6ef-4067-b5ac-3ceac07dde9', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == 'NOK: cannot find content with given search criteria'
         assert out == output
@@ -144,7 +144,7 @@ class TestCliSearchReference(object):
         """
 
         output = 'NOK: cannot find content with given search criteria\n'
-        cause = snippy.run(['snippy', 'search', '--reference', '--uuid', '1234567', '--no-ansi'])
+        cause = snippy.run(['snippy', 'search', '--scat', 'reference', '--uuid', '1234567', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == 'NOK: cannot find content with given search criteria'
         assert out == output
@@ -163,7 +163,7 @@ class TestCliSearchReference(object):
             'NOK: cannot find content with given search criteria',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--reference', '--uuid', '', '--no-ansi'])
+        cause = snippy.run(['snippy', 'search', '--scat', 'reference', '--uuid', '', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == 'NOK: cannot find content with given search criteria'
         assert out == Const.NEWLINE.join(output)
@@ -184,7 +184,7 @@ class TestCliSearchReference(object):
             'NOK: cannot find content with given search criteria',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--reference', '--uuid', '1', '--no-ansi'])
+        cause = snippy.run(['snippy', 'search', '--scat', 'reference', '--uuid', '1', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == 'NOK: cannot find content with given search criteria'
         assert out == Const.NEWLINE.join(output)
@@ -209,7 +209,7 @@ class TestCliSearchReference(object):
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--reference', '--sall', 'howto', '--sgrp', 'git', '--no-ansi'])
+        cause = snippy.run(['snippy', 'search', '--scat', 'reference', '--sall', 'howto', '--sgrp', 'git', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -234,7 +234,7 @@ class TestCliSearchReference(object):
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--sall', 'regexp', '--no-ansi', '--all'])
+        cause = snippy.run(['snippy', 'search', '--sall', 'regexp', '--no-ansi', '--scat', 'all'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -338,7 +338,7 @@ class TestCliSearchReference(object):
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--sall', 'regexp,docker,beats', '--no-ansi', '--all'])
+        cause = snippy.run(['snippy', 'search', '--sall', 'regexp,docker,beats', '--no-ansi', '--scat', 'all'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -349,10 +349,8 @@ class TestCliSearchReference(object):
     def test_cli_search_reference_014(snippy, capsys):
         """Search references with ``sall`` and ``scat`` options.
 
-        Search content from all fields. Content category is set to --all but
-        the search category defines that the search must be made from snippets
-        and references. This must result hits only from snippets and
-        references.
+        Search content from all fields. Content category is set references and
+        snippets which must be the only categories where the search is made.
         """
 
         output = (
@@ -372,7 +370,7 @@ class TestCliSearchReference(object):
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--all', '--sall', 'regexp,docker,beats', '--no-ansi', '--scat', 'reference,snippet'])
+        cause = snippy.run(['snippy', 'search', 'regexp,docker,beats', '--no-ansi', '--scat', 'reference,snippet'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -411,11 +409,6 @@ class TestCliSearchReference(object):
         Try to define search category ``scat`` option in plural form. This
         must not work because only singular forms in the search category
         ``scat`` option are supported.
-
-        It is possible to define the content category with content catefory
-        option long format like ``--snippets`` in plural form from command
-        line. But this is not supported for the ``scat`` option which is also
-        used in the REST API.
 
         This limits the supported values in the REST API and thus it makes
         error handling simpler.

@@ -80,7 +80,7 @@ Run tests with PyPy
       pypy3 -m pip install --editable .[devel]
       pypy3 -m pytest -x ./tests/test_*.py --cov snippy -m "server"
       pypy3 runner --help
-      pypy3 runner import --defaults --all
+      pypy3 runner import --defaults --scat all
       pypy3 runner --server-host 127.0.0.1:8080 -vv
       curl -s -X GET "http://127.0.0.1:8080/api/snippy/rest/snippets?limit=4" -H "accept: application/vnd.api+json"
 
@@ -118,13 +118,13 @@ Test local installation
       snippy --help
       snippy search --sall .
       snippy import --defaults
-      snippy import --defaults --solutions
-      snippy import --defaults --references
+      snippy import --defaults --scat solution
+      snippy import --defaults --scat reference
       snippy search --sall docker
       rm -f ${HOME}/devel/temp/snippy.db
       snippy import --defaults --storage-path ${HOME}/devel/temp
-      snippy import --defaults --solutions --storage-path ${HOME}/devel/temp
-      snippy import --defaults --references --storage-path ${HOME}/devel/temp
+      snippy import --defaults --scat solution --storage-path ${HOME}/devel/temp
+      snippy import --defaults --scat reference --storage-path ${HOME}/devel/temp
       snippy --server-host 127.0.0.1:8080 --storage-path ${HOME}/devel/temp &
       curl -s -X GET "http://127.0.0.1:8080/api/snippy/rest/snippets?limit=4" -H "accept: application/vnd.api+json"
       pkill snippy
@@ -139,7 +139,7 @@ Test docker installation
       make clean
       make clean-db
       docker rmi --force $(docker images --filter=reference="*/snippy*:*" -q)
-      docker rm $(docker ps --all -q -f status=exited)
+      docker rm $(docker ps --scat all -q -f status=exited)
       docker images -q --filter dangling=true | xargs docker rmi
       docker images
       make docker
@@ -231,12 +231,12 @@ Test PyPI installation
       pip3 uninstall snippy -y
       pip install --index-url https://test.pypi.org/simple/ snippy
       snippy --help
-      snippy import --defaults --all
+      snippy import --defaults --scat all
       snippy search --sall docker
       pip uninstall snippy -y
       pip3 install --index-url https://test.pypi.org/simple/ snippy
       snippy --help
-      snippy import --defaults --all
+      snippy import --defaults --scat all
       snippy search --sall docker
       pip3 uninstall snippy -y
       pip3 install --user --index-url https://test.pypi.org/simple/ snippy
@@ -244,7 +244,7 @@ Test PyPI installation
       pip install --user --index-url https://test.pypi.org/simple/ snippy
       which snippy
       snippy --help
-      snippy import --defaults --all
+      snippy import --defaults --scat all
       snippy search --sall docker
       pip3 uninstall snippy -y
       pip uninstall snippy -y
@@ -284,7 +284,7 @@ Release
       pip install snippy --user
       snippy --help
       snippy import --defaults
-      snippy import --defaults --solutions
+      snippy import --defaults --scat solution
       snippy search --sall docker
 
 #. Release in Docker Hub
@@ -295,7 +295,7 @@ Release
       docker stop snippy
       docker rm snippy
       docker rmi --force $(docker images --filter=reference="*/snippy*:*" -q)
-      docker rm $(docker ps --all -q -f status=exited)
+      docker rm $(docker ps --scat all -q -f status=exited)
       docker images -q --filter dangling=true | xargs docker rmi
       docker images
       make docker
@@ -312,7 +312,7 @@ Release
 
       su
       docker rmi --force $(docker images --filter=reference="*/snippy*:*" -q)
-      docker rm $(docker ps --all -q -f status=exited)
+      docker rm $(docker ps --scat all -q -f status=exited)
       docker images -q --filter dangling=true | xargs docker rmi
       docker images
       docker pull heilaaks/snippy

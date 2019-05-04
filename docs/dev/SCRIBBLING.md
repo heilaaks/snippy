@@ -743,7 +743,7 @@ endif
 
     10. Parallel execution does not work.
 
-    11. import all results python runner search --all --sall . --> 37. Was this correct?
+    11. import all results python runner search --scat all --sall . --> 37. Was this correct?
 
    # Embedded postgres function that was not used after all because the Python support is not in by default.
    create language plpythonu;
@@ -778,7 +778,7 @@ endif
       --> same to resource load_dict and dict.pm (is resource load_dict used anymore?)
       --> this works with timestamp but there must be 00:00
 
-   3. python  runner search --all  --sall . results 38. check this
+   3. python  runner search --scat all  --sall . results 38. check this
 
    4. sql defs
       create table if not exists contents (
@@ -938,18 +938,18 @@ sciinema rec ../snippy.cast -c ../commands.sh
 asciinema rec ../snippy.cast
 snippy --help
 snippy search --sall .
-snippy import --defaults --all
+snippy import --defaults --scat all
 snippy search --sall security
 snippy search --sall compress
 snippy export -d 61014e2d1ec56a9a
 ll
 cat snippets.mkdn
-snippy search --solution --sall kafka | grep -Ev '[^\s]+:'
+snippy search --scat solution --sall kafka | grep -Ev '[^\s]+:'
 ll
 snippy export -d 1abc5d4fe9022429
 ll
 snippy import -d 1abc5d4fe9022429 -f kubernetes-docker-log-driver-kafka.mkdn
-snippy search --solution --sall docker | grep -Ev '[^\s]+:'
+snippy search --scat solution --sall docker | grep -Ev '[^\s]+:'
 sudo docker run -d --net="host" --name snippy heilaaks/snippy --server-host 127.0.0.1:8080 --log-json -vv
 curl -s -X GET "http://127.0.0.1:8080/api/snippy/rest/" | python -m json.tool
 curl -s -X GET "http://127.0.0.1:8080//api/snippy/rest/uuid/1/brief"
@@ -1123,14 +1123,14 @@ $ python runner create -c $'docker rm $(docker ps --all -q -f status=exited)\ndo
 > https://stackoverflow.com/questions/26517674/passing-newline-within-string-into-a-python-script-from-the-command-line
 
 # REFERENCES
-python runner create --reference -l 'https://stackoverflow.com/a/33812744' -b 'Command line input encoding'
-python runner create --reference -l 'https://stackoverflow.com/a/33812744' -b 'Command line input encoding' -t cli,coding,utf-8
+python runner create --scat reference -l 'https://stackoverflow.com/a/33812744' -b 'Command line input encoding'
+python runner create --scat reference -l 'https://stackoverflow.com/a/33812744' -b 'Command line input encoding' -t cli,coding,utf-8
 
 
-python runner create --reference -l 'https://writingfordevelopers.substack.com/p/how-to-write-commit-messages|https://chris.beams.io/posts/git-commit/' -b 'How to write commit messages' -t git,commit,message,howto,scm -g git
-python runner search --sall . --reference
-python runner export --defaults --reference
-python runner import --defaults --reference
+python runner create --scat reference -l 'https://writingfordevelopers.substack.com/p/how-to-write-commit-messages|https://chris.beams.io/posts/git-commit/' -b 'How to write commit messages' -t git,commit,message,howto,scm -g git
+python runner search --sall . --scat reference
+python runner export --defaults --scat reference
+python runner import --defaults --scat reference
 ```
 
 #######################################
@@ -1337,8 +1337,8 @@ python runner import --defaults --reference
     # Change version in default content yaml files
     $ make clean
     $ make clean-db
-    $ python runner import --defaults --all
-    $ python runner export --defaults --all
+    $ python runner import --defaults --scat all
+    $ python runner export --defaults --scat all
 
     # Test all
     $ make test-all
@@ -1525,7 +1525,7 @@ git update-index --no-assume-unchanged FILE_NAME # change back
                          A) Command line operation: 'create', 'delete', 'search', 'update', 'export' or 'import'.
                        : B) HTTP methods like: POST, PUT, GET, DELETE, PATCH or OPTION.
     operation category : Referers to 'category' defined for
-                         A) command line operation with: --snippet(s), --solution(s), --reference(s) or --all
+                         A) command line operation with: --scat <snippet|solution|reference|all>
                          B) REST API operation defined with data.type: ['snippet', 'solution' or 'reference']
     search category    : Refers to categories which are searched when operation or request is executed.
     operation ID (OID) : Unique identifier allocated for all log messages generation from a single operation.
@@ -1893,20 +1893,7 @@ git update-index --no-assume-unchanged FILE_NAME # change back
 
        With all other content categories, the links are sorted automatically.
 
-    3. Overlapping operation and search categories
-
-       It is possible to use search category (scat) option on top of operation
-       category defined with --snippet, --solution --reference or --all. For
-       search and export operation, the search category (scat) overrides the
-       operation category.
-
-       This means for example that search results re presented from all
-       categories if search category is defined as: snippet,solution,reference
-       even when the operation category is defined to --solution or it defaults
-       to --snippet. The same logic applies when the operation category is
-       defined to --all.
-
-    4. Markdown
+    3. Markdown
 
        The Markdown content can use either a code block containing anything or
        a Markdown native content. This allows using text based solution content
@@ -2143,27 +2130,27 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        C. Search option (scat, sall, stag, sgrp) without --file option resulting one content
 
           1. Content does not define filename field: <category>.yaml
-             - python runner export --references --sall commit
+             - python runner export --scat reference --sall commit
              - test_cli_export_snippet_011
 
           2. Content defines filename field: <filename>
-             - python runner export --solution --sall kubeadm reset
+             - python runner export --scat solution --sall kubeadm reset
              - test_cli_export_solution_022
 
        D. Search option (scat, sall, stag, sgrp) with --file option resulting one content
 
           1. Content does not define filename field: <--file>
-             - python runner export --references --sall commit -f testing.json
+             - python runner export --scat reference --sall commit -f testing.json
              - test_cli_export_snippet_009
 
           2. Content defines filename field: <--file>
-             - python runner export --solution --sall kubeadm reset -f testing.yaml
+             - python runner export --scat solution --sall kubeadm reset -f testing.yaml
              - test_cli_export_solution_023
 
        E. Search option (scat, sall, stag, sgrp) without --file option resulting more than one content from single category
 
           1. Content does not define filename field: <category>.yaml
-             - python runner export --sall kube --solution
+             - python runner export --sall kube --scat solution
              - test_cli_export_reference_021
              - test_cli_export_solution_036
              - test_cli_export_snippet_026
@@ -2173,11 +2160,11 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        F. Search option (scat, sall, stag, sgrp) with --file option resulting more than one content from single category
 
           1. Content does not define filename field: <--file>
-             - python runner export --sall kube --solution -f testing.yaml
+             - python runner export --sall kube --scat solution -f testing.yaml
              - test_cli_export_snippet_016
 
           2. Content defines filename field: <--file>   # Content filename fields do not have any effect.
-             - python runner export --sall kube --solution -f testing.yaml
+             - python runner export --sall kube --scat solution -f testing.yaml
 
        G. Search option (scat, sall, stag, sgrp) without --file option resulting more than one content from more than one category
 
@@ -2198,14 +2185,14 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        I. Exporting single category without --file option
 
           1. Content does not define filename field: <category.yaml>
-             python runner export --reference
+             python runner export --scat reference
 
           2. Content defines filename field: <category.yaml>   # Content filename fields do not have any effect.
 
        J. Exporting single category with --file option
 
           1. Content does not define filename field: <--file>
-             - python runner export --reference -f testing.json
+             - python runner export --scat reference -f testing.json
 
           2. Content defines filename field: <--file>   # Content filename fields do not have any effect.
 
@@ -2250,7 +2237,7 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        R. Exporting more than one category with --default option
 
           1. Content does not define filename field: Not allowed
-                - python runner export --solution --reference --defaults
+                - python runner export --scat solution --scat reference --defaults
 
           2. Content defines filename field: Content filename field does not affect.
 
@@ -2881,15 +2868,15 @@ git update-index --no-assume-unchanged FILE_NAME # change back
 
        Command example below pipes the output to more command.
 
-       ``python runner search --sall elastic --solutions | more``
+       ``python runner search --sall elastic --scat solution | more``
 
        This leaves `e--` from `--More--` when ANSI colors are used and the printed
        line length is shorter than the `--More--`.
 
        This can be circumvented by using more command options -c or -p.
 
-       `python runner search --sall elastic --solutions | more -c`
-       `python runner search --sall elastic --solutions | more -p`
+       `python runner search --sall elastic --scat solution | more -c`
+       `python runner search --sall elastic --scat solution | more -p`
 
        This is visible at least with Fedora 26 with 'more from util-linux 2.29.1'.
        The reason for this behaviour is unknown. It may be related to color codes
@@ -3010,7 +2997,7 @@ snippy search --sgrp KW                                     # search --sgrp not 
 ## snippets: search with regepx filter
 snippy search --sall . --flter <regexp>                     # search --filter to match only commands (DONE)
 snippy search --sall . --flter <regexp>                     # search --filter not to match (DONE)
-snippy search --all --sall . --filter <regexp>              # search --filter to match only commands from category --all (DONE)
+snippy search --scat all --sall . --filter <regexp>         # search --filter to match only commands from category --scat all (DONE)
 
 ## snippets: search with content
 snippy search -c <content>                                  # search --content to match content (DONE)
@@ -3030,32 +3017,32 @@ snippy search -d <digest>                                   # search --digest no
 
 ## snippets: template
 snippy export --template                                    # export snippet template (DONE)
-snippy export --snippet --template                          # export snippet template with explicit category (DONE)
+snippy export --scat snippet --template                          # export snippet template with explicit category (DONE)
 
 ## solutions: template
-snippy export --solution --template                         # export solution template without --file option (DONE)
+snippy export --scat solution --template                         # export solution template without --file option (DONE)
 
 ## snippets: defaults
 snippy export --defaults                                    # export snippet defaults (DONE)
 snippy export --defaults                                    # export snippet defaults without stored content (DONE)
 
 ## solutions: defaults
-snippy export --solution --defaults                         # export solutions defaults (DONE)
-snippy export --solution --defaults                         # export solution defaults without stored content (DONE)
+snippy export --scat solution --defaults                         # export solutions defaults (DONE)
+snippy export --scat solution --defaults                         # export solution defaults without stored content (DONE)
 
 ## snippets: all content
 snippy export                                               # export all snippets to default file (DONE)
-snippy export --snippet                                     # export all snippets to default file (DONE)
+snippy export --scat snippet                                     # export all snippets to default file (DONE)
 snippy export -f ./file.yaml                                # export all snippets to yaml file (DONE)
 snippy export --file foo.bar                                # try to export all snippets to unsupported file format (DONE)
 
 ## solutions: all content
-snippy export --solution                                    # export all solutions to default file (DONE)
-snippy export --solution -f ./file.yaml                     # export all solutions to yaml file (DONE)
-snippy export --solution -f ./file.json                     # export all solutions to json file (DONE)
-snippy export --solution -f ./file.txt                      # export all solutions to text file (DONE)
-snippy export --solution -f ./file.text                     # export all solutions to text file (DONE)
-snippy export --solution -f ./file.foo                      # try to export all solutions to unsupported file format (DONE)
+snippy export --scat solution                                    # export all solutions to default file (DONE)
+snippy export --scat solution -f ./file.yaml                     # export all solutions to yaml file (DONE)
+snippy export --scat solution -f ./file.json                     # export all solutions to json file (DONE)
+snippy export --scat solution -f ./file.txt                      # export all solutions to text file (DONE)
+snippy export --scat solution -f ./file.text                     # export all solutions to text file (DONE)
+snippy export --scat solution -f ./file.foo                      # try to export all solutions to unsupported file format (DONE)
 
 ## snippets: defined content
 snippy export -d <digest>                                   # export defined snippet to default file (DONE)
@@ -3065,18 +3052,18 @@ snippy export -d <digest> -f ./file.txt                     # export defined sni
 
 ## solutions: defined content
 snippy export -d <digest>                                   # export solution with digest to default file (DONE)
-snippy export --solution -d <digest>                        # export solution to file defined by solution metadata (DONE)
-snippy export --solution -d <digest>                        # export solution to file without solution metadata for file name(DONE)
-snippy export --solution -d <digest> -f ./file.yaml         # export solution to yaml file (DONE)
+snippy export --scat solution -d <digest>                        # export solution to file defined by solution metadata (DONE)
+snippy export --scat solution -d <digest>                        # export solution to file without solution metadata for file name(DONE)
+snippy export --scat solution -d <digest> -f ./file.yaml         # export solution to yaml file (DONE)
 snippy export -d a96accc25dd23ac0 -f ./file.yaml            # export solution to yaml file wihtout category (DONE)
-snippy export --solution -d <digest> -f ./file.json         # export solution to json file (DONE)
+snippy export --scat solution -d <digest> -f ./file.json         # export solution to json file (DONE)
 snippy export -d a96accc25dd23ac0 -f ./file.json            # export solution to json file wihtout category (DONE)
-snippy export --solution -d <digest> -f ./file.txt          # export solution to text file (DONE)
+snippy export --scat solution -d <digest> -f ./file.txt          # export solution to text file (DONE)
 snippy export -d a96accc25dd23ac0 -f ./file.txt             # export solution to text file wihtout category (DONE)
-snippy export --solution -d <digest> -f ./file.text         # export solution to text file (DONE)
+snippy export --scat solution -d <digest> -f ./file.text         # export solution to text file (DONE)
 snippy export -d a96accc25dd23ac0 -f ./file.text            # export solution to text file wihtout category (DONE)
-snippy export --solution -d <digest> -f ./file.foo          # try to export solution to unsupported file format (DONE)
-snippy export --solution -d <unknown digest> -f ./file.text # try to export solution with unknown digest (DONE)
+snippy export --scat solution -d <digest> -f ./file.foo          # try to export solution to unsupported file format (DONE)
+snippy export --scat solution -d <unknown digest> -f ./file.text # try to export solution with unknown digest (DONE)
 
 #######################################
 ## Test plan
@@ -3167,7 +3154,7 @@ python snip.py update --digest 111111111111111
 python snip.py update -c '111111111111111'
 
 8. Update snippet by defining solution category in command line (DONE)
-python snip.py update --solution -d 22c0ca5bbc9797b
+python snip.py update --scat solution -d 22c0ca5bbc9797b
 
 9. Update solution by leaving the category out (defaults snippet) from command line (DONE)
 python snip.py update -d 22c0ca5bbc9797b
@@ -3257,13 +3244,13 @@ python snip.py export --file ./snippets.txt
 
 4. Export without file to use default file
 python snip.py export (DONE)
-python snip.py export --snippets  # Creates snippets.yaml
-python snip.py export --solution # Creates solutions.yaml (DONE)
+python snip.py export --scat snippet  # Creates snippets.yaml
+python snip.py export --scat solution # Creates solutions.yaml (DONE)
 
 5. Export template
 python runner export --template (DONE)
-python runner export --solution --template
-python runner export --snippet --template (DONE)
+python runner export --scat solution --template
+python runner export --scat snippet --template (DONE)
 
 6. Export with unsupported file format foo.bar. This must not create empty file foo.bar
 python runner export --file foo.bar (DONE)
@@ -3282,40 +3269,40 @@ python runner export -d e95e9092c92e3440 -f testing.txt (DONE)
 ######################
 
 1. Export solutions into yaml file. Filename is not defined in command line. (DONE)
-snippet export --solution
+snippet export --scat solution
 
 2. Export solutions into yaml file. Filename is defined in command line. (DONE)
-snippet export --solution -f ./defined-solutions.yaml
+snippet export --scat solution -f ./defined-solutions.yaml
 
 3. Export solution based on message digest. Filename is defined in command line and in solution data. (DONE)
-snippet export --solution -d a96accc25dd23ac0 -f ./defined-solutions.text
+snippet export --scat solution -d a96accc25dd23ac0 -f ./defined-solutions.text
 
 4. Export solution based on message digest. Filename not defined in solution data or in command line. (DONE)
-snippet export --solution -d a96accc25dd23ac0
+snippet export --scat solution -d a96accc25dd23ac0
 
 5. Export solution based on message digest. Filename is defined in solution data but not in command line. (DONE)
-snippet export --solution -d a96accc25dd23ac0
+snippet export --scat solution -d a96accc25dd23ac0
 
 6. Export solution based on message digest. Filename is not defined in command line or in solution data. (DONE)
-snippet export --solution -d a96accc25dd23ac0
+snippet export --scat solution -d a96accc25dd23ac0
 
 7. Export solution template to default file. (DONE)
-snippy export --solution --template
+snippy export --scat solution --template
 
-snippy export --solution                                      # All solutions in default file solutions.yaml. (TESTED)
-snippy export --solution -f ./file-s.txt                      # All solutions in file defined file in text format. (TESTED)
-snippy export --solution -f ./file-s.text                     # All solutions in file defined file in text format. (TESTED)
-snippy export --solution -f ./file-s.yaml                     # All solutions in file defined file in yaml format. (TESTED)
-snippy export --solution -f ./file-s.json                     # All solutions in file defined file in json format. (TESTED)
-snippy export --solution -f ./file-s.foo                      # Unknown file format results error and no export is made. (TESTED)
+snippy export --scat solution                                      # All solutions in default file solutions.yaml. (TESTED)
+snippy export --scat solution -f ./file-s.txt                      # All solutions in file defined file in text format. (TESTED)
+snippy export --scat solution -f ./file-s.text                     # All solutions in file defined file in text format. (TESTED)
+snippy export --scat solution -f ./file-s.yaml                     # All solutions in file defined file in yaml format. (TESTED)
+snippy export --scat solution -f ./file-s.json                     # All solutions in file defined file in json format. (TESTED)
+snippy export --scat solution -f ./file-s.foo                      # Unknown file format results error and no export is made. (TESTED)
 
-snippy export --solution -d ce6ef2f0408ff378                  # One content in file and format defined by content metadata. (TESTED)
-snippy export --solution -d ce6ef2f0408ff378                  # One content in file and format by tool default when metadata is not set. (TESTED)
-snippy export --solution -d a96accc25dd23ac0 -f ./file-s.txt  # One content in file always in text format. (TESTED)
-snippy export --solution -d a96accc25dd23ac0 -f ./file-s.text # One content in file always in text format. (TESTED)
-snippy export --solution -d a96accc25dd23ac0 -f ./file-s.yaml # One content in file always in yaml format. (TESTED)
-snippy export --solution -d a96accc25dd23ac0 -f ./file-s.json # One content in file always in json format. (TESTED)
-snippy export --solution -d a96accc25dd23ac0 -f ./file-s.foo  # Unknown file format results error and no export is made. (TESTED)
+snippy export --scat solution -d ce6ef2f0408ff378                  # One content in file and format defined by content metadata. (TESTED)
+snippy export --scat solution -d ce6ef2f0408ff378                  # One content in file and format by tool default when metadata is not set. (TESTED)
+snippy export --scat solution -d a96accc25dd23ac0 -f ./file-s.txt  # One content in file always in text format. (TESTED)
+snippy export --scat solution -d a96accc25dd23ac0 -f ./file-s.text # One content in file always in text format. (TESTED)
+snippy export --scat solution -d a96accc25dd23ac0 -f ./file-s.yaml # One content in file always in yaml format. (TESTED)
+snippy export --scat solution -d a96accc25dd23ac0 -f ./file-s.json # One content in file always in json format. (TESTED)
+snippy export --scat solution -d a96accc25dd23ac0 -f ./file-s.foo  # Unknown file format results error and no export is made. (TESTED)
 
 snippy export -d ce6ef2f0408ff378 # Export solution without defining the content category. (TESTED)
 snippy export -d a96accc25dd23ac0 -f ./file-s.txt (TESTED)
@@ -3324,8 +3311,8 @@ snippy export -d a96accc25dd23ac0 -f ./file-s.yaml (TESTED)
 snippy export -d a96accc25dd23ac0 -f ./file-s.json (TESTED)
 snippy export -d a96accc25dd23ac0 -f ./file-s.foo
 
-snippy export --solution --defaults                           # All solutions in yaml format into default location that stores the defaults. (TESTED)
-snippy export --solution --template                           # Always just the template to solution-template.txt. (TESTED)
+snippy export --scat solution --defaults                           # All solutions in yaml format into default location that stores the defaults. (TESTED)
+snippy export --scat solution --template                           # Always just the template to solution-template.txt. (TESTED)
 
 
 ######################
@@ -3348,9 +3335,9 @@ python snip.py import --file ./snippets.json
 
 3. Import same snippet yaml file again (DONE)
 
-4. Import snippet defaults: 1) python runner import -f defaults 2) python runner import --snippet -f defaults (DONE)
+4. Import snippet defaults: 1) python runner import -f defaults 2) python runner import --scat snippet -f defaults (DONE)
 
-5. Import solution defaults: python runner import --solution -f defaults (DONE)
+5. Import solution defaults: python runner import --scat solution -f defaults (DONE)
 
 6. Import content from invalid file
 python runner import -f foo.yaml (DONE)
@@ -3363,7 +3350,7 @@ python runner import -f foo.txt
 
 9. Import content without specifying the file (that defaults to snippets.yaml or solutions.yaml) (DONE)
 python runner import
-python runner import --solution
+python runner import --scat solution
 
 10. Import text template with on solution (DONE)
 python runner import -f solution.txt
@@ -3373,8 +3360,8 @@ python runner import -f snippet.txt
 
 12. Import template
 python runner import --template
-python runner import --solution --template
-python runner import --snippet --template
+python runner import --scat solution --template
+python runner import --scat snippet --template
 
 13. Import defaults
 python import --defaults (DONE)
@@ -3387,42 +3374,42 @@ python import -f snippet-template.txt (DONE)
 
 16. Import (update) specific content from file. The content category must be read automatically
 python import -d e95e9092c92e3440 -f howto-debug-elastic-beats.txt # import content with category defaulting to snippet (DONE)
-python import --solution -d e95e9092c92e3440 -f howto-debug-elastic-beats.txt (DONE)
-python import --snippet -d e95e9092c92e3440 -f howto-debug-elastic-beats.txt (DONE)
+python import --scat solution -d e95e9092c92e3440 -f howto-debug-elastic-beats.txt (DONE)
+python import --scat snippet -d e95e9092c92e3440 -f howto-debug-elastic-beats.txt (DONE)
 
 ######################
 ## Importing solution
 ######################
 
-snippy import --solution                                      # Uses default file /solutions.yaml  (TESTED)
-snippy import --solution -f ./all-solutions.yaml              # Import all solutions from yaml file (TESTED)
-snippy import --solution -f ./all-solutions.json              # Import all solutions from json file (TESTED)
-snippy import --solution -f ./all-solutions.txt               # Import all solutions from txt file (TESTED)
-snippy import --solution -f ./all-solutions.text              # Import all solutions from txt file (TESTED)
-snippy import --solution -f ./all-solutions.yaml              # Import solutions that are already imported
-snippy import --solution -f ./all-solutions.yaml              # Import solutions where only one is new
+snippy import --scat solution                                      # Uses default file /solutions.yaml  (TESTED)
+snippy import --scat solution -f ./all-solutions.yaml              # Import all solutions from yaml file (TESTED)
+snippy import --scat solution -f ./all-solutions.json              # Import all solutions from json file (TESTED)
+snippy import --scat solution -f ./all-solutions.txt               # Import all solutions from txt file (TESTED)
+snippy import --scat solution -f ./all-solutions.text              # Import all solutions from txt file (TESTED)
+snippy import --scat solution -f ./all-solutions.yaml              # Import solutions that are already imported
+snippy import --scat solution -f ./all-solutions.yaml              # Import solutions where only one is new
 snippy import -f ./all-solutions.yaml                         # Import all solutions without defining content category. (TESTED)
 snippy import -f ./all-solutions.json (TESTED)
 snippy import -f ./all-solutions.txt (TESTED)
 snippy import -f ./all-solutions.text (TESTED)
 
-snippy import --solution -f ./solution-template.yaml          # Import one content from yaml template (TESTED)
-snippy import --solution -f ./solution-template.json          # Import one content from json template (TESTED)
-snippy import --solution -f ./solution-template.txt           # Import one content from text template (TESTED)
-snippy import --solution -f ./solution-template.text          # Import one content from text template (TESTED)
-snippy import --solution -f ./foo.bar                         # Import one content from unknown file format (TESTED)
+snippy import --scat solution -f ./solution-template.yaml          # Import one content from yaml template (TESTED)
+snippy import --scat solution -f ./solution-template.json          # Import one content from json template (TESTED)
+snippy import --scat solution -f ./solution-template.txt           # Import one content from text template (TESTED)
+snippy import --scat solution -f ./solution-template.text          # Import one content from text template (TESTED)
+snippy import --scat solution -f ./foo.bar                         # Import one content from unknown file format (TESTED)
 
-snippy import --solution -f ./solution-template.yaml -d 12345 # Import (update) one content from yaml template (TESTED)
-snippy import --solution -f ./solution-template.json -d 12345 # Import (update) one content from json template (TESTED)
-snippy import --solution -f ./solution-template.txt  -d 12345 # Import (update) one content from text template (TESTED)
-snippy import --solution -f ./solution-template.text -d 12345 # Import (update) one content from text template (TESTED)
-snippy import --solution -f ./solution-template.text -d 00000 # Import (update) one content with digest not found
+snippy import --scat solution -f ./solution-template.yaml -d 12345 # Import (update) one content from yaml template (TESTED)
+snippy import --scat solution -f ./solution-template.json -d 12345 # Import (update) one content from json template (TESTED)
+snippy import --scat solution -f ./solution-template.txt  -d 12345 # Import (update) one content from text template (TESTED)
+snippy import --scat solution -f ./solution-template.text -d 12345 # Import (update) one content from text template (TESTED)
+snippy import --scat solution -f ./solution-template.text -d 00000 # Import (update) one content with digest not found
 
-snippy import --solution -f ./solution-template.txt   # Import solution template without any changes (TESTED)
+snippy import --scat solution -f ./solution-template.txt   # Import solution template without any changes (TESTED)
 
-snippy import --solution --defaults                   # Import solution defaults (TESTED)
+snippy import --scat solution --defaults                   # Import solution defaults (TESTED)
 
-snippy import --solution --template                   # Must produce error (TESTED)
+snippy import --scat solution --template                   # Must produce error (TESTED)
 
 ########################
 ## Supplementary options

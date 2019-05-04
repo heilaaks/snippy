@@ -47,7 +47,7 @@ class TestCliSearchSolution(object):
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--solution', '--sall', 'filebeat', '--no-ansi'])
+        cause = snippy.run(['snippy', 'search', '--scat', 'solution', '--sall', 'filebeat', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -62,7 +62,7 @@ class TestCliSearchSolution(object):
         """
 
         output = 'NOK: cannot find content with given search criteria' + Const.NEWLINE
-        cause = snippy.run(['snippy', 'search', '--solution', '--sall', 'notfound', '--no-ansi'])
+        cause = snippy.run(['snippy', 'search', '--scat', 'solution', '--sall', 'notfound', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == 'NOK: cannot find content with given search criteria'
         assert out == output
@@ -84,7 +84,7 @@ class TestCliSearchSolution(object):
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--solution', '--sall', '.', '--filter', '.*(\\$.*filebeat)', '--no-ansi'])
+        cause = snippy.run(['snippy', 'search', '--scat', 'solution', '--sall', '.', '--filter', '.*(\\$.*filebeat)', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -107,7 +107,7 @@ class TestCliSearchSolution(object):
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--solution', '--digest', 'db712a82662d6932', '--no-ansi'])
+        cause = snippy.run(['snippy', 'search', '--scat', 'solution', '--digest', 'db712a82662d6932', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -132,7 +132,7 @@ class TestCliSearchSolution(object):
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--solution', '--sall', '.', '--sgrp', 'beats', '--no-ansi'])
+        cause = snippy.run(['snippy', 'search', '--scat', 'solution', '--sall', '.', '--sgrp', 'beats', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)

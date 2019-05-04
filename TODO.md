@@ -1,7 +1,8 @@
 ## WORKING
-   - [ ] Add server command.
-   - [ ] Add --scat all and remove --solutions, etc
+   - [ ] Change name of --scat to --cat?
+   - [ ] Make tests for --scat
    - [ ] Add export to bash completion
+   - [ ] Fix cause 'Content has been created without internal errors.' This breaks when there is e.g. created and bad request.
    - [ ] Fix updating Markdown based solutions in text formats does not work because the Mkdn solution does not have text header and data structure.
    - [ ] Fix test_logger_016. The P3 is not correct? The links in p2 are in the same elemnet separated with \n that should be the case with P3.
    - [ ] Why container --server-host command line option does not work (healthcheck)? docker run -d --net="host" --name snippy heilaaks/snippy --server-host 127.0.0.1:8080 --log-json -vv
@@ -26,7 +27,6 @@
    - [ ] Fix somehow (?) the python runner search --sall 'test' --filter test -vv | grep --all?
    - [ ] Fix JSON API v1.x requires links for collection responses too. Individual resource not found or attrbute results null otherwise empty list.
    - [ ] Fix digest computation once things are setling down. Changing this forces changes to all tests and code that rely on digest.
-   - [ ] Fix help text to use import --all instead of content specific commands. Or keep?
    - [ ] Fix updating content without updates changes the updated timestamp. There is no need to store the content either.
    - [ ] Add delete for wheel build directory for automation. If the folder exist this is a problem (at least used to be) see how to fail python release/building/something.
    - [ ] Refactor Makefile to have python|python3|pypy|pypy3 as ${PYTHON}.

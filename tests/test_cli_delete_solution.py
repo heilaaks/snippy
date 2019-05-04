@@ -43,7 +43,7 @@ class TestCliDeleteSolution(object):
             ]
         }
         Content.assert_storage_size(2)
-        cause = snippy.run(['snippy', 'delete', '--solution', '-d', '5dee85bedb7f4d3a'])
+        cause = snippy.run(['snippy', 'delete', '--scat', 'solution', '-d', '5dee85bedb7f4d3a'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -79,7 +79,7 @@ class TestCliDeleteSolution(object):
                 Solution.BEATS
             ]
         }
-        cause = snippy.run(['snippy', 'delete', '--solution', '-d', '5dee8'])
+        cause = snippy.run(['snippy', 'delete', '--scat', 'solution', '-d', '5dee8'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -97,7 +97,7 @@ class TestCliDeleteSolution(object):
             ]
         }
         Content.assert_storage_size(2)
-        cause = snippy.run(['snippy', 'delete', '--solution', '-d', '5dee85bedb7f4d3a970aa2e0568930c68bac293edc8a2a4538d04bd70bea01ea'])  # pylint: disable=line-too-long
+        cause = snippy.run(['snippy', 'delete', '--scat', 'solution', '-d', '5dee85bedb7f4d3a970aa2e0568930c68bac293edc8a2a4538d04bd70bea01ea'])  # pylint: disable=line-too-long
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -112,7 +112,7 @@ class TestCliDeleteSolution(object):
         """
 
         Content.assert_storage_size(1)
-        cause = snippy.run(['snippy', 'delete', '--solution', '-d', ''])
+        cause = snippy.run(['snippy', 'delete', '--scat', 'solution', '-d', ''])
         assert cause == Cause.ALL_OK
         Content.assert_storage(None)
 
@@ -130,7 +130,7 @@ class TestCliDeleteSolution(object):
                 Solution.NGINX
             ]
         }
-        cause = snippy.run(['snippy', 'delete', '--solution', '-d', '123456789abcdef0'])
+        cause = snippy.run(['snippy', 'delete', '--scat', 'solution', '-d', '123456789abcdef0'])
         assert cause == 'NOK: cannot find content with message digest: 123456789abcdef0'
         Content.assert_storage(content)
 
@@ -149,7 +149,7 @@ class TestCliDeleteSolution(object):
                 Solution.NGINX
             ]
         }
-        cause = snippy.run(['snippy', 'delete', '--solution', '-d', ''])
+        cause = snippy.run(['snippy', 'delete', '--scat', 'solution', '-d', ''])
         assert cause == 'NOK: cannot use empty message digest for delete operation'
         Content.assert_storage(content)
 
@@ -168,7 +168,7 @@ class TestCliDeleteSolution(object):
                 Solution.NGINX
             ]
         }
-        cause = snippy.run(['snippy', 'delete', '--solution', '-d', '123456'])
+        cause = snippy.run(['snippy', 'delete', '--scat', 'solution', '-d', '123456'])
         assert cause == 'NOK: cannot find content with message digest: 123456'
         Content.assert_storage(content)
 
@@ -187,7 +187,7 @@ class TestCliDeleteSolution(object):
         }
         Content.assert_storage_size(2)
         data = Content.dump_text(Solution.NGINX)
-        cause = snippy.run(['snippy', 'delete', '--solution', '--content', data])
+        cause = snippy.run(['snippy', 'delete', '--scat', 'solution', '--content', data])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -206,7 +206,7 @@ class TestCliDeleteSolution(object):
                 Solution.NGINX
             ]
         }
-        cause = snippy.run(['snippy', 'delete', '--solution', '--content', 'not-exists'])
+        cause = snippy.run(['snippy', 'delete', '--scat', 'solution', '--content', 'not-exists'])
         assert cause == 'NOK: cannot find content with content data: not-exists'
         Content.assert_storage(content)
 
@@ -226,7 +226,7 @@ class TestCliDeleteSolution(object):
             ]
         }
         data = Content.dump_text(Solution.KAFKA)
-        cause = snippy.run(['snippy', 'delete', '--solution', '--content', data])
+        cause = snippy.run(['snippy', 'delete', '--scat', 'solution', '--content', data])
         assert cause == 'NOK: cannot find content with content data: ##############################...'
         Content.assert_storage(content)
 
@@ -245,7 +245,7 @@ class TestCliDeleteSolution(object):
                 Solution.NGINX
             ]
         }
-        cause = snippy.run(['snippy', 'delete', '--solution', '--content', ''])
+        cause = snippy.run(['snippy', 'delete', '--scat', 'solution', '--content', ''])
         assert cause == 'NOK: cannot use empty content data for delete operation'
         Content.assert_storage(content)
 

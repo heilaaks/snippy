@@ -27,8 +27,8 @@ result file to the github issue report with the failure report template below.
 
     ## Commands to excecute
 
-    snippy export --snippets --debug >> snippy-$(snippy --version).log 2>&1
-    snippy export --solutions --debug >> snippy-$(snippy --version).log 2>&1
+    snippy export --scat snippet --debug >> snippy-$(snippy --version).log 2>&1
+    snippy export --scat solution --debug >> snippy-$(snippy --version).log 2>&1
     snippy --help --debug >> snippy-$(snippy --version).log 2>&1
     snippy <failing command> --debug >> snippy-$(snippy --version).log 2>&1
     uname -a >> snippy-$(snippy --version).log 2>&1

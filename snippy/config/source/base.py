@@ -56,13 +56,46 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
         ^[-]{0,2}    # Match leading hyphens used to indicate command line option.
         ''', re.VERBOSE)
 
-    def __init__(self, derived, parameters=None):
+    def __init__(self, derived):
         self._logger = Logger.get_logger(__name__)
         self._logger.debug('config source: {}'.format(derived))
         self._derived = derived
         self._reset_fields = {}
         self._repr = self._get_repr()
-        self.init_conf(parameters)
+        self.debug = False
+        self.defaults = False
+        self.digest = None
+        self.editor = False
+        self.failure = False
+        self.failure_message = Const.EMPTY
+        self.template_format = Const.CONTENT_FORMAT_MKDN
+        self.log_json = False
+        self.log_msg_max = self.DEFAULT_LOG_MSG_MAX
+        self.merge = False
+        self.no_ansi = False
+        self.no_editor = False
+        self.operation = None
+        self.profiler = False
+        self.quiet = False
+        self.run_healthcheck = False
+        self.server_minify_json = False
+        self.server_readonly = False
+        self.server_ssl_ca_cert = None
+        self.server_ssl_cert = None
+        self.server_ssl_key = None
+        self.storage_path = Const.EMPTY
+        self.storage_type = Const.DB_SQLITE
+        self.storage_host = Const.EMPTY
+        self.storage_user = Const.EMPTY
+        self.storage_password = Const.EMPTY
+        self.storage_database = Const.EMPTY
+        self.storage_ssl_cert = None
+        self.storage_ssl_key = None
+        self.storage_ssl_ca_cert = None
+        self.template = False
+        self.uuid = None
+        self.version = __version__
+        self.very_verbose = False
 
     def __str__(self):
         """Print class attributes in a controlled manner.
@@ -80,6 +113,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
             return str('%s(%s)' % ('ConfigSourceBase', ', '.join(namespace)))
 
         namespace.append('brief={}'.format(self.brief))
+        namespace.append('category={}'.format(self.category))
         namespace.append('data={}'.format(self.data))
         namespace.append('debug={}'.format(self.debug))
         namespace.append('defaults={}'.format(self.defaults))
@@ -174,6 +208,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
         # Content category aware parsing requires the category to be defined
         # as early as possible.
         self.category = parameters.get('category', Const.SNIPPET)
+        self.scat = parameters.get('scat', self.category)
 
         # There are few parameters like 'data' and 'digest' where the tool
         # error logic must know if value was defined at all by the CLI user.
@@ -206,7 +241,6 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
         self.remove_fields = parameters.get('fields', self.ATTRIBUTES)
         self.run_healthcheck = parameters.get('server_healthcheck', False)
         self.sall = parameters.get('sall', None)
-        self.scat = parameters.get('scat', None)
         self.search_filter = parameters.get('search_filter', None)
         self.search_limit = parameters.get('limit', self.LIMIT_DEFAULT_API)
         self.search_offset = parameters.get('offset', self.OFFSET_DEFAULT)
@@ -241,6 +275,28 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
         # The flag that tells if Snippy server is run is set after the
         # command line arguments and environment variables are parsed.
         self.run_server = bool(self.server_host)
+
+    @property
+    def category(self):
+        """Get content category."""
+
+        return self._category
+
+    @category.setter
+    def category(self, value):
+        """Set content category.
+
+        The content category is important when content is created. In case of
+        the ``create`` operation, there must be only one category.
+        """
+
+        value = Parser.format_list(value)
+        if len(value) == 1 and set(value).issubset(Const.CATEGORIES):
+            value = value[0]
+        else:
+            value = Const.UNKNOWN_CATEGORY
+
+        self._category = value  # pylint: disable=attribute-defined-outside-init
 
     @property
     def data(self):
@@ -422,30 +478,30 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
 
     @scat.setter
     def scat(self, value):
-        """Store 'search categories' keywords.
+        """Store content categories keywords.
+
+        The ``scat`` option defines the content category or categories for
+        the operation. If operation is ``create``, there must be only one
+        category. If the operation is ``search`` or the operation requires
+        searching content, there can be multiple values.
 
         The keywords are stored in tuple with one keywords per element.
 
-        If user has not defined the search categories, the search is made
-        only from the content category.
-
-        If all provided search categories are not correct, an error is set.
-        This is simple error handling that fails the operation instead of
-        trying to recover it.
-
-        An unknown value is set to scat in case of failure because it minimizes
-        the search results in error scenario. If all categories would be
-        searched, it could lead to large set of results that are searched for
-        no reason in case of failure.
+        If any of the give categories is incorrect, error is set. This is a
+        simple error handling that fails the operation instead of trying to
+        recover it. An unknown value is set to the ``scat`` option in case
+        of a failure because it minimizes the search results in the error
+        scenario. If all categories would be searched with errors, it could
+        lead to a large search results sets in case of failures.
         """
 
         scat = Parser.format_search_keywords(value)
         if not scat:
-            if self.category == Const.ALL_CATEGORIES:
-                scat = Const.CATEGORIES
-            else:
-                scat = (self.category,)
-        elif not set(scat).issubset(Const.CATEGORIES):
+            scat = (Const.SNIPPET,)
+        if Const.ALL_CATEGORIES in scat:
+            scat = Const.CATEGORIES
+
+        if not set(scat).issubset(Const.CATEGORIES):
             # The below formatting removes unicode string prefix u'' in case
             # of Python 2. The formatting also prints a beautified list of
             # invalid categories in the same format as the valid categories.
@@ -589,6 +645,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
         The removed fields are presented as tuple and they are converted from
         requested 'fields' parameter."""
 
+        remove_fields = ()
         requested_fields = Parser.format_list(value)
         valid = True
         for field in requested_fields:
@@ -597,9 +654,10 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
                 Cause.push(Cause.HTTP_BAD_REQUEST, 'resource field does not exist: {}'.format(field))
 
         if valid:
-            self._remove_fields = tuple(set(self.ATTRIBUTES) - set(requested_fields))  # pylint: disable=attribute-defined-outside-init
+            remove_fields = tuple(set(self.ATTRIBUTES) - set(requested_fields))  # pylint: disable=attribute-defined-outside-init
 
-        self._logger.debug('{}: content attributes that are removed: {}'.format(self._derived, self._remove_fields))
+        self._logger.debug('{}: content attributes that are removed: {}'.format(self._derived, remove_fields))
+        self._remove_fields = remove_fields  # pylint: disable=attribute-defined-outside-init
 
     @property
     def reset_fields(self):

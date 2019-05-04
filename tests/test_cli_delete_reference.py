@@ -246,7 +246,7 @@ class TestCliDeleteReference(object):
             ]
         }
         Content.assert_storage_size(2)
-        cause = snippy.run(['snippy', 'delete', '--sall', 'chris', '--references'])
+        cause = snippy.run(['snippy', 'delete', '--sall', 'chris', '--scat', 'reference'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 

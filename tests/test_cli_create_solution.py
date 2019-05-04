@@ -54,7 +54,7 @@ class TestCliCreateSolution(object):
         groups = Const.DELIMITER_GROUPS.join(content['data'][0]['groups'])
         tags = Const.DELIMITER_TAGS.join(content['data'][0]['tags'])
         links = Const.DELIMITER_LINKS.join(content['data'][0]['links'])
-        cause = snippy.run(['snippy', 'create', '--solution', '--content', data, '--brief', brief, '--groups', groups, '--tags', tags, '--links', links, '--format', 'text'])  # pylint: disable=line-too-long
+        cause = snippy.run(['snippy', 'create', '--scat', 'solution', '--content', data, '--brief', brief, '--groups', groups, '--tags', tags, '--links', links, '--format', 'text'])  # pylint: disable=line-too-long
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -72,7 +72,7 @@ class TestCliCreateSolution(object):
                 Solution.NGINX
             ]
         }
-        cause = snippy.run(['snippy', 'create', '--solution', '--format', 'text'])
+        cause = snippy.run(['snippy', 'create', '--scat', 'solution', '--format', 'text'])
         assert cause == 'NOK: content data already exist with digest db712a82662d6932'
         Content.assert_storage(content)
 
@@ -84,7 +84,7 @@ class TestCliCreateSolution(object):
         Try to create new solution without any changes to template.
         """
 
-        cause = snippy.run(['snippy', 'create', '--solution', '--format', 'text'])
+        cause = snippy.run(['snippy', 'create', '--scat', 'solution', '--format', 'text'])
         assert cause == 'NOK: content was not stored because it was matching to an empty template'
         Content.assert_storage(None)
 
@@ -97,7 +97,7 @@ class TestCliCreateSolution(object):
         template is deleted and the edited solution is an empty string.
         """
 
-        cause = snippy.run(['snippy', 'create', '--solution', '--format', 'text'])
+        cause = snippy.run(['snippy', 'create', '--scat', 'solution', '--format', 'text'])
         assert cause == 'NOK: could not identify content category - please keep template tags in place'
         Content.assert_storage(None)
 
@@ -111,7 +111,7 @@ class TestCliCreateSolution(object):
         it has lost tags that identify it as a solution content.
         """
 
-        cause = snippy.run(['snippy', 'create', '--solution', '--format', 'text'])
+        cause = snippy.run(['snippy', 'create', '--scat', 'solution', '--format', 'text'])
         assert cause == 'NOK: could not identify content category - please keep template tags in place'
         Content.assert_storage(None)
 
@@ -129,7 +129,7 @@ class TestCliCreateSolution(object):
             ]
         }
         content['data'][0]['uuid'] = Content.UUID2
-        cause = snippy.run(['snippy', 'create', '--solution', '--editor', '--format', 'text'])
+        cause = snippy.run(['snippy', 'create', '--scat', 'solution', '--editor', '--format', 'text'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -231,7 +231,7 @@ class TestCliCreateSolution(object):
         content['data'][0]['uuid'] = Content.UUID1
         content['data'][0]['digest'] = '7941851522a23d3651f223b6d69441f77649ccb7ae1e72c6709890f2caf6401a'
         editor_data.return_value = '\n'.join(edited)
-        cause = snippy.run(['snippy', 'create', '--solution'])
+        cause = snippy.run(['snippy', 'create', '--scat', 'solution'])
         editor_data.assert_called_with('\n'.join(template))
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
@@ -281,7 +281,7 @@ class TestCliCreateSolution(object):
         )
         edited = template
         editor_data.return_value = '\n'.join(edited)
-        cause = snippy.run(['snippy', 'create', '--solution'])
+        cause = snippy.run(['snippy', 'create', '--scat', 'solution'])
         editor_data.assert_called_with('\n'.join(template))
         assert cause == 'NOK: content was not stored because it was matching to an empty template'
         Content.assert_storage(None)
@@ -295,7 +295,7 @@ class TestCliCreateSolution(object):
         option when the mandatory data is not defined.
         """
 
-        cause = snippy.run(['snippy', 'create', '--solution', '--brief', 'Short brief', '--no-editor'])
+        cause = snippy.run(['snippy', 'create', '--scat', 'solution', '--brief', 'Short brief', '--no-editor'])
         assert cause == 'NOK: content was not stored because mandatory content field data is empty'
         Content.assert_storage(None)
 
@@ -324,7 +324,7 @@ class TestCliCreateSolution(object):
         groups = Const.DELIMITER_GROUPS.join(content['data'][0]['groups']) + ',beats'
         tags = Const.DELIMITER_TAGS.join(content['data'][0]['tags']) + ',howto,filebeat'
         links = Const.DELIMITER_LINKS.join(content['data'][0]['links']) + ' https://www.elastic.co/guide/en/beats/filebeat/master/enable-filebeat-debugging.html'  # pylint: disable=line-too-long
-        cause = snippy.run(['snippy', 'create', '--solution', '--content', data, '--brief', brief, '--groups', groups, '--tags', tags, '--links', links, '--format', 'text'])  # pylint: disable=line-too-long
+        cause = snippy.run(['snippy', 'create', '--scat', 'solution', '--content', data, '--brief', brief, '--groups', groups, '--tags', tags, '--links', links, '--format', 'text'])  # pylint: disable=line-too-long
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 

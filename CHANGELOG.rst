@@ -9,7 +9,7 @@ Release history
 Breaking changes
 ~~~~~~~~~~~~~~~~
 
-* none
+* Change content category command line options
 
 New features
 ~~~~~~~~~~~~

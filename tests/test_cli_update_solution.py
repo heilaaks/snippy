@@ -49,7 +49,7 @@ class TestCliUpdateSolution(object):
         content['data'][0]['description'] = ''
         content['data'][0]['digest'] = '19baa35ea3751e7fb66a810fb20b766601dc7c61512a36a8378be7c6b0063acc'
         edited_beats.return_value = Content.dump_text(content['data'][0])
-        cause = snippy.run(['snippy', 'update', '--solution', '-d', 'db712a82662d6932', '--format', 'text'])
+        cause = snippy.run(['snippy', 'update', '--scat', 'solution', '-d', 'db712a82662d6932', '--format', 'text'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -72,7 +72,7 @@ class TestCliUpdateSolution(object):
         content['data'][0]['description'] = ''
         content['data'][0]['digest'] = '19baa35ea3751e7fb66a810fb20b766601dc7c61512a36a8378be7c6b0063acc'
         edited_beats.return_value = Content.dump_text(content['data'][0])
-        cause = snippy.run(['snippy', 'update', '--solution', '--digest', 'db712', '--format', 'text'])
+        cause = snippy.run(['snippy', 'update', '--scat', 'solution', '--digest', 'db712', '--format', 'text'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -95,7 +95,7 @@ class TestCliUpdateSolution(object):
         content['data'][0]['description'] = ''
         content['data'][0]['digest'] = '19baa35ea3751e7fb66a810fb20b766601dc7c61512a36a8378be7c6b0063acc'
         edited_beats.return_value = Content.dump_text(content['data'][0])
-        cause = snippy.run(['snippy', 'update', '--solution', '-d', 'db712a82662d693206004c2174a0bb1900e1e1307f21f79a0efb88a01add4151', '--format', 'text']) # pylint: disable=line-too-long
+        cause = snippy.run(['snippy', 'update', '--scat', 'solution', '-d', 'db712a82662d693206004c2174a0bb1900e1e1307f21f79a0efb88a01add4151', '--format', 'text'])  # pylint: disable=line-too-long
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -119,7 +119,7 @@ class TestCliUpdateSolution(object):
         content['data'][0]['description'] = ''
         content['data'][0]['digest'] = '19baa35ea3751e7fb66a810fb20b766601dc7c61512a36a8378be7c6b0063acc'
         edited_beats.return_value = Content.dump_text(content['data'][0])
-        cause = snippy.run(['snippy', 'update', '--snippet', '-d', 'db712a82662d6932', '--format', 'text'])
+        cause = snippy.run(['snippy', 'update', '--scat', 'snippet', '-d', 'db712a82662d6932', '--format', 'text'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -163,7 +163,7 @@ class TestCliUpdateSolution(object):
                 Solution.NGINX
             ]
         }
-        cause = snippy.run(['snippy', 'update', '--solution', '-d', '123456789abcdef0'])
+        cause = snippy.run(['snippy', 'update', '--scat', 'solution', '-d', '123456789abcdef0'])
         assert cause == 'NOK: cannot find content with message digest: 123456789abcdef0'
         Content.assert_storage(content)
 
@@ -183,7 +183,7 @@ class TestCliUpdateSolution(object):
                 Solution.NGINX
             ]
         }
-        cause = snippy.run(['snippy', 'update', '--solution', '-d', ''])
+        cause = snippy.run(['snippy', 'update', '--scat', 'solution', '-d', ''])
         assert cause == 'NOK: cannot use empty message digest for update operation'
         Content.assert_storage(content)
 
@@ -206,7 +206,7 @@ class TestCliUpdateSolution(object):
         content['data'][0]['digest'] = '19baa35ea3751e7fb66a810fb20b766601dc7c61512a36a8378be7c6b0063acc'
         edited_beats.return_value = Content.dump_text(content['data'][0])
         data = Content.dump_text(Solution.BEATS)
-        cause = snippy.run(['snippy', 'update', '--solution', '-c', data, '--format', 'text', '--editor'])
+        cause = snippy.run(['snippy', 'update', '--scat', 'solution', '-c', data, '--format', 'text', '--editor'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -224,7 +224,7 @@ class TestCliUpdateSolution(object):
                 Solution.NGINX
             ]
         }
-        cause = snippy.run(['snippy', 'update', '--solution', '--content', 'solution not existing'])
+        cause = snippy.run(['snippy', 'update', '--scat', 'solution', '--content', 'solution not existing'])
         assert cause == 'NOK: cannot find content with content data: solution not existing'
         Content.assert_storage(content)
 
@@ -243,7 +243,7 @@ class TestCliUpdateSolution(object):
                 Solution.NGINX
             ]
         }
-        cause = snippy.run(['snippy', 'update', '--solution', '-c', ''])
+        cause = snippy.run(['snippy', 'update', '--scat', 'solution', '-c', ''])
         assert cause == 'NOK: cannot use empty content data for update operation'
         Content.assert_storage(content)
 
@@ -266,7 +266,7 @@ class TestCliUpdateSolution(object):
         }
         content['data'][0]['uuid'] = Solution.NGINX_UUID
         edited_beats.return_value = Content.dump_text(content['data'][0])
-        cause = snippy.run(['snippy', 'update', '-d', '5dee85bedb7f4d3a', '--solution', '--editor', '--format', 'text'])
+        cause = snippy.run(['snippy', 'update', '-d', '5dee85bedb7f4d3a', '--scat', 'solution', '--editor', '--format', 'text'])
         edited_beats.assert_called_with(Content.dump_text(Solution.NGINX))
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
@@ -338,7 +338,7 @@ class TestCliUpdateSolution(object):
         updates['data'][0]['uuid'] = Solution.KAFKA_MKDN_UUID
         updates['data'][0]['digest'] = '7941851522a23d3651f223b6d69441f77649ccb7ae1e72c6709890f2caf6401a'
         editor_data.return_value = '\n'.join(edited)
-        cause = snippy.run(['snippy', 'update', '-d', '18473ec207798670', '--solution'])
+        cause = snippy.run(['snippy', 'update', '-d', '18473ec207798670', '--scat', 'solution'])
         editor_data.assert_called_with(Content.dump_mkdn(Solution.KAFKA_MKDN))
         assert cause == Cause.ALL_OK
         Content.assert_storage(updates)

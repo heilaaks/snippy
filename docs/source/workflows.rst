@@ -24,7 +24,7 @@ group, tags and links related to the snippet.
 
 .. code-block:: none
 
-    snippy create --snippets --editor
+    snippy create --scat snippet --editor
 
 Creating snippet from text template
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -33,8 +33,8 @@ Following commands allows using a text template to import new snippet.
 
 .. code-block:: none
 
-    snippy export --snippets --template
-    snippy import --snippets -f snippet-template.txt
+    snippy export --scat snippet --template
+    snippy import --scat snippet -f snippet-template.txt
 
 Creating snippet from command line
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -52,8 +52,8 @@ Creating solution from text template
 
 .. code-block:: none
 
-    snippy export --solutions --template
-    snippy import --snippets -f solution-template.txt
+    snippy export --scat solution --template
+    snippy import --scat snippet -f solution-template.txt
 
 Searching content
 -----------------
@@ -83,7 +83,7 @@ Filtering out solution content to list only the metadata.
 
 .. code-block:: none
 
-    snippy search --solution --sall . | grep -Ev '[^\s]+:'
+    snippy search --scat solution --sall . | grep -Ev '[^\s]+:'
 
 Updating content
 ----------------
@@ -169,10 +169,10 @@ and path with the -f|--file option.
 
 .. code-block:: none
 
-    snippy export --snippets
-    snippy export --snippets -f my-snippets.yaml
-    snippy export --solutions
-    snippy export --solutions -f my-solutions.yaml
+    snippy export --scat snippet
+    snippy export --scat snippet -f my-snippets.yaml
+    snippy export --scat solution
+    snippy export --scat solution -f my-solutions.yaml
 
 Importing content
 ~~~~~~~~~~~~~~~~~
@@ -183,8 +183,8 @@ command is executed. You can define the file name and path with the -f|--file op
 
 .. code-block:: none
 
-    snippy import --snippets
-    snippy import --solutions
+    snippy import --scat snippet
+    snippy import --scat solution
 
 .. _Read the Docs: http://snippy.readthedocs.io/en/latest/
 

@@ -31,7 +31,7 @@ RUN apk add \
     rm -f /usr/local/snippy/.local/lib/python3.6/site-packages/snippy/data/storage/snippy.db && \
     snippy import \
         --defaults \
-        --all \
+        --scat all \
         --storage-path /volume \
         -q && \
     chmod -R go=+rX-w,u-rwx /usr/local/snippy/ && \

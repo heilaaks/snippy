@@ -627,7 +627,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--all', '--sall', '.', '--filter', '.*engine.*', '--no-ansi'])
+        cause = snippy.run(['snippy', 'search', '--scat', 'all', '--sall', '.', '--filter', '.*engine.*', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)

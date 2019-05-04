@@ -236,7 +236,7 @@ class Config(object):
         cls.is_category_snippet = bool(cls.content_category == Const.SNIPPET)
         cls.is_category_solution = bool(cls.content_category == Const.SOLUTION)
         cls.is_category_reference = bool(cls.content_category == Const.REFERENCE)
-        cls.is_category_all = bool(cls.content_category == Const.ALL_CATEGORIES)
+        cls.is_multi_category = bool(len(cls.search_cat_kws) > 1)
         cls.operation_filename = cls._operation_filename((cls.content_category,))
         cls.operation_file_format = cls._operation_file_format(cls.operation_filename)
         cls.is_operation_file_json = bool(cls.operation_file_format == Const.CONTENT_FORMAT_JSON)

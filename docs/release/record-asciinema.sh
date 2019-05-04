@@ -31,13 +31,13 @@
 COMMANS=(
         'snippy --help'
         'snippy search --sall .'
-        'snippy import --defaults --all'
+        'snippy import --defaults --scat all'
         'snippy search security'
         'snippy search --sall compress'
         'snippy export -d 61014e2d1ec56a9a'
         'ls -al'
         'cat snippets.mkdn'
-        "snippy search --solution --sall kafka | grep -Ev '[^\s]+:'"
+        "snippy search --scat solution --sall kafka | grep -Ev '[^\s]+:'"
         'ls -al'
         'snippy export -d 1abc5d4fe9022429'
         'ls -al'

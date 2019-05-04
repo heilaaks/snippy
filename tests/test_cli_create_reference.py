@@ -51,7 +51,7 @@ class TestCliCreateReferece(object):
         groups = content['data'][0]['groups']
         tags = content['data'][0]['tags']
         links = Const.DELIMITER_LINKS.join(content['data'][0]['links'])
-        cause = snippy.run(['snippy', 'create', '--references', '--links', links, '-b', brief, '-g', groups, '-t', tags, '-c', data])
+        cause = snippy.run(['snippy', 'create', '--scat', 'reference', '--links', links, '-b', brief, '-g', groups, '-t', tags, '-c', data])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -71,7 +71,7 @@ class TestCliCreateReferece(object):
         brief = content['data'][0]['brief']
         groups = Reference.GITLOG['groups']
         tags = content['data'][0]['tags']
-        cause = snippy.run(['snippy', 'create', '--references', '--brief', brief, '--groups', groups, '--tags', tags, '-c', data, '--no-editor'])
+        cause = snippy.run(['snippy', 'create', '--scat', 'reference', '--brief', brief, '--groups', groups, '--tags', tags, '-c', data, '--no-editor'])  # pylint: disable=line-too-long
         assert cause == 'NOK: content was not stored because mandatory content field links is empty'
         Content.assert_storage(None)
 
@@ -162,7 +162,7 @@ class TestCliCreateReferece(object):
             'versions :  ',
             '')
         editor_data.return_value = '\n'.join(edited)
-        cause = snippy.run(['snippy', 'create', '--reference', '--editor'])
+        cause = snippy.run(['snippy', 'create', '--scat', 'reference', '--editor'])
         assert cause == Cause.ALL_OK
         editor_data.assert_called_with('\n'.join(template))
         Content.assert_storage(content)
@@ -200,7 +200,7 @@ class TestCliCreateReferece(object):
         )
         edited = template
         editor_data.return_value = '\n'.join(edited)
-        cause = snippy.run(['snippy', 'create', '--reference', '--editor'])
+        cause = snippy.run(['snippy', 'create', '--scat', 'reference', '--editor'])
         assert cause == 'NOK: content was not stored because it was matching to an empty template'
         editor_data.assert_called_with('\n'.join(template))
         Content.assert_storage(None)
@@ -214,7 +214,7 @@ class TestCliCreateReferece(object):
         option when the mandatory links is not defined.
         """
 
-        cause = snippy.run(['snippy', 'create', '--reference', '--brief', 'Short brief', '--no-editor'])
+        cause = snippy.run(['snippy', 'create', '--scat', 'reference', '--brief', 'Short brief', '--no-editor'])
         assert cause == 'NOK: content was not stored because mandatory content field links is empty'
         Content.assert_storage(None)
 

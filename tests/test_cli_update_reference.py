@@ -47,7 +47,7 @@ class TestCliUpdateReference(object):
         content['data'][0]['links'] = ('https://docs.docker.com', )
         content['data'][0]['digest'] = '1fc34e79a4d2bac51a039b7265da464ad787da41574c3d6651dc6a128d4c7c10'
         edited_gitlog.return_value = Content.dump_text(content['data'][0])
-        cause = snippy.run(['snippy', 'update', '--reference', '-d', '5c2071094dbfaa33', '--format', 'text'])
+        cause = snippy.run(['snippy', 'update', '--scat', 'reference', '-d', '5c2071094dbfaa33', '--format', 'text'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -69,7 +69,7 @@ class TestCliUpdateReference(object):
         content['data'][0]['links'] = ('https://docs.docker.com', )
         content['data'][0]['digest'] = '1fc34e79a4d2bac51a039b7265da464ad787da41574c3d6651dc6a128d4c7c10'
         edited_gitlog.return_value = Content.dump_text(content['data'][0])
-        cause = snippy.run(['snippy', 'update', '--reference', '--digest', '5c2071', '--format', 'text'])
+        cause = snippy.run(['snippy', 'update', '--scat', 'reference', '--digest', '5c2071', '--format', 'text'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -92,7 +92,7 @@ class TestCliUpdateReference(object):
         content['data'][0]['links'] = ('https://docs.docker.com', )
         content['data'][0]['digest'] = '1fc34e79a4d2bac51a039b7265da464ad787da41574c3d6651dc6a128d4c7c10'
         edited_gitlog.return_value = Content.dump_text(content['data'][0])
-        cause = snippy.run(['snippy', 'update', '--solution', '-d', '5c2071094dbfaa33', '--format', 'text'])
+        cause = snippy.run(['snippy', 'update', '--scat', 'solution', '-d', '5c2071094dbfaa33', '--format', 'text'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -135,7 +135,7 @@ class TestCliUpdateReference(object):
                 Reference.REGEXP
             ]
         }
-        cause = snippy.run(['snippy', 'update', '--reference', '-d', '123456789abcdef0'])
+        cause = snippy.run(['snippy', 'update', '--scat', 'reference', '-d', '123456789abcdef0'])
         assert cause == 'NOK: cannot find content with message digest: 123456789abcdef0'
         Content.assert_storage(content)
 
@@ -155,7 +155,7 @@ class TestCliUpdateReference(object):
                 Reference.REGEXP
             ]
         }
-        cause = snippy.run(['snippy', 'update', '--reference', '-d', ''])
+        cause = snippy.run(['snippy', 'update', '--scat', 'reference', '-d', ''])
         assert cause == 'NOK: cannot use empty message digest for update operation'
         Content.assert_storage(content)
 
@@ -177,7 +177,7 @@ class TestCliUpdateReference(object):
         content['data'][0]['links'] = ('https://docs.docker.com', )
         content['data'][0]['digest'] = '1fc34e79a4d2bac51a039b7265da464ad787da41574c3d6651dc6a128d4c7c10'
         edited_gitlog.return_value = Content.dump_text(content['data'][0])
-        cause = snippy.run(['snippy', 'update', '--reference', '-u', '31cd5827-b6ef-4067-b5ac-3ceac07dde9f', '--format', 'text'])
+        cause = snippy.run(['snippy', 'update', '--scat', 'reference', '-u', '31cd5827-b6ef-4067-b5ac-3ceac07dde9f', '--format', 'text'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -195,7 +195,7 @@ class TestCliUpdateReference(object):
                 Reference.REGEXP
             ]
         }
-        cause = snippy.run(['snippy', 'update', '--reference', '-u', '9999994'])
+        cause = snippy.run(['snippy', 'update', '--scat', 'reference', '-u', '9999994'])
         assert cause == 'NOK: cannot find content with content uuid: 9999994'
         Content.assert_storage(content)
 
@@ -217,7 +217,7 @@ class TestCliUpdateReference(object):
         content['data'][0]['links'] = ('https://docs.docker.com', )
         content['data'][0]['digest'] = '1fc34e79a4d2bac51a039b7265da464ad787da41574c3d6651dc6a128d4c7c10'
         edited_gitlog.return_value = Content.dump_text(content['data'][0])
-        cause = snippy.run(['snippy', 'update', '--reference', '-l', 'https://chris.beams.io/posts/git-commit/'])
+        cause = snippy.run(['snippy', 'update', '--scat', 'reference', '-l', 'https://chris.beams.io/posts/git-commit/'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -236,7 +236,7 @@ class TestCliUpdateReference(object):
                 Reference.REGEXP
             ]
         }
-        cause = snippy.run(['snippy', 'update', '--reference', '--links', 'links-not-exist'])
+        cause = snippy.run(['snippy', 'update', '--scat', 'reference', '--links', 'links-not-exist'])
         assert cause == 'NOK: cannot find content with content data: reference not existing'
         Content.assert_storage(content)
 
@@ -259,7 +259,7 @@ class TestCliUpdateReference(object):
         updates = Content.deepcopy(Reference.GITLOG)
         updates['links'] = ()
         edited_gitlog.return_value = Content.dump_text(updates)
-        cause = snippy.run(['snippy', 'update', '--reference', '-d', '5c2071094dbfaa33'])
+        cause = snippy.run(['snippy', 'update', '--scat', 'reference', '-d', '5c2071094dbfaa33'])
         assert cause == 'NOK: content was not stored because mandatory content field links is empty'
         Content.assert_storage(content)
 
@@ -282,7 +282,7 @@ class TestCliUpdateReference(object):
         }
         content['data'][0]['uuid'] = Reference.REGEXP_UUID
         edited_gitlog.return_value = Content.dump_text(content['data'][0])
-        cause = snippy.run(['snippy', 'update', '-d', 'cb9225a81eab8ced', '--reference', '--editor', '--format', 'text'])
+        cause = snippy.run(['snippy', 'update', '-d', 'cb9225a81eab8ced', '--scat', 'reference', '--editor', '--format', 'text'])
         edited_gitlog.assert_called_with(Content.dump_text(Reference.REGEXP))
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
@@ -302,7 +302,7 @@ class TestCliUpdateReference(object):
             ]
         }
         edited_gitlog.return_value = ''
-        cause = snippy.run(['snippy', 'update', '--reference', '-d', '5c2071094dbfaa33', '--format', 'text'])
+        cause = snippy.run(['snippy', 'update', '--scat', 'reference', '-d', '5c2071094dbfaa33', '--format', 'text'])
         assert cause == 'NOK: could not identify content category - please keep template tags in place'
         Content.assert_storage(content)
 

@@ -43,7 +43,8 @@ class TestUtConfig(object):  # pylint: disable=too-many-public-methods
 
         Config.init(None)
         Config.load(Cli(['snippy', 'import']))
-        assert isinstance(Config.content_category, str)
+        print(type(Config.content_category))
+        assert isinstance(Config.content_category, Const.TEXT_TYPE)
         assert isinstance(Config.content_data, tuple)
         assert isinstance(Config.content_brief, Const.TEXT_TYPE)
         assert isinstance(Config.content_description, Const.TEXT_TYPE)
@@ -64,7 +65,7 @@ class TestUtConfig(object):  # pylint: disable=too-many-public-methods
         assert Config.search_offset == 0
         assert Config.remove_fields == ()
         assert Config.sort_fields == OrderedDict([('brief', 'ASC')])
-        assert isinstance(Config.get_operation_file(), str)
+        assert isinstance(Config.get_operation_file(), Const.TEXT_TYPE)
         assert not Config.get_resource(None)
         assert not Config.get_collection()
         assert not Config.is_operation_create
@@ -76,7 +77,7 @@ class TestUtConfig(object):  # pylint: disable=too-many-public-methods
         assert Config.is_category_snippet
         assert not Config.is_category_solution
         assert not Config.is_category_reference
-        assert not Config.is_category_all
+        assert not Config.is_multi_category
         assert Config.content_category == Const.SNIPPET
         assert not Config.content_data
         assert not Config.content_brief

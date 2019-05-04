@@ -41,10 +41,7 @@ class Cli(ConfigSourceBase):
     )
     ARGS_USAGE = ('snippy [-v, --version] [-h, --help] <operation> [<options>] [-vv] [-q]')
     ARGS_CATEGORY = (
-        '  --snippets                    operate snippets (default)',
-        '  --solutions                   operate solutions',
-        '  --references                  operate references',
-        '  --all                         operate all content (search only)'
+        '  --scat [CATEGORY,...]         operate content categories',
     )
     ARGS_EDITOR = (
         '  -c, --content CONTENT         define example content',
@@ -58,7 +55,6 @@ class Cli(ConfigSourceBase):
         '  --no-editor                   do not use vi editor',
     )
     ARGS_SEARCH = (
-        '  --scat [CATEGORY,...]         search keywords only from categories',
         '  --sall [KW,...]               search keywords from all fields',
         '  --stag [KW,...]               search keywords only from tags',
         '  --sgrp [KW,...]               search keywords only from groups',
@@ -81,12 +77,13 @@ class Cli(ConfigSourceBase):
         '',
         'examples:',
         '    Import default content.',
-        '      $ snippy import --snippets --defaults',
-        '      $ snippy import --solutions --defaults',
-        '      $ snippy import --references --defaults',
+        '      $ snippy import --defaults --scat snippet',
+        '      $ snippy import --defaults --scat solution',
+        '      $ snippy import --defaults --scat reference',
+        '      $ snippy import --defaults --scat all',
         '',
         '    List all snippets.',
-        '      $ snippy search --snippets --sall .',
+        '      $ snippy search --scat snippet --sall .',
         '',
         '    List more examples.',
         '      $ snippy --help examples',
@@ -95,47 +92,47 @@ class Cli(ConfigSourceBase):
     ARGS_EXAMPLES = (
         'examples:',
         '    Creating new content:',
-        '      $ snippy create --snippets --editor',
-        '      $ snippy create --snippets -c \'docker ps\' -b \'list containers\' -t docker,moby',
+        '      $ snippy create --scat snippet --editor',
+        '      $ snippy create --scat snippet -c \'docker ps\' -b \'list containers\' -t docker,moby',
         '',
         '    Searching and filtering content:',
-        '      $ snippy search --snippets --sall docker,moby',
-        '      $ snippy search --snippets --sall .',
-        '      $ snippy search --snippets --sall . --no-ansi | grep \'\\$\' | sort',
-        '      $ snippy search --solutions --sall .',
-        '      $ snippy search --solutions --sall . | grep -Ev \'[^\\s]+:\'',
-        '      $ snippy search --all --sall . --filter \'\\$?.*docker\'',
-        '      $ snippy search --all --sall . --no-ansi | grep -E \'[0-9]+\\.\\s\'',
+        '      $ snippy search --scat snippet --sall docker,moby',
+        '      $ snippy search --scat snippet --sall .',
+        '      $ snippy search --scat snippet --sall . --no-ansi | grep \'\\$\' | sort',
+        '      $ snippy search --scat solution --sall .',
+        '      $ snippy search --scat solution --sall . | grep -Ev \'[^\\s]+:\'',
+        '      $ snippy search --scat all --sall . --filter \'\\$?.*docker\'',
+        '      $ snippy search --scat all --sall . --no-ansi | grep -E \'[0-9]+\\.\\s\'',
         '',
         '    Updating content:',
-        '      $ snippy update --snippets -d 44afdd0c59e17159',
-        '      $ snippy update --snippets -c \'docker ps\'',
+        '      $ snippy update --scat snippet -d 44afdd0c59e17159',
+        '      $ snippy update --scat snippet -c \'docker ps\'',
         '',
         '    Deleting content:',
-        '      $ snippy delete --snippets -d 44afdd0c59e17159',
-        '      $ snippy delete --snippets -c \'docker ps\'',
+        '      $ snippy delete --scat snippet -d 44afdd0c59e17159',
+        '      $ snippy delete --scat snippet -c \'docker ps\'',
         '',
         '    Migrating default content:',
-        '      $ snippy import --snippets --defaults',
-        '      $ snippy import --solutions --defaults',
-        '      $ snippy import --references --defaults',
+        '      $ snippy import --scat snippet --defaults',
+        '      $ snippy import --scat solution --defaults',
+        '      $ snippy import --scat reference --defaults',
         '',
         '    Migrating content templates:',
-        '      $ snippy export --solutions --template',
-        '      $ snippy import --solutions --template',
-        '      $ snippy import --solutions -f solution-template.txt',
+        '      $ snippy export --scat solution --template',
+        '      $ snippy import --scat solution --template',
+        '      $ snippy import --scat solution -f solution-template.txt',
         '',
         '    Migrating specific content:',
         '      $ snippy export -d eb792f8015ace749',
         '      $ snippy import -d eb792f8015ace749 -f howto-debug-elastic-beats.mkdn',
         '',
         '    Migrating content:',
-        '      $ snippy export --snippets -f snippets.yaml',
-        '      $ snippy export --snippets -f snippets.json',
-        '      $ snippy export --snippets -f snippets.text',
-        '      $ snippy import --snippets -f snippets.yaml',
-        '      $ snippy export --solutions -f solutions.yaml',
-        '      $ snippy import --solutions -f solutions.yaml',
+        '      $ snippy export --scat snippet -f snippets.yaml',
+        '      $ snippy export --scat snippet -f snippets.json',
+        '      $ snippy export --scat snippet -f snippets.text',
+        '      $ snippy import --scat snippet -f snippets.yaml',
+        '      $ snippy export --scat solution -f solutions.yaml',
+        '      $ snippy import --scat solution -f solutions.yaml',
         '') + ARGS_COPYRIGHT
 
     def __init__(self, args):
@@ -164,14 +161,9 @@ class Cli(ConfigSourceBase):
             formatter_class=argparse.RawTextHelpFormatter
         )
 
-        # content options
+        # content category
         content = parser.add_argument_group(title='content category', description=Const.NEWLINE.join(Cli.ARGS_CATEGORY))
-        content_meg = content.add_mutually_exclusive_group()
-        content_meg.add_argument('--snippet', '--snippets', action='store_const', dest='category', const='snippet', help=argparse.SUPPRESS)
-        content_meg.add_argument('--solution', '--solutions', action='store_const', dest='category', const='solution', help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
-        content_meg.add_argument('--reference', '--references', action='store_const', dest='category', const='reference', help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
-        content_meg.add_argument('--all', action='store_const', dest='category', const='all', help=argparse.SUPPRESS)
-        content_meg.set_defaults(category=Const.SNIPPET)
+        content.add_argument('--scat', nargs='*', type=Parser.to_unicode, default=Const.SNIPPET, help=argparse.SUPPRESS)
 
         # editing options
         options = parser.add_argument_group(title='edit options', description=Const.NEWLINE.join(Cli.ARGS_EDITOR))
@@ -191,7 +183,6 @@ class Cli(ConfigSourceBase):
         search_meg = search.add_mutually_exclusive_group()
         search_meg.add_argument('--sall', nargs='*', type=Parser.to_unicode, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
         search_meg.add_argument('--stag', nargs='*', type=Parser.to_unicode, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
-        search.add_argument('--scat', nargs='*', type=Parser.to_unicode, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
         search.add_argument('--sgrp', nargs='*', type=Parser.to_unicode, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
         search.add_argument('--filter', type=Parser.to_unicode, dest='search_filter', default=argparse.SUPPRESS, help=argparse.SUPPRESS)
         search.add_argument('--limit', type=int, default=Cli.LIMIT_DEFAULT_CLI, help=argparse.SUPPRESS)
@@ -288,7 +279,6 @@ class Cli(ConfigSourceBase):
             arguments['failure_message'] = parser.snippy_failure_message
             self._logger.debug('cli: {}'.format(arguments['failure_message']))
 
-        self._set_editor(arguments)
         self._set_format(arguments)
 
         # Using the tool from command line always updates existing content if
@@ -301,7 +291,9 @@ class Cli(ConfigSourceBase):
         # The merge option has relevance only in API configuration source
         # where it allows different behaviour between PUT and PATCH methods.
         arguments['merge'] = True
+        arguments['category'] = arguments.get('scat', Const.SNIPPET)
         self.init_conf(arguments)
+        self._set_editor(arguments)
 
         # In case of command line usage, tool help is printed if there were
         # no commnad line arguments.
@@ -335,8 +327,7 @@ class Cli(ConfigSourceBase):
 
         return False
 
-    @staticmethod
-    def _set_editor(arguments):
+    def _set_editor(self, arguments):
         """Enforce editor implicitly.
 
         The no-editor option always prevents implicit usage of editor.
@@ -351,17 +342,17 @@ class Cli(ConfigSourceBase):
             arguments (dict): Command line arguments.
         """
 
-        if arguments['failure'] or arguments['no_editor']:
-            arguments['editor'] = False
+        if self.failure or self.no_editor:
+            self.editor = False
             return
 
-        if arguments['operation'] in (Cli.CREATE, Cli.UPDATE):
-            if arguments['category'] == Const.REFERENCE:
-                if not arguments['links']:
-                    arguments['editor'] = True
+        if self.operation in (Cli.CREATE, Cli.UPDATE):
+            if self.category == Const.REFERENCE:
+                if not self.links:
+                    self.editor = True
             else:
                 if 'data' not in arguments:
-                    arguments['editor'] = True
+                    self.editor = True
 
     @staticmethod
     def _set_format(arguments):

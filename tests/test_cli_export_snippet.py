@@ -73,7 +73,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
-            cause = snippy.run(['snippy', 'export', '--snippets'])
+            cause = snippy.run(['snippy', 'export', '--scat', 'snippet'])
             assert cause == Cause.ALL_OK
             Content.assert_mkdn(mock_file, './snippets.mkdn', content)
 
@@ -114,7 +114,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
-            cause = snippy.run(['snippy', 'export', '-f', './defined-snippets.yml', '--snippet'])
+            cause = snippy.run(['snippy', 'export', '-f', './defined-snippets.yml', '--scat', 'snippet'])
             assert cause == Cause.ALL_OK
             Content.assert_yaml(yaml, mock_file, './defined-snippets.yml', content)
 
@@ -484,7 +484,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         """
 
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
-            cause = snippy.run(['snippy', 'export', '--snippet', '--template'])
+            cause = snippy.run(['snippy', 'export', '--scat', 'snippet', '--template'])
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./snippet-template.mkdn', 'w')
             file_handle = mock_file.return_value.__enter__.return_value

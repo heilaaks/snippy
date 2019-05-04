@@ -66,7 +66,7 @@ class TestCliPerformance(object):
             Content.assert_storage_size(4)
 
             # Search all content.
-            cause = snippy_perf.run(['snippy', 'search', '--all', '--sall', '.'] + Content.db_cli_params())
+            cause = snippy_perf.run(['snippy', 'search', '--scat', 'all', '--sall', '.'] + Content.db_cli_params())
             assert cause == Cause.ALL_OK
 
             # Delete all content.

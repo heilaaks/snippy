@@ -113,7 +113,7 @@ class TestCliUpdateSnippet(object):
         content['data'][0]['data'] = ('docker images', )
         content['data'][0]['digest'] = 'af8c89629dc1a5313fd15c95fa9c1199b2b99874426e0b2532a952f40dcf980d'
         edited_remove.return_value = Content.dump_text(content['data'][0])
-        cause = snippy.run(['snippy', 'update', '--snippets', '-d', '54e41e9b52a02b63', '--format', 'text'])
+        cause = snippy.run(['snippy', 'update', '--scat', 'snippet', '-d', '54e41e9b52a02b63', '--format', 'text'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -136,7 +136,7 @@ class TestCliUpdateSnippet(object):
         content['data'][0]['data'] = ('docker images', )
         content['data'][0]['digest'] = 'af8c89629dc1a5313fd15c95fa9c1199b2b99874426e0b2532a952f40dcf980d'
         edited_remove.return_value = Content.dump_text(content['data'][0])
-        cause = snippy.run(['snippy', 'update', '--solution', '-d', '54e41e9b52a02b63', '--format', 'text'])
+        cause = snippy.run(['snippy', 'update', '--scat', 'solution', '-d', '54e41e9b52a02b63', '--format', 'text'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 

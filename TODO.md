@@ -1,17 +1,15 @@
 ## WORKING
+   - [ ] Add server command.
+   - [ ] Add --scat all and remove --solutions, etc
+   - [ ] Add export to bash completion
    - [ ] Fix updating Markdown based solutions in text formats does not work because the Mkdn solution does not have text header and data structure.
    - [ ] Fix test_logger_016. The P3 is not correct? The links in p2 are in the same elemnet separated with \n that should be the case with P3.
    - [ ] Why container --server-host command line option does not work (healthcheck)? docker run -d --net="host" --name snippy heilaaks/snippy --server-host 127.0.0.1:8080 --log-json -vv
-   - [ ] Starting the server again and import the default content again with --defaults causes server internal erro 500 because of UUID. The 500 should not be here because this is not internal error. Fix?
    - [ ] Fix creating/updating resource with invalid versions. Check test_api_create_snippet_024. The seal() cannot check if Cause not is_is because it generates incorrect error. For example GET ../<valid digest>/error shows error that digest not foind. See test_api_search_reference_field_012. move the reast API based empty list check earlier in code to solve this.
    - [ ] Incorrect header does not leave logs. Test manually since this works differently that the tests? For example ab was missing '-T application/vnd.api+json' without this it did not work.
    - [ ] Design and change /groups and /tags to GET groups and tags not content. Like unique tags and groups.
    - [ ] Fix cli -f file to see if this goes ot content filename attribute. Should not. -f|--file and content.filename are not the same.
    - [ ] Fix tox and Python 3.4. Tox -e py34 // http://notes.webutvikling.org/darn-installation-of-python-3-4/
-   - [ ] Add bash completion to Snippy. Check example from Poetry. Check git argcomplete which is used also by Pytest. // https://iridakos.com/tutorials/2018/03/01/bash-programmable-completion-tutorial.html
-   
-        sudo cp snippy.bash-completion /etc/bash_completion.d/
-   
    - [ ] Security log printed incorrectly from GET limit=20 when -vv JSON enabled. The -vv should already truncate the log. Change or warn?
    - [ ] Make docker tests run parallel. Now the container removal is based on image name that is not good. must be based on container hash.
    - [ ] Make more tests for Docker use cases

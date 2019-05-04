@@ -1,0 +1,97 @@
+_snippy_complete()
+{
+    local cur script coms opts com
+    COMPREPLY=()
+    _get_comp_words_by_ref -n : cur prev words
+
+    # for an alias, get the real script behind it
+    if [[ $(type -t ${words[0]}) == "alias" ]]; then
+        script=$(alias ${words[0]} | sed -E "s/alias ${words[0]}='(.*)'/\1/")
+    else
+        script=${words[0]}
+    fi
+
+    # lookup for command
+    for word in ${words[@]:1}; do
+        if [[ $word != -* ]]; then
+            com=$word
+            break
+        fi
+    done
+
+    if [[ ${prev} == --scat ]] ; then
+        opts="snippet solution reference all"
+        COMPREPLY=($(compgen -W "${opts}" -- ${cur}))
+        __ltrim_colon_completions "$cur"
+
+        return 0;
+    fi
+
+    if [[ ${prev} == --format ]] ; then
+        opts="text mkdn"
+        COMPREPLY=($(compgen -W "${opts}" -- ${cur}))
+        __ltrim_colon_completions "$cur"
+
+        return 0;
+    fi
+
+    # completing for an option
+    if [[ ${cur} == -* ]] ; then
+        opts="--help --version --debug -vv -q"
+
+        case "$com" in
+
+            (create)
+            opts="--scat --content --brief --groups --tags --links --editor --no-editor --format"
+            ;;
+
+            (search)
+            opts="--scat --sall --stag --sgrp --filter --limit --digest --uuid --format --no-ansi"
+            ;;
+
+            (update)
+            opts="--digest --uuid --editor --no-editor --format"
+            ;;
+
+            (delete)
+            opts="--digest --uuid"
+            ;;
+
+            (export)
+            opts="--defaults --template --digest --uuid --scat --sall --stag --sgrp --filter --file --format"
+            ;;
+
+            (import)
+            opts="--defaults --scat --digest --uuid --file"
+            ;;
+
+            (server)
+            opts="--server-host           --server-ssl-cert     --server-ssl-key      --server-ssl-ca-cert \
+                  --server-base-path-rest --server-minify-json  --storage-path        --storage-type \
+                  --storage-host          --storage-user        --storage-password    --storage-database \
+                  --storage-ssl-cert      --storage-ssl-key     --storage-ssl-ca-cert --log-json \
+                  --log-msg-max"
+            ;;
+
+        esac
+
+        COMPREPLY=($(compgen -W "${opts}" -- ${cur}))
+        __ltrim_colon_completions "$cur"
+
+        return 0;
+    fi
+
+    # Do not auto complete 'server'. If the server command would be completed,
+    # it would complicate 'search' command by forcing user to write 'sea<tab>'
+    # instead of 's<tab>'. User have to know that the 'server' command exists.
+    if [[ $cur == $com ]]; then
+        coms="create search update delete export import"
+
+        COMPREPLY=($(compgen -W "${coms}" -- ${cur}))
+        __ltrim_colon_completions "$cur"
+
+        return 0
+    fi
+}
+
+complete -o default -o nosort -F _snippy_complete snippy

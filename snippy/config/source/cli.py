@@ -161,6 +161,9 @@ class Cli(ConfigSourceBase):
             formatter_class=argparse.RawTextHelpFormatter
         )
 
+        operations = ('create', 'search', 'update', 'delete', 'export', 'import', 'server')
+        completions = ('bash',)
+
         # content category
         content = parser.add_argument_group(title='content category', description=Const.NEWLINE.join(Cli.ARGS_CATEGORY))
         content.add_argument('--scat', nargs='*', type=Parser.to_unicode, default=Const.SNIPPET, help=argparse.SUPPRESS)
@@ -193,6 +196,7 @@ class Cli(ConfigSourceBase):
         migrat_meg.add_argument('-f', '--file', type=Parser.to_unicode, dest='filename', default='', help=argparse.SUPPRESS)
         migrat_meg.add_argument('--defaults', action='store_true', default=False, help=argparse.SUPPRESS)
         migrat_meg.add_argument('--template', action='store_true', default=False, help=argparse.SUPPRESS)
+        migrat.add_argument('--complete', choices=completions, help=argparse.SUPPRESS)
 
         # support options
         support = parser.add_argument_group(title='support options')
@@ -249,7 +253,6 @@ class Cli(ConfigSourceBase):
             #
             # The 'server' operation is hidden on purpose. User has to know that
             # it exists. The main scope are the Snippy command line operations.
-            operations = ('create', 'search', 'update', 'delete', 'export', 'import', 'server')
             parser.add_argument('operation', nargs='?', choices=operations, metavar='  {create,search,update,delete,export,import}')
 
             # support options

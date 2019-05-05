@@ -133,6 +133,8 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
         if Config.template:
             self._logger.debug('exporting: %s :template: %s', self._category, Config.get_operation_file())
             Migrate.dump_template(self._category)
+        elif Config.complete:
+            Migrate.dump_completion(Config.complete)
         elif Config.is_search_criteria():
             self._logger.debug('exporting: %s :based on search criteria', self._category)
             collection = self._storage.search(

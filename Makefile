@@ -177,6 +177,7 @@ clean-test:
 	rm -f .coverage.*
 	rm -f coverage.xml
 	rm -f pytestdebug.log
+	rm -f snippy.bash-completion
 
 clean-db:
 	> snippy/data/storage/snippy.db

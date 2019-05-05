@@ -96,6 +96,16 @@ class Helper(object):
 
         return template
 
+    @classmethod
+    def read_completion(cls, filename):
+        """Get shell completion script.
+
+        Args
+            filename (str): Name of the shell completion file.
+        """
+
+        return cls._read_resource('data/completion', filename)
+
     @staticmethod
     def remove_ansi(message):
         """Remove all ANSI escape codes from given string.

@@ -14,7 +14,8 @@ Breaking changes
 New features
 ~~~~~~~~~~~~
 
-* none
+* Add Bash completion support.
+
 
 Bugfixes
 ~~~~~~~~

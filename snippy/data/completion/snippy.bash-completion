@@ -19,10 +19,16 @@ _snippy_complete()
         fi
     done
 
+    if [[ ${prev} == --complete ]] ; then
+        opts="bash"
+        COMPREPLY=($(compgen -W "${opts}" -- ${cur}))
+
+        return 0;
+    fi
+
     if [[ ${prev} == --scat ]] ; then
         opts="snippet solution reference all"
         COMPREPLY=($(compgen -W "${opts}" -- ${cur}))
-        __ltrim_colon_completions "$cur"
 
         return 0;
     fi
@@ -30,7 +36,6 @@ _snippy_complete()
     if [[ ${prev} == --format ]] ; then
         opts="text mkdn"
         COMPREPLY=($(compgen -W "${opts}" -- ${cur}))
-        __ltrim_colon_completions "$cur"
 
         return 0;
     fi
@@ -58,7 +63,7 @@ _snippy_complete()
             ;;
 
             (export)
-            opts="--defaults --template --digest --uuid --scat --sall --stag --sgrp --filter --file --format"
+            opts="--defaults --template --complete --digest --uuid --scat --sall --stag --sgrp --filter --file --format"
             ;;
 
             (import)
@@ -76,7 +81,6 @@ _snippy_complete()
         esac
 
         COMPREPLY=($(compgen -W "${opts}" -- ${cur}))
-        __ltrim_colon_completions "$cur"
 
         return 0;
     fi
@@ -88,7 +92,6 @@ _snippy_complete()
         coms="create search update delete export import"
 
         COMPREPLY=($(compgen -W "${coms}" -- ${cur}))
-        __ltrim_colon_completions "$cur"
 
         return 0
     fi

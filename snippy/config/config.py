@@ -150,6 +150,9 @@ class Config(object):
                 'reference': cls._content_template('reference.md')
             }
         }
+        cls.completion = {
+            'bash': cls._read_resource('data/completion', 'snippy.bash-completion')
+        }
 
         # Static server configurations.
         cls.server_readonly = cls.source.server_readonly
@@ -218,6 +221,7 @@ class Config(object):
         # migrate
         cls.defaults = cls.source.defaults
         cls.template = cls.source.template
+        cls.complete = cls.source.complete
 
         # options
         cls.editor = cls.source.editor
@@ -397,6 +401,29 @@ class Config(object):
             )
         )
 
+    @staticmethod
+    def _read_resource(path, filename):
+        """Read Snippy resource file.
+
+        Args:
+            path (str): Relative path under the snippy project.
+            filename (str): Resource filename.
+
+        Returns:
+            str: File read into a string.
+        """
+
+        filename = os.path.join(pkg_resources.resource_filename('snippy', path), filename)
+        if not os.path.isfile(filename):
+            Logger.print_status('NOK: cannot run because snippy resource file is not accessible: {}'.format(filename))
+            sys.exit(1)
+
+        resource_file = ''
+        with io.open(filename, encoding='utf-8') as infile:
+            resource_file = infile.read()
+
+        return resource_file
+
     @classmethod
     def _storage_schema(cls):
         """Test that database schema file exist."""
@@ -572,7 +599,7 @@ class Config(object):
 
         Filename is set based on priority order of
           1) command line input
-          2) content template or content defaults operations
+          2) content defaults operations, content template or shell completion
           3) content category specific defaults
 
         Args:
@@ -592,6 +619,9 @@ class Config(object):
         if cls.template:
             filename = os.path.join('./', cls.content_category + '-template.' + cls.template_format.lower())
 
+        if cls.complete and not filename:
+            filename = os.path.join('./snippy.' + cls.complete + '-completion')
+
         if not filename:
             if len(categories) == 1:
                 defaults = categories[0] + 's.mkdn'
@@ -606,6 +636,8 @@ class Config(object):
         """Extract operation file format.
 
         The file format must be exactly as defined for supported file formats.
+        In case of shell completion, there is no file extension and the check
+        passes.
 
         Args:
             filename (str): Filename with file extension defining the format.
@@ -624,7 +656,7 @@ class Config(object):
             file_format = Const.CONTENT_FORMAT_TEXT
         elif name and extension in ('.yaml', '.yml'):
             file_format = Const.CONTENT_FORMAT_YAML
-        else:
+        elif not cls.complete:
             Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot identify file format for file: {}'.format(filename))
 
         return file_format

@@ -96,6 +96,31 @@ class Migrate(object):
                 Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'fatal failure while exporting template {}'.format(filename))
 
     @classmethod
+    def dump_completion(cls, complete):
+        """Dump shell completion script into a file.
+
+        Args:
+            complete (str): Name of the shell for completion.
+        """
+
+        filename = Config.get_operation_file()
+        path, _ = os.path.split(filename)
+        cls._logger.debug('exporting: %s :completion: %s', Config.complete, filename)
+        if not os.path.exists(path) or not os.access(path, os.W_OK):
+            Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot export: {} :completion file because path is not writable: {}'.format(
+                complete,
+                filename
+            ))
+            return
+
+        with open(filename, 'w') as outfile:
+            try:
+                outfile.write(Config.completion[Config.complete])
+            except IOError as error:
+                cls._logger.exception('fatal failure when creating {} shell completion file: {}', filename, error)
+                Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'fatal failure while exporting shell completion {}'.format(filename))
+
+    @classmethod
     def load(cls, filename):
         """Load dictionary from file."""
 

@@ -862,10 +862,36 @@ def mock_json(mocker):
 ## os.path
 
 @pytest.fixture(scope='function', name='isfile_true')
-def isfile_mock(mocker):
+def isfile_mock_true(mocker):
     """Mock os.path.isfile."""
 
     mocker.patch('snippy.content.migrate.os.path.isfile', return_value=True)
+
+@pytest.fixture(scope='function', name='exists_true')
+def exists_mock_true(mocker):
+    """Mock os.path.exists."""
+
+    mocker.patch('snippy.content.migrate.os.path.exists', return_value=True)
+
+@pytest.fixture(scope='function', name='exists_false')
+def exists_mock_false(mocker):
+    """Mock os.path.exists."""
+
+    mocker.patch('snippy.content.migrate.os.path.exists', return_value=False)
+
+## os.access
+
+@pytest.fixture(scope='function', name='access_true')
+def access_mock_true(mocker):
+    """Mock os.access."""
+
+    mocker.patch('snippy.content.migrate.os.access', return_value=True)
+
+@pytest.fixture(scope='function', name='access_false')
+def access_mock_false(mocker):
+    """Mock os.access."""
+
+    mocker.patch('snippy.content.migrate.os.access', return_value=False)
 
 ## os.environ
 

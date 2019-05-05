@@ -21,6 +21,7 @@
 
 from __future__ import print_function
 
+import mock
 import pytest
 
 from snippy.cause import Cause
@@ -33,7 +34,7 @@ from tests.lib.content import Content
 from tests.lib.helper import Helper
 
 
-class TestCliOptions(object):
+class TestCliOptions(object):  # pylint: disable=too-many-public-methods
     """Test CLI command options."""
 
     HELP = (
@@ -567,6 +568,88 @@ class TestCliOptions(object):
         out = Helper.remove_ansi(out)
         assert Const.NEWLINE.join(output) in out
         assert not err
+
+    @staticmethod
+    @pytest.mark.usefixtures('exists_true', 'access_true')
+    def test_export_shell_completion_001(snippy):
+        """Export bash completion script.
+
+        Export Bash completion script. In this case the ``--file`` option is
+        not defined and a default filename is used.
+        """
+
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '--complete', 'bash'])
+            assert cause == Cause.ALL_OK
+            mock_file.assert_called_once_with('./snippy.bash-completion', 'w')
+            file_handle = mock_file.return_value.__enter__.return_value
+            file_handle.write.assert_called_with(Content.COMPLETE_BASH)
+
+    @staticmethod
+    @pytest.mark.usefixtures('exists_true', 'access_true')
+    def test_export_shell_completion_002(snippy):
+        """Export bash completion script.
+
+        Export Bash completion script. In this case the ``--file`` option is
+        set to local path so that only the filename is changed from the
+        default.
+        """
+
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '--complete', 'bash', '-f', './snippy'])
+            assert cause == Cause.ALL_OK
+            mock_file.assert_called_once_with('./snippy', 'w')
+            file_handle = mock_file.return_value.__enter__.return_value
+            file_handle.write.assert_called_with(Content.COMPLETE_BASH)
+
+    @staticmethod
+    @pytest.mark.usefixtures('exists_false', 'access_true')
+    def test_export_shell_completion_003(snippy):
+        """Try to export bash completion script.
+
+        Try to export Bash completion script. In this case the ``--file``
+        option is set to a file path that does not exist.
+        """
+
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '--complete', 'bash', '-f', '/root/noaccess/snippy'])
+            assert cause == 'NOK: cannot export bash completion file because path is not writable /root/noaccess/snippy'
+            mock_file.assert_not_called()
+
+    @staticmethod
+    @pytest.mark.usefixtures('exists_true', 'access_false')
+    def test_export_shell_completion_004(snippy):
+        """Try to export bash completion script.
+
+        Try to export Bash completion script. In this case the ``--file``
+        option is set to a file path is not writable.
+        """
+
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '--complete', 'bash', '-f', '/root/noaccess/snippy'])
+            assert cause == 'NOK: cannot export bash completion file because path is not writable /root/noaccess/snippy'
+            mock_file.assert_not_called()
+
+    @staticmethod
+    @pytest.mark.usefixtures('exists_true', 'access_false')
+    def test_export_shell_completion_005(snippy, capsys):
+        """Try to export shell completion script.
+
+        Try to export unknown shell completion script.
+        """
+
+        output = (
+            'usage: snippy [-v, --version] [-h, --help] <operation> [<options>] [-vv] [-q]',
+            "snippy: error: argument --complete: invalid choice: 'notfound' (choose from 'bash')",
+            ''
+        )
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '--complete', 'notfound'])
+            out, err = capsys.readouterr()
+            assert not out
+            assert err == Const.NEWLINE.join(output)
+            assert cause == Cause.ALL_OK
+            mock_file.assert_not_called()
 
     @classmethod
     def teardown_class(cls):

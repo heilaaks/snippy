@@ -49,14 +49,14 @@ from tests.lib.solution import Solution
 class Content(object):  # pylint: disable=too-many-public-methods
     """Helper methods for content testing."""
 
-    # Categories
+    # categories
     SNIPPET = Const.SNIPPET
 
-    # Contents
+    # contents
     EXPORT_TIME = Helper.EXPORT_TIME
     IMPORT_TIME = Helper.IMPORT_TIME
 
-    # Snippets
+    # snippets
     REMOVE_TIME = Snippet.REMOVE_CREATED  # Default snippet utc times must be same.
     FORCED_TIME = Snippet.FORCED_CREATED  # Default snippet utc must be same.
     EXITED_TIME = Snippet.EXITED_CREATED
@@ -64,13 +64,13 @@ class Content(object):  # pylint: disable=too-many-public-methods
     UMOUNT_TIME = Snippet.UMOUNT_CREATED
     INTERP_TIME = Snippet.INTERP_CREATED
 
-    # Solutions
+    # solutions
     BEATS_TIME = Solution.BEATS_CREATED  # Default solution utc must be same.
     NGINX_TIME = Solution.NGINX_CREATED  # Default solution utc must be same.
     KAFKA_TIME = Solution.KAFKA_CREATED
     KAFKA_MKDN_TIME = Solution.KAFKA_MKDN_CREATED
 
-    # References
+    # references
     GITLOG_TIME = Reference.GITLOG_CREATED  # Default reference utc must be same.
     REGEXP_TIME = Reference.REGEXP_CREATED  # Default reference utc must be same.
     PYTEST_TIME = Reference.PYTEST_CREATED
@@ -80,9 +80,12 @@ class Content(object):  # pylint: disable=too-many-public-methods
     TEXT = Const.CONTENT_FORMAT_TEXT
     YAML = Const.CONTENT_FORMAT_YAML
 
-    # Mocked UUID's
+    # Mocker UUIDs.
     UUID1 = Database.TEST_UUIDS_STR[0]
     UUID2 = Database.TEST_UUIDS_STR[1]
+
+    # completions
+    COMPLETE_BASH = Helper.read_completion('snippy.bash-completion')
 
     _schema = Helper.get_schema_validator()
 

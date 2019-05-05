@@ -62,6 +62,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
         self._derived = derived
         self._reset_fields = {}
         self._repr = self._get_repr()
+        self.complete = Const.EMPTY
         self.debug = False
         self.defaults = False
         self.digest = None
@@ -114,6 +115,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
 
         namespace.append('brief={}'.format(self.brief))
         namespace.append('category={}'.format(self.category))
+        namespace.append('complete={}'.format(self.complete))
         namespace.append('data={}'.format(self.data))
         namespace.append('debug={}'.format(self.debug))
         namespace.append('defaults={}'.format(self.defaults))
@@ -218,6 +220,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
         # parameters must have default value like empty list or string that
         # make sense.
         self.brief = parameters.get('brief', Const.EMPTY)
+        self.complete = parameters.get('complete', Const.EMPTY)
         self.data = parameters.get('data', None)
         self.debug = parameters.get(*self.read_env('debug', False))
         self.defaults = parameters.get('defaults', False)

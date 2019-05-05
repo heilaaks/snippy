@@ -206,7 +206,9 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
             parameters = {}
 
         # Content category aware parsing requires the category to be defined
-        # as early as possible.
+        # as early as possible. The content category requires knowledge of the
+        # operation.
+        self.operation = parameters.get('operation')
         self.category = parameters.get('category', Const.SNIPPET)
         self.scat = parameters.get('scat', self.category)
 
@@ -235,7 +237,6 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
         self.name = parameters.get('name', Const.EMPTY)
         self.no_ansi = parameters.get(*self.read_env('no_ansi', False))
         self.no_editor = parameters.get('no_editor', False)
-        self.operation = parameters.get('operation')
         self.profiler = parameters.get(*self.read_env('profile', False))
         self.quiet = parameters.get(*self.read_env('q', False))
         self.remove_fields = parameters.get('fields', self.ATTRIBUTES)
@@ -472,13 +473,13 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
 
     @property
     def scat(self):
-        """Get 'search categories' keywords."""
+        """Get content categories."""
 
         return self._scat
 
     @scat.setter
     def scat(self, value):
-        """Store content categories keywords.
+        """Store content categories.
 
         The ``scat`` option defines the content category or categories for
         the operation. If operation is ``create``, there must be only one
@@ -502,12 +503,12 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
             scat = Const.CATEGORIES
 
         if not set(scat).issubset(Const.CATEGORIES):
-            # The below formatting removes unicode string prefix u'' in case
-            # of Python 2. The formatting also prints a beautified list of
-            # invalid categories in the same format as the valid categories.
-            categories = '({})'.format(', '.join('\'{0}\''.format(w) for w in scat))
-            Cause.push(Cause.HTTP_BAD_REQUEST, 'search categories: {} :are not a subset of: {}'.format(categories, Const.CATEGORIES))
+            Cause.push(Cause.HTTP_BAD_REQUEST, 'content categories: {} :are not a subset of: {}'.format(self._format_scat(scat), Const.CATEGORIES))  # noqa pylint: disable=line-too-long
             scat = (Const.UNKNOWN_CATEGORY,)
+
+        if self.operation == self.CREATE and (Const.UNKNOWN_CATEGORY in scat or len(scat) != 1):
+            Cause.push(Cause.HTTP_BAD_REQUEST, 'content category must be unique when content is created: {}'.format(self._format_scat(scat)))  # noqa pylint: disable=line-too-long
+
         self._scat = scat  # pylint: disable=attribute-defined-outside-init
 
     @property
@@ -549,7 +550,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
     def search_filter(self, value):
         """Search regexp filter must be Python regexp.
 
-        Value None means that it was not set all by the caller.
+        Value ``None`` means that the value was not set at all by caller.
         """
 
         if value is None:
@@ -894,3 +895,17 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
             value = default
 
         return value
+
+    @staticmethod
+    def _format_scat(scat):
+        """Format ``scat`` option for Python 2 and Python 3.
+
+        The formatting removes unicode string prefix u'' in case of Python 2.
+        The formatting also prints a beautified list of invalid categories in
+        the same format as the valid categories.
+
+        Args
+            scat (tuple): Content categories
+        """
+
+        return '({})'.format(', '.join('\'{0}\''.format(w) for w in scat))

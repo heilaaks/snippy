@@ -156,13 +156,14 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         """Get specific content based on ``groups`` attribute.
 
         Try to call GET /groups/docker,python and limit search to content
-        categories defined in plural form. This must not work because only
-        singular formas for search category ``scat`` is supported.
+        categories defined in plural forms. This must not work because only
+        the singular formats for the content category ``--scat`` option are
+        supported.
         """
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '550'
+            'content-length': '551'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -170,7 +171,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
                 'status': '400',
                 'statusString': '400 Bad Request',
                 'module': 'snippy.testing.testing:123',
-                'title': "search categories: ('snippets', 'solutions') :are not a subset of: ('snippet', 'solution', 'reference')"
+                'title': "content categories: ('snippets', 'solutions') :are not a subset of: ('snippet', 'solution', 'reference')"
             }, {
                 'status': '404',
                 'statusString': '404 Not Found',
@@ -288,7 +289,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '562'
+            'content-length': '563'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -296,7 +297,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
                 'status': '400',
                 'statusString': '400 Bad Request',
                 'module': 'snippy.testing.testing:123',
-                'title': "search categories: ('reference', 'snippet', 'solutions') :are not a subset of: ('snippet', 'solution', 'reference')"
+                'title': "content categories: ('reference', 'snippet', 'solutions') :are not a subset of: ('snippet', 'solution', 'reference')"
             }, {
                 'status': '404',
                 'statusString': '404 Not Found',

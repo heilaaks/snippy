@@ -762,21 +762,6 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
     def test_cli_import_solution_031(snippy):
         """Import all solutions.
 
-        Try to import content with option ``scat``. This is not supported for
-        import operation.
-        """
-
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
-            cause = snippy.run(['snippy', 'create', '--scat', 'all', '-f', './foo.yaml'])
-            assert cause == 'NOK: content category \'all\' is supported only with search, import or export operations'
-            Content.assert_storage(None)
-            mock_file.assert_not_called()
-
-    @staticmethod
-    @pytest.mark.usefixtures('isfile_true')
-    def test_cli_import_solution_032(snippy):
-        """Import all solutions.
-
         Import all solutions from Markdown formatted file.
         """
 
@@ -795,7 +780,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
 
     @staticmethod
     @pytest.mark.usefixtures('isfile_true')
-    def test_cli_import_solution_033(snippy):
+    def test_cli_import_solution_032(snippy):
         """Import solutions from Markdown template.
 
         Try to import solution template without any changes. This should result

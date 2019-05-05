@@ -1,6 +1,5 @@
 ## WORKING
    - [ ] Change name of --scat to --cat?
-   - [ ] Make tests for --scat
    - [ ] Add export to bash completion
    - [ ] Fix cause 'Content has been created without internal errors.' This breaks when there is e.g. created and bad request.
    - [ ] Fix updating Markdown based solutions in text formats does not work because the Mkdn solution does not have text header and data structure.

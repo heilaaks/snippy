@@ -328,6 +328,21 @@ class TestCliCreateSolution(object):
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+    @staticmethod
+    def test_cli_create_solution_011(snippy):
+        """Try to create solution from CLI.
+
+        Try to create new solution from command line when content category
+        has the ``all`` value. The ``--scat`` option must specify unique
+        content category when new content is created. The value ``all`` is
+        extended to all category names in the error text.
+        """
+
+
+        cause = snippy.run(['snippy', 'create', '--scat', 'all', '-f', './foo.yaml'])
+        assert cause == "NOK: content category must be unique when content is created: ('snippet', 'solution', 'reference')"
+        Content.assert_storage(None)
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

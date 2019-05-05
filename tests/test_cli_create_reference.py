@@ -35,9 +35,9 @@ class TestCliCreateReferece(object):
     def test_cli_create_reference_001(snippy):
         """Create reference from CLI.
 
-        Create new reference by defining all content parameters from command
-        line. Content data is must not be used at all in case of reference
-        content.
+        Create a new reference by defining all content attributes from command
+        line. The content ``data`` attribute must not be used when creating new
+        reference content.
         """
 
         content = {
@@ -59,7 +59,8 @@ class TestCliCreateReferece(object):
     def test_cli_create_reference_002(snippy):
         """Try to create reference from CLI.
 
-        Try to create new reference without defining mandatory content link.
+        Try to create new reference without defining mandatory content the
+        ``links`` attribute.
         """
 
         content = {
@@ -80,7 +81,8 @@ class TestCliCreateReferece(object):
     def test_cli_create_reference_003(snippy):
         """Try to create reference from CLI.
 
-        Try to create new reference without any changes to reference template.
+        Try to create new reference without any changes to the reference
+        template.
         """
 
         cause = snippy.run(['snippy', 'create', '--editor', '--format', 'text'])
@@ -90,10 +92,11 @@ class TestCliCreateReferece(object):
     @staticmethod
     @pytest.mark.usefixtures('edit-empty')
     def test_cli_create_reference_004(snippy):
-        """Try to create reference from CLI.
+        """Try to create reference from editor.
 
-        Try to create new reference with empty data. In this case the whole
-        template is deleted and the edited reference is an empty string.
+        Try to create new reference with empty content. In this case the whole
+        template is deleted in editor and the edited content is just an empty
+        string.
         """
 
         cause = snippy.run(['snippy', 'create', '--editor', '--format', 'text'])
@@ -173,8 +176,9 @@ class TestCliCreateReferece(object):
         """Try to create reference with editor.
 
         Try to create a new reference by using the prefilled default Markdown
-        template in editor. In this case there are no any changes made in
-        editor on top of the displayed template.
+        template in editor. In this case there are no changes made in editor
+        on top of the displayed template. Content must not be stored because
+        it is matching to a content template.
         """
 
         template = (
@@ -206,16 +210,43 @@ class TestCliCreateReferece(object):
         Content.assert_storage(None)
 
     @staticmethod
-    @pytest.mark.usefixtures('create-remove-utc')
     def test_cli_create_reference_007(snippy):
         """Try to create reference from CLI.
 
-        Try to create new reference by from command line with --no-editor
-        option when the mandatory links is not defined.
+        Try to create new reference by from command line with ``--no-editor``
+        option when the mandatory ``links`` attribute for a reference category
+        is not defined.
         """
 
         cause = snippy.run(['snippy', 'create', '--scat', 'reference', '--brief', 'Short brief', '--no-editor'])
         assert cause == 'NOK: content was not stored because mandatory content field links is empty'
+        Content.assert_storage(None)
+
+    @staticmethod
+    def test_cli_create_reference_008(snippy):
+        """Try to create reference from CLI.
+
+        Try to create new reference by from command line when the content
+        category contains two values. The ``--scat`` option must specify
+        an unique content category when new content is created.
+        """
+
+        cause = snippy.run(['snippy', 'create', '--scat', 'reference,snippet', '--links', 'http://short', '--no-editor'])
+        assert cause == "NOK: content category must be unique when content is created: ('reference', 'snippet')"
+        Content.assert_storage(None)
+
+    @staticmethod
+    def test_cli_create_reference_009(snippy):
+        """Try to create reference from CLI.
+
+        Try to create new reference by from command line when the content
+        category contains invalid and valid content category. Because of a
+        failure to define the content category correctly, content creation
+        must fail.
+        """
+
+        cause = snippy.run(['snippy', 'create', '--scat', 'reference,failure', '--links', 'http://short', '--no-editor'])
+        assert cause == "NOK: content categories ('failure', 'reference') are not a subset of ('snippet', 'solution', 'reference')"
         Content.assert_storage(None)
 
     @classmethod

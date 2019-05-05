@@ -406,18 +406,18 @@ class TestCliSearchReference(object):
     def test_cli_search_reference_016(snippy, capsys):
         """Search references with ``scat`` and ``stag`` options.
 
-        Try to define search category ``scat`` option in plural form. This
-        must not work because only singular forms in the search category
-        ``scat`` option are supported.
+        Try to define content category ``--scat`` option in a plural form. This
+        must not work because only singular forms in the ``--scat`` option are
+        supported.
 
         This limits the supported values in the REST API and thus it makes
         error handling simpler.
         """
 
-        output = "NOK: search categories ('solutions') are not a subset of ('snippet', 'solution', 'reference')\n"
+        output = "NOK: content categories ('solutions') are not a subset of ('snippet', 'solution', 'reference')\n"
         cause = snippy.run(['snippy', 'search', '--scat', 'solutions', '--stag', 'howto', '--no-ansi'])
         out, err = capsys.readouterr()
-        assert cause == "NOK: search categories ('solutions') are not a subset of ('snippet', 'solution', 'reference')"
+        assert cause == "NOK: content categories ('solutions') are not a subset of ('snippet', 'solution', 'reference')"
         assert out == output
         assert not err
 

@@ -128,7 +128,7 @@ class Config(object):
 
         # Static storage and template configurations.
         cls.storage_type = cls.source.storage_type
-        cls.storage_schema = cls._storage_schema()
+        cls.storage_schema = cls._test_resource('data/storage', 'database.sql')
         cls.storage_path = cls.source.storage_path
         cls.storage_file = cls._storage_file()
         cls.storage_host = cls.source.storage_host
@@ -140,14 +140,14 @@ class Config(object):
         cls.storage_ssl_ca_cert = cls.source.storage_ssl_ca_cert
         cls.templates = {
             'text': {
-                'snippet': cls._content_template('snippet.txt'),
-                'solution': cls._content_template('solution.txt'),
-                'reference': cls._content_template('reference.txt')
+                'snippet': cls._read_resource('data/templates', 'snippet.txt'),
+                'solution': cls._read_resource('data/templates', 'solution.txt'),
+                'reference': cls._read_resource('data/templates', 'reference.txt')
             },
             'mkdn': {
-                'snippet': cls._content_template('snippet.md'),
-                'solution': cls._content_template('solution.md'),
-                'reference': cls._content_template('reference.md')
+                'snippet': cls._read_resource('data/templates', 'snippet.md'),
+                'solution': cls._read_resource('data/templates', 'solution.md'),
+                'reference': cls._read_resource('data/templates', 'reference.md')
             }
         }
         cls.completion = {
@@ -298,7 +298,7 @@ class Config(object):
         migrated on top of configuration.
 
         Args:
-            update (Resource()): Update to be used on top of configuration.
+            update (obj): Resource() to be used on top of the configuration.
 
         Returns:
             Resource(): Updated resource.
@@ -323,7 +323,7 @@ class Config(object):
         Args:
             timestamp (str): IS8601 timestamp to be used with created collection.
             collection (Collection()): Collection to store configured content.
-            updates (Resource()): Updates from existing content.
+            updates (obj): Resource() from existing content.
             merge (bool): Defines if content is merged or not.
 
         Returns:
@@ -401,8 +401,8 @@ class Config(object):
             )
         )
 
-    @staticmethod
-    def _read_resource(path, filename):
+    @classmethod
+    def _read_resource(cls, path, filename):
         """Read Snippy resource file.
 
         Args:
@@ -413,53 +413,42 @@ class Config(object):
             str: File read into a string.
         """
 
-        filename = os.path.join(pkg_resources.resource_filename('snippy', path), filename)
-        if not os.path.isfile(filename):
-            Logger.print_status('NOK: cannot run because snippy resource file is not accessible: {}'.format(filename))
-            sys.exit(1)
-
         resource_file = ''
+        filename = cls._test_resource(path, filename)
         with io.open(filename, encoding='utf-8') as infile:
             resource_file = infile.read()
 
         return resource_file
 
-    @classmethod
-    def _storage_schema(cls):
-        """Test that database schema file exist."""
+    @staticmethod
+    def _test_resource(path, filename):
+        """Test if Snippy resource exists.
 
-        # The database schema is installed with the tool and it must always exist.
-        filename = os.path.join(pkg_resources.resource_filename('snippy', 'data/storage'), 'database.sql')
+        Args:
+            path (str): Relative path under the snippy project.
+            filename (str): Resource filename.
+
+        Returns:
+            str: File if the resource exists.
+        """
+
+        filename = os.path.join(pkg_resources.resource_filename('snippy', path), filename)
         if not os.path.isfile(filename):
-            Logger.print_status('NOK: cannot run because database schema is not accessible: {}'.format(filename))
+            Logger.print_status('NOK: cannot run because snippy resource file is not accessible: {}'.format(filename))
             sys.exit(1)
 
         return filename
 
     @classmethod
     def server_schema(cls):
-        """Get server API validation schema.
+        """Get REST API JSON validation schema.
 
         Returns:
             str: Server API schema to validate incoming HTTP requests.
         """
 
-        filename = os.path.join(pkg_resources.resource_filename('snippy', 'data/server/openapi/schema'), 'requestresource.json')
-        if not os.path.isfile(filename):
-            Logger.print_status('NOK: cannot run because server api schema is not accessible: {}'.format(filename))
-            sys.exit(1)
-
-        with io.open(filename, encoding='utf-8') as infile:
-            request_resource = json.load(infile)
-
-        filename = os.path.join(pkg_resources.resource_filename('snippy', 'data/server/openapi/schema'), 'requestcollection.json')
-        if not os.path.isfile(filename):
-            Logger.print_status('NOK: cannot run because server api schema is not accessible: {}'.format(filename))
-            sys.exit(1)
-
-        with io.open(filename, encoding='utf-8') as infile:
-            request_collection = json.load(infile)
-
+        request_resource = json.loads(cls._read_resource('data/server/openapi/schema', 'requestresource.json'))
+        request_collection = json.loads(cls._read_resource('data/server/openapi/schema', 'requestcollection.json'))
         schema = Const.EMPTY
         schema = {
             'oneOf': [request_resource, request_collection]
@@ -483,26 +472,11 @@ class Config(object):
         return 'file:' + filepath
 
     @classmethod
-    def _content_template(cls, template):
-        """Get defined content template installed with the tool."""
-
-        filename = os.path.join(pkg_resources.resource_filename('snippy', 'data/templates'), template)
-        if not os.path.isfile(filename):
-            Logger.print_status('NOK: cannot run because content template path is not accessible: {}'.format(filename))
-            sys.exit(1)
-
-        template = Const.EMPTY
-        with io.open(filename, encoding='utf-8') as infile:
-            template = infile.read()
-
-        return template
-
-    @classmethod
     def _storage_file(cls):
         """Construct store file with absolute path."""
 
         if cls.source.run_healthcheck:
-            return ''
+            return Const.EMPTY
 
         if Config.storage_path:
             storage_path = Config.storage_path

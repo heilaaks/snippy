@@ -67,7 +67,11 @@ class Check(object):  # pylint: disable=too-few-public-methods
             resp = conn.getresponse()
             if resp.status == 200:
                 exit_code = 0
-        except (ConnectionRefusedError, httplib.HTTPException):
+        except httplib.HTTPException:
+            # Cannot catch ConnectionRefusedError because it does not exist in
+            # Python 2. Catching it would cause a second exception with any
+            # exception captured here. The Python 2 and 3 compatible solution
+            # falls in this case to next Exception branch.
             cls._log_exception('server healthcheck failed with exception')
         except Exception:  # pylint: disable=broad-except
             cls._log_exception('server healthcheck failed with unknown exception')

@@ -4,11 +4,11 @@ verify_ssl = true
 name = "pypi"
 
 [dev-packages]
-mock = "==2.0.0"
+mock = "==3.0.4"
 openapi2jsonschema = "==0.9.0"
 pprintpp = "==0.4.0"
 pylint = "==2.3.1"
-pytest-cov = "==2.6.1"
+pytest-cov = "==2.7.1"
 pytest-mock = "==1.10.4"
 sphinx-autobuild = "==0.7.1"
 sphinxcontrib-openapi = "==0.4.0"

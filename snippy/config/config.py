@@ -268,10 +268,10 @@ class Config(object):
         is merged or migrated on top of the configuration.
 
         Args:
-            update (Resource()): Content updates on top of configured content.
+            update (obj): Content updates on top of configured content in Resource().
 
         Returns:
-            Collection(): Configured content in Collection object.
+            obj: Configured content in a Collection() object.
         """
 
         collection = Collection()
@@ -301,7 +301,7 @@ class Config(object):
             update (obj): Resource() to be used on top of the configuration.
 
         Returns:
-            Resource(): Updated resource.
+            obj: Updated Resource().
         """
 
         collection = cls.get_collection(update)
@@ -322,12 +322,12 @@ class Config(object):
 
         Args:
             timestamp (str): IS8601 timestamp to be used with created collection.
-            collection (Collection()): Collection to store configured content.
+            collection (obj): Collection() to store configured content.
             updates (obj): Resource() from existing content.
             merge (bool): Defines if content is merged or not.
 
         Returns:
-            Resource(): Configured content with updates.
+            obj: Configured content with updates in Resource().
         """
 
         config = collection.get_resource(cls.content_category, timestamp)
@@ -509,25 +509,25 @@ class Config(object):
 
     @classmethod
     def get_operation_file(cls, collection=None):
-        """Return file for operation.
+        """Return filename for the operation.
 
-        Use the resource filename field only in case of export operation when
-        there is a single resource in collection and when user did not define
-        target file from command line.
+        Use the resource ``filename`` attribute only in case of an export
+        operation when there is a single resource in collection and when
+        user did not define ``--file`` option.
 
         If collection is provided with more than one resource, the operation
         file is still updated. The collection might be a search result from
         different category than originally defined.
 
         Args:
-            collection (Collection): Resources in Collection container.
+            collection (obj): Resources in Collection() container.
 
         Returns:
-            string: Operation filename.
+            str: Operation filename.
         """
 
         filename = cls.operation_filename
-        if cls.is_operation_export and collection and not cls.content_filename:
+        if cls.is_operation_export and collection and not cls.source.operation_file:
             if len(collection) == 1 and next(collection.resources()).filename:
                 filename = next(collection.resources()).filename
             else:
@@ -559,7 +559,7 @@ class Config(object):
             category (str): User defined content category.
 
         Returns:
-            string: Filename with absolute path.
+            str: Filename with absolute path.
         """
 
         filename = category + 's.yaml'
@@ -580,12 +580,12 @@ class Config(object):
             categories (tuple): List of categories related to operation.
 
         Returns:
-            string: Operation filename.
+            str: Operation filename.
         """
 
         filename = None
-        if cls.source.filename:
-            filename = cls.source.filename
+        if cls.source.operation_file:
+            filename = cls.source.operation_file
 
         if cls.defaults:
             filename = cls.default_content_file(cls.content_category)
@@ -617,7 +617,7 @@ class Config(object):
             filename (str): Filename with file extension defining the format.
 
         Returns:
-            string: Operation file format.
+            str: Operation file format.
         """
 
         file_format = Const.CONTENT_FORMAT_NONE

@@ -43,7 +43,6 @@ class TestUtConfig(object):  # pylint: disable=too-many-public-methods
 
         Config.init(None)
         Config.load(Cli(['snippy', 'import']))
-        print(type(Config.content_category))
         assert isinstance(Config.content_category, Const.TEXT_TYPE)
         assert isinstance(Config.content_data, tuple)
         assert isinstance(Config.content_brief, Const.TEXT_TYPE)

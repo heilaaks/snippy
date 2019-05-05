@@ -193,7 +193,7 @@ class Cli(ConfigSourceBase):
         # migration options
         migrat = parser.add_argument_group(title='migration options', description=Const.NEWLINE.join(Cli.ARGS_MIGRATE))
         migrat_meg = migrat.add_mutually_exclusive_group()
-        migrat_meg.add_argument('-f', '--file', type=Parser.to_unicode, dest='filename', default='', help=argparse.SUPPRESS)
+        migrat_meg.add_argument('-f', '--file', type=Parser.to_unicode, dest='operation_file', default='', help=argparse.SUPPRESS)
         migrat_meg.add_argument('--defaults', action='store_true', default=False, help=argparse.SUPPRESS)
         migrat_meg.add_argument('--template', action='store_true', default=False, help=argparse.SUPPRESS)
         migrat.add_argument('--complete', choices=completions, help=argparse.SUPPRESS)

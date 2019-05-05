@@ -76,6 +76,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
         self.no_ansi = False
         self.no_editor = False
         self.operation = None
+        self.operation_file = Const.EMPTY
         self.profiler = False
         self.quiet = False
         self.run_healthcheck = False
@@ -98,7 +99,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
         self.version = __version__
         self.very_verbose = False
 
-    def __str__(self):
+    def __str__(self):  # pylint: disable=too-many-statements
         """Print class attributes in a controlled manner.
 
         This is intended to limit printing of sensitive configuration values
@@ -135,6 +136,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
         namespace.append('no_ansi={}'.format(self.no_ansi))
         namespace.append('no_editor={}'.format(self.no_editor))
         namespace.append('operation={}'.format(self.operation))
+        namespace.append('operation_file={}'.format(self.operation_file))
         namespace.append('profiler={}'.format(self.profiler))
         namespace.append('quiet={}'.format(self.quiet))
         namespace.append('remove_fields={}'.format(self.remove_fields))
@@ -240,6 +242,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
         self.name = parameters.get('name', Const.EMPTY)
         self.no_ansi = parameters.get(*self.read_env('no_ansi', False))
         self.no_editor = parameters.get('no_editor', False)
+        self.operation_file = parameters.get('operation_file', Const.EMPTY)
         self.profiler = parameters.get(*self.read_env('profile', False))
         self.quiet = parameters.get(*self.read_env('q', False))
         self.remove_fields = parameters.get('fields', self.ATTRIBUTES)
@@ -447,7 +450,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
 
     @property
     def filename(self):
-        """Get content filename."""
+        """Get content filename attribute."""
 
         return self._filename
 
@@ -459,6 +462,18 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
             self._reset_fields['filename'] = 'filename'
 
         self._filename = Parser.format_string(value)  # pylint: disable=attribute-defined-outside-init
+
+    @property
+    def operation_file(self):
+        """Get operation filename from the ``--file`` option."""
+
+        return self._operation_file
+
+    @operation_file.setter
+    def operation_file(self, value):
+        """Convert operation filename to utf-8 encoded unicode string."""
+
+        self._operation_file = Parser.format_string(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
     def sall(self):

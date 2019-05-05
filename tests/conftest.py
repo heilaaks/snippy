@@ -19,6 +19,8 @@
 
 """conftest: Fixtures for pytest."""
 
+from __future__ import print_function
+
 import json
 import traceback
 import uuid

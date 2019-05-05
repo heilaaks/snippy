@@ -1,6 +1,6 @@
 ## WORKING
    - [ ] Change name of --scat to --cat?
-   - [ ] Fix cause 'Content has been created without internal errors.' This breaks when there is e.g. created and bad request.
+   - [ ] Fix cause 'Content has been created without internal errors.' This breaks when there is e.g. created and bad request. That is the cause ok does not see 404 and sends OK.
    - [ ] Fix updating Markdown based solutions in text formats does not work because the Mkdn solution does not have text header and data structure.
    - [ ] Fix test_logger_016. The P3 is not correct? The links in p2 are in the same elemnet separated with \n that should be the case with P3.
    - [ ] Why container --server-host command line option does not work (healthcheck)? docker run -d --net="host" --name snippy heilaaks/snippy --server-host 127.0.0.1:8080 --log-json -vv
@@ -11,7 +11,7 @@
    - [ ] Make docker tests run parallel. Now the container removal is based on image name that is not good. must be based on container hash.
    - [ ] Make more tests for Docker use cases
    - [ ] Fix test case: test_quiet_option_001 it passes even when the search output is not printed on screen.
-   - [ ] Remove test cases from container.
+   - [ ] Remove test case files from container.
    - [ ] Add health API to send server health with statistics.
    - [ ] Check good rules from https://opensource.zalando.com/restful-api-guidelines/#218
    - [ ] Empty array values can unambiguously be represented as the empty list, [].

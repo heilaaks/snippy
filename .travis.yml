@@ -30,7 +30,7 @@ jobs:
     - stage: test
       script:
         - "make test"
-      python: "pypy2"
+      python: "pypy"
     - stage: test
       script:
         - "make test"

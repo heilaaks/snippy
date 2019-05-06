@@ -9,12 +9,28 @@ command likely work with any Linux distribution.
 
 .. code:: bash
 
-    # Install Python versions.
-    sudo dnf install python27
-    sudo dnf install python34
-    sudo dnf install python35
-    sudo dnf install python36
-    sudo dnf install python37
+    # Clone the project.
+    mkdir ~devel && cd $_
+    git clone git@github.com:heilaaks/snippy.git
+
+    # Install Docker-CE.
+    sudo dnf -y install dnf-plugins-core
+    sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+    sudo dnf install docker-ce docker-c e-cli containerd.io
+
+    # Install CPython versions.
+    sudo dnf install python27 -y
+    sudo dnf install python34 -y
+    sudo dnf install python35 -y
+    sudo dnf install python36 -y
+    sudo dnf install python37 -y
+
+    # Install PyPy3 versions.
+    sudo dnf install pypy2 -y
+    sudo dnf install pypy3 -y
+    sudo dnf install pypy2-devel -y
+    sudo dnf install pypy3-devel -y
+    sudo dnf install postgresql-devel -y
 
     # Install Python virtual environments.
     pip install pipenv --user
@@ -22,8 +38,8 @@ command likely work with any Linux distribution.
 
     # Configure virtualenv wrapper.
     vi ~/.bashrc
-       export WORKON_HOME=/home/heilaaks/devel/.virtualenvs
-       source /home/heilaaks/.local/bin/virtualenvwrapper.sh
+       export WORKON_HOME=~/devel/.virtualenvs
+       source ~/.local/bin/virtualenvwrapper.sh
     source ~/.bashrc
 
     # Create virtual environments for each Python version.
@@ -32,48 +48,14 @@ command likely work with any Linux distribution.
     mkvirtualenv --python /usr/bin/python3.5 p35-snippy
     mkvirtualenv --python /usr/bin/python3.6 p36-snippy
     mkvirtualenv --python /usr/bin/python3.7 p37-snippy
-    workon
+    mkvirtualenv --python /usr/bin/pypy3.5 pypy35-snippy
+    mkvirtualenv --python /usr/bin/pypy2.7 pypy27-snippy
 
-    # Install Docker-CE.
-    sudo dnf -y install dnf-plugins-core
-    sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
-    sudo dnf install docker-ce docker-c e-cli containerd.io
-
-    # Configure git.
-    git config --global user.name "Heikki Laaksonen"
-    git config --global user.email laaksonen.heikki.j@gmail.com
-    git config --list
-
-    # Configure vim for Git
-    sudo dnf -y install vim-enhanced
-
-    # Create SSH keys.
-    cd ~
-    ssh-keygen -t rsa -b 4096 -C "laaksonen.heikki.j@gmail.com"
-    eval "$(ssh-agent -s)"
-    ssh-add ~/.ssh/id_rsa
-    cat ~/.ssh/id_rsa.pub
-
-    # Create GPG keys. Email address must match to the email address
-    # used in GitLab.
-    # https://help.github.com/articles/generating-a-new-gpg-key/
-    # https://help.github.com/articles/telling-git-about-your-gpg-key/
-    # https://stackoverflow.com/a/42265848
-    gpg2 --list-secret-keys --keyid-format LONG
-    gpg2 --default-new-key-algo rsa4096 --gen-key
-    gpg2 --list-secret-keys --keyid-format LONG
-    gpg2 --armor --export <key>
-    git config commit.gpgsign true
-    git config --global gpg.program gpg2
-
-    # Configure virtualenv wrapper.
-    vi ~/.bashrc
-       export GPG_TTY=$(tty)
-
-    # Commit
-    git commit -S -s
-    git log --show-signature -1
-
+    # Repeat for each environment.
+    workon p27-snippy
+    make upgrade-wheel
+    make install-devel
+    make test
 
 Quick Start
 -----------

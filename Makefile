@@ -3,7 +3,7 @@
 MAKEFLAGS += --no-builtin-rules
 MAKEFLAGS += --no-builtin-variables
 
-# Run all commands in one shell.
+.PHONY: docs
 .ONESHELL:
 
 DEV_VERSION    := 0.11a0
@@ -16,115 +16,72 @@ PYPY2_LIBS     := pypy pypy-devel postgresql-devel
 PYPY3_LIBS     := pypy3 pypy3-devel postgresql-devel
 PYTHON         := python
 PYTHON_VERSION := $(shell python -c 'import sys; print(sys.version_info[0])')
+INSTALL_USER   := 
 
-# Commands assume that they are run inside virtual environment. The new
-# pyproject.toml based PEP517 does not support --editable and it is not
-# possible to use --user install inside a virtual environment. If these
-# commands in the Makefile are run outside of a virtual environment, the
-# install does global install.
+# Only the Python 3 implememtation supports parallel tests. Sqlite database
+# can be run as a in-memory database only with Python 3. An in-memory DB is
+# is needed for parallel testing.
+ifeq ($(PYTHON_VERSION), 3)
+PYTEST_CORES   := --numprocesses auto
+else
+PYTEST_CORES   :=
+endif
+
+# The new pyproject.toml based PEP517 does not support --editable and it
+# is not possible to run --user install inside a virtual environment. In
+# order to use the install targets outside of a virtual environemnt, the
+# INSTALL_USER variable must be set to '--user'.
 install:
-	$(PYTHON) -m pip install .
-
-install-devel:
-	$(PYTHON) -m pip install .[devel]
-
-install-test:
-	$(PYTHON) -m pip install .[test]
-
-install-devel-pypy:
-	@echo "##########################################################################"
-	@echo "Requires on Fedora:"
-	@echo "    dnf install pypy3 -y"
-	@echo "    dnf install pypy3-devel -y"
-	@echo "    dnf install postgresql-devel -y"
-	@echo "##########################################################################"
-	$(PYPY) -m pip install .[develpypy]
-
-install-server:
-	$(PYTHON) -m pip install .[server]
-
-install-server-pypy:
-	@echo "##########################################################################"
-	@echo "Requires on Fedora:"
-	@echo "    dnf install pypy3 -y"
-	@echo "    dnf install pypy3-devel -y"
-	@echo "    dnf install postgresql-devel -y"
-	@echo "##########################################################################"
-	$(PYPY) -m pip install .[serverpypy]
+	$(PYTHON) -m pip install . $(INSTALL_USER)
 
 upgrade:
-	$(PYTHON) -m pip install --upgrade .
-
-upgrade-wheel:
-	$(PYTHON) -m pip install pip setuptools wheel twine --upgrade --user
-	@echo "$$(date +'%Y-%m-%dT%H:%M:%S'): Updated setuptools twine and wheel to latest"
-
-upgrade-tool-version: clean-all
-	sed -i -r "s/${DEV_VERSION}/${TAG_VERSION}/" ./snippy/meta.py
-	$(PYTHON) runner import --defaults --scat all -q
-	$(PYTHON) runner export --defaults --scat all -q
-	! grep -rn -e ${DEV_VERSION} --exclude=releasing.rst --exclude=Makefile ./
-	@echo "$$(date +'%Y-%m-%dT%H:%M:%S'): Updated tool version ${DEV_VERSION} to ${TAG_VERSION}"
-
-upgrade-tool-version-devel: clean-all
-	sed -i -r "s/${TAG_VERSION}/${DEV_VERSION}/" ./snippy/meta.py
-	$(PYTHON) runner import --defaults --scat all -q
-	$(PYTHON) runner export --defaults --scat all -q
-	! grep -rn -e ${TAG_VERSION} --exclude=CHANGELOG.rst --exclude=Makefile --exclude=releasing.rst ./
-	@echo "$$(date +'%Y-%m-%dT%H:%M:%S'): Updated tool version ${TAG_VERSION} to ${DEV_VERSION}"
-
-prepare-release:
-	make upgrade-wheel
-	make upgrade-tool-version
-	make test-release
+	$(PYTHON) -m pip install --upgrade . $(INSTALL_USER)
 
 uninstall:
 	$(PYTHON) -m pip uninstall --yes snippy
 
+install-devel:
+	$(PYTHON) -m pip install .[devel] $(INSTALL_USER)
+
+install-tests:
+	$(PYTHON) -m pip install .[test] $(INSTALL_USER)
+
+install-server:
+	$(PYTHON) -m pip install .[server] $(INSTALL_USER)
+
+upgrade-wheel:
+	$(PYTHON) -m ensurepip $(INSTALL_USER)
+	$(PYTHON) -m pip install pip setuptools wheel twine --upgrade $(INSTALL_USER)
+
 outdated:
 	$(PYTHON) -m pip list --outdated
 
-.PHONY: docs
 docs:
 	make -C docs html
 
-test: test-sqlite
-
-test-all: test-sqlite test-postgresql test-docker
-
-test-ci: test-sqlite
-
-test-release: clean-all test-sqlite test-postgresql test-docker test-tox lint docs test-release-wheel
-	@echo "$$(date +'%Y-%m-%dT%H:%M:%S'): All automated tests and checks run"
-
-test-release-wheel: clean-all
-	$(PYTHON) setup.py sdist bdist_wheel
-	twine check dist/*
-
-test-fast:
-ifeq ($(PYTHON_VERSION), 3)
-	$(PYTHON) -m pytest -n auto -x ./tests/test_*.py --cov snippy -m "not (server or docker)"
-else
-	$(PYTHON) -m pytest -x ./tests/test_*.py --cov snippy -m "not (server or docker)"
-endif
+test:
+	$(PYTHON) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db sqlite -m "not (server or docker)" $(PYTEST_CORES)
 
 test-docker:
 	$(PYTHON) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db sqlite -m "docker"
 
+test-server:
+	$(PYTHON) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db sqlite -m "server"
+
 test-postgresql:
-	$(PYTHON) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db postgresql -m "not docker"
-
-test-postgresql-pypy:
-	$(PYPY) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db postgresql -m "not docker"
-
-test-sqlite:
-	$(PYTHON) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db sqlite -m "not docker"
-
-test-sqlite-pypy:
-	$(PYPY) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db sqlite -m "not docker"
+	$(PYTHON) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db postgresql -m "not (server or docker)" $(PYTEST_CORES)
+	$(PYTHON) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db postgresql -m "server"
 
 test-tox:
 	tox
+
+test-all: test test-postgresql test-server test-docker test-tox
+
+test-release: clean-all test-all lint docs test-release-wheel
+
+test-release-wheel: clean-all
+	$(PYTHON) setup.py sdist bdist_wheel
+	twine check dist/*
 
 coverage:
 	$(PYTHON) -m pytest --cov=snippy --cov-branch --cov-report html tests/ -m "not (server or docker)"
@@ -147,7 +104,6 @@ docker: clean-all
 security-scan:
 	-bandit -r snippy | tee tests/bandit/bandit.txt
 
-.PHONY: clean
 clean: clean-build clean-pyc clean-test
 
 clean-all: clean clean-db
@@ -181,6 +137,45 @@ clean-test:
 
 clean-db:
 	> snippy/data/storage/snippy.db
+
+upgrade-tool-version: clean-all
+	sed -i -r "s/${DEV_VERSION}/${TAG_VERSION}/" ./snippy/meta.py
+	$(PYTHON) runner import --defaults --scat all -q
+	$(PYTHON) runner export --defaults --scat all -q
+	! grep -rn -e ${DEV_VERSION} --exclude=releasing.rst --exclude=Makefile ./
+
+upgrade-tool-version-devel: clean-all
+	sed -i -r "s/${TAG_VERSION}/${DEV_VERSION}/" ./snippy/meta.py
+	$(PYTHON) runner import --defaults --scat all -q
+	$(PYTHON) runner export --defaults --scat all -q
+	! grep -rn -e ${TAG_VERSION} --exclude=CHANGELOG.rst --exclude=Makefile --exclude=releasing.rst ./
+	@echo "$$(date +'%Y-%m-%dT%H:%M:%S'): Updated tool version ${TAG_VERSION} to ${DEV_VERSION}"
+
+prepare-release:
+	make upgrade-wheel
+	@echo "$$(date +'%Y-%m-%dT%H:%M:%S'): Updated setuptools twine and wheel to latest"
+	make upgrade-tool-version
+	@echo "$$(date +'%Y-%m-%dT%H:%M:%S'): Updated tool version ${DEV_VERSION} to ${TAG_VERSION}"
+	make test-release
+	@echo "$$(date +'%Y-%m-%dT%H:%M:%S'): All automated tests and checks run"
+
+install-devel-pypy:
+	@echo "##########################################################################"
+	@echo "Requires on Fedora:"
+	@echo "    dnf install pypy3 -y"
+	@echo "    dnf install pypy3-devel -y"
+	@echo "    dnf install postgresql-devel -y"
+	@echo "##########################################################################"
+	$(PYPY) -m pip install .[develpypy]
+
+install-server-pypy:
+	@echo "##########################################################################"
+	@echo "Requires on Fedora:"
+	@echo "    dnf install pypy3 -y"
+	@echo "    dnf install pypy3-devel -y"
+	@echo "    dnf install postgresql-devel -y"
+	@echo "##########################################################################"
+	$(PYPY) -m pip install .[serverpypy]
 
 # $(call test-pypy-libs, pkg-manager, pkg-COMMAND, required-libs)
 #

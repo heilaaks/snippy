@@ -3,30 +3,38 @@ dist: xenial
 install:
     - "python -m pip install pluggy==0.9.0"
     - "python -m pip install codecov==2.0.15"
-    - "make install-test"
+    - "make install-tests"
 cache: pip
 jobs:
   include:
     - stage: test
       script:
-        - "make test-ci"
+        - "make test"
       python: "2.7"
     - stage: test
       script:
-        - "make test-ci"
+        - "make test"
       python: "3.4"
     - stage: test
       script:
-        - "make test-ci"
+        - "make test"
       python: "3.5"
     - stage: test
       script:
-        - "make test-ci"
+        - "make test"
       python: "3.6"
     - stage: test
       script:
-        - "make test-ci"
+        - "make test"
       python: "3.7"
+    - stage: test
+      script:
+        - "make test"
+      python: "pypy2"
+    - stage: test
+      script:
+        - "make test"
+      python: "pypy3"
 after_success:
     - codecov
 

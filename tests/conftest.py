@@ -22,8 +22,12 @@
 from __future__ import print_function
 
 import json
+import time
 import traceback
 import uuid
+from subprocess import call
+from subprocess import Popen
+from subprocess import PIPE
 
 import docker
 import mock
@@ -295,6 +299,59 @@ def server_db(mocker, request):
     request.addfinalizer(fin)
 
     return (snippy, mock_db_connect)
+
+@pytest.fixture(scope='function', name='process')
+def server_process(request):
+    """Run real server for testing purposes."""
+
+    params = [
+        'python',
+        './runner',
+        'server',
+        '--server-host',
+        '127.0.0.1:8080',
+    ]
+    if hasattr(request, 'param'):
+        params = params + request.param
+
+    # Clear the real database and run the real server.
+    call(['make', 'clean-db'])
+    snippy = Popen(params, stdout=PIPE, stderr=PIPE)
+    http = _wait_process()
+    def fin():
+        """Clear the process at the end.
+
+        Because test cases need to read proccess output from blocking stderr
+        and stdout, the process may be already terminated in test case. There
+        will be a ``No such process`` exception if process has been already
+        terminated.
+        """
+
+        try:
+            snippy.terminate()
+            snippy.wait()
+        except OSError:
+            pass
+    request.addfinalizer(fin)
+
+    return (snippy, http)
+
+def _wait_process():
+    """Wait untill the server is up."""
+
+    result = 0
+    conn = None
+    while result != 200:
+        try:
+            conn = httplib.HTTPConnection('127.0.0.1', port=8080)
+            conn.request('GET', '/api/snippy/rest/hello')
+            resp = conn.getresponse()
+            result = resp.status
+        except Exception:  # pylint: disable=broad-except
+            conn.close()
+            time.sleep(0.05)
+
+    return conn
 
 @pytest.fixture(scope='function', name='mock-server')
 def server_mock(mocker):

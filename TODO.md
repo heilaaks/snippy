@@ -1,4 +1,5 @@
 ## WORKING
+   - [ ] Make server cases parallel by allocating port from list of ports.
    - [ ] Test if new pypy venv is able to select the pypy specific psycopg2cffi
    - [ ] Change name of --scat to --cat?
    - [ ] Fix cause 'Content has been created without internal errors.' This breaks when there is e.g. created and bad request. That is the cause ok does not see 404 and sends OK.
@@ -29,7 +30,6 @@
    - [ ] Add delete for wheel build directory for automation. If the folder exist this is a problem (at least used to be) see how to fail python release/building/something.
    - [ ] Refactor Makefile to have python|python3|pypy|pypy3 as ${PYTHON}.
    - [ ] How to compile psycopg2 for PyPY?
-   - [ ] Fix PyPy 5.5.0 (Python 3.3) that does not have sqlite uri=True and does not have server 'ssl_version': ssl.PROTOCOL_TLSv1_2. Otherwise tests pass with exception of schema validation errors. works with later Pypy would be the best quess.
    - [ ] Config get_resource could return empty Resource instead of None in failure. This is now related to new migrate refactoring that prevents migrating template resources.
    - [ ] Fix (remove) the LANG in Alpine based dockerfile? Is this useless as MUSL does not support locales? https://github.com/gliderlabs/docker-alpine/issues/144
    - [ ] Fix server silent startup failure if for example the port is reserved. How to get proper error cause for user?
@@ -77,7 +77,7 @@
    - [ ] Add support to search phrases like has 'active end'. This should return one result with default set but it returns two since each word is searched separately.
    - [ ] Add support to find dead links.
    - [ ] Add Travis CI for PyPy version v6.0 for Python 3 when it comes https://github.com/travis-ci/travis-ci/issues/9542
-   - [ ] Add test client to measure performance of the server. The PyPy does not seem to work with api_performance test.
+   - [ ] Add test client to measure performance of the server.
    - [ ] Add user management with a new user table that lins to contents table.
    - [ ] Add limit to multilevel sort fields to two fields to avoid complex scenarios.
    - [ ] Add limits to all parameters: column array size, sort array size, etc.
@@ -90,7 +90,6 @@
 
 ## SECURITY
    - [ ] Remove server name and version from HTTP responses. This would require overriding Gunicorn https://stackoverflow.com/a/21294524.
-   - [ ] How to bind inside container to specific IP? Binding to 127.0.0.1 makes the container unavailable because it is the loopback and does not lead anywhere. Is the only option a start-up script?
 
 ## FIX
    - [ ] Refactor rest.generate that now updates also headers. Body, content type and status are set in the main level but header are set in Generate which may be confusing.
@@ -133,6 +132,7 @@
    - [ ] Why changing self._data = data in data setter in line 160 to self.data = data in config base seems to cause core. This can be used to set the Travis gdb parameters.
    - [ ] Should _add_date in Content() be based on updated when DATE already set? The reason would be that this sets the text template DATE and it should be always latest which is updated?
    - [ ] Fix tox and Python 3.4. Tox -e py34 // http://notes.webutvikling.org/darn-installation-of-python-3-4/. This was broken with Fedora 26. With Fedora 30 this works. This is heere because complication instructions are not complete in tox.ini.
+   - [ ] Fix PyPy 5.5.0 (Python 3.3) that does not have sqlite uri=True and does not have server 'ssl_version': ssl.PROTOCOL_TLSv1_2. Otherwise tests pass with exception of schema validation errors. works with later Pypy would be the best quess.
 
 ## REFACTOR
    - [ ] Storage update() supports only one resource and this is not in line with others. Change to collection?
@@ -158,7 +158,6 @@
    - [ ] Observe if Content.mocked_open and Content.imported_dict has sorting problems because of the hash. This could already sorted because the comparison sorts always the output.
    - [ ] Why test_cli_import_snippet_009 requires import-remove-utc but the 001 does not?
    - [ ] Why delete_storage requires not try/catch block for file remove when the existence is tested? This was with after server/snippy.run refactoring.
-   - [ ] Fix api performance test failure which leaves the server running and hanging.
    - [ ] Test URL encoded REST API queries. The same problem that was with %2C may be with other formats.
    - [ ] Test manually the exception cases for example with file with Python3 and 2.7. Some exceptions may not be in Python2.7.
    - [ ] Fix patching in specific module. E.g snippy.migrate.migrate.os.path.isfile does not patch only specified module. Find 'side_effect' in import snippet.

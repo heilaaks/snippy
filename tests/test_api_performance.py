@@ -22,21 +22,15 @@
 from __future__ import print_function
 
 import json
+import re
 import time
-from subprocess import call
-from subprocess import Popen
-from subprocess import PIPE
 
 import pytest
 
 from snippy.cause import Cause
+from snippy.constants import Constants as Const
 from tests.lib.content import Content
 from tests.lib.content import Request
-
-try:
-    import http.client as httplib
-except ImportError:
-    import httplib
 
 pytest.importorskip('gunicorn')
 
@@ -44,9 +38,13 @@ pytest.importorskip('gunicorn')
 class TestApiPerformance(object):
     """Test REST API server performance."""
 
-    @staticmethod
+    RE_MATCH_SERVER_PORT = re.compile(r'''
+        (127\.0\.0\.1):\d{4,5}    # Match server port running locally.
+        ''', re.MULTILINE | re.VERBOSE)
+
     @pytest.mark.server
-    def test_server_performance():
+    @pytest.mark.parametrize('process', [['--server-minify-json']], indirect=True)
+    def test_server_performance(self, process):
         """Test API server performance.
 
         Verify performance of the tool on a rough scale. The intention
@@ -76,10 +74,8 @@ class TestApiPerformance(object):
         than with the reference PC to cope with slow test envrironments
         """
 
-        # Clear the real database and run the real server.
-        call(['make', 'clean-db'])
-        server = Popen(['python', './runner', 'server', '--server-host', 'localhost:8080', '--server-minify-json'], stdout=PIPE, stderr=PIPE)
-        time.sleep(1)  # Wait untill server is up.
+        server = process[0]
+        http = process[1]
         snippets = {
             'data': [
                 {'type': 'snippet', 'attributes': Request.remove},
@@ -88,82 +84,92 @@ class TestApiPerformance(object):
                 {'type': 'snippet', 'attributes': Request.netcat}
             ]
         }
-        conn = httplib.HTTPConnection('localhost', port=8080)
         start = time.time()
         for _ in range(10):
 
             # POST four snippets in list context.
-            conn.request(
+            http.request(
                 'POST',
                 '/api/snippy/rest/snippets',
                 json.dumps(snippets),
                 {'content-type':'application/json; charset=UTF-8'}
             )
-            resp = conn.getresponse()
+            resp = http.getresponse()
             assert resp.status == Cause.HTTP_201_CREATED
             assert len(json.loads(resp.read().decode())['data']) == 4
 
             # GET maximum of two snippets from whole snippet collection.
-            conn.request(
+            http.request(
                 'GET',
                 '/api/snippy/rest/snippets?limit=2&sort=-brief'
             )
-            resp = conn.getresponse()
+            resp = http.getresponse()
             assert resp.status == Cause.HTTP_200_OK
             assert len(json.loads(resp.read().decode())['data']) == 2
 
             # GET maximum of four snippets from whole snippet collection with
             # sall search.
-            conn.request(
+            http.request(
                 'GET',
                 '/api/snippy/rest/snippets?sall=docker,swarm&limit=4&sort=brief'
             )
-            resp = conn.getresponse()
+            resp = http.getresponse()
             assert resp.status == Cause.HTTP_200_OK
             assert len(json.loads(resp.read().decode())['data']) == 3
 
             # DELETE all snippets one by one by first requesting only digests.
-            conn.request(
+            http.request(
                 'GET',
                 '/api/snippy/rest/snippets?limit=100&fields=digest'
             )
-            resp = conn.getresponse()
+            resp = http.getresponse()
             body = json.loads(resp.read().decode())
             assert resp.status == Cause.HTTP_200_OK
             assert len(body['data']) == 4
             for resource_ in body['data']:
-                conn.request(
+                http.request(
                     'DELETE',
-                    'http://localhost:8080/api/snippy/rest/snippets/' + resource_['attributes']['digest']
+                    '/api/snippy/rest/snippets/' + resource_['attributes']['digest']
                 )
-                resp = conn.getresponse()
+                resp = http.getresponse()
                 assert resp.status == Cause.HTTP_204_NO_CONTENT
 
             # GET all snippets to make sure that all are deleted
-            conn.request(
+            http.request(
                 'GET',
                 '/api/snippy/rest/snippets?limit=100'
             )
-            resp = conn.getresponse()
+            resp = http.getresponse()
             assert resp.status == Cause.HTTP_404_NOT_FOUND
 
         runtime = time.time() - start
         server.terminate()
         server.wait()
-        out = server.stdout.readlines()
+        raw = server.stdout.readlines()
+        # Convert array of byte strings to string and replace random
+        # port with static port for comparison.
+        out = Const.EMPTY.join(line.decode() for line in raw)
+        out = self.RE_MATCH_SERVER_PORT.sub(r'\1:80', out)
         err = server.stderr.readlines()
+        output = (
+            'snippy server running at: 127.0.0.1:80',
+            'snippy server stopped at: 127.0.0.1:80',
+            ''
+        )
         print("====================================")
         print("Runtime %.4f" % runtime)
-        print("There are %d rows in stdout" % len(out))
+        print("There are %d rows in stdout" % len(raw))
         print("There are %d rows in stderr" % len(err))
         print("====================================")
-        assert out == [b'snippy server running at: localhost:8080\n', b'snippy server stopped at: localhost:8080\n']
+        assert out == Const.NEWLINE.join(output)
+        print(out)
         assert not err
         assert runtime < 10
 
     @staticmethod
     @pytest.mark.server
-    def test_server_logging():
+    @pytest.mark.parametrize('process', [['-vv']], indirect=True)
+    def test_server_logging(process):
         """Test server log configuration.
 
         Test that server initial log configuration is used for whole the whole
@@ -171,10 +177,8 @@ class TestApiPerformance(object):
         first operation.
         """
 
-        # Clear the real database and run the real server.
-        call(['make', 'clean-db'])
-        server = Popen(['python', './runner', 'server', '--server-host', 'localhost:8080', '-vv'], stdout=PIPE, stderr=PIPE)
-        time.sleep(1)  # Wait untill server up.
+        server = process[0]
+        http = process[1]
         snippets = {
             'data': [
                 {'type': 'snippet', 'attributes': Request.remove},
@@ -183,17 +187,15 @@ class TestApiPerformance(object):
                 {'type': 'snippet', 'attributes': Request.netcat}
             ]
         }
-        conn = httplib.HTTPConnection('localhost', port=8080)
         start = time.time()
 
-        # POST four snippets.
-        conn.request(
+        http.request(
             'POST',
             '/api/snippy/rest/snippets',
             json.dumps(snippets),
             {'content-type':'application/json; charset=UTF-8'}
         )
-        resp = conn.getresponse()
+        resp = http.getresponse()
         assert resp.status == Cause.HTTP_201_CREATED
         assert len(json.loads(resp.read().decode())['data']) == 4
 
@@ -207,7 +209,6 @@ class TestApiPerformance(object):
         print("There are %d rows in stdout" % len(out))
         print("There are %d rows in stderr" % len(err))
         print("====================================")
-
         assert sum('creating new: snippet' in str(s) for s in out) == 4
         assert not err
         assert runtime < 10

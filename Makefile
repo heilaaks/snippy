@@ -60,7 +60,7 @@ docs:
 	make -C docs html
 
 test:
-	$(PYTHON) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db sqlite -m "not (docker)" $(PYTEST_CORES)
+	$(PYTHON) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db sqlite -m "not (docker or server)" $(PYTEST_CORES)
 
 test-docker:
 	$(PYTHON) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db sqlite -m "docker"

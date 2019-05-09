@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""test_api_performance: Test REST API server performance."""
+"""test_api_server: Test real REST API server process."""
 
 from __future__ import print_function
 
@@ -35,17 +35,20 @@ from tests.lib.content import Request
 pytest.importorskip('gunicorn')
 
 
-class TestApiPerformance(object):
-    """Test REST API server performance."""
+class TestApiServer(object):
+    """Test real REST API server performance."""
 
     RE_MATCH_SERVER_PORT = re.compile(r'''
-        (127\.0\.0\.1):\d{4,5}    # Match server port running locally.
+        (127\.0\.0\.1):\d{1,5}    # Match server port running locally.
         ''', re.MULTILINE | re.VERBOSE)
 
     @pytest.mark.server
     @pytest.mark.parametrize('process', [['--server-minify-json']], indirect=True)
     def test_server_performance(self, process):
         """Test API server performance.
+
+        Note! These were invalidated when the in-memory database was
+              taken into use for parallel server testing.
 
         Verify performance of the tool on a rough scale. The intention
         is to keep a reference test that is just iterated few times and
@@ -152,7 +155,6 @@ class TestApiPerformance(object):
         out = self.RE_MATCH_SERVER_PORT.sub(r'\1:80', out)
         err = server.stderr.readlines()
         output = (
-            'snippy server running at: 127.0.0.1:80',
             'snippy server stopped at: 127.0.0.1:80',
             ''
         )
@@ -162,7 +164,6 @@ class TestApiPerformance(object):
         print("There are %d rows in stderr" % len(err))
         print("====================================")
         assert out == Const.NEWLINE.join(output)
-        print(out)
         assert not err
         assert runtime < 10
 

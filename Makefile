@@ -60,7 +60,7 @@ docs:
 	make -C docs html
 
 test:
-	$(PYTHON) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db sqlite -m "not (server or docker)" $(PYTEST_CORES)
+	$(PYTHON) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db sqlite -m "not (docker)" $(PYTEST_CORES)
 
 test-docker:
 	$(PYTHON) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db sqlite -m "docker"
@@ -69,8 +69,7 @@ test-server:
 	$(PYTHON) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db sqlite -m "server"
 
 test-postgresql:
-	$(PYTHON) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db postgresql -m "not (server or docker)" $(PYTEST_CORES)
-	$(PYTHON) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db postgresql -m "server"
+	$(PYTHON) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db postgresql -m "not (docker)" $(PYTEST_CORES)
 
 test-tox:
 	tox

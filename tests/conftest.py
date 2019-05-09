@@ -22,6 +22,7 @@
 from __future__ import print_function
 
 import json
+import re
 import time
 import traceback
 import uuid
@@ -309,15 +310,17 @@ def server_process(request):
         './runner',
         'server',
         '--server-host',
-        '127.0.0.1:8080',
+        '127.0.0.1:0',
+        '--storage-type',
+        'in-memory'
     ]
     if hasattr(request, 'param'):
         params = params + request.param
 
     # Clear the real database and run the real server.
     call(['make', 'clean-db'])
-    snippy = Popen(params, stdout=PIPE, stderr=PIPE)
-    http = _wait_process()
+    process = Popen(params, stdout=PIPE, stderr=PIPE)
+    http = _wait_process(process)
     def fin():
         """Clear the process at the end.
 
@@ -328,28 +331,56 @@ def server_process(request):
         """
 
         try:
-            snippy.terminate()
-            snippy.wait()
+            process.terminate()
+            process.wait()
         except OSError:
             pass
     request.addfinalizer(fin)
 
-    return (snippy, http)
+    return (process, http)
 
-def _wait_process():
-    """Wait untill the server is up."""
+def _wait_process(process):
+    """Wait untill the server is up.
+
+    The port where the server is running is read from the logs. This does not
+    work if the queiet option ``-q`` was used. The reason to use a log print
+    is to avoid using ``psutils`` package and operating system specific tests
+    to find the port where a process is running.
+
+    Note that reading the stdout removes the read logs. This means that the
+    test case using a real process cannot the logs before and including the
+    snippy server startup log 'snippy server running at ...'.
+
+    Args:
+        process (obj): Popen object for Snippy proces.
+    """
+
+    re_catch_server_port = re.compile(r'''
+        snippy\sserver\srunning\sat[:]\s.*[:](?P<port>\d{4,5})  # Catch server port.
+        ''', re.MULTILINE | re.VERBOSE)
+
+    port = 0
+    while True:
+        process.stdout.flush()
+        line = process.stdout.readline().decode('utf-8')
+        match = re_catch_server_port.search(line)
+        if match:
+            port = match.group('port')
+            break
+        if not line:
+            break
 
     result = 0
     conn = None
     while result != 200:
         try:
-            conn = httplib.HTTPConnection('127.0.0.1', port=8080)
+            conn = httplib.HTTPConnection('127.0.0.1', port=port)
             conn.request('GET', '/api/snippy/rest/hello')
             resp = conn.getresponse()
             result = resp.status
         except Exception:  # pylint: disable=broad-except
             conn.close()
-            time.sleep(0.05)
+            time.sleep(0.01)
 
     return conn
 

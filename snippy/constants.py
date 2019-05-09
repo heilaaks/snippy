@@ -75,7 +75,8 @@ class Constants(object):  # pylint: disable=too-few-public-methods
     DB_SQLITE = 'sqlite'
     DB_POSTGRESQL = 'postgresql'
     DB_COCKROACHDB = 'cockroachdb'
-    STORAGES = (DB_SQLITE, DB_POSTGRESQL, DB_COCKROACHDB)
+    DB_IN_MEMORY = 'in-memory'
+    STORAGES = (DB_SQLITE, DB_POSTGRESQL, DB_COCKROACHDB, DB_IN_MEMORY)
 
     # Regexp patterns.
     RE_MATCH_ANSI_ESCAPE_SEQUENCES = re.compile(r'''

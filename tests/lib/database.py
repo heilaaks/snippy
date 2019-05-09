@@ -50,8 +50,9 @@ class Database(object):
     DB_SQLITE = Helper.DB_SQLITE
     DB_POSTGRESQL = Helper.DB_POSTGRESQL
     DB_COCKROACHDB = Helper.DB_COCKROACHDB
+    DB_IN_MEMORY = Helper.DB_IN_MEMORY
     _DATABASE = DB_SQLITE
-    _DATABASES = (DB_SQLITE, DB_POSTGRESQL, DB_COCKROACHDB)
+    _DATABASES = (DB_SQLITE, DB_POSTGRESQL, DB_COCKROACHDB, DB_IN_MEMORY)
     _PLACEHOLDER = '?'
 
     # Mocked UUIDs must not collide with predefined resource UUIDs.
@@ -127,7 +128,7 @@ class Database(object):
             database = cls.DB_SQLITE
         cls._DATABASE = database
 
-        if cls._DATABASE == cls.DB_SQLITE:
+        if cls._DATABASE in (cls.DB_SQLITE, cls.DB_IN_MEMORY):
             cls._PLACEHOLDER = '?'
         else:
             cls._PLACEHOLDER = '%s'
@@ -331,7 +332,7 @@ class Database(object):
     def _connect(cls):
         """Connect to database."""
 
-        if cls._DATABASE == cls.DB_SQLITE:
+        if cls._DATABASE in (cls.DB_SQLITE, cls.DB_IN_MEMORY):
             if not Const.PYTHON2:
                 connection = sqlite3.connect(Database.get_storage(), check_same_thread=False, uri=True)
             else:

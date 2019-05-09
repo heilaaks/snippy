@@ -473,10 +473,20 @@ class Config(object):
 
     @classmethod
     def _storage_file(cls):
-        """Construct store file with absolute path."""
+        """Construct store file with absolute path.
+
+        The in-memory database is supported only in Python 3. The Sqlite, which
+        is used as a in-memory database, supports this feature only in Python 3.
+
+        Returns:
+            str: Path or URI to the storage.
+        """
 
         if cls.source.run_healthcheck:
             return Const.EMPTY
+
+        if Config.storage_type == Const.DB_IN_MEMORY and not Const.PYTHON2:
+            return 'file::memory:?cache=shared'
 
         if Config.storage_path:
             storage_path = Config.storage_path

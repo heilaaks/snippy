@@ -1,5 +1,5 @@
 ## WORKING
-   - [ ] Make server cases parallel by allocating port from list of ports.
+   - [ ] Check and fix API perfromance test results after in-memory change.
    - [ ] Test if new pypy venv is able to select the pypy specific psycopg2cffi
    - [ ] Change name of --scat to --cat?
    - [ ] Fix cause 'Content has been created without internal errors.' This breaks when there is e.g. created and bad request. That is the cause ok does not see 404 and sends OK.

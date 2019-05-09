@@ -47,7 +47,8 @@ class Helper(object):
     DB_SQLITE = 'sqlite'
     DB_POSTGRESQL = 'postgresql'
     DB_COCKROACHDB = 'cockroachdb'
-    STORAGES = (DB_SQLITE, DB_POSTGRESQL, DB_COCKROACHDB)
+    DB_IN_MEMORY = 'in-memory'
+    STORAGES = (DB_SQLITE, DB_POSTGRESQL, DB_COCKROACHDB, DB_IN_MEMORY)
 
     # All resource attributes that can be sent in HTTP request.
     REQUEST_ATTRIBUTES = (

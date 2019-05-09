@@ -84,8 +84,8 @@ class Database(object):
     def init(self):
         """Initialize database."""
 
-        if Config.storage_type == Const.DB_SQLITE:
-            self._db = Config.storage_type
+        if Config.storage_type in (Const.DB_SQLITE, Const.DB_IN_MEMORY):
+            self._db = Const.DB_SQLITE
             self._regexp = 'REGEXP'
             self._placeholder = '?'
             self._catch_violating_column = self.RE_CATCH_UNIQUE_SQLITE_COLUMN

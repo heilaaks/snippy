@@ -26,6 +26,13 @@ _snippy_complete()
         return 0;
     fi
 
+    if [[ ${prev} == --format ]] ; then
+        opts="text mkdn"
+        COMPREPLY=($(compgen -W "${opts}" -- ${cur}))
+
+        return 0;
+    fi
+
     if [[ ${prev} == --scat ]] ; then
         opts="snippet solution reference all"
         COMPREPLY=($(compgen -W "${opts}" -- ${cur}))
@@ -33,8 +40,8 @@ _snippy_complete()
         return 0;
     fi
 
-    if [[ ${prev} == --format ]] ; then
-        opts="text mkdn"
+    if [[ ${prev} == --storage-type ]] ; then
+        opts="sqlite postgresql cockroachdb in-memory"
         COMPREPLY=($(compgen -W "${opts}" -- ${cur}))
 
         return 0;

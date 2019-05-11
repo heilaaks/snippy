@@ -27,6 +27,13 @@ from setuptools import setup, find_packages
 requires = (
     'pyyaml'
 )
+extras_server = (
+    'falcon==2.0.0',
+    'gunicorn==19.9.0',
+    'jsonschema==3.0.1',
+    'psycopg2==2.8.2 ; implementation_name=="cpython"',
+    'psycopg2cffi==2.8.1 ; implementation_name=="pypy"'
+)
 extras_dev = (
     'logging_tree==1.8',
     'openapi2jsonschema==0.9.0'
@@ -37,24 +44,6 @@ extras_docs = (
     'sphinxcontrib-openapi==0.4.0',
     'sphinx_rtd_theme==0.4.3',
     'sphinx-autobuild==0.7.1'
-)
-extras_server = (
-    'falcon==2.0.0',
-    'gunicorn==19.9.0',
-    'jsonschema==3.0.1',
-    'psycopg2-binary==2.8.2'
-)
-extras_server_docker = (
-    extras_server[0],
-    extras_server[1],
-    extras_server[2],
-    'psycopg2>=2.7.5,<=2.8.1'
-)
-extras_server_pypy = (
-    extras_server[0],
-    extras_server[1],
-    extras_server[2],
-    'psycopg2cffi==2.8.1'
 )
 extras_tests = (
     'docker==3.7.2',
@@ -134,11 +123,8 @@ setup(
     ],
     extras_require={
         'devel': extras_dev + extras_docs + extras_server + extras_tests,
-        'develpypy': extras_dev + extras_docs + extras_server_pypy + extras_tests,
-        'docker': extras_server_docker,
         'docs': extras_docs,
         'server': extras_server,
-        'serverpypy': extras_server_pypy,
         'test': extras_server + extras_tests,
     },
     tests_require=extras_tests,

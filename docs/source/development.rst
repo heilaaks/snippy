@@ -13,19 +13,18 @@ command likely work with any Linux distribution.
     mkdir ~devel && cd $_
     git clone git@github.com:heilaaks/snippy.git
 
-    # Install Docker-CE.
-    sudo dnf -y install dnf-plugins-core
-    sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
-    sudo dnf install docker-ce docker-c e-cli containerd.io
+    # Install docker-ce.
 
-    # Install CPython versions.
+    # Install CPython versions (Fedora).
     sudo dnf install python27 -y
     sudo dnf install python34 -y
     sudo dnf install python35 -y
     sudo dnf install python36 -y
     sudo dnf install python37 -y
+    sudo dnf install python3-devel -y
+    sudo dnf install python2-devel -y
 
-    # Install PyPy3 versions.
+    # Install PyPy3 versions (Fedora).
     sudo dnf install pypy2 -y
     sudo dnf install pypy3 -y
     sudo dnf install pypy2-devel -y
@@ -51,11 +50,18 @@ command likely work with any Linux distribution.
     mkvirtualenv --python /usr/bin/pypy3.5 pypy35-snippy
     mkvirtualenv --python /usr/bin/pypy2.7 pypy27-snippy
 
-    # Repeat for each environment.
+    # Repeat for all virtual environments.
     workon p27-snippy
     make upgrade-wheel
     make install-devel
     make test
+
+    # Install PostgreSQL adapters for CPython 2.7 and PyPy 2.7. The
+    # 'implementation_name' environment marker does not work with
+    # Python 2 implementations and the server dependency is left
+    # uninstalled with the makefile install.
+    pip install psycopg2      # CPython
+    pip install psycopg2cffi  # PyPy
 
 Quick Start
 -----------

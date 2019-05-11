@@ -3,7 +3,7 @@ LABEL maintainer "https://github.com/heilaaks/snippy"
 
 ENV LANG C.UTF-8
 ENV PYTHONUSERBASE=/usr/local/snippy/.local
-ENV PATH=/usr/local/snippy/.local/bin:"${PATH}"
+ENV PATH=${PYTHONUSERBASE}/bin:"${PATH}"
 
 ENV SNIPPY_LOG_JSON 1
 ENV SNIPPY_SERVER_HOST=container.hostname:32768
@@ -16,19 +16,25 @@ COPY README.rst .
 COPY setup.py .
 COPY snippy/ snippy/
 
-RUN apk add \
+RUN apk add --virtual .build-deps \
+        gcc \
+        musl-dev \
+        postgresql-dev \
+        python3-dev && \
+    apk add \
         python3 \
-        py3-psycopg2 && \
+        postgresql-libs && \
     python3 -m pip install --upgrade \
         pip \
         setuptools && \
     python3 -m pip install --user \
-        .[docker] && \
+        .[server] && \
+    apk --purge del .build-deps && \
     find /usr/lib/python3.6 -type d -name __pycache__ -exec rm -r {} \+ && \
-    find /usr/local/snippy/.local/lib -type d -name __pycache__ -exec rm -r {} \+ && \
-    find /usr/local/snippy/.local/bin ! -regex '\(.*snippy\)' -type f -exec rm -f {} + && \
+    find ${PYTHONUSERBASE}/lib -type d -name __pycache__ -exec rm -r {} \+ && \
+    find ${PYTHONUSERBASE}/bin ! -regex '\(.*snippy\)' -type f -exec rm -f {} + && \
     mkdir /volume && \
-    rm -f /usr/local/snippy/.local/lib/python3.6/site-packages/snippy/data/storage/snippy.db && \
+    rm -f ${PYTHONUSERBASE}/lib/python3.6/site-packages/snippy/data/storage/snippy.db && \
     snippy import \
         --defaults \
         --scat all \
@@ -39,16 +45,21 @@ RUN apk add \
     chmod go=+rx-w,u=-rwx .local/bin/snippy && \
     chmod go=+rw-x,u=-rwx /volume/snippy.db && \
     python3 -m pip uninstall pip --yes && \
-    apk del apk-tools && \
+    apk del apk-tools perl && \
     rm -f /usr/local/snippy/setup.py && \
-    rm -rf /etc/apk/ && \
     rm -rf /usr/local/snippy/.cache && \
     rm -rf /usr/local/snippy/snippy && \
+    rm -rf /usr/lib/python3.6/asyncio/ && \
+    rm -rf /usr/lib/python3.6/ensurepip/ && \
+    rm -rf /usr/lib/python3.6/distutils/ && \
+    rm -rf /usr/lib/python3.6/pydoc_data/ && \
+    rm -rf /usr/lib/python3.6/unittest/ && \
+    rm -rf /usr/lib/python3.6/venv/ && \
+    rm -rf /usr/lib/python3.6/site-packages/psycopg2/tests && \
+    rm -rf /etc/apk/ && \
     rm -rf /lib/apk/ && \
     rm -rf /root/.cache && \
-    rm -rf /usr/lib/python3.6/site-packages/psycopg2/tests && \
-    rm -rf /usr/lib/python3.6/distutils/ && \
-    rm -rf /usr/share/apk/ && \
+    rm -rf /usr/share/apk && \
     rm -rf /var/cache/apk/ && \
     find / -perm +6000 -type f -exec chmod a-s {} \; || true
 

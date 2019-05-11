@@ -76,7 +76,7 @@ command likely work with any Linux distribution.
     make test
 
     # Run all tests against PostgreSQL.
-    sudo docker run -d --name postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres
+    sudo docker run -d --name postgres -e POSTGRES_PASSWORD= -p 5432:5432 -d postgres
     make test-postgresql
 
     # Run all tests with server.

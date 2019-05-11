@@ -30,7 +30,7 @@ Preparations
       # Manual: Start PostgreSQL.
       sudo docker stop postgres
       sudo docker rm postgres
-      sudo docker run -d --name postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres
+      sudo docker run -d --name postgres -e POSTGRES_PASSWORD= -p 5432:5432 -d postgres
 
       # Manual: Remove runnning Snippy containers
       sudo docker stop snippy
@@ -90,7 +90,7 @@ Run tests with PostgreSQL
    .. code-block:: text
 
       # The test-all target runs test with Sqlite and PostgreSQL.
-      docker run -d --name postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres
+      docker run -d --name postgres -e POSTGRES_PASSWORD= -p 5432:5432 -d postgres
       make clean
       make clean-db
       make test-all

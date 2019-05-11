@@ -16,7 +16,7 @@ PYPY2_LIBS     := pypy pypy-devel postgresql-devel
 PYPY3_LIBS     := pypy3 pypy3-devel postgresql-devel
 PYTHON         := python
 PYTHON_VERSION := $(shell python -c 'import sys; print(sys.version_info[0])')
-INSTALL_USER   := 
+INSTALL_USER   :=
 
 # Only the Python 3 implememtation supports parallel tests. Sqlite database
 # can be run as a in-memory database only with Python 3. An in-memory DB is
@@ -69,7 +69,10 @@ test-server:
 	$(PYTHON) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db sqlite -m "server"
 
 test-postgresql:
-	$(PYTHON) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db postgresql -m "not (docker)"
+	$(PYTHON) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db postgresql -m "not (docker or server)"
+
+test-in-memroy:
+	$(PYTHON) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db in-memory -m "not (docker or server)"
 
 test-tox:
 	tox

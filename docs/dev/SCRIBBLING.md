@@ -398,8 +398,8 @@ endif
    ```
    # Postgres with Docker
    $ pip install psycopg2
-   $ docker run --name postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres
-   $ docker run --name postgres -e POSTGRES_PASSWORD=postgres -v postgres_data:/var/lib/postgresql/data -p 5432:5432 -d postgres
+   $ docker run --name postgres -e POSTGRES_PASSWORD= -p 5432:5432 -d postgres
+   $ docker run --name postgres -e POSTGRES_PASSWORD= -v postgres_data:/var/lib/postgresql/data -p 5432:5432 -d postgres
    $ docker exec -it $(docker ps | egrep -m 1 'postgres' | awk '{print $1}') /bin/bash
    $ docker rm $(docker ps -a | egrep -m 1 'postgre' | awk '{print $1}')
 
@@ -1377,7 +1377,7 @@ python runner import --defaults --scat reference
     # Push docker hub with Fedora
     $ su
     $ make docker
-    $ docker run -d --name postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres --storage-type
+    $ docker run -d --name postgres -e POSTGRES_PASSWORD= -p 5432:5432 -d postgres --storage-type
     $ docker run heilaaks/snippy search --sall .
     $ docker run -d --net="host" --name snippy heilaaks/snippy --server-host 127.0.0.1:8080 --log-json -vv
     $ docker run -d --net="host" --name snippy heilaaks/snippy --server-host 127.0.0.1:8080 --storage-type postgresql --storage-host localhost:5432 --storage-database postgres --storage-user postgres --storage-password postgres --log-json -vv

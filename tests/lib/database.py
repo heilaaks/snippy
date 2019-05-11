@@ -122,7 +122,11 @@ class Database(object):
 
     @classmethod
     def set_database(cls, database):
-        """Set used database."""
+        """Set used database.
+
+        Args:
+            database (str): Database used in the tests.
+        """
 
         if database not in cls._DATABASES:
             database = cls.DB_SQLITE
@@ -134,6 +138,16 @@ class Database(object):
             cls._PLACEHOLDER = '%s'
 
         cls._assert_database_connection()
+
+    @classmethod
+    def get_database(cls):
+        """Get used database.
+
+        Returns:
+            str: Database used in the tests.
+        """
+
+        return cls._DATABASE
 
     @staticmethod
     def get_count():
@@ -237,7 +251,7 @@ class Database(object):
             params.append('--storage-user')
             params.append('postgres')
             params.append('--storage-password')
-            params.append('postgres')
+            params.append('')
 
         return params
 

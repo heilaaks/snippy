@@ -50,6 +50,9 @@ class Helper(object):
     DB_IN_MEMORY = 'in-memory'
     STORAGES = (DB_SQLITE, DB_POSTGRESQL, DB_COCKROACHDB, DB_IN_MEMORY)
 
+    COLOR_OK = '\033[32m'
+    COLOR_END = '\033[0m'
+
     # All resource attributes that can be sent in HTTP request.
     REQUEST_ATTRIBUTES = (
         'data',

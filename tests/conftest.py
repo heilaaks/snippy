@@ -159,23 +159,43 @@ IMPORT_DEFAULT_REFERENCES = ((GITLOG_CREATED,) + (REGEXP_CREATED,))
 # Originals
 JSON_LOAD = json.load
 
+# Pytest hooks.
 def pytest_addoption(parser):
-    """Add command line options for Pytest."""
+    """Pytest hook to add command line options.
+
+    Args:
+        parser (obj): Pytest Parser() object.
+    """
 
     parser.addoption(
         '--snippy-db',
         action='store',
         default=Database.DB_SQLITE,
-        help='test agains database: {' + Database.DB_SQLITE + ' (default), ' + Database.DB_POSTGRESQL + ', ' + Database.DB_COCKROACHDB + '}'
+        help='test with database: {' + Database.DB_SQLITE + ' (default), ' + Database.DB_POSTGRESQL + ', ' + Database.DB_COCKROACHDB + '}'
     )
 
-@pytest.fixture(scope="session", autouse=True)
-def set_database(request):
-    """Get used database."""
+def pytest_sessionstart(session):
+    """Pytest hook called when session is started.
 
-    database = request.config.getoption("--snippy-db")
+    This hook is called before the Pytest report header hook is called
+    and after the Pytest command line arguments have been parsed.
+
+    Args:
+        session (obj): Pytest Session() object.
+    """
+
+    database = session.config.getoption("--snippy-db")
     Database.set_database(database)
     Database.delete_all_contents()
+
+def pytest_report_header(config):
+    """Pytest hook to set report header.
+
+    Args:
+        config (obj): Pytest Config() object.
+    """
+
+    return 'database: {}{}{}'.format(Helper.COLOR_OK, Database.get_database(), Helper.COLOR_END)
 
 # Snippy
 @pytest.fixture(scope='function', name='snippy')

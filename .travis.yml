@@ -1,46 +1,56 @@
-language: python
 dist: xenial
-before_install:
-    - "sudo apt-get install -qq -y python-dev"
-    - "sudo apt-get install -qq -y python3-dev"
-install:
-    - "python -m pip install codecov==2.0.15"
-    - "make install-tests"
+language: python
 cache: pip
+
+stages:
+    - test
+
+services:
+    - postgresql
+
+install:
+    - "sudo apt-get install -y python-dev"
+    - "sudo apt-get install -y python3-dev"
+    - "python -m pip install codecov"
+    - "make install-tests"
+
+before_script:
+    - psql -c 'create database travis_ci_test;' -U postgres
+
 jobs:
   include:
+#    - stage: test
+#      script:
+#        - "make test"
+#      python: "2.7"
+#    - stage: test
+#      script:
+#        - "make test"
+#      python: "3.4"
+#    - stage: test
+#      script:
+#        - "make test"
+#      python: "3.5"
+#    - stage: test
+#      script:
+#        - "make test"
+#      python: "3.6"
     - stage: test
       script:
         - "make test"
-      python: "2.7"
-    - stage: test
-      script:
-        - "make test"
-      python: "3.4"
-    - stage: test
-      script:
-        - "make test"
-      python: "3.5"
-    - stage: test
-      script:
-        - "make test"
-      python: "3.6"
-    - stage: test
-      script:
-        - "make test"
+        - "make test-postgresql"
       python: "3.7"
-    - stage: test
-      script:
-        - "make test"
-      python: "3.8-dev"
-    - stage: test
-      script:
-        - "make test"
-      python: "pypy"
-    - stage: test
-      script:
-        - "make test"
-      python: "pypy3"
+#    - stage: test
+#      script:
+#        - "make test"
+#      python: "3.8-dev"
+#    - stage: test
+#      script:
+#        - "make test"
+#      python: "pypy"
+#    - stage: test
+#      script:
+#        - "make test"
+#      python: "pypy3"
 after_success:
     - codecov
-

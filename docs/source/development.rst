@@ -13,7 +13,9 @@ command likely work with any Linux distribution.
     mkdir ~devel && cd $_
     git clone git@github.com:heilaaks/snippy.git
 
-    # Install docker-ce.
+    # Install docker-ce and make sure that the user who runs Snippy tests
+    # is able to run Docker commands. There are few tests with real Docker
+    # image.
 
     # Install CPython versions (Fedora).
     sudo dnf install python27 -y
@@ -21,6 +23,7 @@ command likely work with any Linux distribution.
     sudo dnf install python35 -y
     sudo dnf install python36 -y
     sudo dnf install python37 -y
+    sudo dnf install python38 -y
     sudo dnf install python3-devel -y
     sudo dnf install python2-devel -y
 
@@ -47,21 +50,45 @@ command likely work with any Linux distribution.
     mkvirtualenv --python /usr/bin/python3.5 p35-snippy
     mkvirtualenv --python /usr/bin/python3.6 p36-snippy
     mkvirtualenv --python /usr/bin/python3.7 p37-snippy
+    mkvirtualenv --python /usr/bin/python3.8 p38-snippy
     mkvirtualenv --python /usr/bin/pypy3.5 pypy35-snippy
     mkvirtualenv --python /usr/bin/pypy2.7 pypy27-snippy
 
     # Repeat for all virtual environments.
-    workon p27-snippy
+    workon <venv>
     make upgrade-wheel
     make install-devel
-    make test
 
     # Install PostgreSQL adapters for CPython 2.7 and PyPy 2.7. The
     # 'implementation_name' environment marker does not work with
     # Python 2 implementations and the server dependency is left
     # uninstalled with the makefile install.
+    workon p27-snippy
     pip install psycopg2      # CPython
+
+    workon pypy27-snippy
     pip install psycopg2cffi  # PyPy
+
+    # Compile Docker image for Docker tests.
+    make docker
+
+    # Run standard feature and refactoring test suite.
+    make test
+
+    # Run all tests against PostgreSQL.
+    sudo docker run -d --name postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres
+    make test-postgresql
+
+    # Run all tests with server.
+    make docker
+    make test-server
+
+    # Run all tests with Docker image.
+    make docker
+    make test-docker
+
+    # Run all tests.
+    make test-all
 
 Quick Start
 -----------

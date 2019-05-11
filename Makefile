@@ -69,7 +69,7 @@ test-server:
 	$(PYTHON) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db sqlite -m "server"
 
 test-postgresql:
-	$(PYTHON) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db postgresql -m "not (docker)" $(PYTEST_CORES)
+	$(PYTHON) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db postgresql -m "not (docker)"
 
 test-tox:
 	tox

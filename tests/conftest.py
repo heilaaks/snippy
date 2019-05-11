@@ -175,6 +175,7 @@ def set_database(request):
 
     database = request.config.getoption("--snippy-db")
     Database.set_database(database)
+    Database.delete_all_contents()
 
 # Snippy
 @pytest.fixture(scope='function', name='snippy')
@@ -1107,16 +1108,23 @@ def _get_template_mkdn(dictionary):
     return collection.dump_mkdn(Config.templates)
 
 def _create_snippy(mocker, params, database):
-    """Create snippy with mocks."""
+    """Create snippy with mocks.
+
+    Args:
+        params (list): Command line arguments to start the Snippy.
+        database (str): Database used with the tests.
+
+    Returns:
+        obj: Snippy object.
+    """
 
     # Mock only objects from the Snippy package. If system calls like os.open
     # are mocked from here, it will mock all the third party packages that are
     # imported when the Snippy object is created. System calls must be mocked
     # after the Snippy object is in a such state that it can accept test case
     # input.
-    if database == Database.DB_SQLITE:
-        mocker.patch.object(Config, '_storage_file', return_value=Database.get_storage())
-    elif database == Database.DB_POSTGRESQL:
+    mocker.patch.object(Config, '_storage_file', return_value=Database.get_storage())
+    if database == Database.DB_POSTGRESQL:
         params = params + Database.get_cli_params()
 
     snippy = Snippy(params)

@@ -196,17 +196,6 @@ endif
 
 
    
-   # - Pypy2 does no likely support implementation_name
-   # - Pypy3 latest 7 requires FC29
-   # - Pypy3 could support implementation_name which would allow single "extras_server" for cpython and PyPy.
-   # - Support only Pypy3
-   extras_server = (
-       'falcon==1.4.1',
-       'gunicorn==19.9.0',
-       'jsonschema==3.0.1',
-       'psycopg2-binary==2.7.7;implementation_name=="cpython"',
-       'psycopg2cffi==2.8.1 ; implementation_name=="PyPy"'
-   )
    BOLD := \033[1m
    RESET := \033[0m
    #PYPY := ""
@@ -408,7 +397,7 @@ endif
 
    ```
    # Postgres with Docker
-   $ pip install psycopg2-binary
+   $ pip install psycopg2
    $ docker run --name postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres
    $ docker run --name postgres -e POSTGRES_PASSWORD=postgres -v postgres_data:/var/lib/postgresql/data -p 5432:5432 -d postgres
    $ docker exec -it $(docker ps | egrep -m 1 'postgres' | awk '{print $1}') /bin/bash

@@ -72,7 +72,7 @@ EXPOSE 32768
 
 USER 232768
 
-ENTRYPOINT ["snippy", "server", "--storage-path", "/volume"]
+ENTRYPOINT ["snippy", "--storage-path", "/volume"]
 
 #
 # CONTAINER IMAGE SECURITY HARDENING
@@ -730,7 +730,7 @@ ENTRYPOINT ["snippy", "server", "--storage-path", "/volume"]
 #     server configuration is defined only from environment variables that
 #     is the most common use case when running server from container.
 #
-#     From Snippy point of view, this implememntation makes the CLI and
+#     From Snippy tool point of view, this implementation makes the CLI and
 #     server side work in a similar manner. This helps to avoid container
 #     specific solutions in code and makes testing easier.
 #
@@ -738,6 +738,10 @@ ENTRYPOINT ["snippy", "server", "--storage-path", "/volume"]
 #     Dockerfile ENTRYPOINT but this won't work unless the new ENTRYPOINT
 #     defines the same ``--storage-path`` pointing to ``/volume``. See the
 #     ``Dockerfile configuration`` for configuration desing.
+#
+#     There are no reasons to add 'server' operation as a default command.
+#     If this would be done, it would break the command line usage of the
+#     container.
 #
 #     ```shell
 #     ENTRYPOINT ["snippy", "--storage-path", "/volume"]

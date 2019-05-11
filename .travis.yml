@@ -32,6 +32,10 @@ jobs:
     - stage: test
       script:
         - "make test"
+      python: "3.8-dev"
+    - stage: test
+      script:
+        - "make test"
       python: "pypy"
     - stage: test
       script:

@@ -31,8 +31,8 @@ extras_server = (
     'falcon==2.0.0',
     'gunicorn==19.9.0',
     'jsonschema==3.0.1',
-    'psycopg2==2.8.2 ; implementation_name=="cpython"',
-    'psycopg2cffi==2.8.1 ; implementation_name=="pypy"'
+    'psycopg2==2.8.2 ; platform_python_implementation=="CPython"',
+    'psycopg2cffi==2.8.1 ; platform_python_implementation=="PyPy"'
 )
 extras_dev = (
     'logging_tree==1.8',

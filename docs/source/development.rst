@@ -59,16 +59,6 @@ command likely work with any Linux distribution.
     make upgrade-wheel
     make install-devel
 
-    # Install PostgreSQL adapters for CPython 2.7 and PyPy 2.7. The
-    # 'implementation_name' environment marker does not work with
-    # Python 2 implementations and the server dependency is left
-    # uninstalled with the makefile install.
-    workon p27-snippy
-    pip install psycopg2      # CPython
-
-    workon pypy27-snippy
-    pip install psycopg2cffi  # PyPy
-
     # Compile Docker image for Docker tests.
     make docker
 

@@ -352,7 +352,7 @@ class Database(object):
             else:
                 connection = sqlite3.connect(Database.get_storage(), check_same_thread=False)
         elif cls._DATABASE == cls.DB_POSTGRESQL:
-            connection = psycopg2.connect(host="localhost", user="postgres", password="postgres")
+            connection = psycopg2.connect(host='localhost', user='postgres', password='')
 
         return connection
 

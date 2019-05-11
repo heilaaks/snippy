@@ -19,38 +19,46 @@ before_script:
 
 jobs:
   include:
-#    - stage: test
-#      script:
-#        - "make test"
-#      python: "2.7"
-#    - stage: test
-#      script:
-#        - "make test"
-#      python: "3.4"
-#    - stage: test
-#      script:
-#        - "make test"
-#      python: "3.5"
-#    - stage: test
-#      script:
-#        - "make test"
-#      python: "3.6"
     - stage: test
+      python: "2.7"
       script:
         - "make test"
         - "make test-postgresql"
+    - stage: test
+      python: "3.4"
+      script:
+        - "make test"
+        - "make test-postgresql"
+    - stage: test
+      python: "3.5"
+      script:
+        - "make test"
+        - "make test-postgresql"
+    - stage: test
+      python: "3.6"
+      script:
+        - "make test"
+        - "make test-postgresql"
+    - stage: test
       python: "3.7"
-#    - stage: test
-#      script:
-#        - "make test"
-#      python: "3.8-dev"
-#    - stage: test
-#      script:
-#        - "make test"
-#      python: "pypy"
-#    - stage: test
-#      script:
-#        - "make test"
-#      python: "pypy3"
+      script:
+        - "make test"
+        - "make test-postgresql"
+    - stage: test
+      python: "3.8-dev"
+      script:
+        - "make test"
+        - "make test-postgresql"
+    - stage: test
+      python: "pypy"
+      script:
+        - "make test"
+        - "make test-postgresql"
+    - stage: test
+      python: "pypy3"
+      script:
+        - "make test"
+        - "make test-postgresql"
+
 after_success:
     - codecov

@@ -92,6 +92,9 @@ Heroku deployment
     heroku login
     heroku local web -f Procfile
     heroku logs -a snippy-server
+    
+    # Login
+    https://snippy-server.herokuapp.com//api/snippy/rest/snippets?limit=100
 
 Quick Start
 -----------

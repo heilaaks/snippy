@@ -72,6 +72,7 @@ class Server(object):  # pylint: disable=too-few-public-methods
             'logger_class': CustomGunicornLogger,
             'on_exit': SnippyServer.on_exit,
             'post_worker_init': SnippyServer.post_worker_init,
+            'pre_fork': SnippyServer.pre_fork,
             'pre_request': SnippyServer.pre_request,
             'ssl_version': ssl.PROTOCOL_TLSv1_2,
             'workers': 1
@@ -103,10 +104,11 @@ class Server(object):  # pylint: disable=too-few-public-methods
         self.api.add_route(urljoin(Config.server_base_path_rest, 'tags'), ApiTags(fields))
         self.api.add_route(urljoin(Config.server_base_path_rest, 'tags/{stag}'), ApiTags(fields))
 
-        # Reset cause just before starting the server. If there are any
-        # failures during server statup phase that set a cause, they are
-        # still stored when the server runs. If this is the case, the
-        # first response sent by the server will be error response.
+        # Reset cause just before starting the server. If there were any
+        # failures during the server statup phase, they are still stored
+        # in the Cause object when the server runs. If this is the case,
+        # the first response sent by the server will be error response
+        # even when the HTTP request was processed successfully.
         Cause.reset()
 
         # The signal handler manipulation and the flush below prevent the

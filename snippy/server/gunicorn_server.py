@@ -20,27 +20,23 @@
 """gunicorn_server: Gunicorn WSGI HTTP server."""
 
 import gunicorn.app.base
-from gunicorn.six import iteritems
 
-from snippy.config.config import Config
 from snippy.logger import Logger
 
 
 class GunicornServer(gunicorn.app.base.BaseApplication):  # pylint: disable=abstract-method
     """Gunicorn WSGI HTTP server."""
 
-    def __init__(self, app, options=None):
-        self.options = options or {}
+    def __init__(self, app, options):
+        self.options = options
         self.application = app
         super(GunicornServer, self).__init__()
 
     def load_config(self):
         """Load configuration."""
 
-        config = {key: value for key, value in iteritems(self.options)
-                  if key in self.cfg.settings and value is not None}
-        for key, value in iteritems(config):
-            self.cfg.set(key.lower(), value)
+        for key in self.options.keys():
+            self.cfg.set(key, self.options[key])
 
     def load(self):
         """Load configuration."""
@@ -48,30 +44,58 @@ class GunicornServer(gunicorn.app.base.BaseApplication):  # pylint: disable=abst
         return self.application
 
     @staticmethod
-    def post_worker_init(_):
-        """Called by Gunicorn server after worker has been initialized.
+    def post_worker_init(worker):
+        """Gunicorn worker initialized hook.
 
-        This is used to tell user that the server is running.
+        This is called by the Gunicorn framework after a worker has been
+        initialized. This is used to tell user that the server is running.
+        Gunicorn server listen IP address is printed from workber because
+        of a use where a random free ephemeral port is selected by OS.
+
+        Args:
+            worker (obj): Gunicorn Worker() class object.
         """
 
-        Logger.print_status('snippy server running at: {}'.format(Config.server_host))
+        listeners = ','.join([str(l) for l in worker.sockets])
+        Logger.print_status('snippy server running at: {}'.format(listeners))
+
+    @staticmethod
+    def pre_fork(server, worker):
+        """Gunicorn worker pre-fork hook.
+
+        This hook is used to transfer the worker real port to the server to
+        be used when the server close. In case ephemeral ports allocated by
+        the operating system is used, the port is not known by the Snippy
+        configuration.
+
+        Because the server and worker are difference processes, it is not
+        possible to transfer the data from worker after it has been forked.
+
+        Args:
+            server (obj): Gunicorn Arbiter() class object.
+            worker (obj): Gunicorn Worker() class object.
+        """
+
+        listeners = ','.join([str(l) for l in worker.sockets])
+        server.app.options['snippy_host'] = listeners
 
     @staticmethod
     def pre_request(_, __):
-        """Called by Gunicorn before executing request.
+        """Gunicorn pre-request hook.
 
-        This method is used to prevent log from Gunicorn and to rely only
-        for Snippy logger in this case. Without this, there is one log printed
-        with incorrect operation ID (OID) into logs. The OID refreshed in
-        Snippy so the Gunicorn log from new request would be otherwise printed
-        with previous request OID which would be incorrect.
+        This hook is used to prevent a log from the Gunicorn with incorrect
+        operation ID (OID).  Without this, the first log message for each
+        HTTP request would contain OID from the previous HTTP request.
         """
 
     @staticmethod
-    def on_exit(_):
-        """Called by Gunicorn server on exit.
+    def on_exit(server):
+        """Gunicorn server exit hook.
 
         This is used to tell user that the server has been stopped.
+
+        Args:
+            server (obj): Gunicorn Arbiter() class object.
         """
 
-        Logger.print_status('snippy server stopped at: {}'.format(Config.server_host))
+        Logger.print_status('snippy server stopped at: {}'.format(server.app.options['snippy_host']))

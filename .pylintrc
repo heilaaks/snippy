@@ -1,0 +1,27 @@
+[MESSAGES CONTROL]
+# The class object inheritance is required in Python 2.
+disable=useless-object-inheritance
+
+[TYPECHECK]
+
+# The falcon class is ignored because it causes warnings from
+# predefined HTTP status codes.
+#
+# Ignored because closing from contextlib causes unnecessary
+# warning from 'with' clause.
+ignored-classes=closing,falcon
+
+# Ignored because test cases replace the implementations with
+# mock that has additional member attributes.
+ignored-modules=json,yaml
+
+[FORMAT]
+
+# Suited as of now for long lines in tests cases.
+max-line-length=145
+
+[DESIGN]
+
+# Suited as of now for long methods in tests cases.
+max-args=9
+max-statements=60

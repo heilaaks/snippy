@@ -27,7 +27,7 @@ from tests.lib.content import Content
 from tests.lib.helper import Helper
 
 
-class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
+class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods, too-many-lines
     """Test workflows for searching snippets."""
 
     @staticmethod

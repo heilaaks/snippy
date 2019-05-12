@@ -31,7 +31,7 @@ pytest.importorskip('gunicorn')
 
 
 # pylint: disable=unsubscriptable-object
-class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
+class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods, too-many-lines
     """Test GET /snippets API."""
 
     @staticmethod

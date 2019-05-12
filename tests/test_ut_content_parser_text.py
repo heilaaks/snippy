@@ -24,7 +24,7 @@ from snippy.content.parsers.text import ContentParserText as Parser
 from snippy.content.collection import Collection
 
 
-class TestUtContentParserText(object):  # pylint: disable=too-many-public-methods
+class TestUtContentParserText(object):  # pylint: disable=too-many-public-methods, too-many-lines
     """Test ContentParserText() class."""
 
     TIMESTAMP = '2018-09-09T14:44:00.000001+00:00'

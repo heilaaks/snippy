@@ -44,7 +44,7 @@ class TestApiServer(object):
 
     @pytest.mark.server
     @pytest.mark.parametrize('process', [['--server-minify-json']], indirect=True)
-    def test_server_performance(self, process):
+    def test_server_performance(self, process):  # pylint: disable=too-many-locals
         """Test API server performance.
 
         Note! These were invalidated when the in-memory database was

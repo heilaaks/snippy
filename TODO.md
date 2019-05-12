@@ -1,6 +1,5 @@
 ## WORKING
    - [ ] Check and fix API perfromance test results after in-memory change.
-   - [ ] Test if new pypy venv is able to select the pypy specific psycopg2cffi
    - [ ] Change name of --scat to --cat?
    - [ ] Fix cause 'Content has been created without internal errors.' This breaks when there is e.g. created and bad request. That is the cause ok does not see 404 and sends OK.
    - [ ] Fix updating Markdown based solutions in text formats does not work because the Mkdn solution does not have text header and data structure.
@@ -28,8 +27,6 @@
    - [ ] Fix digest computation once things are setling down. Changing this forces changes to all tests and code that rely on digest.
    - [ ] Fix updating content without updates changes the updated timestamp. There is no need to store the content either.
    - [ ] Add delete for wheel build directory for automation. If the folder exist this is a problem (at least used to be) see how to fail python release/building/something.
-   - [ ] Refactor Makefile to have python|python3|pypy|pypy3 as ${PYTHON}.
-   - [ ] How to compile psycopg2 for PyPY?
    - [ ] Config get_resource could return empty Resource instead of None in failure. This is now related to new migrate refactoring that prevents migrating template resources.
    - [ ] Fix (remove) the LANG in Alpine based dockerfile? Is this useless as MUSL does not support locales? https://github.com/gliderlabs/docker-alpine/issues/144
    - [ ] Fix server silent startup failure if for example the port is reserved. How to get proper error cause for user?
@@ -62,11 +59,12 @@
    - [ ] Fix (optimize) Why GET with limit=20 is much slower than limit=1? Even POST with one resource is much faster than GET with limit=20 (Sqlite in tests). The test produced 409 from trying to POST the same content in loop.
 
 ## RELEASING
-   - [ ] Document user must be able to run Docker. Add instructions.
    - [ ] Automate PostgreSQL startup.
    - [ ] Remove running snippy container before testing.
-   - [ ] Use make upgrade-wheel PYTHON=pypy3 instead of PYPY targets. Change setup so that it looks the python version and there are no pypy specific extras (like the server)
    - [ ] Snippy asciinema semi faked prompt fails with rest api responses. The prompt is in the same line as the last curly bracket from rest api response.
+
+## PACKAGING
+   - [ ] Change Pytest, Pylint, Flake8, Pyflake and Bandit to use pyproject when the support comes. This merges the configuration files to one place.
 
 ## FEATURES
    - [ ] Add CORS https://stackoverflow.com/a/45183343. This is needed to make the server usable at all?
@@ -76,7 +74,6 @@
    - [ ] Add combine on top of migrate and merge. The combine would allow adding for example a tag to an existing list of tags. This would be nice for CLI and could be used with RFC 6902 (JSON Patch) (if implemented).
    - [ ] Add support to search phrases like has 'active end'. This should return one result with default set but it returns two since each word is searched separately.
    - [ ] Add support to find dead links.
-   - [ ] Add Travis CI for PyPy version v6.0 for Python 3 when it comes https://github.com/travis-ci/travis-ci/issues/9542
    - [ ] Add test client to measure performance of the server.
    - [ ] Add user management with a new user table that lins to contents table.
    - [ ] Add limit to multilevel sort fields to two fields to avoid complex scenarios.
@@ -132,7 +129,6 @@
    - [ ] Why changing self._data = data in data setter in line 160 to self.data = data in config base seems to cause core. This can be used to set the Travis gdb parameters.
    - [ ] Should _add_date in Content() be based on updated when DATE already set? The reason would be that this sets the text template DATE and it should be always latest which is updated?
    - [ ] Fix tox and Python 3.4. Tox -e py34 // http://notes.webutvikling.org/darn-installation-of-python-3-4/. This was broken with Fedora 26. With Fedora 30 this works. This is heere because complication instructions are not complete in tox.ini.
-   - [ ] Fix PyPy 5.5.0 (Python 3.3) that does not have sqlite uri=True and does not have server 'ssl_version': ssl.PROTOCOL_TLSv1_2. Otherwise tests pass with exception of schema validation errors. works with later Pypy would be the best quess.
 
 ## REFACTOR
    - [ ] Storage update() supports only one resource and this is not in line with others. Change to collection?
@@ -192,9 +188,10 @@
    - [ ] Fix the Python2 test database naming to be random temp file in the same folder to allow parallelism.
    - [ ] Why when in Python2 a database test fails, it leaves hanging resources and DB clean does not work? Was this fixed into sqlite3_helper already?
    - [ ] How to better prevent commits to snippy.db than git hooks or git --assume-unchanged?
+   - [ ] Fix PyPy 5.5.0 (Python 3.3) that does not have sqlite uri=True and does not have server 'ssl_version': ssl.PROTOCOL_TLSv1_2. This is working with latest PyPy implementations and this is not a priority fix.
 
 ## FOLLOW EXTERNAL BUGS/ISSUES
-   - [ ] Misleading ValidationError from AnyOf required property list // https://github.com/Julian/jsonschema/issues/535
+   - [x] Misleading ValidationError from AnyOf required property list // https://github.com/Julian/jsonschema/issues/535
    - [ ] Is there an external bug with more and ANSI color codes? // 'Linux more command with ANSI colors'
    - [ ] Pytest support for PEP-518 pyproject.toml is missing // https://github.com/pytest-dev/pytest/issues/1556
    - [ ] OpenAPI does not support OPTIONS HTTP method and it cannot be defined. // https://github.com/OAI/OpenAPI-Specification/issues/325

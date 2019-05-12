@@ -24,7 +24,7 @@ from snippy.content.collection import Collection
 from snippy.content.parsers.mkdn import ContentParserMkdn as Parser
 
 
-class TestUtContentParserMkdn(object):
+class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines
     """Test ContentParserMkdn() class."""
 
     TIMESTAMP = '2018-09-09T14:44:00.000001+00:00'

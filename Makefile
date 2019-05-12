@@ -4,21 +4,17 @@ MAKEFLAGS += --no-builtin-rules
 MAKEFLAGS += --no-builtin-variables
 
 .PHONY: docs
-.ONESHELL:
 
 DEV_VERSION    := 0.11a0
 TAG_VERSION    := 0.10.0
 
-PKG_MANAGER    := $(shell command -v dnf)
-PKG_COMMAND    := list installed
-PYPY           := pypy3
-PYPY2_LIBS     := pypy pypy-devel postgresql-devel
-PYPY3_LIBS     := pypy3 pypy3-devel postgresql-devel
+PIP            := pip
 PYTHON         := python
 PYTHON_VERSION := $(shell python -c 'import sys; print(sys.version_info[0])')
 INSTALL_USER   :=
+COVERAGE       := --cov=snippy --cov-branch
 
-# Only the Python 3 implememtation supports parallel tests. Sqlite database
+# Only the Python 3 implementation supports parallel tests. Sqlite database
 # can be run as a in-memory database only with Python 3. An in-memory DB is
 # is needed for parallel testing.
 ifeq ($(PYTHON_VERSION), 3)
@@ -27,18 +23,29 @@ else
 PYTEST_CORES   :=
 endif
 
-# The new pyproject.toml based PEP517 does not support --editable and it
-# is not possible to run --user install inside a virtual environment. In
-# order to use the install targets outside of a virtual environemnt, the
-# INSTALL_USER variable must be set to '--user'.
+# The new pyproject.toml from PEP517 does not support --editable install.
+# It is not possible to run --user install inside a virtual environment.
+#
+# When the Makefile is used outside of a virtual environment to intsall
+# dependencies, the INSTALL_USER variable should be set to '--user' to
+# avoid a global install.
+#
+# There is a different between 'pip' and 'python -m pip' when installing
+# the project itself. The later does not work with the uninstall with an
+# actitve virtual environment. Using 'pip' works inside active virtual
+# environment as well as without virtual environment.
 install:
-	$(PYTHON) -m pip install . $(INSTALL_USER)
+	$(PIP) install . $(INSTALL_USER)
 
 upgrade:
-	$(PYTHON) -m pip install --upgrade . $(INSTALL_USER)
+	$(PIP) install --upgrade . $(INSTALL_USER)
 
 uninstall:
-	$(PYTHON) -m pip uninstall --yes snippy
+	$(PIP) uninstall --yes snippy .
+
+upgrade-wheel:
+	$(PYTHON) -m ensurepip $(INSTALL_USER)
+	$(PYTHON) -m pip install pip setuptools wheel twine --upgrade $(INSTALL_USER)
 
 install-devel:
 	$(PYTHON) -m pip install .[devel] $(INSTALL_USER)
@@ -49,10 +56,6 @@ install-tests:
 install-server:
 	$(PYTHON) -m pip install .[server] $(INSTALL_USER)
 
-upgrade-wheel:
-	$(PYTHON) -m ensurepip $(INSTALL_USER)
-	$(PYTHON) -m pip install pip setuptools wheel twine --upgrade $(INSTALL_USER)
-
 outdated:
 	$(PYTHON) -m pip list --outdated
 
@@ -60,19 +63,19 @@ docs:
 	make -C docs html
 
 test:
-	$(PYTHON) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db sqlite -m "not (docker or server)" $(PYTEST_CORES)
+	$(PYTHON) -m pytest -x ${COVERAGE} --snippy-db sqlite -m "not (docker or server)" $(PYTEST_CORES)
 
 test-docker:
-	$(PYTHON) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db sqlite -m "docker"
+	$(PYTHON) -m pytest -x ${COVERAGE} --snippy-db sqlite -m "docker"
 
 test-server:
-	$(PYTHON) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db sqlite -m "server"
+	$(PYTHON) -m pytest -x ${COVERAGE} --snippy-db sqlite -m "server"
 
 test-postgresql:
-	$(PYTHON) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db postgresql -m "not (docker or server)"
+	$(PYTHON) -m pytest -x ${COVERAGE} --snippy-db postgresql -m "not (docker or server)"
 
 test-in-memroy:
-	$(PYTHON) -m pytest -x ./tests/test_*.py --cov snippy --snippy-db in-memory -m "not (docker or server)"
+	$(PYTHON) -m pytest -x ${COVERAGE} --snippy-db in-memory -m "not (docker or server)"
 
 test-tox:
 	tox
@@ -86,25 +89,24 @@ test-release-wheel: clean-all
 	twine check dist/*
 
 coverage:
-	$(PYTHON) -m pytest --cov=snippy --cov-branch --cov-report html tests/ -m "not (server or docker)"
-	$(PYTHON) -m pytest --cov=snippy tests/
+	$(PYTHON) -m pytest ${COVERAGE} --cov-report html -m "not (server or docker)" $(PYTEST_CORES)
 
 lint:
-	$(PYTHON) -m pylint --jobs=0 --rcfile tests/pylint/pylint-snippy-tests.rc tests/ | tee tests/pylint/pylint-snippy-tests.txt
-	$(PYTHON) -m pylint --jobs=0 --rcfile tests/pylint/pylint-snippy.rc snippy/ | tee tests/pylint/pylint-snippy.txt
-	$(PYTHON) -m flake8 --config tests/flake8/flake8.ini snippy
+	$(PYTHON) -m pylint --jobs=0 tests/
+	$(PYTHON) -m pylint --jobs=0 snippy/
+	$(PYTHON) -m flake8 snippy
 
 pyflakes:
 	$(PYTHON) -m pyflakes .
 
-schema:
+jsonschema:
 	openapi2jsonschema snippy/data/server/openapi/swagger-2.0.yml -o snippy/data/server/openapi/schema/
 
 docker: clean-all
 	docker build --build-arg http_proxy=${http_proxy} --build-arg https_proxy=${https_proxy} -t heilaaks/snippy .
 
 security-scan:
-	-bandit -r snippy | tee tests/bandit/bandit.txt
+	-bandit -r snippy
 
 clean: clean-build clean-pyc clean-test
 
@@ -160,47 +162,3 @@ prepare-release:
 	@echo "$$(date +'%Y-%m-%dT%H:%M:%S'): Updated tool version ${DEV_VERSION} to ${TAG_VERSION}"
 	make test-release
 	@echo "$$(date +'%Y-%m-%dT%H:%M:%S'): All automated tests and checks run"
-
-install-devel-pypy:
-	@echo "##########################################################################"
-	@echo "Requires on Fedora:"
-	@echo "    dnf install pypy3 -y"
-	@echo "    dnf install pypy3-devel -y"
-	@echo "    dnf install postgresql-devel -y"
-	@echo "##########################################################################"
-	$(PYPY) -m pip install .[develpypy]
-
-install-server-pypy:
-	@echo "##########################################################################"
-	@echo "Requires on Fedora:"
-	@echo "    dnf install pypy3 -y"
-	@echo "    dnf install pypy3-devel -y"
-	@echo "    dnf install postgresql-devel -y"
-	@echo "##########################################################################"
-	$(PYPY) -m pip install .[serverpypy]
-
-# $(call test-pypy-libs, pkg-manager, pkg-COMMAND, required-libs)
-#
-# Test if given array of pacakges is installed with given package
-# manager. Backslashes are aligned for 8 space tabs.
-define test-installed-libs
-	$$(										\
-		set -x;									\
-		MISSING=();								\
-		i=0;									\
-		if [ ! -z "${1}" ]; then						\
-			for PACKAGE in ${3}; do						\
-				if [ -z "$$(${1} ${2} | grep $${PACKAGE})" ]; then	\
-					MISSING+=$$PACKAGE;				\
-				fi							\
-			done;								\
-		else									\
-			false;								\
-		fi;									\
-		if [ $${#MISSING[@]} -eq 0 ]; then					\
-			true;								\
-		else									\
-			echo "$${MISSING[*]}";						\
-		fi									\
-	)
-endef

@@ -159,6 +159,8 @@ IMPORT_DEFAULT_REFERENCES = ((GITLOG_CREATED,) + (REGEXP_CREATED,))
 # Originals
 JSON_LOAD = json.load
 
+# pylint: disable=too-many-lines
+
 # Pytest hooks.
 def pytest_addoption(parser):
     """Pytest hook to add command line options.
@@ -188,11 +190,11 @@ def pytest_sessionstart(session):
     Database.set_database(database)
     Database.delete_all_contents()
 
-def pytest_report_header(config):
+def pytest_report_header(_):
     """Pytest hook to set report header.
 
     Args:
-        config (obj): Pytest Config() object.
+        _ (obj): Pytest Config() object.
     """
 
     return 'database: {}{}{}'.format(Helper.COLOR_OK, Database.get_database(), Helper.COLOR_END)

@@ -46,7 +46,7 @@ from tests.lib.reference import Reference
 from tests.lib.snippet import Snippet
 from tests.lib.solution import Solution
 
-class Content(object):  # pylint: disable=too-many-public-methods
+class Content(object):  # pylint: disable=too-many-public-methods, too-many-lines
     """Helper methods for content testing."""
 
     # categories

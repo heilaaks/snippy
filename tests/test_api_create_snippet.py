@@ -36,7 +36,7 @@ pytest.importorskip('gunicorn')
 
 
 # pylint: disable=unsupported-assignment-operation, unsubscriptable-object
-class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
+class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods, too-many-lines
     """Test POST snippets collection API."""
 
     @staticmethod

@@ -94,7 +94,7 @@ Heroku deployment
     heroku logs -a snippy-server
     
     # Login
-    https://snippy-server.herokuapp.com//api/snippy/rest/snippets?limit=100
+    https://snippy-server.herokuapp.com/api/snippets?sall=docker&limit=5
 
 Quick Start
 -----------

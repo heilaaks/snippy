@@ -8,18 +8,19 @@ Snippy
 Snippy is a software development and maintenance notes manager. It allows
 organizing and sharing examples and solutions from self hosted or shared
 storage through command line interface or via REST API server. Snippy may
-be able to help you when working with different open source components that
-all have different commands, settings and issues.
+be able to help you for example when working with different open source
+components that all have different commands, settings and issues.
 
 Features
 ========
 
 Main features include:
 
-- Linux command line tool or a `REST API server`_.
-- Manage notes in three categories.
+- Use from Linux command line or from a `REST API server`_ as in `Heroku example`_.
+- Run with a self-hosted SQLite or shared PostgreSQL database.
+- Manage notes in three categories: snippets, solutions and references.
 - Supports Markdown, YAML, JSON and text formats.
-- Organize notes with metadata like groups and links.
+- Organize notes with metadata like groups, tags and links.
 
 Installation
 ============
@@ -46,12 +47,12 @@ Usage
 Contributing
 ============
 
-Author is happy to receive bug reports and feature requests.
+This is a personal hobby project to try to organize maintenance notes when
+working with large software projects. Author is happy to hear if this project
+has been actually used by anyone. Please post bug reports of feature requests
+through GitLab issues.
 
-Development
-===========
-
-See the `development`_ chapter from the documentation.
+This project got inspiration from the `Buku <https://github.com/jarun/Buku>`.
 
 Related work
 ============
@@ -89,3 +90,5 @@ Related work
 .. _REST API server: https://app.swaggerhub.com/apis/heilaaks/snippy/0.11.0
 
 .. _development: https://snippy.readthedocs.io/en/latest/development.html
+
+.. _Heroku example: https://snippy-server.herokuapp.com/api/snippets?sall=docker&limit=5

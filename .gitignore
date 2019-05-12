@@ -30,5 +30,6 @@ docs/build/
 server.crt
 server.key
 
-# Snippy export data
+# Snippy data
 snippy.bash-completion
+snippy-test.db*

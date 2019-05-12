@@ -55,9 +55,9 @@ class TestApiServer(object):
         the time consumed is measured. This is more for manual analysis
         than automation as of now.
 
-        Reference PC:   1 loop :  0.1233 /   55 loop :  5.5402 / 100 loop : 10.0044
-        Reference PC: 880 loop : 87.3756 / 1000 loop : 102.6719
-        Reference PC:  10 loop : 0.9912
+        Reference PC:   1 loop :  0.0585 /   55 loop :  0.8221 / 100 loop : 1.4674
+        Reference PC: 880 loop : 12.5211 / 1000 loop : 14.1784
+        Reference PC:  10 loop : 0.1851
 
         NOTE! Vere slow. Is the reason how requests opens the connection
               for every requests?
@@ -155,7 +155,7 @@ class TestApiServer(object):
         out = self.RE_MATCH_SERVER_PORT.sub(r'\1:80', out)
         err = server.stderr.readlines()
         output = (
-            'snippy server stopped at: 127.0.0.1:80',
+            'snippy server stopped at: http://127.0.0.1:80',
             ''
         )
         print("====================================")

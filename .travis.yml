@@ -9,8 +9,6 @@ services:
     - postgresql
 
 install:
-    - "sudo apt-get install -y python-dev"
-    - "sudo apt-get install -y python3-dev"
     - "python -m pip install codecov"
     - "make install-tests"
 

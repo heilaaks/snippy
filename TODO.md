@@ -1,9 +1,7 @@
 ## WORKING
-   - [ ] Change name of --scat to --cat?
-   - [ ] Fix cause 'Content has been created without internal errors.' This breaks when there is e.g. created and bad request. That is the cause ok does not see 404 and sends OK.
+   - [ ] Fix cause 'Content has been created without internal errors.' This breaks when there is e.g. created and bad request. That is the cause ok does not see 404 and sends OK. This was the Cause() check for OK
    - [ ] Fix updating Markdown based solutions in text formats does not work because the Mkdn solution does not have text header and data structure.
    - [ ] Fix test_logger_016. The P3 is not correct? The links in p2 are in the same elemnet separated with \n that should be the case with P3.
-   - [ ] Why container --server-host command line option does not work (healthcheck)? docker run -d --net="host" --name snippy heilaaks/snippy --server-host 127.0.0.1:8080 --log-json -vv
    - [ ] Fix creating/updating resource with invalid versions. Check test_api_create_snippet_024. The seal() cannot check if Cause not is_is because it generates incorrect error. For example GET ../<valid digest>/error shows error that digest not foind. See test_api_search_reference_field_012. move the reast API based empty list check earlier in code to solve this.
    - [ ] Incorrect header does not leave logs. Test manually since this works differently that the tests? For example ab was missing '-T application/vnd.api+json' without this it did not work.
    - [ ] Design and change /groups and /tags to GET groups and tags not content. Like unique tags and groups.
@@ -11,7 +9,6 @@
    - [ ] Make docker tests run parallel. Now the container removal is based on image name that is not good. must be based on container hash.
    - [ ] Make more tests for Docker use cases
    - [ ] Fix test case: test_quiet_option_001 it passes even when the search output is not printed on screen.
-   - [ ] Remove test case files from container.
    - [ ] Add health API to send server health with statistics.
    - [ ] Check good rules from https://opensource.zalando.com/restful-api-guidelines/#218
    - [ ] Empty array values can unambiguously be represented as the empty list, [].
@@ -28,7 +25,7 @@
    - [ ] Add delete for wheel build directory for automation. If the folder exist this is a problem (at least used to be) see how to fail python release/building/something.
    - [ ] Config get_resource could return empty Resource instead of None in failure. This is now related to new migrate refactoring that prevents migrating template resources.
    - [ ] Fix (remove) the LANG in Alpine based dockerfile? Is this useless as MUSL does not support locales? https://github.com/gliderlabs/docker-alpine/issues/144
-   - [ ] Fix server silent startup failure if for example the port is reserved. How to get proper error cause for user?
+   - [ ] Fix server silent startup failure if for example the port is reserved. How to get proper error cause for user? There are logs but not with default?
    - [ ] Test postgreSQL SSL connection manually.
    - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format. Try tldr.
    - [ ] Fix (?) updating JSON or YAML solution (only solution?) with mkdn or text data where data brief changes. This is not now updated in case of YAML/JSON solution because the dict is just read. The problem is to how to identify text or Markdown from YAML/JSON (dict)?
@@ -39,6 +36,9 @@
    - [ ] Is there a better way to support the special case of checking internal cause 500 and Content created cause for importing some of the content (digest integrity error)
    - [ ] Database.init can be moved to database __init__ because it is always called immediately after object init. This is likely historical left over or something that some test requires (mock?)?
    - [ ] It seems that that sqlite3 (and perhaps psycopg2) automatically rollbacks or commits with context manager (with block). So the explicit commit and rollback may (?) be unnecessary? It may better to leave those since working with different databases? Document in code?
+   - [ ] Change name of --scat to --cat?
+   - [ ] Why container --server-host command line option does not work for healthcheck? docker run -d --net="host" --name snippy heilaaks/snippy --server-host 127.0.0.1:8080 --log-json -vv. Because hc is triggered as separate process and it is not possible to get the command line value. --> document.
+   - [ ] Remove test case files from container.
 
 ## THINKING
    - [ ] Add code content.

@@ -80,6 +80,19 @@ command likely work with any Linux distribution.
     # Run all tests.
     make test-all
 
+Heroku deployment
+-----------------
+
+.. code:: bash
+
+    # Install Heroku command line application.
+    curl https://cli-assets.heroku.com/install.sh | sh
+
+    # Run Heroku app locally.
+    heroku login
+    heroku local web -f Procfile
+    heroku logs -a snippy-server
+
 Quick Start
 -----------
 

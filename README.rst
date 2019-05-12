@@ -52,7 +52,7 @@ working with large software projects. Author is happy to hear if this project
 has been actually used by anyone. Please post bug reports of feature requests
 through GitLab issues.
 
-This project got inspiration from the `Buku <https://github.com/jarun/Buku>`.
+This project got inspiration from the `Buku <https://github.com/jarun/Buku>`_.
 
 Related work
 ============

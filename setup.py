@@ -46,6 +46,7 @@ extras_docs = (
     'sphinx-autobuild==0.7.1'
 )
 extras_tests = (
+    'bandit==1.6.0',
     'docker==3.7.2',
     'flake8==3.7.7',
     'logging_tree==1.8',

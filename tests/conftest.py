@@ -190,11 +190,11 @@ def pytest_sessionstart(session):
     Database.set_database(database)
     Database.delete_all_contents()
 
-def pytest_report_header(_):
+def pytest_report_header(config):  # pylint: disable=unused-argument
     """Pytest hook to set report header.
 
     Args:
-        _ (obj): Pytest Config() object.
+        config (obj): Pytest Config() object.
     """
 
     return 'database: {}{}{}'.format(Helper.COLOR_OK, Database.get_database(), Helper.COLOR_END)

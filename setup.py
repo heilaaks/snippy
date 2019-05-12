@@ -82,7 +82,7 @@ setup(
     author_email=meta['__email__'],
     url=meta['__homepage__'],
     license=meta['__license__'],
-    keywords='command solution snippet reference link snippet manager server console',
+    keywords='notes markdown yaml text command-line cli server backend docker software-engineering',
     packages=find_packages(exclude=['tests', 'tests.lib']),
     package_dir={'snippy': 'snippy'},
     package_data={

@@ -44,7 +44,7 @@ uninstall:
 	$(PIP) uninstall --yes snippy .
 
 upgrade-wheel:
-	$(PYTHON) -m ensurepip $(INSTALL_USER)
+	@test -x "$(shell which pip)" || $(PYTHON) -m ensurepip $(INSTALL_USER)
 	$(PYTHON) -m pip install pip setuptools wheel twine --upgrade $(INSTALL_USER)
 
 install-devel:

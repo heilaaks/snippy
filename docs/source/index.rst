@@ -13,5 +13,7 @@ Welcome to Snippy documentation!
    workflows
    api
    development
+   releasing
+   performance
    license
 

@@ -7,41 +7,39 @@ To install, run:
 
     pip install snippy --user
 
+    # Export user local Python package bin to PATH if needed.
+    export PATH=${PATH}:~/.local/bin
+
 To remove, run:
 
 .. code:: text
 
     pip uninstall --yes snippy
 
-To install from Docker Hub, run:
+To install as a server, run:
 
 .. code:: text
 
-    docker pull heilaaks/snippy
+    docker pull docker.io/heilaaks/snippy:latest
 
 To install from Github, run:
 
-.. code-block:: text
+.. code:: text
 
     git clone https://github.com/heilaaks/snippy.git
     cd snippy
-    make install
+    make install INSTALL_USER=--user
+
+To install Bash completion, run:
+
+.. code:: text
+
+    snippy export --complete bash
+    sudo cp snippy.bash-completion /etc/bash_completion.d/snippy.bash-completion
 
 To try for the very first time, run:
 
-.. raw:: html
+.. code:: text
 
-    <div class="highlight-none"><div class="highlight"><pre><span></span>
-    $ snippy import --defaults
-    OK
-    $ snippy search --sall docker
-
-    <font color="#20b2aa">1.</font> <font color="#228B22">Remove all docker containers with volumes</font> @docker <font color="#979a9a">[54e41e9b52a02b63]</font>
-       <font color="#ff0000">$</font> docker rm --volumes $(docker ps --all --quiet)
-
-       <font color="#ff0000">#</font> <font color="#979a9a">cleanup,container,docker,docker-ce,moby</font>
-       <font color="#ff0000">></font> <font color="#979a9a">https://docs.docker.com/engine/reference/commandline/rm/</font>
-
-    OK
-    </pre></div>
-    </div>
+    snippy import --defaults
+    snippy search untar

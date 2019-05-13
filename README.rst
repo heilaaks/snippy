@@ -35,7 +35,7 @@ To install as a server, run:
 
 .. code:: text
 
-    docker pull docker.io/heilaaks/snippy
+    docker pull docker.io/heilaaks/snippy:latest
 
 Usage
 =====

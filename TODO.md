@@ -7,16 +7,13 @@
    - [ ] Design and change /groups and /tags to GET groups and tags not content. Like unique tags and groups.
    - [ ] Make docker tests run parallel. Now the container removal is based on image name that is not good. must be based on container hash.
    - [ ] Make more tests for Docker use cases
-   - [ ] Fix test case: test_quiet_option_001 it passes even when the search output is not printed on screen.
-   - [ ] Add health API to send server health with statistics.
-   - [ ] Check good rules from https://opensource.zalando.com/restful-api-guidelines/#218
-   - [ ] Empty array values can unambiguously be represented as the empty list, [].
+   - [ ] Add health API to send server health with statistics.
+   - [ ] Empty array values can unambiguously be represented as the empty list, []. // https://opensource.zalando.com/restful-api-guidelines/#218
    - [ ] Swagger 3.0: Why the 'additionProperties: false' field did not affect swagger 3.0?
    - [ ] Swagger 2.0: Does not support nullable and this does not work with validation: test_api_update_reference_010/117. move to OAS3.0 to solve this?
    - [ ] Check why test_api_create_snippet_004 has specific error length in Python 3.4.
    - [ ] Config.get_resource creates external UUID usage when e.g resource is updated. Get rid of this (somehow) after UUID refactoring.
    - [ ] Test export/import Mkdn snippet with partial comments. The export must have the <not documented> tag and import must remove it.
-   - [ ] Add instructions to use local install dir and the export path for local bin if needed (add the ~./local/bin to path)
    - [ ] Fix somehow (?) the python runner search --sall 'test' --filter test -vv | grep --all?
    - [ ] Fix JSON API v1.x requires links for collection responses too. Individual resource not found or attrbute results null otherwise empty list.
    - [ ] Fix digest computation once things are setling down. Changing this forces changes to all tests and code that rely on digest.
@@ -87,6 +84,8 @@
    - [ ] Remove server name and version from HTTP responses. This would require overriding Gunicorn https://stackoverflow.com/a/21294524.
 
 ## FIX
+   - [ ] Add instructions to use local install dir and the export path for local bin if needed (add the ~./local/bin to path). This is partially added in actual documentation installation chapter.
+   - [ ] Check good rules from https://opensource.zalando.com/restful-api-guidelines/#218
    - [ ] Refactor rest.generate that now updates also headers. Body, content type and status are set in the main level but header are set in Generate which may be confusing.
    - [ ] Fix reading data from cli that does not parse description and filename from CLI --content data test_cli_create_solution_001.
    - [ ] Fix why new mkdn log driver kafka solution does not have description in quotations in defaults?  This is normal YAML behaviour?

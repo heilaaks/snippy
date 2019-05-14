@@ -501,7 +501,33 @@ class TestUtLogger(object):
         assert len(max(caplog.text.split(), key=len)) == len('variable' + 'a'*Logger.SECURITY_LOG_MSG_MAX) - len('variable')
 
     @staticmethod
-    def test_logger_013(capsys, caplog):
+    def test_logger_013(logger, caplog, capsys):
+        """Test logger security.
+
+        Test case verifies that security log is not printed when log exceeds
+        the limit with the very verbose ``-vv`` option. This option already
+        truncates the log and there is no need to ward about long logs.
+
+        The log message max length is also reduced in this test.
+        """
+
+        Logger.configure({
+            'debug': True,
+            'log_json': False,
+            'log_msg_max': 30,
+            'quiet': False,
+            'very_verbose': True
+        })
+
+        logger.debug('variable%s', ('a'*(Logger.SECURITY_LOG_MSG_MAX+1000)))
+        out, err = capsys.readouterr()
+        assert not err
+        assert len(out.splitlines()) == 1
+        assert len(caplog.records[:]) == 1
+        assert 'variableaaaaaaaaaaaaaaaaaaa...' in out
+
+    @staticmethod
+    def test_logger_014(capsys, caplog):
         """Test custom security level.
 
         Test case verifies that the custom ``security`` level is working.
@@ -529,7 +555,7 @@ class TestUtLogger(object):
         assert hasattr(caplog.records[0], 'oid')
 
     @staticmethod
-    def test_logger_014(capsys, caplog):
+    def test_logger_015(capsys, caplog):
         """Test failure handling.
 
         Test case verifies that log message length cannot exceed safety limits
@@ -566,7 +592,7 @@ class TestUtLogger(object):
         assert caplog.records[3].msg.islower()
 
     @staticmethod
-    def test_logger_015(capsys):
+    def test_logger_016(capsys):
         """Test logs from Gunicorn.
 
         Test case verifies that log log messages from Gunicorn are converted
@@ -609,7 +635,7 @@ class TestUtLogger(object):
         assert json.loads(out.splitlines()[5])['levelname'] == 'debug'
 
     @staticmethod
-    def test_logger_016(caplog):
+    def test_logger_017(caplog):
         """Test pretty printing logs.
 
         In case of debug when JSON logs are not enabled, the logs are pretty

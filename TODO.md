@@ -5,7 +5,6 @@
    - [ ] Fix creating/updating resource with invalid versions. Check test_api_create_snippet_024. The seal() cannot check if Cause not is_is because it generates incorrect error. For example GET ../<valid digest>/error shows error that digest not foind. See test_api_search_reference_field_012. move the reast API based empty list check earlier in code to solve this.
    - [ ] Incorrect header does not leave logs. Test manually since this works differently that the tests? For example ab was missing '-T application/vnd.api+json' without this it did not work.
    - [ ] Design and change /groups and /tags to GET groups and tags not content. Like unique tags and groups.
-   - [ ] Security log printed incorrectly from GET limit=20 when -vv JSON enabled. The -vv should already truncate the log. Change or warn?
    - [ ] Make docker tests run parallel. Now the container removal is based on image name that is not good. must be based on container hash.
    - [ ] Make more tests for Docker use cases
    - [ ] Fix test case: test_quiet_option_001 it passes even when the search output is not printed on screen.

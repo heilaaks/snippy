@@ -338,7 +338,6 @@ class TestCliCreateSolution(object):
         extended to all category names in the error text.
         """
 
-
         cause = snippy.run(['snippy', 'create', '--scat', 'all', '-f', './foo.yaml'])
         assert cause == "NOK: content category must be unique when content is created: ('snippet', 'solution', 'reference')"
         Content.assert_storage(None)

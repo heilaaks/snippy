@@ -401,6 +401,7 @@ class TestCliOptions(object):  # pylint: disable=too-many-public-methods
 
     @staticmethod
     @pytest.mark.usefixtures('default-snippets')
+    @pytest.mark.parametrize('snippy', [['--debug', '--no-ansi']], indirect=True)
     def test_debug_option_001(snippy, capsys, caplog):
         """Test printing logs with debug option.
 
@@ -448,9 +449,7 @@ class TestCliOptions(object):  # pylint: disable=too-many-public-methods
             '   ! uuid        : 12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
             '   ! versions    :'
         )
-        snippy = Snippy(['snippy', 'search', '--sall', '.', '--debug', '--no-ansi'])
-        cause = snippy.run()
-        snippy.release()
+        cause = snippy.run(['snippy', 'search', '--sall', '.', '--debug', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert Const.NEWLINE.join(output) in out

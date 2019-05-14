@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""test_cli_options: Test command line options options."""
+"""test_cli_options: Test command line options."""
 
 from __future__ import print_function
 
@@ -155,6 +155,7 @@ class TestCliOptions(object):  # pylint: disable=too-many-public-methods
 
         snippy = Snippy(['snippy', '--help'])
         snippy.run()
+        snippy.release()
         out, err = capsys.readouterr()
         assert out == Const.NEWLINE.join(TestCliOptions.HELP)
         assert not err
@@ -170,6 +171,7 @@ class TestCliOptions(object):  # pylint: disable=too-many-public-methods
 
         snippy = Snippy(['snippy', '-h'])
         snippy.run()
+        snippy.release()
         out, err = capsys.readouterr()
         assert out == Const.NEWLINE.join(TestCliOptions.HELP)
         assert not err
@@ -185,6 +187,7 @@ class TestCliOptions(object):  # pylint: disable=too-many-public-methods
 
         snippy = Snippy(['snippy'])
         snippy.run()
+        snippy.release()
         out, err = capsys.readouterr()
         assert out == Const.NEWLINE.join(TestCliOptions.HELP)
         assert not err
@@ -205,6 +208,7 @@ class TestCliOptions(object):  # pylint: disable=too-many-public-methods
         osenviron.setenv('SNIPPY_SERVER_HOST', '127.0.0.1:8081')
         snippy = Snippy(['snippy'])
         snippy.run()
+        snippy.release()
         out, err = capsys.readouterr()
         assert out == Const.EMPTY
         assert not err
@@ -221,6 +225,7 @@ class TestCliOptions(object):  # pylint: disable=too-many-public-methods
 
         snippy = Snippy(['snippy', '-q'])
         snippy.run()
+        snippy.release()
         out, err = capsys.readouterr()
         assert out == Const.EMPTY
         assert not err
@@ -241,6 +246,7 @@ class TestCliOptions(object):  # pylint: disable=too-many-public-methods
         )
         snippy = Snippy(['snippy', '-a'])
         snippy.run()
+        snippy.release()
         out, err = capsys.readouterr()
         assert out == Const.EMPTY
         assert err == Const.NEWLINE.join(output)
@@ -256,6 +262,7 @@ class TestCliOptions(object):  # pylint: disable=too-many-public-methods
 
         snippy = Snippy(['snippy', '--help', 'examples'])
         snippy.run()
+        snippy.release()
         out, err = capsys.readouterr()
         assert out == Const.NEWLINE.join(TestCliOptions.EXAMPLES)
         assert not err
@@ -267,8 +274,8 @@ class TestCliOptions(object):  # pylint: disable=too-many-public-methods
     def test_help_option_008(capsys, caplog):
         """Test printing test documentation from console.
 
-        Print test cases. The --no-ansi option must be work when set before
-        the --help option.
+        Print test cases. The ``--no-ansi`` option must work when set before
+        the ``--help`` option.
         """
 
         output = (
@@ -288,6 +295,7 @@ class TestCliOptions(object):  # pylint: disable=too-many-public-methods
         )
         snippy = Snippy(['snippy', '--no-ansi', '--help', 'tests'])
         snippy.run()
+        snippy.release()
         out, err = capsys.readouterr()
         assert out == Const.NEWLINE.join(output)
         assert not err
@@ -299,8 +307,8 @@ class TestCliOptions(object):  # pylint: disable=too-many-public-methods
     def test_help_option_009(capsys, caplog):
         """Test printing test documentation from console.
 
-        Print test cases. The --no-ansi option must work when set after
-        the --help option.
+        Print test cases. The ``--no-ansi`` option must work when set after
+        the ``--help`` option.
         """
 
         output = (
@@ -320,6 +328,7 @@ class TestCliOptions(object):  # pylint: disable=too-many-public-methods
         )
         snippy = Snippy(['snippy', '--help', 'tests', '--no-ansi'])
         snippy.run()
+        snippy.release()
         out, err = capsys.readouterr()
         assert out == Const.NEWLINE.join(output)
         assert not err
@@ -337,6 +346,7 @@ class TestCliOptions(object):  # pylint: disable=too-many-public-methods
 
         snippy = Snippy(['snippy', '--help', 'tests'])
         cause = snippy.run()
+        snippy.release()
         out, err = capsys.readouterr()
         assert cause == 'NOK: test cases are not packaged with release No module named \'tests\''
         assert out == 'NOK: test cases are not packaged with release No module named \'tests\'' + Const.NEWLINE
@@ -346,57 +356,56 @@ class TestCliOptions(object):  # pylint: disable=too-many-public-methods
         Content.delete()
 
     @staticmethod
-    @pytest.mark.parametrize('snippy', [['-vv']], indirect=True)
-    def test_very_verbose_option_001(snippy, caplog, capsys):
+    def test_very_verbose_option_001(caplog, capsys):
         """Test printing logs with the very verbose option.
 
-        Enable verbose logging with -vv option. Test checks that there is more
-        than randomly picked largish number of logs in order to avoid matching
-        logs explicitly. Nothing must be printed to stderr.
+        Enable verbose logging with ``-vv`` option. Test checks that there are
+        more than a randomly picked largish number of logs in order to avoid
+        matching logs count explicitly.
 
-        TODO: Why the stdout contains few lines in this test and stderr the
-              Logger exception logs?
+        Nothing must be printed to the stderr.
         """
 
-        cause = snippy.run(['snippy', 'search', '--sall', '.', '-vv'])
-        _, _ = capsys.readouterr()
+        snippy = Snippy(['snippy', 'search', '--sall', '.', '-vv'])
+        cause = snippy.run()
+        snippy.release()
+        out, err = capsys.readouterr()
         assert cause == 'NOK: cannot find content with given search criteria'
-        #assert not out
-        #assert not err
-        assert len(caplog.records[:]) > 20
+        assert len(out.splitlines()) > 20
+        assert len(caplog.records) > 20
+        assert len(out.splitlines()) == len(caplog.records)
+        assert not err
 
     @staticmethod
-    @pytest.mark.parametrize('snippy', [['-vv', '--log-msg-max', '200']], indirect=True)
-    def test_very_verbose_option_002(snippy, caplog, capsys):
+    def test_very_verbose_option_002(caplog, capsys):
         """Test printing logs with the very verbose option.
 
-        Enable verbose logging with -vv option. In this case the message
-        lenght is defined from command line. Test checks that there is
-        more than randomly picked largish number of logs in order to avoid
-        matching logs explicitly. Nothing must be printed to stderr.
+        Enable verbose logging with ``-vv`` option. In this case the message
+        lenght is defined from command line. Test checks that there are more
+        than a randomly picked largish number of logs to avoid matching log
+        count explicitly.
 
-        TODO: Why the stdout contains few lines in this test and stderr the
-              Logger exception logs?
+        Nothing must be printed to stderr.
         """
 
-        cause = snippy.run(['snippy', 'search', '--sall', '.', '-vv'])
-        out, _ = capsys.readouterr()
+        snippy = Snippy(['snippy', 'search', '--sall', '.', '-vv', '--log-msg-max', '200'])
+        cause = snippy.run()
+        snippy.release()
+        out, err = capsys.readouterr()
         assert cause == 'NOK: cannot find content with given search criteria'
-        assert 'msg max: 200' in out
-        #assert not err
-        assert len(caplog.records[:]) > 20
+        assert 'log msg max: 200' in out
+        assert len(out.splitlines()) > 20
+        assert len(caplog.records) > 20
+        assert len(out.splitlines()) == len(caplog.records)
+        assert not err
 
     @staticmethod
-    @pytest.mark.usefixtures('uuid', 'default-snippets')
-    @pytest.mark.parametrize('snippy', [['--debug', '--no-ansi']], indirect=True)
+    @pytest.mark.usefixtures('default-snippets')
     def test_debug_option_001(snippy, capsys, caplog):
         """Test printing logs with debug option.
 
-        Enable full logging with --debug option. In this case the debug
-        option must print all fields from stored snippets.
-
-        TODO: Why the stderr contains log exceptions with 'I/O operation
-              on closed file'?
+        Enable full length log messages with the ``--debug`` option. In this
+        case all the attributes from stored resources must be printed.
         """
 
         output = (
@@ -439,15 +448,16 @@ class TestCliOptions(object):  # pylint: disable=too-many-public-methods
             '   ! uuid        : 12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
             '   ! versions    :'
         )
-        cause = snippy.run(['snippy', 'search', '--sall', '.', '--debug', '--no-ansi'])
-        out, _ = capsys.readouterr()
+        snippy = Snippy(['snippy', 'search', '--sall', '.', '--debug', '--no-ansi'])
+        cause = snippy.run()
+        snippy.release()
+        out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert Const.NEWLINE.join(output) in out
-        #assert not err
-        assert len(caplog.records[:]) > 20
+        assert len(caplog.records) > 20
+        assert not err
 
     @staticmethod
-    @pytest.mark.parametrize('snippy', [['-q']], indirect=True)
     def test_quiet_option_001(snippy, capsys, caplog):
         """Test supressing all output from tool.
 
@@ -455,7 +465,9 @@ class TestCliOptions(object):  # pylint: disable=too-many-public-methods
         is displayed on the screen.
         """
 
-        cause = snippy.run(['snippy', 'search', '--sall', '.', '-q'])
+        snippy = Snippy(['snippy', 'search', '--sall', '.', '-q'])
+        cause = snippy.run()
+        snippy.release()
         out, err = capsys.readouterr()
         assert cause == 'NOK: cannot find content with given search criteria'
         assert not out
@@ -472,6 +484,7 @@ class TestCliOptions(object):  # pylint: disable=too-many-public-methods
 
         snippy = Snippy(['snippy', '--version'])
         snippy.run()
+        snippy.release()
         out, err = capsys.readouterr()
         assert out == __version__ + Const.NEWLINE
         assert not err
@@ -488,6 +501,7 @@ class TestCliOptions(object):  # pylint: disable=too-many-public-methods
 
         snippy = Snippy(['snippy', '-v'])
         snippy.run()
+        snippy.release()
         out, err = capsys.readouterr()
         assert out == __version__ + Const.NEWLINE
         assert not err
@@ -512,12 +526,12 @@ class TestCliOptions(object):  # pylint: disable=too-many-public-methods
         Content.delete()
 
     @staticmethod
-    @pytest.mark.usefixtures('uuid', 'snippy', 'default-snippets')
+    @pytest.mark.usefixtures('snippy', 'default-snippets')
     def test_debug_print_001(capsys):
         """Test printing the content.
 
         Test printing content with print. This is a development test which
-        must directly print the snippets.
+        must directly print the snippets with the test case helper method.
         """
 
         output = (

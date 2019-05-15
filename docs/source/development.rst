@@ -4,8 +4,9 @@ Development
 Installation
 ------------
 
-The instructions are tested with Fedora and Bash shell. Similar command
-likely work with other Linux distributions.
+The instructions are tested with Fedora 30 and Bash shell because author
+does the development on Fedora. There are also draft examples for Ubuntu
+and Debian.
 
 .. note::
 
@@ -17,11 +18,20 @@ likely work with other Linux distributions.
    The PostgreSQL adapters used with the server are installed by compiling
    them. This require working gcc toolchain.
 
+.. note::
+
+    Author is more familiar with Fedora than other distributions. It may
+    be that the installation procedure for other distributions is not as
+    tested as with Fedora.
+
+Fedora
+~~~~~~
+
 .. code:: bash
 
     # Clone the project.
-    mkdir ~/devel && cd $_
-    git clone git@github.com:heilaaks/snippy.git
+    mkdir ~/devel/snippy && cd $_
+    git clone https://github.com/heilaaks/snippy.git .
 
     # Install CPython versions.
     sudo dnf install -y \
@@ -34,7 +44,7 @@ likely work with other Linux distributions.
         python3-devel \
         python2-devel
 
-    # Install PyPy3 versions.
+    # Install PyPy versions.
     sudo dnf install -y \
         pypy2 \
         pypy3 \
@@ -43,7 +53,7 @@ likely work with other Linux distributions.
         postgresql-devel
 
     # Install Python virtual environments.
-    pip install --user \
+    pip3 install --user \
         pipenv \
         virtualenv \
         virtualenvwrapper
@@ -65,7 +75,8 @@ likely work with other Linux distributions.
     mkvirtualenv --python /usr/bin/pypy2 pypy2-snippy
     mkvirtualenv --python /usr/bin/pypy3 pypy3-snippy
 
-    # Repeat for all virtual environments.
+    # Repeat setuptools and wheel upgrade and development environment
+    # installation for all created virtual environments.
     for VENV in p27-snippy \
                 p34-snippy \
                 p35-snippy \
@@ -75,49 +86,120 @@ likely work with other Linux distributions.
                 pypy2-snippy \
                 pypy3-snippy
     do
-        workon $VENV
+        workon ${VENV}
         make upgrade-wheel
         make install-devel
         deactivate
     done
 
-    # Compile Docker image for Docker tests.
+Ubuntu
+~~~~~~
+
+.. code:: bash
+
+    # Clone the project.
+    mkdir ~/devel/snippy && cd $_
+    git clone https://github.com/heilaaks/snippy.git .
+
+    # Install CPython versions.
+    sudo add-apt-repository ppa:deadsnakes/ppa -y
+    sudo add-apt-repository ppa:pypy/ppa -y
+    sudo apt-get install -y \
+        python2.7  \
+        python3.4 \
+        python3.5 \
+        python3.6 \
+        python3.7 \
+        python3.8-dev \
+        python3-devel \
+        python2-devel
+
+    # Install PyPy versions.
+    sudo apt-get install -y \
+        pypy \
+        pypy3 \
+        pypy-dev \
+        pypy3-dev \
+        libpq-dev \
+
+    # Install Python virtual environments.
+    sudo apt-get install python3-pip -y
+    sudo apk-install python3-distutils -y
+    pip3 install --user \
+        pipenv \
+        virtualenv \
+        virtualenvwrapper
+
+    # Create virtual environments for each Python version.
+    mkvirtualenv --python /usr/bin/python2.7 p27-snippy
+    mkvirtualenv --python /usr/bin/python3.4 p34-snippy
+    mkvirtualenv --python /usr/bin/python3.5 p35-snippy
+    mkvirtualenv --python /usr/bin/python3.6 p36-snippy
+    mkvirtualenv --python /usr/bin/python3.7 p37-snippy
+    mkvirtualenv --python /usr/bin/python3.8 p38-snippy
+    mkvirtualenv --python /usr/bin/pypy pypy2-snippy
+    mkvirtualenv --python /usr/bin/pypy3 pypy3-snippy
+
+    # Repeat setuptools and wheel upgrade and development environment
+    # installation for all created virtual environments.
+    for VENV in p27-snippy \
+                p34-snippy \
+                p35-snippy \
+                p36-snippy \
+                p37-snippy \
+                p38-snippy \
+                pypy2-snippy \
+                pypy3-snippy
+    do
+        workon ${VENV}
+        make upgrade-wheel
+        make install-devel
+        deactivate
+    done
+
+Debian
+~~~~~~
+
+TODO
+
+Workflow
+--------
+
+After the virtual environments and Docker CE have been installed, compile
+the project container image and start the PostgreSQL database container.
+Then activate any of the virtual environments for selected Python version.
+
+.. code:: bash
+
+    # Compile Docker image for the 'test-docker' make target.
     make docker
 
-    # Run standard feature and refactoring test suite.
+    # Start PostgreSQL in container.
+    sudo docker run -d --name postgres -e POSTGRES_PASSWORD= -p 5432:5432 -d postgres
+
+    # Work with Python virtual environment
+    workon p37-snippy
+
+    # Run tests default tests. This does not include docker, server or
+    # tests with other databases than SQLite.
     make test
 
     # Run all tests against PostgreSQL.
-    sudo docker run -d --name postgres -e POSTGRES_PASSWORD= -p 5432:5432 -d postgres
     make test-postgresql
 
     # Run all tests with server.
-    make docker
     make test-server
 
     # Run all tests with Docker image.
-    make docker
     make test-docker
 
     # Run all tests.
     make test-all
 
-    # Install Bash complete
-    python runner export --complete bash
-    sudo cp snippy.bash-completion /etc/bash_completion.d/snippy.bash-completion
-
-Workflow
---------
-
-.. code:: bash
-
-    # Run tests.
-    make test
-
     # Run lint.
     make lint
 
-    # Clean all generated files.
+    # Clean all generated files and empty the SQLite database file.
     make clean-all
 
     # Run test coverage.
@@ -125,6 +207,86 @@ Workflow
 
     # Create documents.
     make docs
+
+    # Install Bash complete
+    python runner export --complete bash
+    sudo cp snippy.bash-completion /etc/bash_completion.d/snippy.bash-completion
+
+Terms
+-----
+
++-----------------+------------------------------------------------------------+
+| Term            | Description                                                |
++=================+============================================================+
+| attribute       | Content attribute like ``brief``, ``links`` or ``tags``.   |
++-----------------+------------------------------------------------------------+
+| category        | Content category that is one of ``snippet``, ``solution``  |
+|                 | or ``reference``.                                          |
++-----------------+------------------------------------------------------------+
+| collection      | Collection is a set of resources.                          |
++-----------------+------------------------------------------------------------+
+| content         | Content from one of the categories stored in a resource.   |
++-----------------+------------------------------------------------------------+
+| field           | Same as attribute.                                         |
++-----------------+------------------------------------------------------------+
+| operation       | Command line operation like ``create`` or delete. This can |
+|                 | refer also to a HTTP request in case of the REST API       |
+|                 | server. This refers to processing of the whole ``create``  |
+|                 | operation or HTTP request like GET through the code from   |
+|                 | start to an end.                                           |
++-----------------+------------------------------------------------------------+
+| operation ID    | Unique opration identifier (OID) allocated for all log     |
+|                 | messages generation from a single operation.               |
++-----------------+------------------------------------------------------------+
+| resource        | Resource is an object that can store a single content from |
+|                 | any of the categories.                                     |
++-----------------+------------------------------------------------------------+
+| parameter       | URL parameter that defines for example a search criteria   |
+|                 | like ``sall`` or ``scat`` for a HTTP request.              |
++-----------------+------------------------------------------------------------+
+
+Guidelines
+----------
+
+Commit logs
+~~~~~~~~~~~
+
+Git commit logs must follow rules from `Chris Beams`_ with explicit change
+types listed below. The change types are derived from a `keep a changelog`_
+and a post in `Writing for Developers`_
+
+1. `Add` new external features.
+2. `Change` external behavior in existing functionality.
+3. `Fix` bugs. Use 'Edit' for typo and layout corrections.
+4. `Remove` external feature.
+5. `Deprecat` a soon-to-be removed features.
+6. `Security` in case of vulnerabilities.
+7. `Refactor` code without external changes.
+8. `Edit` small fixes like typo and layout fixes.
+9. `Test` new test cases.
+
+The rule must be applied so that the logs are written for humans. This
+means that the commit log must tell the reasons and design decisions
+behind the change.
+
+This rule tries also encourage a common look and feel for commit logs.
+
+.. _Chris Beams: https://chris.beams.io/posts/git-commit/
+.. _keep a changelog: http://keepachangelog.com/en/1.0.0/
+.. _Writing for Developers : https://writingfordevelopers.substack.com/p/how-to-write-commit-messages
+
+Design
+------
+
+Security
+--------
+
+Testing
+-------
+
+Documentation
+-------------
+
 
 Heroku app
 ----------

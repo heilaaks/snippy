@@ -4,9 +4,8 @@ Development
 Installation
 ------------
 
-The instructions are tested with Fedora 30 and Bash shell because author
-does the development on Fedora. There are also draft examples for Ubuntu
-and Debian.
+The instructions are tested with Fedora 30 and Bash shell. There are also
+installation instructions for Ubuntu and Debian Linux distributions.
 
 .. note::
 
@@ -16,20 +15,17 @@ and Debian.
 .. note::
 
    The PostgreSQL adapters used with the server are installed by compiling
-   them. This require working gcc toolchain.
-
-.. note::
-
-    Author is more familiar with Fedora than other distributions. It may
-    be that the installation procedure for other distributions is not as
-    tested as with Fedora.
+   them with the help of pip. This require working GCC toolchain which is
+   not part of Snippy documentation.
 
 Fedora
 ~~~~~~
 
+Follow the instructions to install the project on a Fedora Linux.
+
 .. code:: bash
 
-    # Clone the project.
+    # Clone the project from the GitHub.
     mkdir ~/devel/snippy && cd $_
     git clone https://github.com/heilaaks/snippy.git .
 
@@ -59,7 +55,7 @@ Fedora
         virtualenvwrapper
     export PATH=${PATH}:~/.local/bin
 
-    # Configure virtualenv wrapper.
+    # Configure the virtualenv wrapper.
     vi ~/.bashrc
        export WORKON_HOME=~/devel/.virtualenvs
        source ~/.local/bin/virtualenvwrapper.sh
@@ -95,9 +91,11 @@ Fedora
 Ubuntu
 ~~~~~~
 
+Follow the instructions to install the project on a Ubuntu Linux.
+
 .. code:: bash
 
-    # Clone the project.
+    # Clone the project from the GitHub.
     mkdir ~/devel/snippy && cd $_
     git clone https://github.com/heilaaks/snippy.git .
 
@@ -124,11 +122,18 @@ Ubuntu
 
     # Install Python virtual environments.
     sudo apt-get install python3-pip -y
-    sudo apk-install python3-distutils -y
+    sudo apt-get install python3-distutils -y
     pip3 install --user \
         pipenv \
         virtualenv \
         virtualenvwrapper
+    export PATH=${PATH}:~/.local/bin
+
+    # Configure the virtualenv wrapper.
+    vi ~/.bashrc
+       export WORKON_HOME=~/devel/.virtualenvs
+       source ~/.local/bin/virtualenvwrapper.sh
+    source ~/.bashrc
 
     # Create virtual environments for each Python version.
     mkvirtualenv --python /usr/bin/python2.7 p27-snippy
@@ -160,14 +165,29 @@ Ubuntu
 Debian
 ~~~~~~
 
-TODO
+Follow the instructions to install the project on a Debian Linux.
 
-Workflow
---------
+.. code:: bash
 
-After the virtual environments and Docker CE have been installed, compile
-the project container image and start the PostgreSQL database container.
-Then activate any of the virtual environments for selected Python version.
+    # Clone the project from the GitHub.
+    mkdir ~/devel/snippy && cd $_
+    git clone https://github.com/heilaaks/snippy.git .
+
+Workflows
+---------
+
+After virtual environments and Docker CE have been installed succesfully,
+build the Snippy container image and run the PostgreSQL database container.
+The PostgreSQL database is one of the supported databases and tests are run
+with it.
+
+For development, prefer a virtual environment with the latest Python release.
+Run ``tox`` to test against all supported Python releases.
+
+The Snippy continuous integration will run all tests with the default SQLite
+and PostgreSQL databases with the exception of tests with a real server or 
+docker. It is recomended to run ``make test-server`` and ``make test-docker``
+until these are included into the automated continuous integration.
 
 .. code:: bash
 
@@ -177,11 +197,11 @@ Then activate any of the virtual environments for selected Python version.
     # Start PostgreSQL in container.
     sudo docker run -d --name postgres -e POSTGRES_PASSWORD= -p 5432:5432 -d postgres
 
-    # Work with Python virtual environment
+    # Work with Python virtual environment.
     workon p37-snippy
 
-    # Run tests default tests. This does not include docker, server or
-    # tests with other databases than SQLite.
+    # Run the default development tests. This does not include docker, server
+    # or tests with other databases than SQLite.
     make test
 
     # Run all tests against PostgreSQL.
@@ -193,11 +213,20 @@ Then activate any of the virtual environments for selected Python version.
     # Run all tests with Docker image.
     make test-docker
 
+    # Run tests against all supported Python versions.
+    make test-tox
+
     # Run all tests.
     make test-all
 
     # Run lint.
     make lint
+
+    # Clean all generated files but do not delete SQLite database file.
+    make clean
+
+    # Clean only the SQLite database file.
+    make clean-db
 
     # Clean all generated files and empty the SQLite database file.
     make clean-all
@@ -208,7 +237,7 @@ Then activate any of the virtual environments for selected Python version.
     # Create documents.
     make docs
 
-    # Install Bash complete
+    # Install the Bash completion.
     python runner export --complete bash
     sudo cp snippy.bash-completion /etc/bash_completion.d/snippy.bash-completion
 
@@ -223,19 +252,21 @@ Terms
 | category        | Content category that is one of ``snippet``, ``solution``  |
 |                 | or ``reference``.                                          |
 +-----------------+------------------------------------------------------------+
-| collection      | Collection is a set of resources.                          |
+| collection      | Collection is a set of resources objects.                  |
 +-----------------+------------------------------------------------------------+
-| content         | Content from one of the categories stored in a resource.   |
+| content         | Content is a software development note from one of the     |
+|                 | categories. A content is stored into a resource object.    |
+|                 | In a broader context, content, resource and note can be    |
+|                 | interpreted to have same meaning.                          |
 +-----------------+------------------------------------------------------------+
 | field           | Same as attribute.                                         |
 +-----------------+------------------------------------------------------------+
-| operation       | Command line operation like ``create`` or delete. This can |
-|                 | refer also to a HTTP request in case of the REST API       |
-|                 | server. This refers to processing of the whole ``create``  |
-|                 | operation or HTTP request like GET through the code from   |
-|                 | start to an end.                                           |
+| operation       | Command line operation like ``create`` or ``delete``. This |
+|                 | term refers also to a HTTP request in case of the REST API |
+|                 | server. This term also refers to processing the operation  |
+|                 | from start to an end.                                      |
 +-----------------+------------------------------------------------------------+
-| operation ID    | Unique opration identifier (OID) allocated for all log     |
+| operation ID    | Unique operation identifier (OID) allocated for all log    |
 |                 | messages generation from a single operation.               |
 +-----------------+------------------------------------------------------------+
 | resource        | Resource is an object that can store a single content from |
@@ -278,18 +309,30 @@ This rule tries also encourage a common look and feel for commit logs.
 Design
 ------
 
-Security
---------
-
 Testing
 -------
+
+Security
+--------
 
 Documentation
 -------------
 
+Docstrings
+~~~~~~~~~~
+
+Use the `Google docstring`_ format. It is considered less verbose and more
+readable than the NumPy formatted docstring. In this project the intention
+is that a method description explains the complicated parts and the method
+argument is a short explanation of the method arguments. The NumPy format
+is better suited for complex algorithms and their parameters.
+
+.. _Google docstring: https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html
 
 Heroku app
 ----------
+
+Use the examples below to deploy a Heroky Application.
 
 .. code:: bash
 

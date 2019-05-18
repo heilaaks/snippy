@@ -356,7 +356,8 @@ class TestCliOptions(object):  # pylint: disable=too-many-public-methods
         Content.delete()
 
     @staticmethod
-    def test_very_verbose_option_001(caplog, capsys):
+    @pytest.mark.parametrize('snippy', [['-vv']], indirect=True)
+    def test_very_verbose_option_001(snippy, caplog, capsys):
         """Test printing logs with the very verbose option.
 
         Enable verbose logging with ``-vv`` option. Test checks that there are
@@ -366,18 +367,16 @@ class TestCliOptions(object):  # pylint: disable=too-many-public-methods
         Nothing must be printed to the stderr.
         """
 
-        snippy = Snippy(['snippy', 'search', '--sall', '.', '-vv'])
-        cause = snippy.run()
-        snippy.release()
+        cause = snippy.run(['snippy', 'search', '--sall', '.', '-vv'])
         out, err = capsys.readouterr()
         assert cause == 'NOK: cannot find content with given search criteria'
-        assert len(out.splitlines()) > 20
-        assert len(caplog.records) > 20
-        assert len(out.splitlines()) == len(caplog.records)
+        assert len(out.splitlines()) > 10
+        assert len(caplog.records) > 10
         assert not err
 
     @staticmethod
-    def test_very_verbose_option_002(caplog, capsys):
+    @pytest.mark.parametrize('snippy', [['-vv', '--log-msg-max', '200']], indirect=True)
+    def test_very_verbose_option_002(snippy, caplog, capsys):
         """Test printing logs with the very verbose option.
 
         Enable verbose logging with ``-vv`` option. In this case the message
@@ -388,15 +387,13 @@ class TestCliOptions(object):  # pylint: disable=too-many-public-methods
         Nothing must be printed to stderr.
         """
 
-        snippy = Snippy(['snippy', 'search', '--sall', '.', '-vv', '--log-msg-max', '200'])
-        cause = snippy.run()
+        cause = snippy.run(['snippy', 'search', '--sall', '.', '-vv', '--log-msg-max', '200'])
         snippy.release()
         out, err = capsys.readouterr()
         assert cause == 'NOK: cannot find content with given search criteria'
         assert 'log msg max: 200' in out
-        assert len(out.splitlines()) > 20
-        assert len(caplog.records) > 20
-        assert len(out.splitlines()) == len(caplog.records)
+        assert len(out.splitlines()) > 10
+        assert len(caplog.records) > 10
         assert not err
 
     @staticmethod

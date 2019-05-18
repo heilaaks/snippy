@@ -54,7 +54,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     DIGEST = 15
 
     SNIPPET_TEMPLATE = 'b4bedc2603e3b9ea95bcf53cb7b8aa6efa31eabb788eed60fccf3d8029a6a6cc'
-    SOLUTION_TEMPLATE_TEXT = '711315d13d19bc7a6afc860ca0d24672ccdc665b4ca46110a9d7ce7c665bc17e'
+    SOLUTION_TEMPLATE_TEXT = 'be2ec3ade0e984463c1d3346910a05625897abd8d3feae4b2e54bfd6aecbde2d'
     SOLUTION_TEMPLATE_MKDN = '073ea152d867cf06b2ee993fb1aded4c8ccbc618972db5c18158b5b68a5da6e4'
     REFERENCE_TEMPLATE = 'e0cd55c650ef936a66633ee29500e47ee60cc497c342212381c40032ea2850d9'
     TEMPLATES = (
@@ -710,6 +710,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         # defined special character combinations like \n for new line
         # are not interpolated.
         text = templates['text'][self.category]
+        text = text.replace('<category>', self.category)
         if self.data:
             try:
                 text = re.sub(r'''
@@ -721,8 +722,23 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
                 self._logger.info('failed to replace content data: {}'.format(self.data))
                 self._logger.info('failed to replace content template: {}'.format(text))
         else:
-            text = text.replace('<data>', Const.EMPTY)
-            text = text.lstrip()
+            # The replacing of the data is only relevant with a text formatted
+            # solution . With other cases where for example Markdown solution
+            # or snippet have one <data> tag, the tag is just replaced with an
+            # empty string.
+            match = re.compile(r'''
+                <data>          # Match opening tag for data.
+                (?P<data>.*)    # Catch all the data from template.
+                <data>          # Match closing tag for data.
+                ''', re.DOTALL | re.VERBOSE).search(text)
+            if match:
+                text = re.sub(r'''
+                    <data>          # Match opening tag for data.
+                    (.*<data>)      # Match closing <data> tag and all data between the tags.
+                    ''', match.group('data').lstrip().replace('\\', '\\\\'), text, flags=re.DOTALL | re.VERBOSE)
+            else:
+                text = text.replace('<data>', Const.EMPTY)
+                text = text.lstrip()
         text = text.replace('<brief>', self.brief)
         text = text.replace('<description>', self.description)
         text = text.replace('<name>', self.name)
@@ -732,6 +748,10 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         text = text.replace('<source>', self.source)
         text = text.replace('<versions>', Const.DELIMITER_VERSIONS.join(self.versions))
         text = text.replace('<filename>', self.filename)
+        text = text.replace('<created>', self.created)
+        text = text.replace('<updated>', self.updated)
+        text = text.replace('<uuid>', self.uuid)
+        text = text.replace('<digest>', self.digest)
 
         return text
 

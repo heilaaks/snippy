@@ -41,15 +41,6 @@ class Solution(object):  # pylint: disable=too-few-public-methods
     _DEFAULTS = ({
         'category': 'solution',
         'data':('################################################################################',
-                '## BRIEF  : Debugging Elastic Beats',
-                '##',
-                '## GROUPS : beats',
-                '## TAGS   : Elastic,beats,filebeat,debug,howto',
-                '## FILE   : howto-debug-elastic-beats.txt',
-                '################################################################################',
-                '',
-                '',
-                '################################################################################',
                 '## description',
                 '################################################################################',
                 '',
@@ -93,19 +84,10 @@ class Solution(object):  # pylint: disable=too-few-public-methods
         'created': DEFAULT_TIME,
         'updated': DEFAULT_TIME,
         'uuid': '21cd5827-b6ef-4067-b5ac-3ceac07dde9f',
-        'digest': 'db712a82662d693206004c2174a0bb1900e1e1307f21f79a0efb88a01add4151'
+        'digest': '9d0a54be4bb66b47b30da865e887b8081397bc1ff1915d3487a8629d28f06305' ##db712a82662d693206004c2174a0bb1900e1e1307f21f79a0efb88a01add4151'
     }, {
         'category': 'solution',
         'data':('################################################################################',
-                '## BRIEF  : Debugging nginx',
-                '##',
-                '## GROUPS : nginx',
-                '## TAGS   : nginx,debug,logging,howto',
-                '## FILE   : howto-debug-nginx.txt',
-                '################################################################################',
-                '',
-                '',
-                '################################################################################',
                 '## description',
                 '################################################################################',
                 '',
@@ -169,25 +151,17 @@ class Solution(object):  # pylint: disable=too-few-public-methods
         'created': DEFAULT_TIME,
         'updated': DEFAULT_TIME,
         'uuid': '22cd5827-b6ef-4067-b5ac-3ceac07dde9f',
-        'digest': '5dee85bedb7f4d3a970aa2e0568930c68bac293edc8a2a4538d04bd70bea01ea'
+        'digest': 'c91b420e5437158c997459d5c978828327406b598b6ce1478dc0fcf9d72634c7' ##5dee85bedb7f4d3a970aa2e0568930c68bac293edc8a2a4538d04bd70bea01ea'
     }, {
         'category': 'solution',
         'data':('################################################################################',
-                '## BRIEF  : Testing docker log drivers',
-                '##',
-                '## GROUPS : docker',
-                '## TAGS   : docker,moby,kubernetes,logging,plugin,driver,kafka,logs2kafka',
-                '## FILE   : kubernetes-docker-log-driver-kafka.txt',
-                '################################################################################',
-                '',
-                '################################################################################',
-                '## description',
+                '## Description',
                 '################################################################################',
                 '',
                 '    # Investigating docker log driver and especially the Kafka plugin.',
                 '',
                 '################################################################################',
-                '## references',
+                '## References',
                 '################################################################################',
                 '',
                 '    # Kube Kafka log driver',
@@ -198,7 +172,7 @@ class Solution(object):  # pylint: disable=too-few-public-methods
                 '    > https://github.com/garo/logs2kafka',
                 '',
                 '################################################################################',
-                '## commands',
+                '## Commands',
                 '################################################################################',
                 '',
                 '    # Get logs from pods',
@@ -227,11 +201,11 @@ class Solution(object):  # pylint: disable=too-few-public-methods
                 '\'"Hostname"|"IPAddress"\' ; done | while read line ; do echo $line ; done',
                 '',
                 '################################################################################',
-                '## solutions',
+                '## Solutions',
                 '################################################################################',
                 '',
                 '################################################################################',
-                '## configurations',
+                '## Configurations',
                 '################################################################################',
                 '',
                 '    # Logstash configuration',
@@ -258,7 +232,7 @@ class Solution(object):  # pylint: disable=too-few-public-methods
                 '    }',
                 '',
                 '################################################################################',
-                '## whiteboard',
+                '## Whiteboard',
                 '################################################################################',
                 ''),
         'brief': 'Testing docker log drivers',
@@ -275,7 +249,7 @@ class Solution(object):  # pylint: disable=too-few-public-methods
         'created': '2017-10-20T06:16:27.000001+00:00',
         'updated': '2017-10-20T06:16:27.000001+00:00',
         'uuid': '23cd5827-b6ef-4067-b5ac-3ceac07dde9f',
-        'digest': 'fffeaf31e98e68a3dd063a1db0e334c0bc7e7c2f774262c5df0f95210c5ff1ee'
+        'digest': 'ee3f2ab7c63d6965ac2531003807f00caee178f6e1cbb870105c7df86e6d5be2', ##fffeaf31e98e68a3dd063a1db0e334c0bc7e7c2f774262c5df0f95210c5ff1ee'
     }, {
         'category': 'solution',
         'data':('## Description',
@@ -361,7 +335,7 @@ class Solution(object):  # pylint: disable=too-few-public-methods
                 '## Whiteboard',
                 ''),
         'brief': 'Testing docker log drivers',
-        'description': 'Investigate docker log drivers and the logs2kafka log plugin',
+        'description': 'Investigate docker log drivers and the logs2kafka log plugin.',
         'name': '',
         'groups': ('docker',),
         'tags': ('docker', 'driver', 'kafka', 'kubernetes', 'logging', 'logs2kafka', 'moby', 'plugin'),
@@ -374,7 +348,7 @@ class Solution(object):  # pylint: disable=too-few-public-methods
         'created': '2019-01-04T10:54:49.265512+00:00',
         'updated': '2019-01-05T10:54:49.265512+00:00',
         'uuid': '24cd5827-b6ef-4067-b5ac-3ceac07dde9f',
-        'digest': '18473ec207798670c302fb711a40df6555e8973e26481e4cd6b2ed205f5e633c'
+        'digest': 'c54c8a896b94ea35edf6c798879957419d26268bd835328d74b19a6e9ce2324d', ##'18473ec207798670c302fb711a40df6555e8973e26481e4cd6b2ed205f5e633c'
     })
 
     BEATS_CREATED = _DEFAULTS[_BEATS]['created']
@@ -405,7 +379,7 @@ class Solution(object):  # pylint: disable=too-few-public-methods
     DEFAULT_SOLUTIONS = (BEATS, NGINX)
 
     TEMPLATE = Helper.read_template('solution.txt').split('\n')
-    TEMPLATE_DIGEST_TEXT = '711315d13d19bc7a6afc860ca0d24672ccdc665b4ca46110a9d7ce7c665bc17e'
+    TEMPLATE_DIGEST_TEXT = 'be2ec3ade0e984463c1d3346910a05625897abd8d3feae4b2e54bfd6aecbde2d'
     TEMPLATE_DIGEST_MKDN = '073ea152d867cf06b2ee993fb1aded4c8ccbc618972db5c18158b5b68a5da6e4'
 
     TEMPLATE_TEXT = (
@@ -441,6 +415,21 @@ class Solution(object):  # pylint: disable=too-few-public-methods
         '################################################################################',
         '## Whiteboard',
         '################################################################################',
+        '',
+        '################################################################################',
+        '## Meta',
+        '################################################################################',
+        '',
+        'category : solution',
+        'created  : 2017-10-14T19:56:31.000001+00:00',
+        'digest   : 50c37862816a197c63b2ae72c511586c3463814509c0d5c7ebde534ce0209935',
+        'filename : example-content.md',
+        'name     : example content handle',
+        'source   : https://www.example.com/source.md',
+        'tags     : example,tags',
+        'updated  : 2017-10-14T19:56:31.000001+00:00',
+        'uuid     : a1cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+        'versions : example=3.9.0,python>=3',
         ''
     )
     TEMPLATE_MKDN = (

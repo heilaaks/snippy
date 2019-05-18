@@ -62,7 +62,7 @@ class TestApiCreateSolution(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2429'}
+            'content-length': '2092'}
         expect_body = {
             'data': [{
                 'type': 'solution',
@@ -109,7 +109,7 @@ class TestApiCreateSolution(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '7103'
+            'content-length': '6393'
         }
         expect_body = {
             'data': [{
@@ -136,7 +136,7 @@ class TestApiCreateSolution(object):
     def test_api_create_solution_003(server):
         """Update Solution with POST that maps to PUT.
 
-        Send POST /solutions/[id} to update existing resource with the
+        Send POST /solutions/{id} to update existing resource with the
         ``X-HTTP-Method-Override`` header that overrides the operation as
         PUT. In this case the created timestamp must remain in initial
         value and the updated timestamp must be updated to reflect the
@@ -162,7 +162,7 @@ class TestApiCreateSolution(object):
         storage['data'][0]['filename'] = ''
         storage['data'][0]['updated'] = Content.NGINX_TIME
         storage['data'][0]['uuid'] = Solution.BEATS_UUID
-        storage['data'][0]['digest'] = '59c5861b51701c2f52abad1a7965e4503875b2668a4df12f6c3386ef9d535970'
+        storage['data'][0]['digest'] = '24d350f995b0340c29da7db4df7f9c0c413cea54103372eb308e6dbabd0fe52a'
         request_body = {
             'data': {
                 'type': 'solution',
@@ -178,7 +178,7 @@ class TestApiCreateSolution(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '3072'
+            'content-length': '2760'
         }
         expect_body = {
             'links': {
@@ -191,7 +191,7 @@ class TestApiCreateSolution(object):
             }
         }
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/api/snippy/rest/solutions/db712a82662d6932',
+            path='/api/snippy/rest/solutions/9d0a54be4bb66b47',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8', 'X-HTTP-Method-Override': 'PUT'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_200
@@ -204,8 +204,8 @@ class TestApiCreateSolution(object):
     def test_api_create_solution_004(server):
         """Update solution with POST that maps to PATCH.
 
-        Send POST /solutions/db712a82662d6932 to update existing solution
-        with X-HTTP-Method-Override header that overrides the operation as
+        Send POST /solutions/{id} to update existing solution with the
+        ``X-HTTP-Method-Override`` header that overrides the operation as
         PATCH.
 
         The UUID must not be changed when the resource is updated because it
@@ -219,7 +219,7 @@ class TestApiCreateSolution(object):
         }
         storage['data'][0]['data'] = Solution.NGINX['data']
         storage['data'][0]['uuid'] = Solution.BEATS_UUID
-        storage['data'][0]['digest'] = '02533ef592b8d26c557e1e365b3cc1bd9f54ca5599a5cb5aaf44a54cb7d6a310'
+        storage['data'][0]['digest'] = '122d397e2e450d9aff8f7a481967d1105a83c80534a5ab8849ddeb05d3602dea'
         request_body = {
             'data': {
                 'type': 'solution',
@@ -230,7 +230,7 @@ class TestApiCreateSolution(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '3142'
+            'content-length': '2830'
         }
         expect_body = {
             'links': {
@@ -243,7 +243,7 @@ class TestApiCreateSolution(object):
             }
         }
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/api/snippy/rest/solutions/db712a82662d6932',
+            path='/api/snippy/rest/solutions/9d0a54be4bb66b47',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8', 'X-HTTP-Method-Override': 'PATCH'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_200
@@ -256,7 +256,7 @@ class TestApiCreateSolution(object):
     def test_api_create_solution_005(server):
         """Update solution with POST that maps to DELETE.
 
-        Send POST /solutions with X-HTTP-Method-Override header to delete
+        Send POST /solutions with the ``X-HTTP-Method-Override`` header to delete
         solution. In this case the resource exists and the content is deleted.
         """
 
@@ -268,7 +268,7 @@ class TestApiCreateSolution(object):
         }
         expect_headers = {}
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/api/snippy/rest/solutions/fffeaf31e98e68a',
+            path='/api/snippy/rest/solutions/ee3f2ab7c63d696',
             headers={'accept': 'application/json', 'X-HTTP-Method-Override': 'DELETE'})
         assert result.status == falcon.HTTP_204
         assert result.headers == expect_headers

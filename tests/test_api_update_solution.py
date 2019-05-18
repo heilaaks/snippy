@@ -57,7 +57,7 @@ class TestApiUpdateSolution(object):
         storage['data'][0]['created'] = Content.BEATS_TIME
         storage['data'][0]['updated'] = Content.KAFKA_TIME
         storage['data'][0]['uuid'] = Solution.BEATS_UUID
-        storage['data'][0]['digest'] = '04be0828cd51e173eb7f12620ad79ddab36721ccbd85c3cfbf5218a93e9b1a2e'
+        storage['data'][0]['digest'] = '0a2b29d2fde6b900375d68be93ac6142c5adafb27fb5d6294fab465090d82504'
         request_body = {
             'data': {
                 'type': 'solution',
@@ -73,7 +73,7 @@ class TestApiUpdateSolution(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '4756'
+            'content-length': '4383'
         }
         expect_body = {
             'links': {
@@ -86,7 +86,7 @@ class TestApiUpdateSolution(object):
             }
         }
         result = testing.TestClient(server.server.api).simulate_put(
-            path='/api/snippy/rest/solutions/db712a82662d6932',
+            path='/api/snippy/rest/solutions/9d0a54be4bb66b47',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_200
@@ -120,7 +120,7 @@ class TestApiUpdateSolution(object):
                 'created': Content.BEATS_TIME,
                 'updated': Content.NGINX_TIME,
                 'uuid': Solution.BEATS_UUID,
-                'digest': '6cd48521a898357f5f088c3cd5a8614c6291ef98733cd7e52ab2cdedb146a874'
+                'digest': '6967b8757c901be4f4a7e0db882ae0d3dd86985dafbae8e722056c40d33a3438'
             }]
         }
         request_body = {
@@ -134,7 +134,7 @@ class TestApiUpdateSolution(object):
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2939'
+            'content-length': '2627'
         }
         expect_body = {
             'links': {
@@ -147,7 +147,7 @@ class TestApiUpdateSolution(object):
             }
         }
         result = testing.TestClient(server.server.api).simulate_put(
-            path='/api/snippy/rest/solutions/db712a82662d6932',
+            path='/api/snippy/rest/solutions/9d0a54be4bb66b47',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_200
@@ -222,8 +222,8 @@ class TestApiUpdateSolution(object):
             'tags': Const.DELIMITER_TAGS.join(Request.dnginx['tags']),
             'links': Const.DELIMITER_LINKS.join(Request.dnginx['links'])
         }
-        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5713'}
-        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5571'}
+        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5090'}
+        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '4975'}
         expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
@@ -234,7 +234,7 @@ class TestApiUpdateSolution(object):
             }]
         }
         result = testing.TestClient(server.server.api).simulate_put(
-            path='/api/snippy/rest/solutions/db712a82662d6932',
+            path='/api/snippy/rest/solutions/9d0a54be4bb66b47',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_400
@@ -284,7 +284,7 @@ class TestApiUpdateSolution(object):
             }]
         }
         result = testing.TestClient(server.server.api).simulate_put(
-            path='/api/snippy/rest/solutions/db712a82662d6932',
+            path='/api/snippy/rest/solutions/9d0a54be4bb66b47',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_403
@@ -333,7 +333,7 @@ class TestApiUpdateSolution(object):
             }]
         }
         result = testing.TestClient(server.server.api).simulate_put(
-            path='/api/snippy/rest/solutions/db712a82662d6932',
+            path='/api/snippy/rest/solutions/9d0a54be4bb66b47',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_403
@@ -361,7 +361,7 @@ class TestApiUpdateSolution(object):
         storage['data'][0]['created'] = Content.BEATS_TIME
         storage['data'][0]['updated'] = Content.KAFKA_TIME
         storage['data'][0]['uuid'] = Solution.BEATS_UUID
-        storage['data'][0]['digest'] = 'c7b25c6ee326b025c471caa32be285f8c4fc4138593d7cb31a7da63acc36043b'
+        storage['data'][0]['digest'] = 'd8271fa72ab79e877fd977ae66019b1afc86826a93530b28c3756077a8ace067'
         request_body = {
             'data': {
                 'type': 'snippet',
@@ -372,7 +372,7 @@ class TestApiUpdateSolution(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '4627'
+            'content-length': '4254'
         }
         expect_body = {
             'links': {
@@ -385,7 +385,7 @@ class TestApiUpdateSolution(object):
             }
         }
         result = testing.TestClient(server.server.api).simulate_patch(
-            path='/api/snippy/rest/solutions/db712a82662d6932',
+            path='/api/snippy/rest/solutions/9d0a54be4bb66b47',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_200
@@ -416,9 +416,8 @@ class TestApiUpdateSolution(object):
                 }
             }
         }
-        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '4483'}
-        expect_headers_p34 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '4486'}
-        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '4587'}
+        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '3813'}
+        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '3905'}
         expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
@@ -429,11 +428,11 @@ class TestApiUpdateSolution(object):
             }]
         }
         result = testing.TestClient(server.server.api).simulate_put(
-            path='/api/snippy/rest/solutions/db712a82662d6932',
+            path='/api/snippy/rest/solutions/9d0a54be4bb66b47',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_400
-        assert result.headers in (expect_headers_p2, expect_headers_p3, expect_headers_p34)
+        assert result.headers in (expect_headers_p2, expect_headers_p3)
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(storage)
 

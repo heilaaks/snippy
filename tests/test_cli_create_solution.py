@@ -48,13 +48,14 @@ class TestCliCreateSolution(object):
         content['data'][0]['description'] = ''
         content['data'][0]['filename'] = ''
         content['data'][0]['uuid'] = Content.UUID1
-        content['data'][0]['digest'] = 'b8dfd78b2f92caac57469acda50bebf4dca9fd3e85bb9083c8408f430fc83f52'
+        content['data'][0]['digest'] = 'b1601153d0a43b61c8b8659619ac315b419f1823eb88c56f701f4e5559cf9aba'
         data = Const.DELIMITER_DATA.join(content['data'][0]['data'])
         brief = content['data'][0]['brief']
         groups = Const.DELIMITER_GROUPS.join(content['data'][0]['groups'])
         tags = Const.DELIMITER_TAGS.join(content['data'][0]['tags'])
         links = Const.DELIMITER_LINKS.join(content['data'][0]['links'])
         cause = snippy.run(['snippy', 'create', '--scat', 'solution', '--content', data, '--brief', brief, '--groups', groups, '--tags', tags, '--links', links, '--format', 'text'])  # pylint: disable=line-too-long
+        print(Content.output())
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -73,7 +74,7 @@ class TestCliCreateSolution(object):
             ]
         }
         cause = snippy.run(['snippy', 'create', '--scat', 'solution', '--format', 'text'])
-        assert cause == 'NOK: content data already exist with digest db712a82662d6932'
+        assert cause == 'NOK: content data already exist with digest 9d0a54be4bb66b47'
         Content.assert_storage(content)
 
     @staticmethod
@@ -128,7 +129,7 @@ class TestCliCreateSolution(object):
                 Content.deepcopy(Solution.BEATS)
             ]
         }
-        content['data'][0]['uuid'] = Content.UUID2
+        content['data'][0]['uuid'] = Content.UUID_EDIT
         cause = snippy.run(['snippy', 'create', '--scat', 'solution', '--editor', '--format', 'text'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
@@ -318,7 +319,7 @@ class TestCliCreateSolution(object):
         content['data'][0]['description'] = ''
         content['data'][0]['filename'] = ''
         content['data'][0]['uuid'] = Content.UUID1
-        content['data'][0]['digest'] = 'b8dfd78b2f92caac57469acda50bebf4dca9fd3e85bb9083c8408f430fc83f52'
+        content['data'][0]['digest'] = 'b1601153d0a43b61c8b8659619ac315b419f1823eb88c56f701f4e5559cf9aba'
         data = Const.DELIMITER_DATA.join(content['data'][0]['data'])
         brief = content['data'][0]['brief']
         groups = Const.DELIMITER_GROUPS.join(content['data'][0]['groups']) + ',beats'

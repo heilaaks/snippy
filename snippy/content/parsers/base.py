@@ -500,3 +500,33 @@ class ContentParserBase(object):
             cls._logger.debug('conversion to list of unicode unicode strings failed with unknown type %s : %s', type(value), value)
 
         return list_
+
+
+    def read_meta_value(self, category, key, text):
+        """Read content metadata value from a text string.
+
+        Args:
+            category (str): Content category.
+            metadata (str): Metadata to be read.
+            text (str): Content text string.
+
+        Returns:
+            str: Utf-8 encoded unicode string.
+        """
+
+        meta = ''
+        if category not in Const.CATEGORIES:
+            return self.format_string(meta)
+
+        match = re.compile(r'''
+            ^%s                 # Match metadata key at the beginning of line.
+            \s+[:]{1}\s         # Match spaces and column between key and value.
+            (?P<value>.*$)      # Catch metadata value till end of the line.
+            ''' % re.escape(key), re.MULTILINE | re.VERBOSE).search(text)
+        if match:
+            meta = match.group('value')
+            self._logger.debug('parsed content metadata: {} : with value: {}'.format(key, text))
+        else:
+            self._logger.debug('parser did not find content for key: {} :from metadata: {}'.format(key, text))
+
+        return self.format_string(meta)

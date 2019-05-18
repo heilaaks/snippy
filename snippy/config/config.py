@@ -607,10 +607,11 @@ class Config(object):
             filename = os.path.join('./snippy.' + cls.complete + '-completion')
 
         if not filename:
+
             if len(categories) == 1:
-                defaults = categories[0] + 's.mkdn'
+                defaults = categories[0] + 's.' + cls.template_format
             else:
-                defaults = 'content.mkdn'
+                defaults = 'content.' + cls.template_format
             filename = os.path.join('./', defaults)
 
         return filename

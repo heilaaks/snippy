@@ -83,6 +83,7 @@ class Content(object):  # pylint: disable=too-many-public-methods, too-many-line
     # Mocker UUIDs.
     UUID1 = Database.TEST_UUIDS_STR[0]
     UUID2 = Database.TEST_UUIDS_STR[1]
+    UUID_EDIT = Database.UUID_EDIT
 
     # completions
     COMPLETE_BASH = Helper.read_completion('snippy.bash-completion')
@@ -220,11 +221,6 @@ class Content(object):  # pylint: disable=too-many-public-methods, too-many-line
         The assert comparisons use equality implemented for collection data
         class. This quarantees that the count and content of resources are
         the same in database and expected content.
-
-        The text formatted content does not have all resource attributes. For
-        example created and updated attributes are missing and thus cannot be
-        compared. Because of this, a text reference is always compared against
-        text formatted content.
 
         If the result and expected content are compared only as collections,
         there are cases that are not noticed. A content fields in collection
@@ -637,11 +633,6 @@ class Content(object):  # pylint: disable=too-many-public-methods, too-many-line
         references = Collection()
         references.load_dict(Content.IMPORT_TIME, {'data': content['data']})
 
-        if content_format == Const.CONTENT_FORMAT_TEXT:
-            for digest in references.keys():
-                references[digest].created = Content.IMPORT_TIME
-                references[digest].updated = Content.IMPORT_TIME
-
         return references
 
     @staticmethod
@@ -727,8 +718,9 @@ class Content(object):  # pylint: disable=too-many-public-methods, too-many-line
                 pprintpp.pprint(expect[field])
         elif isinstance(result, str):
             print("Comparing result and expected types of {} which are different.".format(type(expect)))
-            print(result)
-            print(expect)
+            print("(%s)" % result)
+            print("=" * 120)
+            print("(%s)" % expect)
         print("=" * 120)
 
 

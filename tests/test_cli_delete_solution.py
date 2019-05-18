@@ -43,7 +43,7 @@ class TestCliDeleteSolution(object):
             ]
         }
         Content.assert_storage_size(2)
-        cause = snippy.run(['snippy', 'delete', '--scat', 'solution', '-d', '5dee85bedb7f4d3a'])
+        cause = snippy.run(['snippy', 'delete', '--scat', 'solution', '-d', 'c91b420e5437158c'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -61,7 +61,7 @@ class TestCliDeleteSolution(object):
             ]
         }
         Content.assert_storage_size(2)
-        cause = snippy.run(['snippy', 'delete', '-d', '5dee85bedb7f4d3a'])
+        cause = snippy.run(['snippy', 'delete', '-d', 'c91b420e5437158c'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -79,7 +79,7 @@ class TestCliDeleteSolution(object):
                 Solution.BEATS
             ]
         }
-        cause = snippy.run(['snippy', 'delete', '--scat', 'solution', '-d', '5dee8'])
+        cause = snippy.run(['snippy', 'delete', '--scat', 'solution', '-d', 'c91b4'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -97,7 +97,7 @@ class TestCliDeleteSolution(object):
             ]
         }
         Content.assert_storage_size(2)
-        cause = snippy.run(['snippy', 'delete', '--scat', 'solution', '-d', '5dee85bedb7f4d3a970aa2e0568930c68bac293edc8a2a4538d04bd70bea01ea'])  # pylint: disable=line-too-long
+        cause = snippy.run(['snippy', 'delete', '--scat', 'solution', '-d', 'c91b420e5437158c997459d5c978828327406b598b6ce1478dc0fcf9d72634c7'])  # pylint: disable=line-too-long
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -186,7 +186,7 @@ class TestCliDeleteSolution(object):
             ]
         }
         Content.assert_storage_size(2)
-        data = Content.dump_text(Solution.NGINX)
+        data = '\n'.join(Solution.NGINX['data'])
         cause = snippy.run(['snippy', 'delete', '--scat', 'solution', '--content', data])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)

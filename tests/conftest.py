@@ -21,6 +21,7 @@
 
 from __future__ import print_function
 
+import copy
 import json
 import re
 import time
@@ -596,6 +597,17 @@ def update_forced_time_mock(mocker):
 
     _add_utc_time(mocker, UPDATE_FORCED)
 
+@pytest.fixture(scope='function', name='update-three-forced-utc')
+def update_forced_three_time_mock(mocker):
+    """Mock timestamps to update 'forced' snippet three times."""
+
+    updates = (
+        ('2017-10-14T19:56:31.000001+00:00',)*2 +
+        ('2017-11-14T19:56:31.000001+00:00',)*2 +
+        ('2017-12-14T19:56:31.000001+00:00',)*2
+    )
+    _add_utc_time(mocker, updates)
+
 @pytest.fixture(scope='function', name='import-forced-utc')
 def import_forced_time_mock(mocker):
     """Mock timestamps to import 'forced' snippet."""
@@ -718,7 +730,10 @@ def import_beats_time_mock(mocker):
 def edit_beats_solution(mocker):
     """Edited 'beats' solution."""
 
-    template = _get_template(Solution.BEATS)
+    # Set another UUID to prevent collision with existing UUID.
+    solution = copy.deepcopy(Solution.BEATS)
+    solution['uuid'] = Database.UUID_EDIT
+    template = _get_template(solution)
     mocker.patch.object(Editor, '_call_editor', return_value=template)
     _add_utc_time(mocker, EDITED_BEATS)
 
@@ -763,6 +778,18 @@ def update_kafka_time_mock(mocker):
     """Mock timestamps to update 'kafka' solution."""
 
     _add_utc_time(mocker, UPDATE_KAFKA)
+
+
+@pytest.fixture(scope='function', name='update-three-kafka-utc')
+def update_kafka_three_time_many_mock(mocker):
+    """Mock timestamps to update 'kafka' solution."""
+
+    updates = (
+        ('2017-10-20T06:16:27.000001+00:00',)*2 +
+        ('2017-11-20T06:16:27.000001+00:00',)*2 +
+        ('2017-12-20T06:16:27.000001+00:00',)*2
+    )
+    _add_utc_time(mocker, updates)
 
 @pytest.fixture(scope='function', name='update-kafka-mkdn-utc')
 def update_kafka_mkdn_time_mock(mocker):
@@ -821,6 +848,17 @@ def update_gitlog_time_mock(mocker):
     """Mock timestamps to update 'gitlog' reference."""
 
     _add_utc_time(mocker, UPDATE_GITLOG)
+
+@pytest.fixture(scope='function', name='update-three-gitlog-utc')
+def update_gitlog_three_time_mock(mocker):
+    """Mock timestamps to update 'gitlog' reference."""
+
+    updates = (
+        ('2018-06-22T13:11:13.678729+00:00',)*2 +
+        ('2018-07-22T13:11:13.678729+00:00',)*2 +
+        ('2018-08-22T13:11:13.678729+00:00',)*2
+    )
+    _add_utc_time(mocker, updates)
 
 @pytest.fixture(scope='function', name='edited_gitlog')
 def edited_gitlog(mocker):

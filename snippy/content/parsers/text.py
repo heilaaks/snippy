@@ -85,7 +85,9 @@ class ContentParserText(ContentParserBase):
         ''' % (re.escape(DATA[Const.SNIPPET]), re.escape(DATA[Const.REFERENCE])), re.MULTILINE | re.VERBOSE)
     REGEXP['data'][Const.REFERENCE] = REGEXP['data'][Const.SNIPPET]
     REGEXP['data'][Const.SOLUTION] = re.compile(r'''
-        (?P<data>.*)            # Catch all the content to data.
+        (?:[#]{2}\sFILE.*?\n[#]{70,}\s+)    # Match the header that is not part of data.
+        (?P<data>.*?)                       # Catch all the content to data till the metadata.
+        (?:$|[#]{70,}\n[#]{2}\sMeta)        # Match end of string or content metadata.
         ''', re.DOTALL | re.VERBOSE)
 
     REGEXP['brief'] = {}
@@ -108,9 +110,9 @@ class ContentParserText(ContentParserBase):
         ''' % (re.escape(DESCRIPTION[Const.SNIPPET]), re.escape(DESCRIPTION[Const.REFERENCE])), re.DOTALL | re.VERBOSE)
     REGEXP['description'][Const.REFERENCE] = REGEXP['description'][Const.SNIPPET]
     REGEXP['description'][Const.SOLUTION] = re.compile(r'''
-        (?:\#\#\s+description\n[#]+\n)  # Match solution description header.
-        (?P<description>.*?)            # Catch description.
-        (?:\n{2}|[#]{2,}|$)             # Match newlines or next header indicated by hashes or end of the string.
+        (?:\#\#\s+[dD]escription\n(?:[#]+\n)?)  # Match solution description header. The description can be text or Markdown header.
+        (?P<description>.*?)                    # Catch description.
+        (?:\n{2}|[#]{2,}|$)                     # Match newlines or next header indicated by hashes or end of the string.
         ''', re.DOTALL | re.VERBOSE)
 
     REGEXP['name'] = {}
@@ -220,6 +222,10 @@ class ContentParserText(ContentParserBase):
                 'source': self._read_source(category, content),
                 'versions': self._read_versions(category, content),
                 'filename': self._read_filename(category, content),
+                'created': self.read_meta_value(category, 'created', content),
+                'updated': self.read_meta_value(category, 'updated', content),
+                'uuid': self.read_meta_value(category, 'uuid', content),
+                'digest': self.read_meta_value(category, 'digest', content),
             })
         self._collection.convert(resources, self._timestamp)
 

@@ -119,6 +119,7 @@ class Database(object):
         uuid.UUID(hex='dfcd5827b6ef4067b5ac3ceac07dde9f')
     )
     TEST_UUIDS_STR = [str(uuid_) for uuid_ in TEST_UUIDS]
+    UUID_EDIT = '99cd5827-b6ef-4067-b5ac-3ceac07dde9f'
 
     @classmethod
     def set_database(cls, database):

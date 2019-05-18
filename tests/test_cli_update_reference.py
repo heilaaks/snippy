@@ -348,6 +348,52 @@ class TestCliUpdateReference(object):
         editor_data.assert_called_with('\n'.join(template))
         Content.assert_storage(content)
 
+    @staticmethod
+    @pytest.mark.usefixtures('import-gitlog', 'update-three-gitlog-utc')
+    def test_cli_update_reference_015(snippy, edited_gitlog):
+        """Update reference with editor.
+
+        Update existing Mkdn formatted reference first in text format, then
+        in Text format and then again in Markdown format without making any
+        changes. The content must not change when updated between different
+        formats.
+
+        Each update must generate different timestamp in content ``updated``
+        attribute.
+
+        The content in editor is explicitly defined in the test to avoid
+        false positives from the test helpers that actually use the code
+        itself.
+        """
+
+        content = {
+            'data': [
+                Content.deepcopy(Reference.GITLOG)
+            ]
+        }
+        template = Content.dump_mkdn(content['data'][0])
+        edited_gitlog.return_value = template
+        cause = snippy.run(['snippy', 'update', '-d', '5c2071094dbfaa33', '--editor', '--format', 'mkdn'])
+        edited_gitlog.assert_called_with(template)
+        assert cause == Cause.ALL_OK
+        Content.assert_storage(content)
+
+        template = Content.dump_text(content['data'][0])
+        edited_gitlog.return_value = template
+        content['data'][0]['updated'] = '2018-07-22T13:11:13.678729+00:00'
+        cause = snippy.run(['snippy', 'update', '-d', '5c2071094dbfaa33', '--editor', '--format', 'text'])
+        edited_gitlog.assert_called_with(template)
+        assert cause == Cause.ALL_OK
+        Content.assert_storage(content)
+
+        template = Content.dump_mkdn(content['data'][0])
+        edited_gitlog.return_value = template
+        content['data'][0]['updated'] = '2018-08-22T13:11:13.678729+00:00'
+        cause = snippy.run(['snippy', 'update', '-d', '5c2071094dbfaa33', '--editor', '--format', 'mkdn'])
+        edited_gitlog.assert_called_with(template)
+        assert cause == Cause.ALL_OK
+        Content.assert_storage(content)
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

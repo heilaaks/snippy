@@ -49,7 +49,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '5462'
+            'content-length': '4813'
         }
         expect_body = {
             'meta': {
@@ -92,7 +92,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '5461'
+            'content-length': '4812'
         }
         expect_body = {
             'meta': {
@@ -206,7 +206,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '5461'
+            'content-length': '4812'
         }
         expect_body = {
             'meta': {
@@ -247,7 +247,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '7716'
+            'content-length': '7031'
         }
         expect_body = {
             'meta': {
@@ -440,7 +440,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2599'
+            'content-length': '2262'
         }
         expect_body = {
             'meta': {
@@ -459,7 +459,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/api/snippy/rest/solutions/db712a82662d6932',
+            path='/api/snippy/rest/solutions/9d0a54be4bb66b47',
             headers={'accept': 'application/json'})
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
@@ -504,7 +504,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '5462'
+            'content-length': '4813'
         }
         expect_body = {
             'meta': {
@@ -544,7 +544,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '3042'
+            'content-length': '2730'
         }
         expect_body = {
             'meta': {
@@ -580,7 +580,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '8576'
+            'content-length': '7567'
         }
         expect_body = {
             'meta': {
@@ -691,7 +691,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1959'
+            'content-length': '1622'
         }
         expect_body = {
             'data': {
@@ -706,7 +706,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/api/snippy/rest/solutions/db712a82662d6932/data',
+            path='/api/snippy/rest/solutions/9d0a54be4bb66b47/data',
             headers={'accept': 'application/vnd.api+json'})
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
@@ -737,7 +737,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/api/snippy/rest/solutions/db712a82662d6932/brief',
+            path='/api/snippy/rest/solutions/9d0a54be4bb66b47/brief',
             headers={'accept': 'application/vnd.api+json'})
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
@@ -768,7 +768,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/api/snippy/rest/solutions/db712a82662d6932/groups',
+            path='/api/snippy/rest/solutions/9d0a54be4bb66b47/groups',
             headers={'accept': 'application/vnd.api+json'})
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
@@ -799,7 +799,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/api/snippy/rest/solutions/db712a82662d6932/tags',
+            path='/api/snippy/rest/solutions/9d0a54be4bb66b47/tags',
             headers={'accept': 'application/vnd.api+json'})
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
@@ -830,7 +830,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/api/snippy/rest/solutions/db712a82662d6932/links',
+            path='/api/snippy/rest/solutions/9d0a54be4bb66b47/links',
             headers={'accept': 'application/vnd.api+json'})
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
@@ -859,7 +859,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/api/snippy/rest/solutions/db712a82662d6932/notexist',
+            path='/api/snippy/rest/solutions/9d0a54be4bb66b47/notexist',
             headers={'accept': 'application/vnd.api+json'})
         assert result.status == falcon.HTTP_400
         assert result.headers == expect_headers

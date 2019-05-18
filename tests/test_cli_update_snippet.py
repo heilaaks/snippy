@@ -32,7 +32,7 @@ class TestCliUpdateSnippet(object):
     @staticmethod
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_update_snippet_001(snippy, edited_remove):
-        """Update snippet with ``digest`` option.
+        """Update snippet with ``--digest`` option.
 
         Update snippet based on short message digest. Only the content data
         is updated.
@@ -54,7 +54,7 @@ class TestCliUpdateSnippet(object):
     @staticmethod
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_update_snippet_002(snippy, edited_remove):
-        """Update snippet with ``digest`` option.
+        """Update snippet with ``--digest`` option.
 
         Update snippet based on very short message digest. This must match to
         a single snippet that must be updated.
@@ -76,7 +76,7 @@ class TestCliUpdateSnippet(object):
     @staticmethod
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_update_snippet_003(snippy, edited_remove):
-        """Update snippet with ``digest`` option.
+        """Update snippet with ``--digest`` option.
 
         Update snippet based on long message digest. Only the content data is
         updated.
@@ -98,7 +98,7 @@ class TestCliUpdateSnippet(object):
     @staticmethod
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_update_snippet_004(snippy, edited_remove):
-        """Update snippet with ``digest`` option.
+        """Update snippet with ``--digest`` option.
 
         Update snippet based on message digest and explicitly define the
         content category.
@@ -120,7 +120,7 @@ class TestCliUpdateSnippet(object):
     @staticmethod
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_update_snippet_005(snippy, edited_remove):
-        """Update snippet with ``digest`` option.
+        """Update snippet with ``--digest`` option.
 
         Update snippet based on message digest and accidentally define
         solution category. In this case the snippet is updated properly
@@ -143,7 +143,7 @@ class TestCliUpdateSnippet(object):
     @staticmethod
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_update_snippet_006(snippy):
-        """Update snippet with ``digest`` option.
+        """Update snippet with ``--digest`` option.
 
         Try to update snippet with message digest that cannot be found. No
         changes must be made to stored content.
@@ -162,7 +162,7 @@ class TestCliUpdateSnippet(object):
     @staticmethod
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_update_snippet_007(snippy):
-        """Update snippet with ``digest`` option.
+        """Update snippet with ``--digest`` option.
 
         Try to update snippet with empty message digest. Nothing should be
         updated in this case because the empty digest matches to more than
@@ -182,7 +182,7 @@ class TestCliUpdateSnippet(object):
     @staticmethod
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_update_snippet_008(snippy):
-        """Update snippet with ``digest`` option.
+        """Update snippet with ``--digest`` option.
 
         Try to update snippet with one digit digest that matches two snippets.
 
@@ -204,7 +204,7 @@ class TestCliUpdateSnippet(object):
     @staticmethod
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_update_snippet_009(snippy, edited_remove):
-        """Update snippet with ``content`` option.
+        """Update snippet with ``--content`` option.
 
         Update snippet based on content data.
         """
@@ -225,7 +225,7 @@ class TestCliUpdateSnippet(object):
     @staticmethod
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_update_snippet_010(snippy):
-        """Update snippet with ``content`` option.
+        """Update snippet with ``--content`` option.
 
         Try to update snippet based on content data that is not found.
         """
@@ -243,7 +243,7 @@ class TestCliUpdateSnippet(object):
     @staticmethod
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_update_snippet_011(snippy):
-        """Update snippet with ``content`` option.
+        """Update snippet with ``--content`` option.
 
         Try to update snippet with empty content data. Nothing must be updated
         in this case because there is more than one content stored.
@@ -262,7 +262,7 @@ class TestCliUpdateSnippet(object):
     @staticmethod
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_update_snippet_012(snippy):
-        """Update snippet with ``content`` option.
+        """Update snippet with ``--content`` option.
 
         Try to update snippet with content data that matches to two different
         snippets. Nothing must be updated in this case because content can be
@@ -540,6 +540,103 @@ class TestCliUpdateSnippet(object):
         cause = snippy.run(['snippy', 'update', '-d', 'dae4e22c3c3858b5'])
         assert cause == Cause.ALL_OK
         editor_data.assert_called_with('\n'.join(template))
+        Content.assert_storage(content)
+
+    @staticmethod
+    @pytest.mark.usefixtures('import-remove', 'update-three-forced-utc')
+    def test_cli_update_snippet_018(snippy, edited_remove):
+        """Update snippet with editor.
+
+        Update existing text formatted snippet first in text format, then
+        in Markdown format and then again in text format without making any
+        changes. The content must not change when updated between different
+        formats.
+
+        Each update must generate different timestamp in content ``updated``
+        attribute.
+
+        The content in editor is explicitly defined in the test to avoid
+        false positives from the test helpers that actually use the code
+        itself.
+        """
+
+        edited_text = (
+            '# Commented lines will be ignored.',
+            '#',
+            '# Add mandatory snippet below.',
+            'docker rm --volumes $(docker ps --all --quiet)',
+            '',
+            '# Add optional brief description below.',
+            'Remove all docker containers with volumes',
+            '',
+            '# Add optional description below.',
+            '',
+            '',
+            '# Add optional name below.',
+            '',
+            '',
+            '# Add optional comma separated list of groups below.',
+            'docker',
+            '',
+            '# Add optional comma separated list of tags below.',
+            'cleanup,container,docker,docker-ce,moby',
+            '',
+            '# Add optional links below one link per line.',
+            'https://docs.docker.com/engine/reference/commandline/rm/',
+            '',
+            '# Add optional source reference below.',
+            '',
+            '',
+            '# Add optional comma separated list of key-value versions below.',
+            '',
+            '',
+            '# Add optional filename below.',
+            ''
+        )
+        edited_mkdn = (
+            '# Remove all docker containers with volumes @docker',
+            '',
+            '> ',
+            '',
+            '> [1] https://docs.docker.com/engine/reference/commandline/rm/',
+            '',
+            '`$ docker rm --volumes $(docker ps --all --quiet)`',
+            '',
+            '## Meta',
+            '',
+            '> category : snippet  ',
+            'created  : 2017-10-14T19:56:31.000001+00:00  ',
+            'digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319  ',
+            'filename :  ',
+            'name     :  ',
+            'source   :  ',
+            'tags     : cleanup,container,docker,docker-ce,moby  ',
+            'updated  : 2017-10-14T19:56:31.000001+00:00  ',
+            'uuid     : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+            'versions :  ',
+            ''
+        )
+
+        content = {
+            'data': [
+                Content.deepcopy(Snippet.REMOVE),
+            ]
+        }
+        edited_remove.return_value = '\n'.join(edited_text)
+        cause = snippy.run(['snippy', 'update', '--digest', '54e41e9b52a0', '--format', 'text', '--editor'])
+        assert cause == Cause.ALL_OK
+        Content.assert_storage(content)
+
+        edited_remove.return_value = '\n'.join(edited_mkdn)
+        content['data'][0]['updated'] = '2017-11-14T19:56:31.000001+00:00'
+        cause = snippy.run(['snippy', 'update', '--digest', '54e41e9b52a0', '--format', 'mkdn', '--editor'])
+        assert cause == Cause.ALL_OK
+        Content.assert_storage(content)
+
+        edited_remove.return_value = '\n'.join(edited_text)
+        content['data'][0]['updated'] = '2017-12-14T19:56:31.000001+00:00'
+        cause = snippy.run(['snippy', 'update', '--digest', '54e41e9b52a0', '--format', 'text', '--editor'])
+        assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
     @classmethod

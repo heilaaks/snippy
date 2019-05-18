@@ -32,7 +32,7 @@ class TestCliUpdateSolution(object):
     @staticmethod
     @pytest.mark.usefixtures('default-solutions')
     def test_cli_update_solution_001(snippy, edited_beats):
-        """Update solution with ``digest`` option.
+        """Update solution with ``--digest`` option.
 
         Update solution based on short message digest. Only content data
         is updated. Because the description tag was changed, the description
@@ -56,7 +56,7 @@ class TestCliUpdateSolution(object):
     @staticmethod
     @pytest.mark.usefixtures('default-solutions')
     def test_cli_update_solution_002(snippy, edited_beats):
-        """Update solution with ``digest`` option.
+        """Update solution with ``--digest`` option.
 
         Update solution based on very short message digest. This must match
         to a single solution that must be updated.
@@ -79,7 +79,7 @@ class TestCliUpdateSolution(object):
     @staticmethod
     @pytest.mark.usefixtures('default-solutions')
     def test_cli_update_solution_003(snippy, edited_beats):
-        """Update solution with ``digest`` option.
+        """Update solution with ``--digest`` option.
 
         Update solution based on long message digest. Only the content data
         is updated.
@@ -102,7 +102,7 @@ class TestCliUpdateSolution(object):
     @staticmethod
     @pytest.mark.usefixtures('default-solutions')
     def test_cli_update_solution_004(snippy, edited_beats):
-        """Update solution with ``digest`` option.
+        """Update solution with ``--digest`` option.
 
         Update solution based on message digest and accidentally define
         snippet category explicitly from command line. In this case the
@@ -126,7 +126,7 @@ class TestCliUpdateSolution(object):
     @staticmethod
     @pytest.mark.usefixtures('default-solutions')
     def test_cli_update_solution_005(snippy, edited_beats):
-        """Update solution with ``digest`` option.
+        """Update solution with ``--digest`` option.
 
         Update solution based on message digest and accidentally implicitly
         use snippet category by not using content category option that
@@ -151,7 +151,7 @@ class TestCliUpdateSolution(object):
     @staticmethod
     @pytest.mark.usefixtures('default-solutions')
     def test_cli_update_solution_006(snippy):
-        """Update solution with ``digest`` option.
+        """Update solution with ``--digest`` option.
 
         Try to update solution with message digest that cannot be found. No
         changes must be made to stored content.
@@ -170,7 +170,7 @@ class TestCliUpdateSolution(object):
     @staticmethod
     @pytest.mark.usefixtures('default-solutions')
     def test_cli_update_solution_007(snippy):
-        """Update solution with ``digest`` option.
+        """Update solution with ``--digest`` option.
 
         Try to update solution with empty message digest. Nothing should be
         updated in this case because the empty digest matches to more than
@@ -190,7 +190,7 @@ class TestCliUpdateSolution(object):
     @staticmethod
     @pytest.mark.usefixtures('default-solutions')
     def test_cli_update_solution_008(snippy, edited_beats):
-        """Update solution with ``content`` option.
+        """Update solution with ``--content`` option.
 
         Update solution based on content data.
         """
@@ -213,7 +213,7 @@ class TestCliUpdateSolution(object):
     @staticmethod
     @pytest.mark.usefixtures('default-solutions')
     def test_cli_update_solution_009(snippy):
-        """Update solution with ``content`` option.
+        """Update solution with ``--content`` option.
 
         Try to update solution based on content data that is not found.
         """
@@ -231,7 +231,7 @@ class TestCliUpdateSolution(object):
     @staticmethod
     @pytest.mark.usefixtures('default-solutions')
     def test_cli_update_solution_010(snippy):
-        """Update solution with ``content`` option.
+        """Update solution with ``--content`` option.
 
         Try to update solution with empty content data. Nothing must be
         updated in this case because there is more than one content stored.
@@ -279,7 +279,7 @@ class TestCliUpdateSolution(object):
         Update existing Markdown native solution. Editor must show existing
         Markdown native content as is. Updated content must be identified as
         Markdown native content. Editor must be used by default when the
-        --editor option is not used.
+        ``--editor`` option is not used.
 
         In this case the links must be empty when stored. The edited content
         did not have any links in the content data so they must be updated
@@ -412,6 +412,91 @@ class TestCliUpdateSolution(object):
         editor_data.return_value = '\n'.join(template)
         cause = snippy.run(['snippy', 'update', '-d', '18473ec207798670', '--format', 'mkdn'])
         editor_data.assert_called_with('\n'.join(template))
+        assert cause == Cause.ALL_OK
+        Content.assert_storage(content)
+
+    @staticmethod
+    @pytest.mark.usefixtures('import-kafka', 'update-three-kafka-utc')
+    def test_cli_update_solution_015(snippy, editor_data):
+        """Update text native solution with editor.
+
+        Update existing text formatted solution first in text format, then
+        in Markdown format and then again in text format without making any
+        changes. The content must not change when updated between different
+        formats.
+
+        Each update must generate different timestamp in content ``updated``
+        attribute.
+        """
+
+        content = {
+            'data': [
+                Content.deepcopy(Solution.KAFKA)
+            ]
+        }
+        template = Content.dump_text(content['data'][0])
+        editor_data.return_value = template
+        cause = snippy.run(['snippy', 'update', '-d', 'ee3f2ab7c63d6965', '--format', 'text'])
+        editor_data.assert_called_with(template)
+        assert cause == Cause.ALL_OK
+        Content.assert_storage(content)
+
+        template = Content.dump_mkdn(content['data'][0])
+        editor_data.return_value = template
+        content['data'][0]['updated'] = '2017-11-20T06:16:27.000001+00:00'
+        cause = snippy.run(['snippy', 'update', '-d', 'ee3f2ab7c63d6965', '--format', 'mkdn'])
+        editor_data.assert_called_with(template)
+        assert cause == Cause.ALL_OK
+        Content.assert_storage(content)
+
+        template = Content.dump_text(content['data'][0])
+        editor_data.return_value = template
+        content['data'][0]['updated'] = '2017-12-20T06:16:27.000001+00:00'
+        cause = snippy.run(['snippy', 'update', '-d', 'ee3f2ab7c63d6965', '--format', 'text'])
+        editor_data.assert_called_with(template)
+        assert cause == Cause.ALL_OK
+        Content.assert_storage(content)
+
+    @staticmethod
+    @pytest.mark.usefixtures('import-kafka-mkdn', 'update-three-kafka-utc')
+    def test_cli_update_solution_016(snippy, editor_data):
+        """Update Markdown native solution with editor.
+
+        Update existing text formatted solution first in text format, then
+        in Markdown format and then again in text format without making any
+        changes. The content must not change when updated between different
+        formats.
+
+        Each update must generate different timestamp in content ``updated``
+        attribute.
+        """
+
+        content = {
+            'data': [
+                Content.deepcopy(Solution.KAFKA_MKDN)
+            ]
+        }
+        template = Content.dump_text(content['data'][0])
+        editor_data.return_value = template
+        content['data'][0]['updated'] = '2017-10-20T06:16:27.000001+00:00'
+        cause = snippy.run(['snippy', 'update', '-d', 'c54c8a896b94ea35', '--format', 'text'])
+        editor_data.assert_called_with(template)
+        assert cause == Cause.ALL_OK
+        Content.assert_storage(content)
+
+        template = Content.dump_mkdn(content['data'][0])
+        editor_data.return_value = template
+        content['data'][0]['updated'] = '2017-11-20T06:16:27.000001+00:00'
+        cause = snippy.run(['snippy', 'update', '-d', 'c54c8a896b94ea35', '--format', 'mkdn'])
+        editor_data.assert_called_with(template)
+        assert cause == Cause.ALL_OK
+        Content.assert_storage(content)
+
+        template = Content.dump_text(content['data'][0])
+        editor_data.return_value = template
+        content['data'][0]['updated'] = '2017-12-20T06:16:27.000001+00:00'
+        cause = snippy.run(['snippy', 'update', '-d', 'c54c8a896b94ea35', '--format', 'text'])
+        editor_data.assert_called_with(template)
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 

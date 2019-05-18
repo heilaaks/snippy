@@ -5,7 +5,12 @@ Installation
 ------------
 
 The instructions are tested with Fedora 30 and Bash shell. There are also
-installation instructions for Ubuntu and Debian Linux distributions.
+draft installation instructions for Ubuntu and Debian Linux distributions.
+
+.. note::
+
+   The installation instructions add new software packages. Execute at your
+   own risk.
 
 .. note::
 
@@ -26,7 +31,7 @@ Follow the instructions to install the project on a Fedora Linux.
 .. code:: bash
 
     # Clone the project from the GitHub.
-    mkdir ~/devel/snippy && cd $_
+    mkdir -p ~/devel/snippy && cd $_
     git clone https://github.com/heilaaks/snippy.git .
 
     # Install CPython versions.
@@ -61,7 +66,7 @@ Follow the instructions to install the project on a Fedora Linux.
        source ~/.local/bin/virtualenvwrapper.sh
     source ~/.bashrc
 
-    # Create virtual environments for each Python version.
+    # Create virtual environments for each Python versions.
     mkvirtualenv --python /usr/bin/python2.7 p27-snippy
     mkvirtualenv --python /usr/bin/python3.4 p34-snippy
     mkvirtualenv --python /usr/bin/python3.5 p35-snippy
@@ -96,7 +101,7 @@ Follow the instructions to install the project on a Ubuntu Linux.
 .. code:: bash
 
     # Clone the project from the GitHub.
-    mkdir ~/devel/snippy && cd $_
+    mkdir -p ~/devel/snippy && cd $_
     git clone https://github.com/heilaaks/snippy.git .
 
     # Install CPython versions.
@@ -108,9 +113,12 @@ Follow the instructions to install the project on a Ubuntu Linux.
         python3.5 \
         python3.6 \
         python3.7 \
-        python3.8-dev \
-        python3-devel \
-        python2-devel
+        python2.7-dev \
+        python3.4-dev \
+        python3.5-dev \
+        python3.6-dev \
+        python3.7-dev \
+        python3.8-dev
 
     # Install PyPy versions.
     sudo apt-get install -y \
@@ -135,7 +143,7 @@ Follow the instructions to install the project on a Ubuntu Linux.
        source ~/.local/bin/virtualenvwrapper.sh
     source ~/.bashrc
 
-    # Create virtual environments for each Python version.
+    # Create virtual environments for each Python versions.
     mkvirtualenv --python /usr/bin/python2.7 p27-snippy
     mkvirtualenv --python /usr/bin/python3.4 p34-snippy
     mkvirtualenv --python /usr/bin/python3.5 p35-snippy
@@ -170,8 +178,32 @@ Follow the instructions to install the project on a Debian Linux.
 .. code:: bash
 
     # Clone the project from the GitHub.
-    mkdir ~/devel/snippy && cd $_
+    mkdir -p ~/devel/snippy && cd $_
     git clone https://github.com/heilaaks/snippy.git .
+
+    # Install Python virtual environments.
+    sudo apt-get install python3-pip -y
+    sudo apt-get install python3-distutils -y
+    pip3 install --user \
+        pipenv \
+        virtualenv \
+        virtualenvwrapper
+    export PATH=${PATH}:~/.local/bin
+
+    # Create virtual environments for each Python versions.
+    mkvirtualenv --python /usr/bin/python2.7 p27-snippy
+    mkvirtualenv --python /usr/bin/python3.5 p35-snippy
+
+    # Install CPython versions.
+    mkdir -p ~/devel/compile && cd $_
+    apt-get install sudo -y
+    sudo apt-get install -y \
+        zlib1g-dev
+    wget https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tgz
+    tar xvf Python-3.6.8.tgz
+    /configure --enable-optimizations
+    make -j8
+    sudo make altinstall
 
 Workflows
 ---------
@@ -185,7 +217,7 @@ For development, prefer a virtual environment with the latest Python release.
 Run ``tox`` to test against all supported Python releases.
 
 The Snippy continuous integration will run all tests with the default SQLite
-and PostgreSQL databases with the exception of tests with a real server or 
+and PostgreSQL databases with the exception of tests with a real server or
 docker. It is recomended to run ``make test-server`` and ``make test-docker``
 until these are included into the automated continuous integration.
 

@@ -341,6 +341,23 @@ This rule tries also encourage a common look and feel for commit logs.
 Design
 ------
 
+Error handling
+~~~~~~~~~~~~~~
+
+Operations will flow from the beginning to an end. There are no intermediate
+exists or shortcust. The error handling must be made simple in order to keep
+the implementation size and testing effort in control. The target is not to
+try to recover all possible errors but to fail operation as soon as the first
+failure is detected by setting an error cause.
+
+For example if the search category ``scat`` option has multiple categories
+and one of them is faulty, the ``scat`` option will be invalidated. This will
+not generate any search hits and it will minimize the database queries.
+
+The REST API server must invalidate the HTTP request if any of the attributes
+or parameters is incorrect. That is, the server must not store valid values of
+some attributes and silently set faily attributes to default values.
+
 Testing
 -------
 

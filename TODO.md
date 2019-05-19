@@ -1,12 +1,15 @@
 ## WORKING
-    -[ ] Fix HTTP response 201 Created in case the second resource is failing. If any of the resources fails, the HTTP request must be rejected. This applies only to empty data because that is checked after the REST API validation. See test_api_create_snippet_025
-   - [ ] Fix test_logger_016. The P3 is not correct? The links in p2 are in the same elemnet separated with \n that should be the case with P3.
-   - [ ] Fix creating/updating resource with invalid versions. Check test_api_create_snippet_024. The seal() cannot check if Cause not is_is because it generates incorrect error. For example GET ../<valid digest>/error shows error that digest not foind. See test_api_search_reference_field_012. move the reast API based empty list check earlier in code to solve this.
-   - [ ] Incorrect header does not leave logs. Test manually since this works differently that the tests? For example ab was missing '-T application/vnd.api+json' without this it did not work.
+   - [ ] Fix updating content without updates changes the updated timestamp. There is no need to store the content either.
+   - [ ] Fix JSON API v1.x requires links for collection responses too. Individual resource not found or attrbute results null otherwise empty list.
    - [ ] Design and change /groups and /tags to GET groups and tags not content. Like unique tags and groups.
+   - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format. Try tldr. External tool? No more dependencies would be nice.
+   - [ ] Add support to find dead links. External tool? No more dependencies would be nice.
+   - [ ] Fix HTTP response 201 Created in case the second resource is failing. If any of the resources fails, the HTTP request must be rejected. This applies only to empty data because that is checked after the REST API validation. See test_api_create_snippet_025
+   - [ ] Fix test_logger_017. The P3 is not correct? The links in p2 are in the same elemnet separated with \n that should be the case with P3.
+   - [ ] Add --help server to list server specific commands and log parameters. Maybe add --help debug/troubleshoot? Debug better because it is shorter?
+   - [ ] Incorrect header does not leave logs. Test manually since this works differently that the tests? For example ab was missing '-T application/vnd.api+json' without this it did not work.
    - [ ] Make docker tests run parallel. Now the container removal is based on image name that is not good. must be based on container hash.
    - [ ] Make more tests for Docker use cases
-   - [ ] Add health API to send server health with statistics.
    - [ ] Empty array values can unambiguously be represented as the empty list, []. // https://opensource.zalando.com/restful-api-guidelines/#218
    - [ ] Swagger 3.0: Why the 'additionProperties: false' field did not affect swagger 3.0?
    - [ ] Swagger 2.0: Does not support nullable and this does not work with validation: test_api_update_reference_010/117. move to OAS3.0 to solve this?
@@ -14,21 +17,11 @@
    - [ ] Config.get_resource creates external UUID usage when e.g resource is updated. Get rid of this (somehow) after UUID refactoring.
    - [ ] Test export/import Mkdn snippet with partial comments. The export must have the <not documented> tag and import must remove it.
    - [ ] Fix somehow (?) the python runner search --sall 'test' --filter test -vv | grep --all?
-   - [ ] Fix JSON API v1.x requires links for collection responses too. Individual resource not found or attrbute results null otherwise empty list.
-   - [ ] Fix digest computation once things are setling down. Changing this forces changes to all tests and code that rely on digest.
-   - [ ] Fix updating content without updates changes the updated timestamp. There is no need to store the content either.
-   - [ ] Add delete for wheel build directory for automation. If the folder exist this is a problem (at least used to be) see how to fail python release/building/something.
    - [ ] Config get_resource could return empty Resource instead of None in failure. This is now related to new migrate refactoring that prevents migrating template resources.
-   - [ ] Fix (remove) the LANG in Alpine based dockerfile? Is this useless as MUSL does not support locales? https://github.com/gliderlabs/docker-alpine/issues/144
    - [ ] Fix server silent startup failure if for example the port is reserved. How to get proper error cause for user? There are logs but not with default?
    - [ ] Test postgreSQL SSL connection manually.
-   - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format. Try tldr.
    - [ ] Fix (?) updating JSON or YAML solution (only solution?) with mkdn or text data where data brief changes. This is not now updated in case of YAML/JSON solution because the dict is just read. The problem is to how to identify text or Markdown from YAML/JSON (dict)?
-   - [ ] Fix does the Parser really return UTF-8 encoded strings always? For example (links/keywords) is not coverted and other use decode(utf-8) which is opposite?
-   - [ ] Fix clarify how insert multiple - one failure behaves. Should have been fail all because of simplicity. Write test and fix. The code tries to insert all and returns inteserted content in REST API. What about CLI (same behaviour but should this change to fail immediately)?
-   - [ ] Fix Parser which assumes always UTF-8. If CLI terminal has something else, this fails.
    - [ ] Parse new format that supports snippets with leading comment to internal format? Or remove the support? This was the case where snippet was started with # comment followed by $ snippet
-   - [ ] Is there a better way to support the special case of checking internal cause 500 and Content created cause for importing some of the content (digest integrity error)
    - [ ] Database.init can be moved to database __init__ because it is always called immediately after object init. This is likely historical left over or something that some test requires (mock?)?
    - [ ] It seems that that sqlite3 (and perhaps psycopg2) automatically rollbacks or commits with context manager (with block). So the explicit commit and rollback may (?) be unnecessary? It may better to leave those since working with different databases? Document in code?
    - [ ] Change name of --scat to --cat?
@@ -36,14 +29,18 @@
    - [ ] Remove test case files from container.
 
 ## THINKING
+   - [ ] Add TODO content.
    - [ ] Add code content.
-   - [ ] Add Debug() for all classes. Add debug() for snippy that calls all the debugs that Snippy imports.
+   - [ ] Add health API to send server health with statistics.
    - [ ] Add UT tests for class Debug() methods.
-   - [ ] Add --help server to list server specific commands and log parameters. Maybe add --help debug/troubleshoot? Debug better because it is shorter?
-   - [ ] Add tool configs to pyproject.toml.
+   - [ ] Fix Parser which assumes always UTF-8. If CLI terminal has something else, this fails.
+   - [ ] Fix does the Parser really return UTF-8 encoded strings always? For example (links/keywords) is not coverted and other use decode(utf-8) which is opposite?
+   - [ ] Fix (remove) the LANG in Alpine based dockerfile? Is this useless as MUSL does not support locales? https://github.com/gliderlabs/docker-alpine/issues/144
+   - [ ] Fix digest computation once things are setling down. Changing this forces changes to all tests and code that rely on digest.
+   - [ ] Add Debug() for all classes. Add debug() for snippy that calls all the debugs that Snippy imports.
 
 ## OPTIMIZATIONS
-   - [ ] Fix (optimize) PyPy is 2x faster with HTTP than CPython but PyPy is 10% slower than CPython with HTTPS. Is there a problem with HTTPS certs in Snippy?
+   - [ ] Fix (optimize) PyPy is 2x faster with HTTP than CPython but PyPy is 10% slower than CPython with HTTPS. Is there a problem with HTTPS certs in Snippy?
    - [ ] Fix (optimize) Import all and the storage reads and returns all imported data that is not actually used in any way.
    - [ ] Fix (optimize) migrate and dump. The dump_dict is not needed in case of text and mkdn because those methods do not need the dict format but produce string directly.
    - [x] Fix (optimize) digest computation for Resource.
@@ -54,11 +51,12 @@
 
 ## RELEASING
    - [ ] Automate PostgreSQL startup.
-   - [ ] Remove running snippy container before testing.
+   - [ ] Remove possibly running snippy container before testing. This will fail the test which will remove the container anyways.
    - [ ] Snippy asciinema semi faked prompt fails with rest api responses. The prompt is in the same line as the last curly bracket from rest api response.
 
 ## PACKAGING
    - [ ] Change Pytest, Pylint, Flake8, Pyflake and Bandit to use pyproject when the support comes. This merges the configuration files to one place.
+   - [ ] Add delete for wheel build directory for automation. If the folder exist this is a problem (at least used to be) see how to fail python release/building/something.
 
 ## FEATURES
    - [ ] Add CORS https://stackoverflow.com/a/45183343. This is needed to make the server usable at all?
@@ -67,15 +65,13 @@
    - [ ] Add support to store any content in YAML files when server starts. Give path to folder that contains yaml files and import all?
    - [ ] Add combine on top of migrate and merge. The combine would allow adding for example a tag to an existing list of tags. This would be nice for CLI and could be used with RFC 6902 (JSON Patch) (if implemented).
    - [ ] Add support to search phrases like has 'active end'. This should return one result with default set but it returns two since each word is searched separately.
-   - [ ] Add support to find dead links.
    - [ ] Add test client to measure performance of the server.
    - [ ] Add user management with a new user table that lins to contents table.
    - [ ] Add limit to multilevel sort fields to two fields to avoid complex scenarios.
    - [ ] Add limits to all parameters: column array size, sort array size, etc.
    - [ ] Add support to print only selected fields, like brief and digest for CLI text output. Hard to generalize since layout e.g. contains header with three fields.
    - [ ] Add statistics object which tracks peak and percentile latencies with memory and CPU usage.
-   - [ ] Add support for REST API YAML responses.
-   - [ ] Add upload command like in setup example from https://github.com/kennethreitz/setup.py/blob/master/setup.py
+   - [ ] Add support for REST API YAML responses --> YAML likely not needed. JSON It is that rules.
    - [ ] How to add custom Falcon error codes? Now e.g. 500 is HTML string and it is different than normal Snippy server error code.
    - [ ] How to add custom Falcon exception handling through snippy logger?
 
@@ -83,12 +79,11 @@
    - [ ] Remove server name and version from HTTP responses. This would require overriding Gunicorn https://stackoverflow.com/a/21294524.
 
 ## FIX
-   - [ ] Add instructions to use local install dir and the export path for local bin if needed (add the ~./local/bin to path). This is partially added in actual documentation installation chapter.
    - [ ] Check good rules from https://opensource.zalando.com/restful-api-guidelines/#218
    - [ ] Refactor rest.generate that now updates also headers. Body, content type and status are set in the main level but header are set in Generate which may be confusing.
    - [ ] Fix reading data from cli that does not parse description and filename from CLI --content data test_cli_create_solution_001.
    - [ ] Fix why new mkdn log driver kafka solution does not have description in quotations in defaults?  This is normal YAML behaviour?
-   - [ ] Fix timestamp usage to be Datetime native. Now the created and updated times are strings. It may be usefull in future (no use case now) to have Datetime objects instead of strings.
+   - [ ] Fix timestamp usage to be Datetime native? Now the created and updated times are strings. It may be usefull in future (no use case now) to have Datetime objects instead of strings.
    - [ ] Fix the internal primary key UUID. It has MAC address which is same for multiple containers? //https://docs.docker.com/engine/reference/run/#network-settings
    - [ ] Fix long description in Markdown format does not support keeping paragraph. The description supports only one paragraph that is wrapped for Markdown. Fix or ok? Read only one paragrap. This is good for example for solution which may have longer Description chapter as own header.
    - [ ] Fix Fields class. It may not have to be inherited like now. The operation ID refresh and logs are problematic now because the Fields logs would refresh OID to be different than with the base class logs. How?
@@ -172,15 +167,11 @@
    - [ ] Add 'internal server errors' from logger scribling to Sphinx docs. Check that this part is there.
    - [ ] Add optional extra fields for logging.warning('test', extra={'foo': 'bar'}) which might be good for json. What fields to add?
    - [ ] There is a pylint bug that it does not see see Python decorators being used with underscore // https://github.com/PyCQA/pylint/issues/409
-   - [ ] Add setup.py longdescription from readme.rst. // https://github.com/pypa/sampleproject/blob/master/setup.py
    - [ ] Check security implications from using setup.py (runs code) // https://stackoverflow.com/questions/44878600/is-setup-cfg-deprecated
-   - [ ] Add very strict validation for REST API? Even a light failure in params generate error?
    - [ ] How to add upgrade procedure? Is this needed? What happens when there is content stored and pip upgrade is made?
-   - [ ] How to sign git commits. /1/ https://help.github.com/articles/signing-commits-with-gpg/) and code n PyPI (?)
-   - [ ] How to sign PyPI code? Is this feasible?
+   - [ ] How to sign PyPI code? Is this feasible? https://help.github.com/articles/signing-commits-with-gpg/)
    - [ ] Add statistics print that shows the amout of snippets and unique categories.
    - [ ] Fix case described in 'git log 11448a2e90dab3a' and somehow and make test_wf a bit nicer?
-   - [ ] How to use BytePackager/packagecore?
    - [ ] Fix the Python2 test database naming to be random temp file in the same folder to allow parallelism.
    - [ ] Why when in Python2 a database test fails, it leaves hanging resources and DB clean does not work? Was this fixed into sqlite3_helper already?
    - [ ] How to better prevent commits to snippy.db than git hooks or git --assume-unchanged?

@@ -506,9 +506,9 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
 
         The keywords are stored in tuple with one keywords per element.
 
-        If any of the give categories is incorrect, error is set. This is a
-        simple error handling that fails the operation instead of trying to
-        recover it. An unknown value is set to the ``scat`` option in case
+        If any of the given categories is incorrect, an error is set. This
+        is a simple error handling that fails the operation instead of trying
+        to recover it. An unknown value is set to the ``scat`` option in case
         of a failure because it minimizes the search results in the error
         scenario. If all categories would be searched with errors, it could
         lead to a large search results sets in case of failures.

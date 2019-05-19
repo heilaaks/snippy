@@ -1,6 +1,5 @@
 ## WORKING
-   - [ ] Fix cause 'Content has been created without internal errors.' This breaks when there is e.g. created and bad request. That is the cause ok does not see 404 and sends OK. This was the Cause() check for OK
-   - [ ] Fix updating Markdown based solutions in text formats does not work because the Mkdn solution does not have text header and data structure.
+    -[ ] Fix HTTP response 201 Created in case the second resource is failing. If any of the resources fails, the HTTP request must be rejected. This applies only to empty data because that is checked after the REST API validation. See test_api_create_snippet_025
    - [ ] Fix test_logger_016. The P3 is not correct? The links in p2 are in the same elemnet separated with \n that should be the case with P3.
    - [ ] Fix creating/updating resource with invalid versions. Check test_api_create_snippet_024. The seal() cannot check if Cause not is_is because it generates incorrect error. For example GET ../<valid digest>/error shows error that digest not foind. See test_api_search_reference_field_012. move the reast API based empty list check earlier in code to solve this.
    - [ ] Incorrect header does not leave logs. Test manually since this works differently that the tests? For example ab was missing '-T application/vnd.api+json' without this it did not work.

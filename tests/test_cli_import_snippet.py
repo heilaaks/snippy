@@ -466,9 +466,11 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
         """Import snippet based on digest.
 
         Try to import snippet based on message digest that matches to two
-        snippets. Note! Don't not change the test snippets because this case
-        is produced with real digests that just happen to have same digit
-        starting both of the cases.
+        other snippets.
+
+        Note! Don't change the test snippets because this case is produced
+        with real digests that just happen to have same digit starting both
+        of the cases.
         """
 
         content = {

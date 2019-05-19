@@ -132,16 +132,11 @@ class Cause(object):
 
           1. There are no errors at all.
           2. There are only accepted error codes.
-          3. Content has been created without internal errors.
+          3. Content has been created and there are only 409 Conflict errors.
 
-        The last case is a special case. The problem is that currently the case
-        where multiple contents are imported when some of them fail due to data
-        already existing is considered successful. That is, user should get OK
-        when importing a list of data when some of them are already imported.
-        For this reason, the Created is searched without internal error.
-
-        The UUID collision is considered internal error because that field is
-        set by the application.
+        The last case is a special case. It is considered as a successful
+        case when there are multiple resources imported and some of them
+        are already created.
 
         Returns:
             bool: Define if the cause list can be considered ok.
@@ -150,11 +145,10 @@ class Cause(object):
         is_ok = False
         if not cls._list['errors']:
             is_ok = True
-        elif len(cls._list['errors']) == 1 and cls._list['errors'][0]['status_string'] in Cause.OK_STATUS_LIST:
-            is_ok = True
         elif all(error['status_string'] in Cause.OK_STATUS_LIST for error in cls._list['errors']):
             is_ok = True
-        elif not cls._is_internal_error() and any(error['status_string'] == cls.HTTP_CREATED for error in cls._list['errors']):
+        elif (any(error['status_string'] == cls.HTTP_CREATED for error in cls._list['errors']) and
+              all(error['status_string'] in (cls.HTTP_CREATED, cls.HTTP_CONFLICT) for error in cls._list['errors'])):
             is_ok = True
 
         return is_ok

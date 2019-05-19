@@ -801,10 +801,9 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods, 
     def test_api_create_snippet_018(server):
         """Create one snippet with POST.
 
-        Try to send POST /snippets to create a new snippet with an empty
-        resource ``data``. In case of snippets, the resulting error string is
-        misleading because the only given attribute is ``data`` that is empty
-        which maps the resource to a resource template.
+        Try to send POST /snippets to create a new resource with an empty
+        ``data`` attribute. Because the ``data`` attribute is a mandatory
+        attribute, the HTTP request must be rejected with an error.
         """
 
         request_body = {
@@ -817,7 +816,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods, 
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '691'
+            'content-length': '563'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -831,11 +830,6 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods, 
                 'statusString': '400 Bad Request',
                 'module': 'snippy.testing.testing:123',
                 'title': 'content was not stored because mandatory content field data is empty'
-            }, {
-                'status': '404',
-                'statusString': '404 Not Found',
-                'module': 'snippy.testing.testing:123',
-                'title': 'no content to be stored'
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
@@ -1178,35 +1172,16 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods, 
         Content.assert_storage(storage)
 
     @staticmethod
-    @pytest.mark.usefixtures('create-regexp-utc')
+    @pytest.mark.usefixtures('caller')
     def test_api_create_snippet_024(server):
         """Create one snippet from API.
 
-        Send POST /snippets to create a new resource with invalid version
-        string. The mathematical operator ``=`` is not supported. The equal
-        operation must be ``==``. This causes the version to be stored as
-        empty list.
+        Try to send POST /snippets to create a new resource with invalid
+        version string. The mathematical operator ``=`` is not supported.
+        The equal operation must be ``==``. This causes the HTTP request
+        to be rejected with an error.
         """
 
-        storage = {
-            'data': [{
-                'category': 'snippet',
-                'data': ('first row', ),
-                'brief': '',
-                'description': '',
-                'name': '',
-                'groups': ('default',),
-                'tags': (),
-                'links': (),
-                'source': '',
-                'versions': (),
-                'filename': '',
-                'created': '2018-06-22T13:11:13.678729+00:00',
-                'updated': '2018-06-22T13:11:13.678729+00:00',
-                'uuid': Content.UUID1,
-                'digest': '1ff004f146c8771b93eed01bf65a837ab1617d264495187560cc33347f2cd0a3'
-            }]
-        }
         request_body = {
             'data': [{
                 'type': 'snippet',
@@ -1216,14 +1191,14 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods, 
                 }
             }]
         }
-        expect_headers = {
-            'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '497'}
+        expect_headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '448'}
         expect_body = {
-            'data': [{
-                'type': 'snippet',
-                'id': storage['data'][0]['uuid'],
-                'attributes': storage['data'][0]
+            'meta': Content.get_api_meta(),
+            'errors': [{
+                'status': '400',
+                'statusString': '400 Bad Request',
+                'module': 'snippy.testing.testing:123',
+                'title': "version: version=1.1.1 did not have key value pair with any of the supported operators: ('>=', '<=', '!=', '==', '>', '<', '~')"  # noqa pylint: disable=line-too-long
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
@@ -1233,7 +1208,56 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods, 
         assert result.status == falcon.HTTP_400
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(storage)
+        Content.assert_storage(None)
+
+    @staticmethod
+    @pytest.mark.skip(reason="FIXME")
+    @pytest.mark.usefixtures('caller')
+    def test_api_create_snippet_025(server):
+        """Try to create two snippets.
+
+        Try to send POST /snippets to create two new resources. The second
+        resource contains an empty mandatory attribute ``data``.
+
+        Currently the schema validation does not check the data attribute.
+        The reason is that it is mandatory with snippets and solutions but
+        not with Reference resources. Because the code logic processes the
+        resources one by one, it is not possible currently to see that the
+        next resource in a list will fail.
+        """
+
+        request_body = {
+            'data': [{
+                'type': 'snippet',
+                'attributes': Request.remove
+            }, {
+                'type': 'snippet',
+                'attributes':{
+                    'data': []
+                }
+            }]
+        }
+        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '2004'}
+        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '2093'}
+        expect_body = {
+            'meta': Content.get_api_meta(),
+            'errors': [{
+                'status': '400',
+                'statusString': '400 Bad Request',
+                'module': 'snippy.testing.testing:123',
+                'title': 'json media validation failed'
+            }]
+        }
+        result = testing.TestClient(server.server.api).simulate_post(
+            path='/api/snippy/rest/snippets',
+            headers={'accept': 'application/json'},
+            body=json.dumps(request_body))
+        print(result.headers)
+        print(result.json)
+        assert result.status == falcon.HTTP_404
+        assert result.headers in (expect_headers_p2, expect_headers_p3)
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(None)
 
     @classmethod
     def teardown_class(cls):

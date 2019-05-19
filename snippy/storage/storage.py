@@ -19,6 +19,7 @@
 
 """storage: Storage management for content."""
 
+from snippy.cause import Cause
 from snippy.config.config import Config
 from snippy.logger import Logger
 from snippy.storage.database import Database
@@ -39,8 +40,11 @@ class Storage(object):
             collection (Collection): Content container to be stored into database.
         """
 
-        self._logger.debug('store content')
-        collection = self._database.insert(collection)
+        if Cause.is_ok():
+            self._logger.debug('store content')
+            collection = self._database.insert(collection)
+        else:
+            self._logger.debug('content not stored becuase of errors: {}'.format(Cause.http_status))
 
         return collection
 

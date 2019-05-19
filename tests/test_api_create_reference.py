@@ -317,9 +317,10 @@ class TestApiCreateReference(object):
     def test_api_create_reference_007(server):
         """Try to create a Reference resource.
 
-        Try to send POST /references to create a new reference with empty
-        content links. The links are mandatory in case of Reference content
-        and the request must be rejected with an error.
+        Try to send POST /references to create a new resource with an empty
+        ``links`` attribute. The ``links`` is a mandatory attribute in case
+        of a Reference content and the HTTP request must be rejected with an
+        error.
         """
 
         request_body = {
@@ -332,7 +333,7 @@ class TestApiCreateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '692'
+            'content-length': '564'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -346,11 +347,6 @@ class TestApiCreateReference(object):
                 'statusString': '400 Bad Request',
                 'module': 'snippy.testing.testing:123',
                 'title': 'content was not stored because mandatory content field links is empty'
-            }, {
-                'status': '404',
-                'statusString': '404 Not Found',
-                'module': 'snippy.testing.testing:123',
-                'title': 'no content to be stored'
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(

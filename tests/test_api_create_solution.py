@@ -352,7 +352,7 @@ class TestApiCreateSolution(object):
     def test_api_create_solution_008(server):
         """Create one solution from API.
 
-        Try to send POST /solutions to create new a resource with empty
+        Try to send POST /solutions to create new a resource with an empty
         resource ``data`` attribute.
         """
 
@@ -366,7 +366,7 @@ class TestApiCreateSolution(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '517'
+            'content-length': '389'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -375,11 +375,6 @@ class TestApiCreateSolution(object):
                 'statusString': '400 Bad Request',
                 'module': 'snippy.testing.testing:123',
                 'title': 'content was not stored because mandatory content field data is empty'
-            }, {
-                'status': '404',
-                'statusString': '404 Not Found',
-                'module': 'snippy.testing.testing:123',
-                'title': 'no content to be stored'
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(

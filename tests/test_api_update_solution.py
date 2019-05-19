@@ -86,7 +86,7 @@ class TestApiUpdateSolution(object):
             }
         }
         result = testing.TestClient(server.server.api).simulate_put(
-            path='/api/snippy/rest/solutions/9d0a54be4bb66b47',
+            path='/api/snippy/rest/solutions/4346ba4c79247430',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_200
@@ -99,9 +99,9 @@ class TestApiUpdateSolution(object):
     def test_api_update_solution_002(server):
         """Update one solution with PUT request.
 
-        Send PUT /solutions/{id} to update existing resource. The PUT
-        request contains only the mandatory data attribute. All other
-        attributes must be set to their default values.
+        Send PUT /solutions/{id} to update existing resource. The PUT request
+        contains only the mandatory data attribute. All other attributes must
+        be set to their default values.
         """
 
         storage = {
@@ -120,7 +120,7 @@ class TestApiUpdateSolution(object):
                 'created': Content.BEATS_TIME,
                 'updated': Content.NGINX_TIME,
                 'uuid': Solution.BEATS_UUID,
-                'digest': '6967b8757c901be4f4a7e0db882ae0d3dd86985dafbae8e722056c40d33a3438'
+                'digest': 'd2b737f5be315e098941245b7415b6ef751aef2712daf5a6329366057ec26edc'
             }]
         }
         request_body = {
@@ -147,7 +147,7 @@ class TestApiUpdateSolution(object):
             }
         }
         result = testing.TestClient(server.server.api).simulate_put(
-            path='/api/snippy/rest/solutions/9d0a54be4bb66b47',
+            path='/api/snippy/rest/solutions/4346ba4c79247430',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_200
@@ -234,7 +234,7 @@ class TestApiUpdateSolution(object):
             }]
         }
         result = testing.TestClient(server.server.api).simulate_put(
-            path='/api/snippy/rest/solutions/9d0a54be4bb66b47',
+            path='/api/snippy/rest/solutions/4346ba4c79247430',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_400
@@ -284,7 +284,7 @@ class TestApiUpdateSolution(object):
             }]
         }
         result = testing.TestClient(server.server.api).simulate_put(
-            path='/api/snippy/rest/solutions/9d0a54be4bb66b47',
+            path='/api/snippy/rest/solutions/4346ba4c79247430',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_403
@@ -333,7 +333,7 @@ class TestApiUpdateSolution(object):
             }]
         }
         result = testing.TestClient(server.server.api).simulate_put(
-            path='/api/snippy/rest/solutions/9d0a54be4bb66b47',
+            path='/api/snippy/rest/solutions/4346ba4c79247430',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_403
@@ -385,7 +385,7 @@ class TestApiUpdateSolution(object):
             }
         }
         result = testing.TestClient(server.server.api).simulate_patch(
-            path='/api/snippy/rest/solutions/9d0a54be4bb66b47',
+            path='/api/snippy/rest/solutions/4346ba4c79247430',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_200
@@ -428,7 +428,7 @@ class TestApiUpdateSolution(object):
             }]
         }
         result = testing.TestClient(server.server.api).simulate_put(
-            path='/api/snippy/rest/solutions/9d0a54be4bb66b47',
+            path='/api/snippy/rest/solutions/4346ba4c79247430',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_400

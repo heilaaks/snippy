@@ -22,6 +22,7 @@
 import pytest
 
 from snippy.cause import Cause
+from snippy.constants import Constants as Const
 from tests.lib.content import Content
 from tests.lib.solution import Solution
 
@@ -34,9 +35,9 @@ class TestCliUpdateSolution(object):
     def test_cli_update_solution_001(snippy, edited_beats):
         """Update solution with ``--digest`` option.
 
-        Update solution based on short message digest. Only content data
-        is updated. Because the description tag was changed, the description
-        itself is not read and it results an empty string.
+        Update solution with short message digest. Only the content data is
+        updated. Because the description tag was changed, the ``description``
+        attribute is not read and it results an empty string.
         """
 
         content = {
@@ -45,11 +46,12 @@ class TestCliUpdateSolution(object):
                 Solution.NGINX
             ]
         }
-        content['data'][0]['data'] = tuple([line.replace('## description', '## updated desc') for line in content['data'][0]['data']])
+        content['data'][0]['data'] = tuple([line.replace('## Description', '## updated desc') for line in content['data'][0]['data']])
         content['data'][0]['description'] = ''
-        content['data'][0]['digest'] = '19baa35ea3751e7fb66a810fb20b766601dc7c61512a36a8378be7c6b0063acc'
+        content['data'][0]['digest'] = '23312e20cb961d46b3fb0ac5a63dacfbb16f13a220b48250019977940e9720f3'
         edited_beats.return_value = Content.dump_text(content['data'][0])
-        cause = snippy.run(['snippy', 'update', '--scat', 'solution', '-d', 'db712a82662d6932', '--format', 'text'])
+        cause = snippy.run(['snippy', 'update', '--scat', 'solution', '-d', '4346ba4c79247430', '--format', 'text'])
+        print(Content.output())
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -58,8 +60,8 @@ class TestCliUpdateSolution(object):
     def test_cli_update_solution_002(snippy, edited_beats):
         """Update solution with ``--digest`` option.
 
-        Update solution based on very short message digest. This must match
-        to a single solution that must be updated.
+        Update solution with very short message digest. This must match to a
+        single solution that must be updated.
         """
 
         content = {
@@ -68,11 +70,11 @@ class TestCliUpdateSolution(object):
                 Solution.NGINX
             ]
         }
-        content['data'][0]['data'] = tuple([line.replace('## description', '## updated desc') for line in content['data'][0]['data']])
+        content['data'][0]['data'] = tuple([line.replace('## Description', '## updated desc') for line in content['data'][0]['data']])
         content['data'][0]['description'] = ''
-        content['data'][0]['digest'] = '19baa35ea3751e7fb66a810fb20b766601dc7c61512a36a8378be7c6b0063acc'
+        content['data'][0]['digest'] = '23312e20cb961d46b3fb0ac5a63dacfbb16f13a220b48250019977940e9720f3'
         edited_beats.return_value = Content.dump_text(content['data'][0])
-        cause = snippy.run(['snippy', 'update', '--scat', 'solution', '--digest', 'db712', '--format', 'text'])
+        cause = snippy.run(['snippy', 'update', '--scat', 'solution', '--digest', '4346b', '--format', 'text'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -91,11 +93,11 @@ class TestCliUpdateSolution(object):
                 Solution.NGINX
             ]
         }
-        content['data'][0]['data'] = tuple([line.replace('## description', '## updated desc') for line in content['data'][0]['data']])
+        content['data'][0]['data'] = tuple([line.replace('## Description', '## updated desc') for line in content['data'][0]['data']])
         content['data'][0]['description'] = ''
-        content['data'][0]['digest'] = '19baa35ea3751e7fb66a810fb20b766601dc7c61512a36a8378be7c6b0063acc'
+        content['data'][0]['digest'] = '23312e20cb961d46b3fb0ac5a63dacfbb16f13a220b48250019977940e9720f3'
         edited_beats.return_value = Content.dump_text(content['data'][0])
-        cause = snippy.run(['snippy', 'update', '--scat', 'solution', '-d', 'db712a82662d693206004c2174a0bb1900e1e1307f21f79a0efb88a01add4151', '--format', 'text'])  # pylint: disable=line-too-long
+        cause = snippy.run(['snippy', 'update', '--scat', 'solution', '-d', '4346ba4c792474308bc66bd16d747875bef9b431044824987e302b726c1d298e', '--format', 'text'])  # pylint: disable=line-too-long
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -115,11 +117,11 @@ class TestCliUpdateSolution(object):
                 Solution.NGINX
             ]
         }
-        content['data'][0]['data'] = tuple([line.replace('## description', '## updated desc') for line in content['data'][0]['data']])
+        content['data'][0]['data'] = tuple([line.replace('## Description', '## updated desc') for line in content['data'][0]['data']])
         content['data'][0]['description'] = ''
-        content['data'][0]['digest'] = '19baa35ea3751e7fb66a810fb20b766601dc7c61512a36a8378be7c6b0063acc'
+        content['data'][0]['digest'] = '23312e20cb961d46b3fb0ac5a63dacfbb16f13a220b48250019977940e9720f3'
         edited_beats.return_value = Content.dump_text(content['data'][0])
-        cause = snippy.run(['snippy', 'update', '--scat', 'snippet', '-d', 'db712a82662d6932', '--format', 'text'])
+        cause = snippy.run(['snippy', 'update', '--scat', 'snippet', '-d', '4346ba4c79247430', '--format', 'text'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -140,11 +142,11 @@ class TestCliUpdateSolution(object):
                 Solution.NGINX
             ]
         }
-        content['data'][0]['data'] = tuple([line.replace('## description', '## updated desc') for line in content['data'][0]['data']])
+        content['data'][0]['data'] = tuple([line.replace('## Description', '## updated desc') for line in content['data'][0]['data']])
         content['data'][0]['description'] = ''
-        content['data'][0]['digest'] = '19baa35ea3751e7fb66a810fb20b766601dc7c61512a36a8378be7c6b0063acc'
+        content['data'][0]['digest'] = '23312e20cb961d46b3fb0ac5a63dacfbb16f13a220b48250019977940e9720f3'
         edited_beats.return_value = Content.dump_text(content['data'][0])
-        cause = snippy.run(['snippy', 'update', '-d', 'db712a82662d6932', '--format', 'text'])
+        cause = snippy.run(['snippy', 'update', '-d', '4346ba4c79247430', '--format', 'text'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -201,11 +203,11 @@ class TestCliUpdateSolution(object):
                 Solution.NGINX
             ]
         }
-        content['data'][0]['data'] = tuple([line.replace('## description', '## updated desc') for line in content['data'][0]['data']])
+        content['data'][0]['data'] = tuple([line.replace('## Description', '## updated desc') for line in content['data'][0]['data']])
         content['data'][0]['description'] = ''
-        content['data'][0]['digest'] = '19baa35ea3751e7fb66a810fb20b766601dc7c61512a36a8378be7c6b0063acc'
+        content['data'][0]['digest'] = '23312e20cb961d46b3fb0ac5a63dacfbb16f13a220b48250019977940e9720f3'
         edited_beats.return_value = Content.dump_text(content['data'][0])
-        data = Content.dump_text(Solution.BEATS)
+        data = Const.NEWLINE.join(Solution.BEATS['data'])
         cause = snippy.run(['snippy', 'update', '--scat', 'solution', '-c', data, '--format', 'text', '--editor'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
@@ -266,7 +268,7 @@ class TestCliUpdateSolution(object):
         }
         content['data'][0]['uuid'] = Solution.NGINX_UUID
         edited_beats.return_value = Content.dump_text(content['data'][0])
-        cause = snippy.run(['snippy', 'update', '-d', '5dee85bedb7f4d3a', '--scat', 'solution', '--editor', '--format', 'text'])
+        cause = snippy.run(['snippy', 'update', '-d', '6cfe47a8880a8f81', '--scat', 'solution', '--editor', '--format', 'text'])
         edited_beats.assert_called_with(Content.dump_text(Solution.NGINX))
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
@@ -312,7 +314,7 @@ class TestCliUpdateSolution(object):
             '',
             '> category : solution  ',
             'created  : 2019-01-04T10:54:49.265512+00:00  ',
-            'digest   : 18473ec207798670c302fb711a40df6555e8973e26481e4cd6b2ed205f5e633c  ',
+            'digest   : c54c8a896b94ea35edf6c798879957419d26268bd835328d74b19a6e9ce2324d  ',
             'filename : kubernetes-docker-log-driver-kafka.mkdn  ',
             'name     :  ',
             'source   :  ',
@@ -338,7 +340,7 @@ class TestCliUpdateSolution(object):
         updates['data'][0]['uuid'] = Solution.KAFKA_MKDN_UUID
         updates['data'][0]['digest'] = '7941851522a23d3651f223b6d69441f77649ccb7ae1e72c6709890f2caf6401a'
         editor_data.return_value = '\n'.join(edited)
-        cause = snippy.run(['snippy', 'update', '-d', '18473ec207798670', '--scat', 'solution'])
+        cause = snippy.run(['snippy', 'update', '-d', 'c54c8a896b94ea35', '--scat', 'solution'])
         editor_data.assert_called_with(Content.dump_mkdn(Solution.KAFKA_MKDN))
         assert cause == Cause.ALL_OK
         Content.assert_storage(updates)
@@ -361,7 +363,7 @@ class TestCliUpdateSolution(object):
         }
         template = Content.dump_mkdn(content['data'][0])
         editor_data.return_value = template
-        cause = snippy.run(['snippy', 'update', '-d', 'fffeaf31e98e68a3', '--format', 'mkdn'])
+        cause = snippy.run(['snippy', 'update', '-d', 'ee3f2ab7c63d6965', '--format', 'mkdn'])
         editor_data.assert_called_with(template)
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
@@ -389,7 +391,7 @@ class TestCliUpdateSolution(object):
         template = (  # Python 2 does not support tuple unpack with star.
             '# Testing docker log drivers @docker',
             '',
-            '> Investigate docker log drivers and the logs2kafka log plugin',
+            '> Investigate docker log drivers and the logs2kafka log plugin.',
             '',
             '> [1] https://github.com/MickayG/moby-kafka-logdriver  ',
             '[2] https://github.com/garo/logs2kafka  ',
@@ -399,7 +401,7 @@ class TestCliUpdateSolution(object):
             '',
             '> category : solution  ',
             'created  : 2019-01-04T10:54:49.265512+00:00  ',
-            'digest   : 18473ec207798670c302fb711a40df6555e8973e26481e4cd6b2ed205f5e633c  ',
+            'digest   : c54c8a896b94ea35edf6c798879957419d26268bd835328d74b19a6e9ce2324d  ',
             'filename : kubernetes-docker-log-driver-kafka.mkdn  ',
             'name     :  ',
             'source   :  ',
@@ -410,7 +412,7 @@ class TestCliUpdateSolution(object):
             '')
         # pylint: enable=C0330
         editor_data.return_value = '\n'.join(template)
-        cause = snippy.run(['snippy', 'update', '-d', '18473ec207798670', '--format', 'mkdn'])
+        cause = snippy.run(['snippy', 'update', '-d', 'c54c8a896b94ea35', '--format', 'mkdn'])
         editor_data.assert_called_with('\n'.join(template))
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)

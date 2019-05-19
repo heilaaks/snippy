@@ -40,7 +40,7 @@ class TestCliSearchSolution(object):
         """
 
         output = (
-            '1. Debugging Elastic Beats @beats [db712a82662d6932]',
+            '1. Debugging Elastic Beats @beats [4346ba4c79247430]',
             Const.NEWLINE.join(Solution.BEATS_OUTPUT),
             '   :',
             '',
@@ -77,7 +77,7 @@ class TestCliSearchSolution(object):
         """
 
         output = (
-            '1. Debugging Elastic Beats @beats [db712a82662d6932]',
+            '1. Debugging Elastic Beats @beats [4346ba4c79247430]',
             Const.NEWLINE.join(Solution.BEATS_OUTPUT),
             '   :',
             '',
@@ -100,14 +100,14 @@ class TestCliSearchSolution(object):
         """
 
         output = (
-            '1. Debugging Elastic Beats @beats [db712a82662d6932]',
+            '1. Debugging Elastic Beats @beats [4346ba4c79247430]',
             Const.NEWLINE.join(Solution.BEATS_OUTPUT),
             '   :',
             '',
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--scat', 'solution', '--digest', 'db712a82662d6932', '--no-ansi'])
+        cause = snippy.run(['snippy', 'search', '--scat', 'solution', '--digest', '4346ba4c79247430', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -125,7 +125,7 @@ class TestCliSearchSolution(object):
         """
 
         output = (
-            '1. Debugging Elastic Beats @beats [db712a82662d6932]',
+            '1. Debugging Elastic Beats @beats [4346ba4c79247430]',
             Const.NEWLINE.join(Solution.BEATS_OUTPUT),
             '   :',
             '',

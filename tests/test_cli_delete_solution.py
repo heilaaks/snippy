@@ -43,7 +43,7 @@ class TestCliDeleteSolution(object):
             ]
         }
         Content.assert_storage_size(2)
-        cause = snippy.run(['snippy', 'delete', '--scat', 'solution', '-d', 'c91b420e5437158c'])
+        cause = snippy.run(['snippy', 'delete', '--scat', 'solution', '-d', '6cfe47a8880a8f81'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -61,7 +61,7 @@ class TestCliDeleteSolution(object):
             ]
         }
         Content.assert_storage_size(2)
-        cause = snippy.run(['snippy', 'delete', '-d', 'c91b420e5437158c'])
+        cause = snippy.run(['snippy', 'delete', '-d', '6cfe47a8880a8f81'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -79,7 +79,7 @@ class TestCliDeleteSolution(object):
                 Solution.BEATS
             ]
         }
-        cause = snippy.run(['snippy', 'delete', '--scat', 'solution', '-d', 'c91b4'])
+        cause = snippy.run(['snippy', 'delete', '--scat', 'solution', '-d', '6cfe4'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -97,7 +97,7 @@ class TestCliDeleteSolution(object):
             ]
         }
         Content.assert_storage_size(2)
-        cause = snippy.run(['snippy', 'delete', '--scat', 'solution', '-d', 'c91b420e5437158c997459d5c978828327406b598b6ce1478dc0fcf9d72634c7'])  # pylint: disable=line-too-long
+        cause = snippy.run(['snippy', 'delete', '--scat', 'solution', '-d', '6cfe47a8880a8f81b66ff6bd71e795069ed1dfdd259c9fd181133f683c7697eb'])  # pylint: disable=line-too-long
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 

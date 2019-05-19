@@ -162,7 +162,7 @@ class TestApiCreateSolution(object):
         storage['data'][0]['filename'] = ''
         storage['data'][0]['updated'] = Content.NGINX_TIME
         storage['data'][0]['uuid'] = Solution.BEATS_UUID
-        storage['data'][0]['digest'] = '24d350f995b0340c29da7db4df7f9c0c413cea54103372eb308e6dbabd0fe52a'
+        storage['data'][0]['digest'] = '6d102b92af89d6bd6cb65e8d2a6e486dcff2d0fed015ba6b6afde0c99e74b9bc'
         request_body = {
             'data': {
                 'type': 'solution',
@@ -191,7 +191,7 @@ class TestApiCreateSolution(object):
             }
         }
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/api/snippy/rest/solutions/9d0a54be4bb66b47',
+            path='/api/snippy/rest/solutions/4346ba4c79247430',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8', 'X-HTTP-Method-Override': 'PUT'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_200
@@ -219,7 +219,7 @@ class TestApiCreateSolution(object):
         }
         storage['data'][0]['data'] = Solution.NGINX['data']
         storage['data'][0]['uuid'] = Solution.BEATS_UUID
-        storage['data'][0]['digest'] = '122d397e2e450d9aff8f7a481967d1105a83c80534a5ab8849ddeb05d3602dea'
+        storage['data'][0]['digest'] = '038441c764ac6c4386fcb5a3bdf9b0521e4c0c0535ff5b445d022a83b7419c9a'
         request_body = {
             'data': {
                 'type': 'solution',
@@ -243,7 +243,7 @@ class TestApiCreateSolution(object):
             }
         }
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/api/snippy/rest/solutions/9d0a54be4bb66b47',
+            path='/api/snippy/rest/solutions/4346ba4c79247430',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8', 'X-HTTP-Method-Override': 'PATCH'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_200
@@ -267,6 +267,7 @@ class TestApiCreateSolution(object):
             ]
         }
         expect_headers = {}
+        print(Content.output())
         result = testing.TestClient(server.server.api).simulate_post(
             path='/api/snippy/rest/solutions/ee3f2ab7c63d696',
             headers={'accept': 'application/json', 'X-HTTP-Method-Override': 'DELETE'})

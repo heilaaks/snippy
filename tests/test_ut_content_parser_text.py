@@ -655,7 +655,7 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
         Parser(self.TIMESTAMP, text, collection).read_collection()
         resource = next(collection.resources())
         assert resource.category == Const.SOLUTION
-        assert resource.data == tuple(text.split(Const.DELIMITER_DATA))
+        assert resource.data == tuple(text.split(Const.DELIMITER_DATA)[8:])
         assert resource.brief == 'Testing docker log drivers'
         assert resource.description == 'This is a one line solution description.'
         assert resource.name == ''
@@ -725,7 +725,7 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
         Parser(self.TIMESTAMP, text, collection).read_collection()
         resource = next(collection.resources())
         assert resource.category == Const.SOLUTION
-        assert resource.data == tuple(text.split(Const.DELIMITER_DATA))
+        assert resource.data == tuple(text.split(Const.DELIMITER_DATA)[8:])
         assert resource.brief == 'Testing docker log drivers'
         assert resource.description == 'This is two line solution description.'
         assert resource.name == ''
@@ -794,7 +794,7 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
         Parser(self.TIMESTAMP, text, collection).read_collection()
         resource = next(collection.resources())
         assert resource.category == Const.SOLUTION
-        assert resource.data == tuple(text.split(Const.DELIMITER_DATA))
+        assert resource.data == tuple(text.split(Const.DELIMITER_DATA)[8:])
         assert resource.brief == 'Testing docker log drivers'
         assert resource.description == 'This is two line solution description without newline before next header.'
         assert resource.name == ''
@@ -861,7 +861,7 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
         Parser(self.TIMESTAMP, text, collection).read_collection()
         resource = next(collection.resources())
         assert resource.category == Const.SOLUTION
-        assert resource.data == tuple(text.split(Const.DELIMITER_DATA))
+        assert resource.data == tuple(text.split(Const.DELIMITER_DATA)[8:])
         assert resource.brief == 'Testing docker log drivers'
         assert resource.description == ''
         assert resource.name == ''

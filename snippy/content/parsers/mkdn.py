@@ -128,17 +128,17 @@ class ContentParserMkdn(ContentParserBase):
                 'data': self._read_data(category, content),
                 'brief': self._read_brief(category, content),
                 'description': self._read_description(category, content),
-                'name': self._read_meta_value(category, 'name', content),
+                'name': self.read_meta_value(category, 'name', content),
                 'groups': self._read_groups(category, content),
                 'tags': self._read_tags(category, content),
                 'links': self._read_links(category, content),
-                'source': self._read_meta_value(category, 'source', content),
+                'source': self.read_meta_value(category, 'source', content),
                 'versions': self._read_versions(category, content),
-                'filename': self._read_meta_value(category, 'filename', content),
-                'created': self._read_meta_value(category, 'created', content),
-                'updated': self._read_meta_value(category, 'updated', content),
-                'uuid': self._read_meta_value(category, 'uuid', content),
-                'digest': self._read_meta_value(category, 'digest', content),
+                'filename': self.read_meta_value(category, 'filename', content),
+                'created': self.read_meta_value(category, 'created', content),
+                'updated': self.read_meta_value(category, 'updated', content),
+                'uuid': self.read_meta_value(category, 'uuid', content),
+                'digest': self.read_meta_value(category, 'digest', content),
             })
         self._collection.convert(resources, self._timestamp)
 
@@ -309,7 +309,7 @@ class ContentParserMkdn(ContentParserBase):
         if category not in Const.CATEGORIES:
             return self.format_list(tags)
 
-        match = self._read_meta_value(category, 'tags', text)
+        match = self.read_meta_value(category, 'tags', text)
         if match:
             tags = [match]
             self._logger.debug('parsed content tags: %s', tags)
@@ -343,32 +343,3 @@ class ContentParserMkdn(ContentParserBase):
         """
 
         return self.parse_versions(category, self.REGEXP['versions'].get(category, None), text)
-
-    def _read_meta_value(self, category, key, text):
-        """Read content metadata value from text string.
-
-        Args:
-            category (str): Content category.
-            metadata (str): Metadata to be read.
-            text (str): Content text string.
-
-        Returns:
-            str: Utf-8 encoded unicode string.
-        """
-
-        meta = ''
-        if category not in Const.CATEGORIES:
-            return self.format_string(meta)
-
-        match = re.compile(r'''
-            ^%s                 # Match metadata key at the beginning of line.
-            \s+[:]{1}\s         # Match spaces and column between key and value.
-            (?P<value>.*$)      # Catch metadata value till end of the line.
-            ''' % re.escape(key), re.MULTILINE | re.VERBOSE).search(text)
-        if match:
-            meta = match.group('value')
-            self._logger.debug('parsed content metadata: {} : with value: {}'.format(key, text))
-        else:
-            self._logger.debug('parser did not find content for key: {} :from metadata: {}'.format(key, text))
-
-        return self.format_string(meta)

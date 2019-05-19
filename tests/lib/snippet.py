@@ -218,6 +218,13 @@ class Snippet(object):  # pylint: disable=too-few-public-methods
         '',
         '# Add optional filename below.',
         'example-content.md',
+        '',
+        '# Meta',
+        'category : snippet',
+        'created  : 2018-02-02T02:02:02.000001+00:00',
+        'digest   : b3e9bcf808ba86461bee74dca40f62e518ce306ecbac6a18adea78b30a0fe346',
+        'updated  : 2018-02-02T02:02:02.000001+00:00',
+        'uuid     : a1cd5827-b6ef-4067-b5ac-3ceac07dde9f',
         ''
     )
     TEMPLATE_MKDN = (

@@ -243,7 +243,7 @@ class Content(object):  # pylint: disable=too-many-public-methods, too-many-line
 
         result_collection = Database.get_collection()
         result_dictionary = cls._get_db_dictionary(result_collection)
-        expect_collection = cls._get_expect_collection(Const.CONTENT_FORMAT_DICT, content)
+        expect_collection = cls._get_expect_collection(content)
         expect_dictionary = content
         try:
             assert result_collection == expect_collection
@@ -309,7 +309,7 @@ class Content(object):  # pylint: disable=too-many-public-methods, too-many-line
 
         result_collection = cls._get_result_collection(Const.CONTENT_FORMAT_JSON, json_mock)
         result_dictionary = cls._get_result_dictionary(Const.CONTENT_FORMAT_JSON, json_mock)
-        expect_collection = cls._get_expect_collection(Const.CONTENT_FORMAT_JSON, content)
+        expect_collection = cls._get_expect_collection(content)
         expect_dictionary = content
         try:
             assert result_collection == expect_collection
@@ -334,7 +334,7 @@ class Content(object):  # pylint: disable=too-many-public-methods, too-many-line
 
         result_collection = cls._get_result_collection(Const.CONTENT_FORMAT_MKDN, mkdn_mock)
         result_markdown = cls._read_text(Const.CONTENT_FORMAT_MKDN, mkdn_mock)
-        expect_collection = cls._get_expect_collection(Const.CONTENT_FORMAT_MKDN, content)
+        expect_collection = cls._get_expect_collection(content)
         expect_markdown = result_collection.dump_mkdn(Config.templates)
         try:
             assert result_collection == expect_collection
@@ -365,7 +365,7 @@ class Content(object):  # pylint: disable=too-many-public-methods, too-many-line
 
         result_collection = cls._get_result_collection(Const.CONTENT_FORMAT_TEXT, text)
         result_text = cls._read_text(Const.CONTENT_FORMAT_TEXT, text)
-        expect_collection = cls._get_expect_collection(Const.CONTENT_FORMAT_TEXT, content)
+        expect_collection = cls._get_expect_collection(content)
         expect_text = expect_collection.dump_text(Config.templates)
         try:
             assert result_collection == expect_collection
@@ -391,7 +391,7 @@ class Content(object):  # pylint: disable=too-many-public-methods, too-many-line
 
         result_collection = cls._get_result_collection(Const.CONTENT_FORMAT_YAML, yaml)
         result_dictionary = cls._get_result_dictionary(Const.CONTENT_FORMAT_YAML, yaml)
-        expect_collection = cls._get_expect_collection(Const.CONTENT_FORMAT_YAML, content)
+        expect_collection = cls._get_expect_collection(content)
         expect_dictionary = content
         try:
             assert result_collection == expect_collection
@@ -617,13 +617,12 @@ class Content(object):  # pylint: disable=too-many-public-methods, too-many-line
         return collection
 
     @staticmethod
-    def _get_expect_collection(content_format, content):
+    def _get_expect_collection(content):
         """Return comparable collection from expected content.
 
         See the description for assert_storage method.
 
         Args:
-            content_format (str): Content format stored in mock.
             content (dict): Reference content.
 
         Returns:

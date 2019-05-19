@@ -201,13 +201,8 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
     def test_cli_export_snippet_009(snippy):
         """Export defined snippets.
 
-        Export defined snippet based on message digest. File name is defined
-        in command line. This should result file and format defined by command
-        line option -f|--file.
-
-        Because text template does not have UUID, the UUID mock allocates a new
-        UUID for the exported comparison. Because of this the imported resource
-        UUID cannot be compared to exported text.
+        Export defined snippet based on message digest. Filename and format
+        are defined with command line option ``--file``.
         """
 
         content = {
@@ -216,7 +211,6 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
                 Content.deepcopy(Snippet.FORCED)
             ]
         }
-        content['data'][0]['uuid'] = Content.UUID1
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-d', '53908d68425c61dc', '-f', 'defined-snippet.txt'])
             assert cause == Cause.ALL_OK
@@ -312,7 +306,6 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
                 Content.deepcopy(Snippet.FORCED)
             ]
         }
-        content['data'][0]['uuid'] = Content.UUID1
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--sall', 'force', '-f', 'defined-snippet.txt'])
             assert cause == Cause.ALL_OK
@@ -333,7 +326,6 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
                 Content.deepcopy(Snippet.FORCED)
             ]
         }
-        content['data'][0]['uuid'] = Content.UUID1
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--sall', 'force', '-f', 'defined-snippet.text'])
             assert cause == Cause.ALL_OK
@@ -356,8 +348,6 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
                 Content.deepcopy(Snippet.FORCED)
             ]
         }
-        content['data'][0]['uuid'] = Content.UUID1
-        content['data'][1]['uuid'] = Content.UUID2
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--sall', 'docker', '-f', 'defined-snippet.text'])
             assert cause == Cause.ALL_OK
@@ -452,7 +442,6 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
                 Content.deepcopy(Snippet.REMOVE)
             ]
         }
-        content['data'][0]['uuid'] = Content.UUID1
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-c', 'docker rm --volumes $(docker ps --all --quiet)', '-f', 'defined-snippet.txt'])  # pylint: disable=line-too-long
             assert cause == Cause.ALL_OK

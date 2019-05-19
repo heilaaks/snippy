@@ -26,3 +26,10 @@
 
 # Add optional filename below.
 <filename>
+
+# Meta
+category : <category>
+created  : <created>
+digest   : <digest>
+updated  : <updated>
+uuid     : <uuid>

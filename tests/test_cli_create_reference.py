@@ -164,10 +164,10 @@ class TestCliCreateReferece(object):
             'uuid     : a1cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
             'versions :  ',
             '')
-        editor_data.return_value = '\n'.join(edited)
+        editor_data.return_value = Const.NEWLINE.join(edited)
         cause = snippy.run(['snippy', 'create', '--scat', 'reference', '--editor'])
         assert cause == Cause.ALL_OK
-        editor_data.assert_called_with('\n'.join(template))
+        editor_data.assert_called_with(Const.NEWLINE.join(template))
         Content.assert_storage(content)
 
     @staticmethod
@@ -203,10 +203,10 @@ class TestCliCreateReferece(object):
             ''
         )
         edited = template
-        editor_data.return_value = '\n'.join(edited)
+        editor_data.return_value = Const.NEWLINE.join(edited)
         cause = snippy.run(['snippy', 'create', '--scat', 'reference', '--editor'])
         assert cause == 'NOK: content was not stored because it was matching to an empty template'
-        editor_data.assert_called_with('\n'.join(template))
+        editor_data.assert_called_with(Const.NEWLINE.join(template))
         Content.assert_storage(None)
 
     @staticmethod
@@ -248,6 +248,74 @@ class TestCliCreateReferece(object):
         cause = snippy.run(['snippy', 'create', '--scat', 'reference,failure', '--links', 'http://short', '--no-editor'])
         assert cause == "NOK: content categories ('failure', 'reference') are not a subset of ('snippet', 'solution', 'reference')"
         Content.assert_storage(None)
+
+    @staticmethod
+    @pytest.mark.usefixtures('create-gitlog-utc')
+    def test_cli_create_reference_010(snippy, editor_data):
+        """Create reference with editor.
+
+        Create a new reference by using the prefilled default Markdown template
+        in editor. In this case the metadata section is not touched and there
+        is the example content left. The example values for attributes must not
+        be used when the content is created.
+        """
+
+        content = {
+            'data': [
+                Content.deepcopy(Reference.GITLOG)
+            ]
+        }
+        content['data'][0]['tags'] = ()
+        content['data'][0]['uuid'] = Content.UUID1
+        content['data'][0]['digest'] = '7093775e077941bad7a707295feb6a6630458f89e18a35994179e27fc4937b02'
+        template = (
+            '# Add brief title for content @groups',
+            '',
+            '> Add a description that defines the content in one chapter.',
+            '',
+            '> [1] https://www.example.com/add-links-here.html',
+            '',
+            '## Meta',
+            '',
+            '> category : reference  ',
+            'created  : 2018-06-22T13:11:13.678729+00:00  ',
+            'digest   : bb4c2540fab3a12b051b77b6902f426812ec95f8a1fa9e07ca1b7dc3cca0cc0d  ',
+            'filename : example-content.md  ',
+            'name     : example content handle  ',
+            'source   : https://www.example.com/source.md  ',
+            'tags     : example,tags  ',
+            'updated  : 2018-06-22T13:11:13.678729+00:00  ',
+            'uuid     : a1cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+            'versions : example=3.9.0,python>=3  ',
+            ''
+        )
+        edited = (
+            '# How to write commit messages @git',
+            '',
+            '> ',
+            '',
+            '> [1] https://chris.beams.io/posts/git-commit/',
+            '',
+            '`$ docker rm --volumes $(docker ps --all --quiet)`',
+            '',
+            '## Meta',
+            '',
+            '> category : reference  ',
+            'created  : 2018-06-22T13:11:13.678729+00:00  ',
+            'digest   : 7093775e077941bad7a707295feb6a6630458f89e18a35994179e27fc4937b02  ',
+            'filename : example-content.md  ',
+            'name     : example content handle  ',
+            'source   : https://www.example.com/source.md  ',
+            'tags     : example,tags  ',
+            'updated  : 2018-06-22T13:11:13.678729+00:00  ',
+            'uuid     : a1cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+            'versions : example=3.9.0,python>=3  ',
+            '')
+        editor_data.return_value = Const.NEWLINE.join(edited)
+        cause = snippy.run(['snippy', 'create', '--scat', 'reference', '--editor'])
+        assert cause == Cause.ALL_OK
+        editor_data.assert_called_with(Const.NEWLINE.join(template))
+        Content.assert_storage(content)
 
     @classmethod
     def teardown_class(cls):

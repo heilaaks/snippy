@@ -48,7 +48,7 @@ class TestCliCreateSolution(object):
         content['data'][0]['description'] = ''
         content['data'][0]['filename'] = ''
         content['data'][0]['uuid'] = Content.UUID1
-        content['data'][0]['digest'] = 'b1601153d0a43b61c8b8659619ac315b419f1823eb88c56f701f4e5559cf9aba'
+        content['data'][0]['digest'] = '509c7e11b568283ae985ff038cbabbe94e9cea8b058215b243ae0463b0497e5c'
         data = Const.DELIMITER_DATA.join(content['data'][0]['data'])
         brief = content['data'][0]['brief']
         groups = Const.DELIMITER_GROUPS.join(content['data'][0]['groups'])
@@ -74,7 +74,7 @@ class TestCliCreateSolution(object):
             ]
         }
         cause = snippy.run(['snippy', 'create', '--scat', 'solution', '--format', 'text'])
-        assert cause == 'NOK: content data already exist with digest 9d0a54be4bb66b47'
+        assert cause == 'NOK: content data already exist with digest 4346ba4c79247430'
         Content.assert_storage(content)
 
     @staticmethod
@@ -319,7 +319,7 @@ class TestCliCreateSolution(object):
         content['data'][0]['description'] = ''
         content['data'][0]['filename'] = ''
         content['data'][0]['uuid'] = Content.UUID1
-        content['data'][0]['digest'] = 'b1601153d0a43b61c8b8659619ac315b419f1823eb88c56f701f4e5559cf9aba'
+        content['data'][0]['digest'] = '509c7e11b568283ae985ff038cbabbe94e9cea8b058215b243ae0463b0497e5c'
         data = Const.DELIMITER_DATA.join(content['data'][0]['data'])
         brief = content['data'][0]['brief']
         groups = Const.DELIMITER_GROUPS.join(content['data'][0]['groups']) + ',beats'

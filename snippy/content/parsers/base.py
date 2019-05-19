@@ -501,7 +501,6 @@ class ContentParserBase(object):
 
         return list_
 
-
     def read_meta_value(self, category, key, text):
         """Read content metadata value from a text string.
 

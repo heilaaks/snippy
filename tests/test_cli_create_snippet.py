@@ -312,10 +312,10 @@ class TestCliCreateSnippet(object):
             'uuid     : a1cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
             'versions :  ',
             '')
-        editor_data.return_value = '\n'.join(edited)
+        editor_data.return_value = Const.NEWLINE.join(edited)
         cause = snippy.run(['snippy', 'create', '--editor'])
         assert cause == Cause.ALL_OK
-        editor_data.assert_called_with('\n'.join(template))
+        editor_data.assert_called_with(Const.NEWLINE.join(template))
         Content.assert_storage(content)
 
     @staticmethod
@@ -352,10 +352,10 @@ class TestCliCreateSnippet(object):
             ''
         )
         edited = template
-        editor_data.return_value = '\n'.join(edited)
+        editor_data.return_value = Const.NEWLINE.join(edited)
         cause = snippy.run(['snippy', 'create', '--editor'])
         assert cause == 'NOK: content was not stored because it was matching to an empty template'
-        editor_data.assert_called_with('\n'.join(template))
+        editor_data.assert_called_with(Const.NEWLINE.join(template))
         Content.assert_storage(None)
 
     @staticmethod
@@ -455,10 +455,81 @@ class TestCliCreateSnippet(object):
             'versions :  ',
             ''
         )
-        editor_data.return_value = '\n'.join(edited)
+        editor_data.return_value = Const.NEWLINE.join(edited)
         cause = snippy.run(['snippy', 'create', '-t', 'tags,from,cli', '-b', 'Brief from cli'])
         assert cause == Cause.ALL_OK
-        editor_data.assert_called_with('\n'.join(template))
+        editor_data.assert_called_with(Const.NEWLINE.join(template))
+        Content.assert_storage(content)
+
+    @staticmethod
+    @pytest.mark.usefixtures('create-remove-utc')
+    def test_cli_create_snippet_013(snippy, editor_data):
+        """Create snippet with editor.
+
+        Create a new snippet by using the prefilled default Markdown template
+        in editor. In this case the metadata section is not touched and there
+        is the example content left. The example values for attributes must not
+        be used when the content is created.
+        """
+
+        content = {
+            'data': [
+                Content.deepcopy(Snippet.REMOVE)
+            ]
+        }
+        content['data'][0]['uuid'] = Content.UUID1
+        content['data'][0]['tags'] = ()
+        content['data'][0]['digest'] = 'e218ad23bce0ea7e316ea752632a86b43258f96e280f8f23c1467cee0b110f72'
+        template = (
+            '# Add brief title for content @groups',
+            '',
+            '> Add a description that defines the content in one chapter.',
+            '',
+            '> [1] https://www.example.com/add-links-here.html',
+            '',
+            '`$ Markdown commands are defined between backtics and prefixed by a dollar sign`',
+            '',
+            '## Meta',
+            '',
+            '> category : snippet  ',
+            'created  : 2017-10-14T19:56:31.000001+00:00  ',
+            'digest   : 8d5193fea452d0334378a73ded829cfa27debea7ee87714d64b1b492d1a4601a  ',
+            'filename : example-content.md  ',
+            'name     : example content handle  ',
+            'source   : https://www.example.com/source.md  ',
+            'tags     : example,tags  ',
+            'updated  : 2017-10-14T19:56:31.000001+00:00  ',
+            'uuid     : a1cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+            'versions : example=3.9.0,python>=3  ',
+            ''
+        )
+        edited = (
+            '# Remove all docker containers with volumes @docker',
+            '',
+            '> ',
+            '',
+            '> [1] https://docs.docker.com/engine/reference/commandline/rm/',
+            '',
+            '`$ docker rm --volumes $(docker ps --all --quiet)`',
+            '',
+            '## Meta',
+            '',
+            '> category : snippet  ',
+            '> category : snippet  ',
+            'created  : 2017-10-14T19:56:31.000001+00:00  ',
+            'digest   : 8d5193fea452d0334378a73ded829cfa27debea7ee87714d64b1b492d1a4601a  ',
+            'filename : example-content.md  ',
+            'name     : example content handle  ',
+            'source   : https://www.example.com/source.md  ',
+            'tags     : example,tags  ',
+            'updated  : 2017-10-14T19:56:31.000001+00:00  ',
+            'uuid     : a1cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+            'versions : example=3.9.0,python>=3  ',
+            '')
+        editor_data.return_value = Const.NEWLINE.join(edited)
+        cause = snippy.run(['snippy', 'create', '--editor'])
+        assert cause == Cause.ALL_OK
+        editor_data.assert_called_with(Const.NEWLINE.join(template))
         Content.assert_storage(content)
 
     @classmethod

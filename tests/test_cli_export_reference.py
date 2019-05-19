@@ -42,8 +42,8 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
     def test_cli_export_reference_001(snippy):
         """Export all references.
 
-        Export all references without defining target filename from command
-        line. In this case the default filename and format is used.
+        Export all references without defining target filename with ``--file``
+        option. In this case the default filename and format are used.
         """
 
         content = {
@@ -163,9 +163,8 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
     def test_cli_export_reference_007(snippy):
         """Export defined reference with digest.
 
-        Export defined reference based on message digest. File name is defined
-        in command line. This should result file and format defined by command
-        line option ``-f|--file``.
+        Export defined reference based on message digest. Filename and format
+        are defined with command line option ``--file``.
 
         Because text template does not have UUID, the UUID mock allocates a new
         UUID for the exported comparison. Because of this the imported resource
@@ -178,7 +177,6 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
                 Content.deepcopy(Reference.REGEXP)
             ]
         }
-        content['data'][0]['uuid'] = Content.UUID1
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-d', 'cb9225a81eab8ced', '-f', 'defined-reference.txt'])
             assert cause == Cause.ALL_OK
@@ -270,7 +268,6 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
                 Content.deepcopy(Reference.REGEXP)
             ]
         }
-        content['data'][0]['uuid'] = Content.UUID1
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--sall', 'regexp', '-f', 'defined-reference.txt', '--scat', 'reference'])
             assert cause == Cause.ALL_OK
@@ -291,7 +288,6 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
                 Content.deepcopy(Reference.REGEXP)
             ]
         }
-        content['data'][0]['uuid'] = Content.UUID1
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--sall', 'regexp', '-f', 'defined-reference.text', '--scat', 'reference'])
             assert cause == Cause.ALL_OK
@@ -314,8 +310,6 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
                 Content.deepcopy(Reference.REGEXP)
             ]
         }
-        content['data'][0]['uuid'] = Content.UUID1
-        content['data'][1]['uuid'] = Content.UUID2
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--sall', 'howto', '-f', 'defined-reference.text', '--scat', 'reference'])
             assert cause == Cause.ALL_OK

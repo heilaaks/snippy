@@ -1,17 +1,5 @@
 ## WORKING
-
-    --> move _read_meta_value to parser base class since this is the same with mkdn and text
-    --> remove timestamp from load/parse stuff
-    --> Note two fixes below in change hist
-    --> Test if creating new solution from template that contains the metadata does not store the examples in tempplate. This is is mkdn based files but not in text format
-
-    - Fix parsing solution description
-     There was a capital letter in the template but the code parsed small letter for 'description'
-
-    - Fix --format with export. If file option was not used and there was no filename attribute, markdown was always used. Now it can be changed with format.
-
-   - capitalize solution helper templates headers- They are in Markdown in capital letters
-   
+   - [ ] Remove duplicated attributes from templates. At least solution and filename twice.
    - [ ] Fix cause 'Content has been created without internal errors.' This breaks when there is e.g. created and bad request. That is the cause ok does not see 404 and sends OK. This was the Cause() check for OK
    - [ ] Fix updating Markdown based solutions in text formats does not work because the Mkdn solution does not have text header and data structure.
    - [ ] Fix test_logger_016. The P3 is not correct? The links in p2 are in the same elemnet separated with \n that should be the case with P3.

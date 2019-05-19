@@ -141,6 +141,13 @@ class Reference(object):  # pylint: disable=too-few-public-methods
         '',
         '# Add optional filename below.',
         'example-content.md',
+        '',
+        '# Meta',
+        'category : reference',
+        'created  : 2018-02-02T02:02:02.000001+00:00',
+        'digest   : f5693f66ec42e8f42687e8639df806e79aead1dad1a6c1b5448b6220995518bd',
+        'updated  : 2018-02-02T02:02:02.000001+00:00',
+        'uuid     : a1cd5827-b6ef-4067-b5ac-3ceac07dde9f',
         ''
     )
     TEMPLATE_MKDN = (

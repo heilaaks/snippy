@@ -332,13 +332,13 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
                 Content.deepcopy(Solution.NGINX)
             ]
         }
-        content['data'][0]['data'] = content['data'][0]['data'][:13] + ('    # Changed.',) + content['data'][0]['data'][14:]
+        content['data'][0]['data'] = content['data'][0]['data'][:4] + ('    # Changed.',) + content['data'][0]['data'][5:]
         content['data'][0]['updated'] = Content.KAFKA_TIME
-        content['data'][0]['digest'] = 'f7c59ea7da22f408d4ba71d4c4ac477b83549d29e1bfcb4d721ccda0b1fedfe2'
+        content['data'][0]['digest'] = 'c64d9cd40c15d5ce9905b282bf26c53c2ffdc32c1a7f268d6cf31364ef889a8a'
         file_content = Content.get_file_content(Content.YAML, content)
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             yaml.safe_load.return_value = file_content
-            cause = snippy.run(['snippy', 'import', '--scat', 'solution', '-d', '5dee85bedb7f4d3a', '-f', 'one-solution.yaml'])
+            cause = snippy.run(['snippy', 'import', '--scat', 'solution', '-d', '6cfe47a8880a8f81', '-f', 'one-solution.yaml'])
             assert cause == Cause.ALL_OK
             Content.assert_storage(content)
             mock_file.assert_called_once_with('one-solution.yaml', 'r')
@@ -357,13 +357,13 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
                 Content.deepcopy(Solution.NGINX)
             ]
         }
-        content['data'][0]['data'] = content['data'][0]['data'][:13] + ('    # Changed.',) + content['data'][0]['data'][14:]
+        content['data'][0]['data'] = content['data'][0]['data'][:4] + ('    # Changed.',) + content['data'][0]['data'][5:]
         content['data'][0]['updated'] = Content.KAFKA_TIME
-        content['data'][0]['digest'] = 'f7c59ea7da22f408d4ba71d4c4ac477b83549d29e1bfcb4d721ccda0b1fedfe2'
+        content['data'][0]['digest'] = 'c64d9cd40c15d5ce9905b282bf26c53c2ffdc32c1a7f268d6cf31364ef889a8a'
         file_content = Content.get_file_content(Content.YAML, content)
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             yaml.safe_load.return_value = file_content
-            cause = snippy.run(['snippy', 'import', '-d', '5dee85bedb7f4d3a', '-f', 'one-solution.yaml'])
+            cause = snippy.run(['snippy', 'import', '-d', '6cfe47a8880a8f81', '-f', 'one-solution.yaml'])
             assert cause == Cause.ALL_OK
             Content.assert_storage(content)
             mock_file.assert_called_once_with('one-solution.yaml', 'r')
@@ -383,13 +383,13 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
                 Content.deepcopy(Solution.NGINX)
             ]
         }
-        content['data'][0]['data'] = content['data'][0]['data'][:13] + ('    # Changed.',) + content['data'][0]['data'][14:]
+        content['data'][0]['data'] = content['data'][0]['data'][:4] + ('    # Changed.',) + content['data'][0]['data'][5:]
         content['data'][0]['updated'] = Content.KAFKA_TIME
-        content['data'][0]['digest'] = 'f7c59ea7da22f408d4ba71d4c4ac477b83549d29e1bfcb4d721ccda0b1fedfe2'
+        content['data'][0]['digest'] = 'c64d9cd40c15d5ce9905b282bf26c53c2ffdc32c1a7f268d6cf31364ef889a8a'
         file_content = Content.get_file_content(Content.JSON, content)
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             json.load.return_value = file_content
-            cause = snippy.run(['snippy', 'import', '--scat', 'solution', '-d', '5dee85bedb7f4d3a', '-f', 'one-solution.json'])
+            cause = snippy.run(['snippy', 'import', '--scat', 'solution', '-d', '6cfe47a8880a8f81', '-f', 'one-solution.json'])
             assert cause == Cause.ALL_OK
             Content.assert_storage(content)
             mock_file.assert_called_once_with('one-solution.json', 'r')
@@ -410,13 +410,13 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
                 Content.deepcopy(Solution.NGINX)
             ]
         }
-        content['data'][0]['data'] = content['data'][0]['data'][:13] + ('    # Changed.',) + content['data'][0]['data'][14:]
+        content['data'][0]['data'] = content['data'][0]['data'][:4] + ('    # Changed.',) + content['data'][0]['data'][5:]
         content['data'][0]['description'] = 'Changed.'
         content['data'][0]['updated'] = Content.KAFKA_TIME
-        content['data'][0]['digest'] = '44a84d31fd5d4ca67aecf2dd1f92290114cbd64bd33b4f1811761c82f645458a'
+        content['data'][0]['digest'] = 'ce3f7a0ab75dc74f7bbea68ae323c29b2361965975c0c8d34897551149d29118'
         file_content = Content.get_file_content(Content.TEXT, content)
         with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
-            cause = snippy.run(['snippy', 'import', '--scat', 'solution', '-d', '5dee85bedb7f4d3a', '-f', 'one-solution.txt'])
+            cause = snippy.run(['snippy', 'import', '--scat', 'solution', '-d', '6cfe47a8880a8f81', '-f', 'one-solution.txt'])
             assert cause == Cause.ALL_OK
             Content.assert_storage(content)
             mock_file.assert_called_once_with('one-solution.txt', 'r')
@@ -437,13 +437,13 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
                 Content.deepcopy(Solution.NGINX)
             ]
         }
-        content['data'][0]['data'] = content['data'][0]['data'][:13] + ('    # Changed.',) + content['data'][0]['data'][14:]
+        content['data'][0]['data'] = content['data'][0]['data'][:4] + ('    # Changed.',) + content['data'][0]['data'][5:]
         content['data'][0]['description'] = 'Changed.'
         content['data'][0]['updated'] = Content.KAFKA_TIME
-        content['data'][0]['digest'] = '44a84d31fd5d4ca67aecf2dd1f92290114cbd64bd33b4f1811761c82f645458a'
+        content['data'][0]['digest'] = 'ce3f7a0ab75dc74f7bbea68ae323c29b2361965975c0c8d34897551149d29118'
         file_content = Content.get_file_content(Content.TEXT, content)
         with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
-            cause = snippy.run(['snippy', 'import', '--scat', 'solution', '-d', '5dee85bedb7f4d3a', '-f', 'one-solution.text'])
+            cause = snippy.run(['snippy', 'import', '--scat', 'solution', '-d', '6cfe47a8880a8f81', '-f', 'one-solution.text'])
             assert cause == Cause.ALL_OK
             Content.assert_storage(content)
             mock_file.assert_called_once_with('one-solution.text', 'r')
@@ -453,9 +453,9 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
     def test_cli_import_solution_018(snippy):
         """Import solution based on message digest.
 
-        Import defined solution based on message digest. In this case the
-        content category is accidentally specified as 'snippet'. This
-        should still import the content in solution category.
+        Import solution based on a message digest. In this case the content
+        category is accidentally specified as 'snippet'. This should still
+        import the content in solution category.
         """
 
         content = {
@@ -463,13 +463,15 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
                 Content.deepcopy(Solution.NGINX)
             ]
         }
-        content['data'][0]['data'] = content['data'][0]['data'][:13] + ('    # Changed.',) + content['data'][0]['data'][14:]
+        print(content['data'][0]['data'])
+        #sys-exit()
+        content['data'][0]['data'] = content['data'][0]['data'][:4] + ('    # Changed.',) + content['data'][0]['data'][5:]
         content['data'][0]['description'] = 'Changed.'
         content['data'][0]['updated'] = Content.KAFKA_TIME
-        content['data'][0]['digest'] = '44a84d31fd5d4ca67aecf2dd1f92290114cbd64bd33b4f1811761c82f645458a'
+        content['data'][0]['digest'] = 'ce3f7a0ab75dc74f7bbea68ae323c29b2361965975c0c8d34897551149d29118'
         file_content = Content.get_file_content(Content.TEXT, content)
         with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
-            cause = snippy.run(['snippy', 'import', '--scat', 'snippet', '-d', '5dee85bedb7f4d3a', '-f', 'one-solution.text'])
+            cause = snippy.run(['snippy', 'import', '--scat', 'snippet', '-d', '6cfe47a8880a8f81', '-f', 'one-solution.text'])
             assert cause == Cause.ALL_OK
             Content.assert_storage(content)
             mock_file.assert_called_once_with('one-solution.text', 'r')
@@ -493,10 +495,10 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
                 Content.deepcopy(Solution.NGINX)
             ]
         }
-        updates['data'][0]['data'] = content['data'][0]['data'][:13] + ('    # Changed.',) + content['data'][0]['data'][14:]
+        updates['data'][0]['data'] = content['data'][0]['data'][:4] + ('    # Changed.',) + content['data'][0]['data'][5:]
         updates['data'][0]['description'] = 'Changed.'
         updates['data'][0]['updated'] = Content.KAFKA_TIME
-        updates['data'][0]['digest'] = '44a84d31fd5d4ca67aecf2dd1f92290114cbd64bd33b4f1811761c82f645458a'
+        updates['data'][0]['digest'] = 'ce3f7a0ab75dc74f7bbea68ae323c29b2361965975c0c8d34897551149d29118'
         file_content = Content.get_file_content(Content.TEXT, updates)
         with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--scat', 'solution', '-d', '123456789abcdef0', '-f', 'one-solution.text'])
@@ -663,10 +665,10 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             yaml.safe_load.return_value = file_content
             cause = snippy.run(['snippy', 'import', '--scat', 'solution', '--defaults'])
-            assert cause in ('NOK: content data already exist with digest 5dee85bedb7f4d3a',
-                             'NOK: content uuid already exist with digest 5dee85bedb7f4d3a',
-                             'NOK: content data already exist with digest db712a82662d6932',
-                             'NOK: content uuid already exist with digest db712a82662d6932')
+            assert cause in ('NOK: content data already exist with digest 6cfe47a8880a8f81',
+                             'NOK: content uuid already exist with digest 6cfe47a8880a8f81',
+                             'NOK: content data already exist with digest 4346ba4c79247430',
+                             'NOK: content uuid already exist with digest 4346ba4c79247430')
             Content.assert_storage(content)
             defaults_solutions = pkg_resources.resource_filename('snippy', 'data/defaults/solutions.yaml')
             mock_file.assert_called_once_with(defaults_solutions, 'r')

@@ -32,7 +32,7 @@ from snippy.content.parser import Parser
 from snippy.logger import Logger
 
 
-class Resource(object):  # pylint: disable=too-many-public-methods,too-many-instance-attributes
+class Resource(object):  # pylint: disable=too-many-public-methods,too-many-instance-attributes,too-many-lines
     """Persiste one resource."""
 
     # Database column numbers.
@@ -540,16 +540,22 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         return self.seal(validate)
 
     def convert(self, list_=None, dict_=None):
-        """Convert give data into a resource.
+        """Convert given data into a resource.
 
         Resource source can be database which stores resources as a list
         of attributes or a dictionary. In case of dictionary, the source
-        is JSON or YAML file which do not store the internal ID that must
-        be generated in case of dictionary source.
+        can be any supported file format like YAML or Markdown format.
+
+        The internal ``_id`` attribute is stored only in database and thus
+        it must be generated when resource is read from external file.
+
+        The external source file may not contain timestamps in attributes
+        ``created`` or ``updated`` for example in error cases. These values
+        has to be set to timestamp to prevent database INSERT failure.
 
         Args:
-            list_ (list): Resource attributes in list or tuple.
-            dict_ (dict): Resource attributes in dict.
+            list_ (list): Resource attributes in a list or tuple.
+            dict_ (dict): Resource attributes in dictionary.
         """
 
         if list_:
@@ -582,8 +588,8 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             self.source = dict_.get('source', self.source)
             self.versions = dict_.get('versions', self.versions)
             self.filename = dict_.get('filename', self.filename)
-            self.created = dict_.get('created', self.created)
-            self.updated = dict_.get('updated', self.updated)
+            self.created = dict_.get('created', self.created) or self.created
+            self.updated = dict_.get('updated', self.updated) or self.updated
             self.uuid = dict_.get('uuid', self.uuid)
             self.digest = dict_.get('digest', self.digest)
 

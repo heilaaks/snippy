@@ -74,9 +74,9 @@ class TestCliPerformance(object):
             assert cause == Cause.ALL_OK
             cause = snippy_perf.run(['snippy', 'delete', '-d', '53908d68425c61dc'] + Content.db_cli_params())
             assert cause == Cause.ALL_OK
-            cause = snippy_perf.run(['snippy', 'delete', '-d', '9d0a54be4bb66b47'] + Content.db_cli_params())
+            cause = snippy_perf.run(['snippy', 'delete', '-d', '4346ba4c79247430'] + Content.db_cli_params())
             assert cause == Cause.ALL_OK
-            cause = snippy_perf.run(['snippy', 'delete', '-d', 'c91b420e5437158c'] + Content.db_cli_params())
+            cause = snippy_perf.run(['snippy', 'delete', '-d', '6cfe47a8880a8f81'] + Content.db_cli_params())
             assert cause == Cause.ALL_OK
             Content.assert_storage(None)
 

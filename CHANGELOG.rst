@@ -10,12 +10,12 @@ Breaking changes
 ~~~~~~~~~~~~~~~~
 
 * Change content category command line options `[2019.05.04]`_.
+* Change content text templates metadata section `[2019.05.19]`_.
 
 New features
 ~~~~~~~~~~~~
 
 * Add Bash completion support.
-
 
 Bugfixes
 ~~~~~~~~
@@ -183,3 +183,4 @@ Security
 .. _`[2019.04.20]`: https://github.com/heilaaks/snippy/commit/3479f27e298cd09e37dd1e1bd58c6f67fc0b2f34
 .. _`[2019.04.21]`: https://github.com/heilaaks/snippy/commit/5203f6060e8f6d394befb210ce707944f9494d49
 .. _`[2019.05.04]`: https://github.com/heilaaks/snippy/commit/f2344cca2307d848a7d726892bec4b0872e0f566
+.. _`[2019.05.19]`: https://github.com/heilaaks/snippy/commit/b5ca1d025ec091d0572c24808744785415f61ca1

@@ -1,5 +1,4 @@
 ## WORKING
-   - [ ] Remove duplicated attributes from templates. At least solution and filename twice.
    - [ ] Fix cause 'Content has been created without internal errors.' This breaks when there is e.g. created and bad request. That is the cause ok does not see 404 and sends OK. This was the Cause() check for OK
    - [ ] Fix updating Markdown based solutions in text formats does not work because the Mkdn solution does not have text header and data structure.
    - [ ] Fix test_logger_016. The P3 is not correct? The links in p2 are in the same elemnet separated with \n that should be the case with P3.

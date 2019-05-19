@@ -920,6 +920,178 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
         Parser(self.TIMESTAMP, text, collection).read_collection()
         assert not collection
 
+    def test_parser_solution_006(self):
+        """Test parsing solution.
+
+        Test case verifies that text formatted solution metadata is read
+        correctly.
+        """
+
+        text = '\n'.join((
+            '################################################################################',
+            '## BRIEF  : Testing docker log drivers',
+            '##',
+            '## GROUPS : docker',
+            '## TAGS   : docker,moby,kubernetes,logging,plugin,driver,kafka,logs2kafka',
+            '## FILE   : kubernetes-docker-log-driver-kafka.txt',
+            '################################################################################',
+            '',
+            '################################################################################',
+            '## description',
+            '################################################################################',
+            '',
+            '    # description.',
+            '',
+            '################################################################################',
+            '## references',
+            '################################################################################',
+            '',
+            '    # Kube Kafka log driver',
+            '    > https://github.com/MickayG/moby-kafka-logdriver',
+            '',
+            '    # Logs2Kafka',
+            '    > https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ',
+            '    > https://github.com/garo/logs2kafka',
+            '',
+            '################################################################################',
+            '## commands',
+            '################################################################################',
+            '',
+            '################################################################################',
+            '## solutions',
+            '################################################################################',
+            '',
+            '################################################################################',
+            '## configurations',
+            '################################################################################',
+            '',
+            '################################################################################',
+            '## whiteboard',
+            '################################################################################',
+            '',
+            '################################################################################',
+            '## Meta',
+            '################################################################################',
+            '',
+            'category : solution',
+            'created  : 2019-04-19T10:13:39.885247+00:00',
+            'digest   : 50c37862816a197c63b2ae72c511586c3463814509c0d5c7ebde534ce0209935',
+            'name     : solution name',
+            'source   : https://www.source.com/source.md',
+            'updated  : 2019-05-19T10:13:39.885247+00:00',
+            'uuid     : 7ff49be3-c1f0-4bb7-9dd2-6ff9035261c1',
+            'versions : kafka==1.1.0,python>=3',
+            ''
+        ))
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
+        assert resource.category == Const.SOLUTION
+        assert resource.data == tuple(text.split(Const.DELIMITER_DATA)[8:-13])
+        assert resource.brief == 'Testing docker log drivers'
+        assert resource.description == 'description.'
+        assert resource.name == 'solution name'
+        assert resource.groups == ('docker',)
+        assert resource.tags == ('docker', 'driver', 'kafka', 'kubernetes', 'logging', 'logs2kafka', 'moby', 'plugin')
+        assert resource.links == (
+            'https://github.com/MickayG/moby-kafka-logdriver',
+            'https://github.com/garo/logs2kafka',
+            'https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ'
+        )
+        assert resource.source == 'https://www.source.com/source.md'
+        assert resource.versions == ('kafka==1.1.0', 'python>=3')
+        assert resource.filename == 'kubernetes-docker-log-driver-kafka.txt'
+        assert resource.created == '2019-04-19T10:13:39.885247+00:00'
+        assert resource.updated == '2019-05-19T10:13:39.885247+00:00'
+        assert resource.uuid == '7ff49be3-c1f0-4bb7-9dd2-6ff9035261c1'
+        assert resource.digest == 'a91f24a0490bcaedb1070c71d032764a7e3c1fcff4f44d857b59e6603c61677f'
+
+    def test_parser_solution_007(self):
+        """Test parsing solution.
+
+        Test case verifies that text formatted solution template examples in
+        the metadata are not read when the examples are not changed.
+        """
+
+        text = '\n'.join((
+            '################################################################################',
+            '## BRIEF  : Testing docker log drivers',
+            '##',
+            '## GROUPS : docker',
+            '## TAGS   : docker,moby,kubernetes,logging,plugin,driver,kafka,logs2kafka',
+            '## FILE   : kubernetes-docker-log-driver-kafka.txt',
+            '################################################################################',
+            '',
+            '################################################################################',
+            '## description',
+            '################################################################################',
+            '',
+            '    # description.',
+            '',
+            '################################################################################',
+            '## references',
+            '################################################################################',
+            '',
+            '    # Kube Kafka log driver',
+            '    > https://github.com/MickayG/moby-kafka-logdriver',
+            '',
+            '    # Logs2Kafka',
+            '    > https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ',
+            '    > https://github.com/garo/logs2kafka',
+            '',
+            '################################################################################',
+            '## commands',
+            '################################################################################',
+            '',
+            '################################################################################',
+            '## solutions',
+            '################################################################################',
+            '',
+            '################################################################################',
+            '## configurations',
+            '################################################################################',
+            '',
+            '################################################################################',
+            '## whiteboard',
+            '################################################################################',
+            '',
+            '################################################################################',
+            '## Meta',
+            '################################################################################',
+            '',
+            'category : solution',
+            'created  : 2019-04-19T10:13:39.885247+00:00',
+            'digest   : 50c37862816a197c63b2ae72c511586c3463814509c0d5c7ebde534ce0209935',
+            'name     : example content handle',
+            'source   : https://www.example.com/source.md',
+            'updated  : 2019-05-19T10:13:39.885247+00:00',
+            'uuid     : 7ff49be3-c1f0-4bb7-9dd2-6ff9035261c1',
+            'versions : example=3.9.0,python>=3',
+            ''
+        ))
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
+        assert resource.category == Const.SOLUTION
+        assert resource.data == tuple(text.split(Const.DELIMITER_DATA)[8:-13])
+        assert resource.brief == 'Testing docker log drivers'
+        assert resource.description == 'description.'
+        assert resource.name == ''
+        assert resource.groups == ('docker',)
+        assert resource.tags == ('docker', 'driver', 'kafka', 'kubernetes', 'logging', 'logs2kafka', 'moby', 'plugin')
+        assert resource.links == (
+            'https://github.com/MickayG/moby-kafka-logdriver',
+            'https://github.com/garo/logs2kafka',
+            'https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ'
+        )
+        assert resource.source == ''
+        assert resource.versions == ()
+        assert resource.filename == 'kubernetes-docker-log-driver-kafka.txt'
+        assert resource.created == '2019-04-19T10:13:39.885247+00:00'
+        assert resource.updated == '2019-05-19T10:13:39.885247+00:00'
+        assert resource.uuid == '7ff49be3-c1f0-4bb7-9dd2-6ff9035261c1'
+        assert resource.digest == 'd376b7c6a492c9032357d4346b551867d42b8bb34873fe417fc837abe7fb7506'
+
     def test_parser_reference_001(self):
         """Test parsing reference.
 

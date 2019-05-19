@@ -122,7 +122,11 @@ class ContentParserText(ContentParserBase):
         (?:\n{2}|[#]|$)         # Match newlines or next header indicated by hash or end of the string.
         ''' % (re.escape(NAME[Const.SNIPPET]), re.escape(NAME[Const.REFERENCE])), re.DOTALL | re.VERBOSE)
     REGEXP['name'][Const.REFERENCE] = REGEXP['name'][Const.SNIPPET]
-    REGEXP['name'][Const.SOLUTION] = Const.RE_DO_NOT_MATCH_ANYTHING  # There is no name tag in solution content.
+    REGEXP['name'][Const.SOLUTION] = re.compile(r'''
+        name                    # Match metadata key at the beginning of line.
+        \s+[:]{1}\s             # Match spaces and column between key and value.
+        (?P<name>.*$)           # Catch metadata value till end of the line.
+        ''', re.MULTILINE | re.VERBOSE)
 
     REGEXP['groups'] = {}
     REGEXP['groups'][Const.SNIPPET] = re.compile(r'''
@@ -167,7 +171,11 @@ class ContentParserText(ContentParserBase):
         (?:\n{2}|[#]|$)         # Match newlines or next header indicated by hash or end of the string.
         ''' % (re.escape(SOURCE[Const.SNIPPET]), re.escape(SOURCE[Const.REFERENCE])), re.DOTALL | re.VERBOSE)
     REGEXP['source'][Const.REFERENCE] = REGEXP['source'][Const.SNIPPET]
-    REGEXP['source'][Const.SOLUTION] = Const.RE_DO_NOT_MATCH_ANYTHING  # There is no source tag in solution content.
+    REGEXP['source'][Const.SOLUTION] = re.compile(r'''
+        source                  # Match metadata key at the beginning of line.
+        \s+[:]{1}\s             # Match spaces and column between key and value.
+        (?P<source>.*$)         # Catch metadata value till end of the line.
+        ''', re.MULTILINE | re.VERBOSE)
 
     REGEXP['versions'] = {}
     REGEXP['versions'][Const.SNIPPET] = re.compile(r'''
@@ -176,7 +184,11 @@ class ContentParserText(ContentParserBase):
         (?:\n{2}|[#]|$)         # Match newlines or next header indicated by hash or end of the string.
         ''' % (re.escape(VERSIONS[Const.SNIPPET]), re.escape(VERSIONS[Const.REFERENCE])), re.DOTALL | re.VERBOSE)
     REGEXP['versions'][Const.REFERENCE] = REGEXP['versions'][Const.SNIPPET]
-    REGEXP['versions'][Const.SOLUTION] = Const.RE_DO_NOT_MATCH_ANYTHING  # There is no versions tag in solution content.
+    REGEXP['versions'][Const.SOLUTION] = re.compile(r'''
+        versions                # Match metadata key at the beginning of line.
+        \s+[:]{1}\s             # Match spaces and column between key and value.
+        (?P<versions>.*$)       # Catch metadata value till end of the line.
+        ''', re.MULTILINE | re.VERBOSE)
 
     REGEXP['filename'] = {}
     REGEXP['filename'][Const.SNIPPET] = re.compile(r'''

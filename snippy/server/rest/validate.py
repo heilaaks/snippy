@@ -24,6 +24,7 @@ from jsonschema.exceptions import ValidationError
 from jsonschema.exceptions import SchemaError
 
 from snippy.cause import Cause
+from snippy.constants import Constants as Const
 from snippy.config.config import Config
 from snippy.logger import Logger
 
@@ -119,7 +120,7 @@ class Validate(object):  # pylint: disable=too-few-public-methods
 
         if cls._schema.validate(request.media):
             for data in cls._to_list(request.media['data']):
-                if cls._is_valid_data(data):
+                if cls._is_valid_data(data, request):
                     resource_ = data['attributes']
                     resource_['identity'] = identity
                     resource_['digest'] = None
@@ -153,19 +154,24 @@ class Validate(object):  # pylint: disable=too-few-public-methods
 
         return tuple(data)
 
-    @staticmethod
-    def _is_valid_data(data):
+    @classmethod
+    def _is_valid_data(cls, data, request):
         """Validata top level resource data.
 
         Additional validation on top of JSON schema validation is done to be
         able to generate other than 400 Bad Request HTTP response. The 400 is
         the only HTTP error generated from JSON schema validation failures.
 
-        JSON API specification requires 403 Forbidden response if client tried
-        to generate resource ID.
+        JSON API specification requires that the 403 Forbidden response if
+        client tried to generate a resource ID.
+
+        Because resources are processed one by one, the mandatory attibutes
+        are must checked for the whole HTTP request in here. The ``data`` or
+        ``links`` attributes are mandatory only when new resource is created.
 
         Args:
             data (dict): Top level JSON ``data`` property.
+            request (dict): JSON resource received from a client.
 
         Returns:
             bool: True if the data is valid.
@@ -175,4 +181,31 @@ class Validate(object):  # pylint: disable=too-few-public-methods
             Cause.push(Cause.HTTP_FORBIDDEN, 'client generated resource id is not supported, remove member data.id')
             return False
 
+        if cls._is_resource_created(request):
+            if 'data' in data['attributes'] and not data['attributes']['data'] and data['type'] in (Const.SNIPPET, Const.SOLUTION):
+                Cause.push(Cause.HTTP_BAD_REQUEST, 'mandatory attribute data for {} is empty'.format(data['type']))
+                return False
+
+            if 'links' in data['attributes'] and not data['attributes']['links'] and data['type'] == Const.REFERENCE:
+                Cause.push(Cause.HTTP_BAD_REQUEST, 'mandatory attribute links for {} is empty'.format(data['type']))
+                return False
+
         return True
+
+    @staticmethod
+    def _is_resource_created(request):
+        """Test if new resource is created.
+
+        Args:
+            request (dict): JSON resource received from a client.
+
+        Returns:
+            bool: True if a new resource is created.
+        """
+
+        method = request.method.lower()
+        override = request.get_header("x-http-method-override", default=method)
+        if (method == 'post' or override == 'post') or (method == 'put' or override == 'put'):
+            return True
+
+        return False

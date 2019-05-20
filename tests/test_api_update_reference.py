@@ -59,7 +59,7 @@ class TestApiUpdateReference(object):
         storage['data'][0]['digest'] = Reference.PYTEST_DIGEST
         request_body = {
             'data': {
-                'type': 'snippet',
+                'type': 'reference',
                 'attributes': {
                     'data': storage['data'][0]['data'],
                     'brief': storage['data'][0]['brief'],

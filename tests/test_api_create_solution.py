@@ -267,7 +267,6 @@ class TestApiCreateSolution(object):
             ]
         }
         expect_headers = {}
-        print(Content.output())
         result = testing.TestClient(server.server.api).simulate_post(
             path='/api/snippy/rest/solutions/ee3f2ab7c63d696',
             headers={'accept': 'application/json', 'X-HTTP-Method-Override': 'DELETE'})
@@ -366,7 +365,7 @@ class TestApiCreateSolution(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '389'
+            'content-length': '367'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -374,7 +373,7 @@ class TestApiCreateSolution(object):
                 'status': '400',
                 'statusString': '400 Bad Request',
                 'module': 'snippy.testing.testing:123',
-                'title': 'content was not stored because mandatory content field data is empty'
+                'title': 'mandatory attribute data for solution is empty'
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
@@ -454,6 +453,49 @@ class TestApiCreateSolution(object):
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(storage)
+
+    @staticmethod
+    @pytest.mark.usefixtures('caller')
+    def test_api_create_solution_010(server):
+        """Try to create two solutions.
+
+        Try to send POST /solutions to create two new resources. The second
+        resource contains an empty mandatory attribute ``data``. The HTTP
+        request must be rejected with an error.
+        """
+
+        request_body = {
+            'data': [{
+                'type': 'solution',
+                'attributes': Request.dnginx
+            }, {
+                'type': 'solution',
+                'attributes':{
+                    'data': []
+                }
+            }]
+        }
+        expect_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '367'
+        }
+        expect_body = {
+            'meta': Content.get_api_meta(),
+            'errors': [{
+                'status': '400',
+                'statusString': '400 Bad Request',
+                'module': 'snippy.testing.testing:123',
+                'title': 'mandatory attribute data for solution is empty'
+            }]
+        }
+        result = testing.TestClient(server.server.api).simulate_post(
+            path='/api/snippy/rest/solutions',
+            headers={'accept': 'application/json'},
+            body=json.dumps(request_body))
+        assert result.status == falcon.HTTP_400
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(None)
 
     @classmethod
     def teardown_class(cls):

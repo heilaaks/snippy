@@ -816,20 +816,15 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods, 
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '563'
+            'content-length': '366'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
+                'module': 'snippy.testing.testing:123',
                 'status': '400',
                 'statusString': '400 Bad Request',
-                'module': 'snippy.testing.testing:123',
-                'title': 'content was not stored because it was matching to an empty template'
-            }, {
-                'status': '400',
-                'statusString': '400 Bad Request',
-                'module': 'snippy.testing.testing:123',
-                'title': 'content was not stored because mandatory content field data is empty'
+                'title': 'mandatory attribute data for snippet is empty',
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
@@ -1211,19 +1206,13 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods, 
         Content.assert_storage(None)
 
     @staticmethod
-    @pytest.mark.skip(reason="FIXME")
     @pytest.mark.usefixtures('caller')
     def test_api_create_snippet_025(server):
         """Try to create two snippets.
 
         Try to send POST /snippets to create two new resources. The second
-        resource contains an empty mandatory attribute ``data``.
-
-        Currently the schema validation does not check the data attribute.
-        The reason is that it is mandatory with snippets and solutions but
-        not with Reference resources. Because the code logic processes the
-        resources one by one, it is not possible currently to see that the
-        next resource in a list will fail.
+        resource contains an empty mandatory attribute ``data``. The HTTP
+        request must be rejected with an error.
         """
 
         request_body = {
@@ -1237,25 +1226,25 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods, 
                 }
             }]
         }
-        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '2004'}
-        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '2093'}
+        expect_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '366'
+        }
         expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '400',
                 'statusString': '400 Bad Request',
                 'module': 'snippy.testing.testing:123',
-                'title': 'json media validation failed'
+                'title': 'mandatory attribute data for snippet is empty'
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
             path='/api/snippy/rest/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
-        print(result.headers)
-        print(result.json)
-        assert result.status == falcon.HTTP_404
-        assert result.headers in (expect_headers_p2, expect_headers_p3)
+        assert result.status == falcon.HTTP_400
+        assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(None)
 

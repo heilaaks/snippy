@@ -319,7 +319,7 @@ class TestApiCreateReference(object):
 
         Try to send POST /references to create a new resource with an empty
         ``links`` attribute. The ``links`` is a mandatory attribute in case
-        of a Reference content and the HTTP request must be rejected with an
+        of a reference content and the HTTP request must be rejected with an
         error.
         """
 
@@ -333,20 +333,15 @@ class TestApiCreateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '564'
+            'content-length': '369'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
+                'module': 'snippy.testing.testing:123',
                 'status': '400',
                 'statusString': '400 Bad Request',
-                'module': 'snippy.testing.testing:123',
-                'title': 'content was not stored because it was matching to an empty template'
-            }, {
-                'status': '400',
-                'statusString': '400 Bad Request',
-                'module': 'snippy.testing.testing:123',
-                'title': 'content was not stored because mandatory content field links is empty'
+                'title': 'mandatory attribute links for reference is empty',
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
@@ -727,6 +722,49 @@ class TestApiCreateReference(object):
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(storage)
+
+    @staticmethod
+    @pytest.mark.usefixtures('caller')
+    def test_api_create_reference_014(server):
+        """Try to create two references.
+
+        Try to send POST /references to create two new resources. The second
+        resource contains an empty mandatory attribute ``list``. The HTTP
+        request must be rejected with an error.
+        """
+
+        request_body = {
+            'data': [{
+                'type': 'reference',
+                'attributes': Request.gitlog
+            }, {
+                'type': 'reference',
+                'attributes':{
+                    'links': []
+                }
+            }]
+        }
+        expect_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '369'
+        }
+        expect_body = {
+            'meta': Content.get_api_meta(),
+            'errors': [{
+                'status': '400',
+                'statusString': '400 Bad Request',
+                'module': 'snippy.testing.testing:123',
+                'title': 'mandatory attribute links for reference is empty'
+            }]
+        }
+        result = testing.TestClient(server.server.api).simulate_post(
+            path='/api/snippy/rest/references',
+            headers={'accept': 'application/json'},
+            body=json.dumps(request_body))
+        assert result.status == falcon.HTTP_400
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(None)
 
     @classmethod
     def teardown_class(cls):

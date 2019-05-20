@@ -1,10 +1,9 @@
 ## WORKING
-   - [ ] Fix updating content without updates changes the updated timestamp. There is no need to store the content either.
+   - [ ] Fix updating content without update changing the updated timestamp. There is no need to store the content either.
    - [ ] Fix JSON API v1.x requires links for collection responses too. Individual resource not found or attrbute results null otherwise empty list.
    - [ ] Design and change /groups and /tags to GET groups and tags not content. Like unique tags and groups.
    - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format. Try tldr. External tool? No more dependencies would be nice.
    - [ ] Add support to find dead links. External tool? No more dependencies would be nice.
-   - [ ] Fix HTTP response 201 Created in case the second resource is failing. If any of the resources fails, the HTTP request must be rejected. This applies only to empty data because that is checked after the REST API validation. See test_api_create_snippet_025
    - [ ] Fix test_logger_017. The P3 is not correct? The links in p2 are in the same elemnet separated with \n that should be the case with P3.
    - [ ] Add --help server to list server specific commands and log parameters. Maybe add --help debug/troubleshoot? Debug better because it is shorter?
    - [ ] Incorrect header does not leave logs. Test manually since this works differently that the tests? For example ab was missing '-T application/vnd.api+json' without this it did not work.

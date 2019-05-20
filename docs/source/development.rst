@@ -66,28 +66,26 @@ Follow the instructions to install the project on a Fedora Linux.
        source ~/.local/bin/virtualenvwrapper.sh
     source ~/.bashrc
 
-    # Create virtual environments for each Python versions.
-    mkvirtualenv --python /usr/bin/python2.7 p27-snippy
-    mkvirtualenv --python /usr/bin/python3.4 p34-snippy
-    mkvirtualenv --python /usr/bin/python3.5 p35-snippy
-    mkvirtualenv --python /usr/bin/python3.6 p36-snippy
-    mkvirtualenv --python /usr/bin/python3.7 p37-snippy
-    mkvirtualenv --python /usr/bin/python3.8 p38-snippy
-    mkvirtualenv --python /usr/bin/pypy2 pypy2-snippy
-    mkvirtualenv --python /usr/bin/pypy3 pypy3-snippy
+    # Create virtual environments for each Python version.
+    for PYTHON in python2.7 \
+                  python3.4 \
+                  python3.5 \
+                  python3.6 \
+                  python3.7 \
+                  python3.8 \
+                  pypy \
+                  pypy3
+    do
+        if which ${PYTHON} > /dev/null 2>&1; then
+            mkvirtualenv --python $(which ${PYTHON}) snippy-${PYTHON}
+        fi
+    done
 
-    # Repeat setuptools and wheel upgrade and development environment
-    # installation for all created virtual environments.
-    for VENV in p27-snippy \
-                p34-snippy \
-                p35-snippy \
-                p36-snippy \
-                p37-snippy \
-                p38-snippy \
-                pypy2-snippy \
-                pypy3-snippy
+    # Install development environment virtual environments.
+    for VENV in $(lsvirtualenv -b | grep snippy-py)
     do
         workon ${VENV}
+        echo install packages in ${VENV}
         make upgrade-wheel
         make install-devel
         deactivate
@@ -143,28 +141,26 @@ Follow the instructions to install the project on a Ubuntu Linux.
        source ~/.local/bin/virtualenvwrapper.sh
     source ~/.bashrc
 
-    # Create virtual environments for each Python versions.
-    mkvirtualenv --python /usr/bin/python2.7 p27-snippy
-    mkvirtualenv --python /usr/bin/python3.4 p34-snippy
-    mkvirtualenv --python /usr/bin/python3.5 p35-snippy
-    mkvirtualenv --python /usr/bin/python3.6 p36-snippy
-    mkvirtualenv --python /usr/bin/python3.7 p37-snippy
-    mkvirtualenv --python /usr/bin/python3.8 p38-snippy
-    mkvirtualenv --python /usr/bin/pypy pypy2-snippy
-    mkvirtualenv --python /usr/bin/pypy3 pypy3-snippy
+    # Create virtual environments for each Python version.
+    for PYTHON in python2.7 \
+                  python3.4 \
+                  python3.5 \
+                  python3.6 \
+                  python3.7 \
+                  python3.8 \
+                  pypy \
+                  pypy3
+    do
+        if which ${PYTHON} > /dev/null 2>&1; then
+            mkvirtualenv --python $(which ${PYTHON}) snippy-${PYTHON}
+        fi
+    done
 
-    # Repeat setuptools and wheel upgrade and development environment
-    # installation for all created virtual environments.
-    for VENV in p27-snippy \
-                p34-snippy \
-                p35-snippy \
-                p36-snippy \
-                p37-snippy \
-                p38-snippy \
-                pypy2-snippy \
-                pypy3-snippy
+    # Install development environment virtual environments.
+    for VENV in $(lsvirtualenv -b | grep snippy-py)
     do
         workon ${VENV}
+        echo install packages in ${VENV}
         make upgrade-wheel
         make install-devel
         deactivate
@@ -190,9 +186,30 @@ Follow the instructions to install the project on a Debian Linux.
         virtualenvwrapper
     export PATH=${PATH}:~/.local/bin
 
-    # Create virtual environments for each Python versions.
-    mkvirtualenv --python /usr/bin/python2.7 p27-snippy
-    mkvirtualenv --python /usr/bin/python3.5 p35-snippy
+    # Create virtual environments for each Python version.
+    for PYTHON in python2.7 \
+                  python3.4 \
+                  python3.5 \
+                  python3.6 \
+                  python3.7 \
+                  python3.8 \
+                  pypy \
+                  pypy3
+    do
+        if which ${PYTHON} > /dev/null 2>&1; then
+            mkvirtualenv --python $(which ${PYTHON}) snippy-${PYTHON}
+        fi
+    done
+
+    # Install development environment virtual environments.
+    for VENV in $(lsvirtualenv -b | grep snippy-py)
+    do
+        workon ${VENV}
+        echo install packages in ${VENV}
+        make upgrade-wheel
+        make install-devel
+        deactivate
+    done
 
     # Install CPython versions.
     mkdir -p ~/devel/compile && cd $_
@@ -230,7 +247,7 @@ Follow the instructions to install the project on a RHEL Linux.
        source ~/.local/bin/virtualenvwrapper.sh
     source ~/.bashrc
 
-    # Create virtual environments for each Python versions.
+    # Create virtual environments for each Python version.
     for PYTHON in python2.7 \
                   python3.4 \
                   python3.5 \
@@ -243,6 +260,16 @@ Follow the instructions to install the project on a RHEL Linux.
         if which ${PYTHON} > /dev/null 2>&1; then
             mkvirtualenv --python $(which ${PYTHON}) snippy-${PYTHON}
         fi
+    done
+
+    # Install development environment virtual environments.
+    for VENV in $(lsvirtualenv -b | grep snippy-py)
+    do
+        workon ${VENV}
+        echo install packages in ${VENV}
+        make upgrade-wheel
+        make install-devel
+        deactivate
     done
 
 Workflows

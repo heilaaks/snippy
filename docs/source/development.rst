@@ -5,7 +5,7 @@ Installation
 ------------
 
 The instructions are tested with Fedora 30 and Bash shell. There are also
-draft installation instructions for Ubuntu and Debian Linux distributions.
+draft installation instructions for other Linux distributions.
 
 .. note::
 
@@ -204,6 +204,46 @@ Follow the instructions to install the project on a Debian Linux.
     /configure --enable-optimizations
     make -j8
     sudo make altinstall
+
+RHEL
+~~~~
+
+Follow the instructions to install the project on a RHEL Linux.
+
+.. code:: bash
+
+    # Clone the project from the GitHub.
+    mkdir -p ~/devel/snippy && cd $_
+    git clone https://github.com/heilaaks/snippy.git .
+
+    # Install Python virtual environments.
+    yum install python-pip -y
+    pip install --user \
+        pipenv \
+        virtualenv \
+        virtualenvwrapper
+    export PATH=${PATH}:~/.local/bin
+
+    # Configure the virtualenv wrapper.
+    vi ~/.bashrc
+       export WORKON_HOME=~/devel/.virtualenvs
+       source ~/.local/bin/virtualenvwrapper.sh
+    source ~/.bashrc
+
+    # Create virtual environments for each Python versions.
+    for PYTHON in python2.7 \
+                  python3.4 \
+                  python3.5 \
+                  python3.6 \
+                  python3.7 \
+                  python3.8 \
+                  pypy \
+                  pypy3
+    do
+        if which ${PYTHON} > /dev/null 2>&1; then
+            mkvirtualenv --python $(which ${PYTHON}) snippy-${PYTHON}
+        fi
+    done
 
 Workflows
 ---------

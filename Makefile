@@ -80,7 +80,7 @@ test-in-memory:
 test-tox:
 	tox
 
-test-all: test test-postgresql test-server test-docker test-tox
+test-all: test test-postgresql test-in-memory test-server test-docker test-tox
 
 test-release: clean-all test-all lint docs test-release-wheel
 
@@ -103,7 +103,7 @@ jsonschema:
 	openapi2jsonschema snippy/data/server/openapi/swagger-2.0.yml -o snippy/data/server/openapi/schema/
 
 docker: clean-all
-	docker build --build-arg http_proxy=${http_proxy} --build-arg https_proxy=${https_proxy} -t heilaaks/snippy .
+	docker build -t heilaaks/snippy .
 
 security-scan:
 	-bandit -r snippy

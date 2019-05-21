@@ -22,49 +22,49 @@ jobs:
       script:
         - "make test"
         - "make test-postgresql"
-        - "mate test-in-memory"
+        - "make test-in-memory"
     - stage: test
       python: "3.4"
       script:
         - "make test"
         - "make test-postgresql"
-        - "mate test-in-memory"
+        - "make test-in-memory"
     - stage: test
       python: "3.5"
       script:
         - "make test"
         - "make test-postgresql"
-        - "mate test-in-memory"
+        - "make test-in-memory"
     - stage: test
       python: "3.6"
       script:
         - "make test"
         - "make test-postgresql"
-        - "mate test-in-memory"
+        - "make test-in-memory"
     - stage: test
       python: "3.7"
       script:
         - "make test"
         - "make test-postgresql"
-        - "mate test-in-memory"
+        - "make test-in-memory"
     - stage: test
       python: "3.8-dev"
       script:
         - "make test"
         - "make test-postgresql"
-        - "mate test-in-memory"
+        - "make test-in-memory"
     - stage: test
       python: "pypy"
       script:
         - "make test"
         - "make test-postgresql"
-        - "mate test-in-memory"
+        - "make test-in-memory"
     - stage: test
       python: "pypy3"
       script:
         - "make test"
         - "make test-postgresql"
-        - "mate test-in-memory"
+        - "make test-in-memory"
 
 after_success:
     - codecov

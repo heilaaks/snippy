@@ -45,10 +45,10 @@ uninstall:
 
 upgrade-wheel:
 	@test -x "$(shell which pip)" || $(PYTHON) -m ensurepip $(INSTALL_USER)
-	$(PYTHON) -m pip install pip setuptools wheel twine --upgrade $(INSTALL_USER)
+	$(PYTHON) -m pip install pip setuptools wheel twine --upgrade -qq $(INSTALL_USER)
 
 install-devel:
-	$(PYTHON) -m pip install .[devel] $(INSTALL_USER)
+	$(PYTHON) -m pip install .[devel] -qq $(INSTALL_USER)
 
 install-tests:
 	$(PYTHON) -m pip install .[test] $(INSTALL_USER)
@@ -74,8 +74,8 @@ test-server:
 test-postgresql:
 	$(PYTHON) -m pytest -x ${COVERAGE} --snippy-db postgresql -m "not (docker or server)"
 
-test-in-memroy:
-	$(PYTHON) -m pytest -x ${COVERAGE} --snippy-db in-memory -m "not (docker or server)"
+test-in-memory:
+	$(PYTHON) -m pytest -x ${COVERAGE} --snippy-db in-memory -m "not (docker or server)" $(PYTEST_CORES)
 
 test-tox:
 	tox

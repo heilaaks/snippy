@@ -392,7 +392,7 @@ class TestApiCreateReference(object):
         }
         server = server_db[0]
         db_connect = server_db[1]
-        if used_database == Helper.DB_SQLITE:
+        if used_database in (Helper.DB_SQLITE, Helper.DB_IN_MEMORY):
             db_connect.return_value.commit.side_effect = [
                 sqlite3.IntegrityError('UNIQUE constraint failed: contents.uuid'),
                 sqlite3.IntegrityError('UNIQUE constraint failed: contents.uuid')

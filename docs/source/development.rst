@@ -45,6 +45,17 @@ Follow the instructions to install the project on a Fedora Linux.
         python3-devel \
         python2-devel
 
+    # Upgrade CPython versions.
+    sudo dnf upgrade -y \
+        python27 \
+        python34 \
+        python35 \
+        python36 \
+        python37 \
+        python38 \
+        python3-devel \
+        python2-devel
+
     # Install PyPy versions.
     sudo dnf install -y \
         pypy2 \
@@ -53,20 +64,35 @@ Follow the instructions to install the project on a Fedora Linux.
         pypy3-devel \
         postgresql-devel
 
+    # Upgrade PyPy versions.
+    sudo dnf upgrade -y \
+        pypy2 \
+        pypy3 \
+        pypy2-devel \
+        pypy3-devel \
+        postgresql-devel
+
+    # Upgrade pip and setuptools.
+    pip install --user --upgrade \
+        pip \
+        setuptools \
+        wheel
+
     # Install Python virtual environments.
-    pip3 install --user \
+    pip install --user \
         pipenv \
         virtualenv \
         virtualenvwrapper
-    export PATH=${PATH}:~/.local/bin
 
-    # Configure the virtualenv wrapper.
+    # Enable virtualenvwrapper and add the Python user script dir if needed.
     vi ~/.bashrc
+       # Snippy development settings.
+       [[ ":$PATH:" != *"~/.local/bin"* ]] && PATH="${PATH}:~/.local/bin"
        export WORKON_HOME=~/devel/.virtualenvs
-       source ~/.local/bin/virtualenvwrapper.sh
+       source virtualenvwrapper.sh
     source ~/.bashrc
 
-    # Create virtual environments for each Python version.
+    # Create virtual environments.
     for PYTHON in python2.7 \
                   python3.4 \
                   python3.5 \
@@ -77,18 +103,31 @@ Follow the instructions to install the project on a Fedora Linux.
                   pypy3
     do
         if which ${PYTHON} > /dev/null 2>&1; then
-            mkvirtualenv --python $(which ${PYTHON}) snippy-${PYTHON}
+            printf "\033[32mcreate snippy venv: ${PYTHON}\033[0m\n"
+            mkvirtualenv --python $(which ${PYTHON}) snippy-${PYTHON} > /dev/null 2>&1
+            deactivate
         fi
     done
 
-    # Install development environment virtual environments.
+    # Install virtual environments.
     for VENV in $(lsvirtualenv -b | grep snippy-py)
     do
         workon ${VENV}
-        echo install packages in ${VENV}
-        make upgrade-wheel
-        make install-devel
+        if [ $(echo ${VENV} | cut -d"-" -f2) == $(readlink $(which python)) ]; then
+            printf "\033[32mdeploy snippy venv: ${VENV}\033[0m\n"
+            make upgrade-wheel
+            make install-devel
+        else
+            printf "\e[31menvironment not activated: ${VENV} \033[0m\n"
+        fi
         deactivate
+    done
+
+    # Delete virtual environments
+    for VENV in $(lsvirtualenv -b | grep snippy-py)
+    do
+        printf "\033[32mdelete snippy venv: ${VENV}\033[0m\n"
+        rmvirtualenv ${VENV} > /dev/null 2>&1
     done
 
 Ubuntu

@@ -21,7 +21,7 @@ draft installation instructions for other Linux distributions.
 
    The PostgreSQL adapters used with the server are installed by compiling
    them with the help of pip. This require working GCC toolchain which is
-   not part of Snippy documentation.
+   not part of the Snippy documentation.
 
 Fedora
 ~~~~~~
@@ -31,7 +31,7 @@ Follow the instructions to install the project on a Fedora Linux.
 .. code:: bash
 
     # Clone the project from the GitHub.
-    mkdir -p ~/devel/snippy && cd $_
+    mkdir -p ${HOME}/devel/snippy && cd $_
     git clone https://github.com/heilaaks/snippy.git .
 
     # Install CPython versions.
@@ -72,24 +72,31 @@ Follow the instructions to install the project on a Fedora Linux.
         pypy3-devel \
         postgresql-devel
 
-    # Upgrade pip and setuptools.
-    pip install --user --upgrade \
+    # Below are generic instructions that can be used with other
+    # Linux distributions.
+
+    # Upgrade pip and setuptools. Upgrade Python 3 packages under
+    # the Python user script directory instead of system packages.
+    python3 -m pip install --user --upgrade \
         pip \
         setuptools \
         wheel
 
     # Install Python virtual environments.
-    pip install --user \
+    python3 -m pip install --user --upgrade \
         pipenv \
         virtualenv \
         virtualenvwrapper
 
-    # Enable virtualenvwrapper and add the Python user script dir if needed.
+    # Enable virtualenvwrapper and add the Python user script
+    # directory to the path if needed.
     vi ~/.bashrc
-       # Snippy development settings.
-       [[ ":$PATH:" != *"~/.local/bin"* ]] && PATH="${PATH}:~/.local/bin"
-       export WORKON_HOME=~/devel/.virtualenvs
-       source virtualenvwrapper.sh
+        # Snippy development settings.
+        [[ ":$PATH:" != *"/${HOME}/.local/bin"* ]] && PATH="${PATH}:/${HOME}/.local/bin"
+        export WORKON_HOME=/${HOME}/devel/.virtualenvs
+        source virtualenvwrapper.sh
+        cd ${HOME}/devel/snippy
+        workon snippy-python3.7
     source ~/.bashrc
 
     # Create virtual environments.
@@ -103,9 +110,14 @@ Follow the instructions to install the project on a Fedora Linux.
                   pypy3
     do
         if which ${PYTHON} > /dev/null 2>&1; then
-            printf "\033[32mcreate snippy venv: ${PYTHON}\033[0m\n"
+            printf "create snippy venv for ${PYTHON}\033[37G: "
             mkvirtualenv --python $(which ${PYTHON}) snippy-${PYTHON} > /dev/null 2>&1
-            deactivate
+            if [[ -n "${VIRTUAL_ENV}" ]]; then
+                printf "\033[32mOK\033[0m\n"
+            else
+                printf "\e[31mNOK\033[0m\n"
+            fi
+            deactivate > /dev/null 2>&1
         fi
     done
 
@@ -113,21 +125,24 @@ Follow the instructions to install the project on a Fedora Linux.
     for VENV in $(lsvirtualenv -b | grep snippy-py)
     do
         workon ${VENV}
+        printf "deploy snippy venv ${VENV}\033[37G: "
         if [ $(echo ${VENV} | cut -d"-" -f2) == $(readlink $(which python)) ]; then
-            printf "\033[32mdeploy snippy venv: ${VENV}\033[0m\n"
             make upgrade-wheel
             make install-devel
+            printf "\033[32mOK\033[0m\n"
         else
-            printf "\e[31menvironment not activated: ${VENV} \033[0m\n"
+            printf "\e[31mNOK\033[0m\n"
         fi
-        deactivate
+        deactivate > /dev/null 2>&1
     done
 
-    # Delete virtual environments
+    # Example how to delete Snippy virtual environments.
+    deactivate > /dev/null 2>&1
     for VENV in $(lsvirtualenv -b | grep snippy-py)
     do
-        printf "\033[32mdelete snippy venv: ${VENV}\033[0m\n"
+        printf "delete snippy venv ${VENV}\033[37G: "
         rmvirtualenv ${VENV} > /dev/null 2>&1
+        printf "\033[32mOK\033[0m\n"
     done
 
 Ubuntu
@@ -165,45 +180,12 @@ Follow the instructions to install the project on a Ubuntu Linux.
         pypy3-dev \
         libpq-dev \
 
-    # Install Python virtual environments.
+    # Install required Python packages.
     sudo apt-get install python3-pip -y
     sudo apt-get install python3-distutils -y
-    pip3 install --user \
-        pipenv \
-        virtualenv \
-        virtualenvwrapper
-    export PATH=${PATH}:~/.local/bin
 
-    # Configure the virtualenv wrapper.
-    vi ~/.bashrc
-       export WORKON_HOME=~/devel/.virtualenvs
-       source ~/.local/bin/virtualenvwrapper.sh
-    source ~/.bashrc
-
-    # Create virtual environments for each Python version.
-    for PYTHON in python2.7 \
-                  python3.4 \
-                  python3.5 \
-                  python3.6 \
-                  python3.7 \
-                  python3.8 \
-                  pypy \
-                  pypy3
-    do
-        if which ${PYTHON} > /dev/null 2>&1; then
-            mkvirtualenv --python $(which ${PYTHON}) snippy-${PYTHON}
-        fi
-    done
-
-    # Install development environment virtual environments.
-    for VENV in $(lsvirtualenv -b | grep snippy-py)
-    do
-        workon ${VENV}
-        echo install packages in ${VENV}
-        make upgrade-wheel
-        make install-devel
-        deactivate
-    done
+    # Follow the generic Snippy virtual environment installation
+    # instructions from the Fedora chapter.
 
 Debian
 ~~~~~~
@@ -225,30 +207,8 @@ Follow the instructions to install the project on a Debian Linux.
         virtualenvwrapper
     export PATH=${PATH}:~/.local/bin
 
-    # Create virtual environments for each Python version.
-    for PYTHON in python2.7 \
-                  python3.4 \
-                  python3.5 \
-                  python3.6 \
-                  python3.7 \
-                  python3.8 \
-                  pypy \
-                  pypy3
-    do
-        if which ${PYTHON} > /dev/null 2>&1; then
-            mkvirtualenv --python $(which ${PYTHON}) snippy-${PYTHON}
-        fi
-    done
-
-    # Install development environment virtual environments.
-    for VENV in $(lsvirtualenv -b | grep snippy-py)
-    do
-        workon ${VENV}
-        echo install packages in ${VENV}
-        make upgrade-wheel
-        make install-devel
-        deactivate
-    done
+    # Follow the generic Snippy virtual environment installation
+    # instructions from the Fedora chapter.
 
     # Install CPython versions.
     mkdir -p ~/devel/compile && cd $_
@@ -280,36 +240,8 @@ Follow the instructions to install the project on a RHEL Linux.
         virtualenvwrapper
     export PATH=${PATH}:~/.local/bin
 
-    # Configure the virtualenv wrapper.
-    vi ~/.bashrc
-       export WORKON_HOME=~/devel/.virtualenvs
-       source ~/.local/bin/virtualenvwrapper.sh
-    source ~/.bashrc
-
-    # Create virtual environments for each Python version.
-    for PYTHON in python2.7 \
-                  python3.4 \
-                  python3.5 \
-                  python3.6 \
-                  python3.7 \
-                  python3.8 \
-                  pypy \
-                  pypy3
-    do
-        if which ${PYTHON} > /dev/null 2>&1; then
-            mkvirtualenv --python $(which ${PYTHON}) snippy-${PYTHON}
-        fi
-    done
-
-    # Install development environment virtual environments.
-    for VENV in $(lsvirtualenv -b | grep snippy-py)
-    do
-        workon ${VENV}
-        echo install packages in ${VENV}
-        make upgrade-wheel
-        make install-devel
-        deactivate
-    done
+    # Follow the generic Snippy virtual environment installation
+    # instructions from the Fedora chapter.
 
 Workflows
 ---------

@@ -45,10 +45,10 @@ uninstall:
 
 upgrade-wheel:
 	@test -x "$(shell which pip)" || $(PYTHON) -m ensurepip $(INSTALL_USER)
-	$(PYTHON) -m pip install pip setuptools wheel twine --upgrade -qq $(INSTALL_USER)
+	@$(PYTHON) -m pip install pip setuptools wheel twine --upgrade -qq $(INSTALL_USER)
 
 install-devel:
-	$(PYTHON) -m pip install .[devel] -qq $(INSTALL_USER)
+	@$(PYTHON) -m pip install .[devel] -qq $(INSTALL_USER)
 
 install-tests:
 	$(PYTHON) -m pip install .[test] $(INSTALL_USER)

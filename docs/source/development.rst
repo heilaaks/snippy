@@ -9,19 +9,31 @@ draft installation instructions for other Linux distributions.
 
 .. note::
 
+   The instructions install used virtual environments with ``python3`` and
+   add the python3 virtualenv modules to Python user script directory. This
+   allows for example creating own Linux user for Snippy development which
+   has an isolated virtual environment setup from global Python modules.
+   
+   In case you want different virtual environment setup, you have to modify
+   the examples.
+
+   The virtual environemts are installed under user ${HOME}/.cache/snippy.
+
+.. note::
+
    The installation instructions add new software packages. Execute at your
    own risk.
 
 .. note::
 
-   Install docker-ce to be able to run test with read container. Make sure
-   that the user who runs the Snippy tests is able to run docker commands.
+   The PostgreSQL adapters used with the server are installed by compiling
+   them with the help of pip. This require working GCC toolchain. The GCC
+   setup and configuration is not part of the Snippy documentation.
 
 .. note::
 
-   The PostgreSQL adapters used with the server are installed by compiling
-   them with the help of pip. This require working GCC toolchain which is
-   not part of the Snippy documentation.
+   Install docker-ce to be able to run test with read container. Make sure
+   that the user who runs the Snippy tests is able to run docker commands.
 
 Fedora
 ~~~~~~
@@ -31,6 +43,8 @@ Follow the instructions to install the project on a Fedora Linux.
 .. code:: bash
 
     # Clone the project from the GitHub.
+    mkdir -p ${HOME}/.cache/snippy
+    mkdir -p ${HOME}/.local/share/snippy
     mkdir -p ${HOME}/devel/snippy && cd $_
     git clone https://github.com/heilaaks/snippy.git .
 
@@ -72,28 +86,23 @@ Follow the instructions to install the project on a Fedora Linux.
         pypy3-devel \
         postgresql-devel
 
-    # Below are generic instructions that can be used with other
+    # Below are 'generic instructions' that can be used also with other
     # Linux distributions.
 
-    # Upgrade pip and setuptools. Upgrade Python 3 packages under
-    # the Python user script directory instead of system packages.
-    python3 -m pip install --user --upgrade \
-        pip \
-        setuptools \
-        wheel
-
     # Install Python virtual environments.
-    python3 -m pip install --user --upgrade \
+    pip3 install --user --upgrade \
         pipenv \
         virtualenv \
         virtualenvwrapper
 
-    # Enable virtualenvwrapper and add the Python user script
-    # directory to the path if needed.
+    # Enable virtualenvwrapper and add the Python user script directory
+    # to the path if needed.
     vi ~/.bashrc
         # Snippy development settings.
-        [[ ":$PATH:" != *"/${HOME}/.local/bin"* ]] && PATH="${PATH}:/${HOME}/.local/bin"
-        export WORKON_HOME=/${HOME}/devel/.virtualenvs
+        [[ ":$PATH:" != *"${HOME}/.local/bin"* ]] && PATH="${PATH}:${HOME}/.local/bin"
+        export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
+        export VIRTUALENVWRAPPER_VIRTUALENV=${HOME}/.local/bin/virtualenv
+        export WORKON_HOME=${HOME}/.cache/snippy/.virtualenvs
         source virtualenvwrapper.sh
         cd ${HOME}/devel/snippy
         workon snippy-python3.7
@@ -184,8 +193,8 @@ Follow the instructions to install the project on a Ubuntu Linux.
     sudo apt-get install python3-pip -y
     sudo apt-get install python3-distutils -y
 
-    # Follow the generic Snippy virtual environment installation
-    # instructions from the Fedora chapter.
+    # Follow the 'generic instructions' for the Snippy virtual environment
+    # installation from the Fedora chapter.
 
 Debian
 ~~~~~~
@@ -207,8 +216,8 @@ Follow the instructions to install the project on a Debian Linux.
         virtualenvwrapper
     export PATH=${PATH}:~/.local/bin
 
-    # Follow the generic Snippy virtual environment installation
-    # instructions from the Fedora chapter.
+    # Follow the 'generic instructions' for the Snippy virtual environment
+    # installation from the Fedora chapter.
 
     # Install CPython versions.
     mkdir -p ~/devel/compile && cd $_
@@ -240,8 +249,8 @@ Follow the instructions to install the project on a RHEL Linux.
         virtualenvwrapper
     export PATH=${PATH}:~/.local/bin
 
-    # Follow the generic Snippy virtual environment installation
-    # instructions from the Fedora chapter.
+    # Follow the 'generic instructions' for the Snippy virtual environment
+    # installation from the Fedora chapter.
 
 Workflows
 ---------
@@ -276,6 +285,9 @@ until these are included into the automated continuous integration.
 
     # Run all tests against PostgreSQL.
     make test-postgresql
+
+    # Run all tests against in-memory database.
+    make test-in-memory
 
     # Run all tests with server.
     make test-server

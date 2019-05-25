@@ -436,25 +436,31 @@ class TestCliUpdateSolution(object):
                 Content.deepcopy(Solution.KAFKA)
             ]
         }
+        content['data'][0]['brief'] = 'Testing docker log drivers again'
+        content['data'][0]['digest'] = '1072f9a0ddb2ab15a7f6cca0acd9f7e48903faa576fb19eca4e0ec98dc20c041'
         template = Content.dump_text(content['data'][0])
         editor_data.return_value = template
-        cause = snippy.run(['snippy', 'update', '-d', 'ee3f2ab7c63d6965', '--format', 'text'])
+        cause = snippy.run(['snippy', 'update', '-d', 'ee3f2ab7c63d6965', '--format', 'text', '--brief', 'Testing docker log drivers again'])
         editor_data.assert_called_with(template)
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+        content['data'][0]['brief'] = 'Testing docker log drivers again in mkdn'
+        content['data'][0]['digest'] = '2887f455e73ad3a6040df7299e69548748db5eb208b9c7eb4717aa2527af4778'
         template = Content.dump_mkdn(content['data'][0])
         editor_data.return_value = template
         content['data'][0]['updated'] = '2017-11-20T06:16:27.000001+00:00'
-        cause = snippy.run(['snippy', 'update', '-d', 'ee3f2ab7c63d6965', '--format', 'mkdn'])
+        cause = snippy.run(['snippy', 'update', '-d', '1072f9a0ddb2ab15', '--format', 'mkdn', '--brief', 'Testing docker log drivers again in mkdn'])  # pylint: disable=line-too-long
         editor_data.assert_called_with(template)
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+        content['data'][0]['brief'] = 'Testing docker log drivers again'
+        content['data'][0]['digest'] = '1072f9a0ddb2ab15a7f6cca0acd9f7e48903faa576fb19eca4e0ec98dc20c041'
         template = Content.dump_text(content['data'][0])
         editor_data.return_value = template
         content['data'][0]['updated'] = '2017-12-20T06:16:27.000001+00:00'
-        cause = snippy.run(['snippy', 'update', '-d', 'ee3f2ab7c63d6965', '--format', 'text'])
+        cause = snippy.run(['snippy', 'update', '-d', '2887f455e73ad3a6', '--format', 'text', '--brief', 'Testing docker log drivers again'])
         editor_data.assert_called_with(template)
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
@@ -478,26 +484,32 @@ class TestCliUpdateSolution(object):
                 Content.deepcopy(Solution.KAFKA_MKDN)
             ]
         }
+        content['data'][0]['brief'] = 'Testing docker log drivers again'
+        content['data'][0]['digest'] = 'b5e5242d971f561675558981b4f25d1e822db282145c4246e3bd50111146096c'
         template = Content.dump_text(content['data'][0])
         editor_data.return_value = template
         content['data'][0]['updated'] = '2017-10-20T06:16:27.000001+00:00'
-        cause = snippy.run(['snippy', 'update', '-d', 'c54c8a896b94ea35', '--format', 'text'])
+        cause = snippy.run(['snippy', 'update', '-d', 'c54c8a896b94ea35e', '--format', 'text', '--brief', 'Testing docker log drivers again'])
         editor_data.assert_called_with(template)
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+        content['data'][0]['brief'] = 'Testing docker log drivers again in mkdn'
+        content['data'][0]['digest'] = '243e51c8b99c80fb73c30b8d72618f8c3bc094df04184da8209f147138067083'
         template = Content.dump_mkdn(content['data'][0])
         editor_data.return_value = template
         content['data'][0]['updated'] = '2017-11-20T06:16:27.000001+00:00'
-        cause = snippy.run(['snippy', 'update', '-d', 'c54c8a896b94ea35', '--format', 'mkdn'])
+        cause = snippy.run(['snippy', 'update', '-d', 'b5e5242d971f5616', '--format', 'mkdn', '--brief', 'Testing docker log drivers again in mkdn'])  # pylint: disable=line-too-long
         editor_data.assert_called_with(template)
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+        content['data'][0]['brief'] = 'Testing docker log drivers again'
+        content['data'][0]['digest'] = 'b5e5242d971f561675558981b4f25d1e822db282145c4246e3bd50111146096c'
         template = Content.dump_text(content['data'][0])
         editor_data.return_value = template
         content['data'][0]['updated'] = '2017-12-20T06:16:27.000001+00:00'
-        cause = snippy.run(['snippy', 'update', '-d', 'c54c8a896b94ea35', '--format', 'text'])
+        cause = snippy.run(['snippy', 'update', '-d', '243e51c8b99c80fb', '--format', 'text', '--brief', 'Testing docker log drivers again'])
         editor_data.assert_called_with(template)
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)

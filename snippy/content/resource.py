@@ -127,6 +127,14 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
 
         return not self == resource
 
+    def copy(self):
+        """Copy resource."""
+
+        resource = type(self)()
+        resource.__dict__.update(self.__dict__)
+
+        return resource
+
     @property
     def category(self):
         """Get resource category."""

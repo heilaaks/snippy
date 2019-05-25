@@ -110,6 +110,15 @@ class TestUtCollection(object):
         with pytest.raises(KeyError):
             del collection[0]
 
+        # Two created objects must not point ot same reference.
+        if collection is collection2:
+            assert 0
+
+        # Reference of object must be to the same object.
+        collection3 = collection
+        if collection3 is not collection:
+            assert 0
+
     @staticmethod
     @pytest.mark.usefixtures('uuid')
     def test_collection_operations_002(capsys):  # pylint: disable=too-many-branches

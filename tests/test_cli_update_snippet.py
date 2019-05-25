@@ -441,7 +441,7 @@ class TestCliUpdateSnippet(object):
         Content.assert_storage(content)
 
     @staticmethod
-    @pytest.mark.usefixtures('update-remove-utc')
+    @pytest.mark.usefixtures()
     def test_cli_update_snippet_017(snippy, editor_data):
         """Update snippet with editor.
 
@@ -486,7 +486,7 @@ class TestCliUpdateSnippet(object):
                 'versions': (),
                 'filename': '',
                 'created': '2018-03-02T02:02:02.000001+00:00',
-                'updated': '2017-10-14T19:56:31.000001+00:00',
+                'updated': '2018-03-02T02:02:02.000001+00:00',
                 'uuid': 'a1cd5827-b6ef-4067-b5ac-3ceac07dde9f',
                 'digest': 'dae4e22c3c3858b5616a29be11916112a16994e30bc3e4b93b069bc9a772d889'
             }]
@@ -553,7 +553,8 @@ class TestCliUpdateSnippet(object):
         formats.
 
         Each update must generate different timestamp in content ``updated``
-        attribute.
+        attribute. In this case the updates are given from editor and the
+        last update must produce the same content as the first update.
 
         The content in editor is explicitly defined in the test to avoid
         false positives from the test helpers that actually use the code
@@ -567,7 +568,7 @@ class TestCliUpdateSnippet(object):
             'docker rm --volumes $(docker ps --all --quiet)',
             '',
             '# Add optional brief description below.',
-            'Remove all docker containers with volumes',
+            'Remove all docker containers',
             '',
             '# Add optional description below.',
             '',
@@ -594,7 +595,7 @@ class TestCliUpdateSnippet(object):
             ''
         )
         edited_mkdn = (
-            '# Remove all docker containers with volumes @docker',
+            '# Remove all docker containers again @docker',
             '',
             '> ',
             '',
@@ -622,20 +623,26 @@ class TestCliUpdateSnippet(object):
                 Content.deepcopy(Snippet.REMOVE),
             ]
         }
+        content['data'][0]['brief'] = 'Remove all docker containers'
+        content['data'][0]['digest'] = 'ef734194f551eaa165767fc6aa081ca0c66894fd51eef5cfbc5a26ab3e808d06'
         edited_remove.return_value = '\n'.join(edited_text)
         cause = snippy.run(['snippy', 'update', '--digest', '54e41e9b52a0', '--format', 'text', '--editor'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+        content['data'][0]['brief'] = 'Remove all docker containers again'
+        content['data'][0]['digest'] = 'ff16d0f4fdbe1f863e6b81189672d33d29fb436235f3a2243449aca651e8eb49'
         edited_remove.return_value = '\n'.join(edited_mkdn)
         content['data'][0]['updated'] = '2017-11-14T19:56:31.000001+00:00'
-        cause = snippy.run(['snippy', 'update', '--digest', '54e41e9b52a0', '--format', 'mkdn', '--editor'])
+        cause = snippy.run(['snippy', 'update', '--digest', 'ef734194f551', '--format', 'mkdn', '--editor'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+        content['data'][0]['brief'] = 'Remove all docker containers'
+        content['data'][0]['digest'] = 'ef734194f551eaa165767fc6aa081ca0c66894fd51eef5cfbc5a26ab3e808d06'
         edited_remove.return_value = '\n'.join(edited_text)
         content['data'][0]['updated'] = '2017-12-14T19:56:31.000001+00:00'
-        cause = snippy.run(['snippy', 'update', '--digest', '54e41e9b52a0', '--format', 'text', '--editor'])
+        cause = snippy.run(['snippy', 'update', '--digest', 'ff16d0f4fdbe', '--format', 'text', '--editor'])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 

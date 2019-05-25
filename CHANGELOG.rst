@@ -24,6 +24,7 @@ Bugfixes
 * Fix updating Markdown native content in text format.
 * Fix ``--format`` option with the export operation.
 * Fix parsing of text formatted solution.
+* Fix update operation when content does not change.
 
 Security
 ~~~~~~~~

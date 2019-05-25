@@ -260,37 +260,37 @@ class Config(object):
         Profiler.disable()
 
     @classmethod
-    def get_collection(cls, update=None):
+    def get_collection(cls, updates=None):
         """Get collection of resources.
 
-        Read collection of resources from the used configuration source. If a
-        resource update is provided on top of configured content, the update
-        is merged or migrated on top of the configuration.
+        Read collection of resources from the used configuration source. If
+        resource updates are provided on top of the configured content, the
+        updates are merged or migrated to the configuration.
 
         Args:
-            update (obj): Content updates on top of configured content in Resource().
+            updates (obj): Updates for the configured content in a Resource().
 
         Returns:
-            obj: Configured content in a Collection() object.
+            obj: Configured content in a Collection().
         """
 
         collection = Collection()
         timestamp = Config.utcnow()
-        update = cls._get_config(timestamp, collection, update, merge=Config.merge)
+        resource = cls._get_config(timestamp, collection, updates, merge=Config.merge)
         if cls.editor:
-            template = update.get_template(
+            template = resource.get_template(
                 cls.content_category,
                 cls.template_format,
                 cls.templates
             )
             Editor.read(timestamp, cls.template_format, template, collection)
         else:
-            collection.migrate(update)
+            collection.migrate(resource)
 
         return collection
 
     @classmethod
-    def get_resource(cls, update):
+    def get_resource(cls, updates):
         """Get resource.
 
         Read a resource from the used configuration source. If an update is
@@ -298,13 +298,13 @@ class Config(object):
         migrated on top of configuration.
 
         Args:
-            update (obj): Resource() to be used on top of the configuration.
+            updates (obj): Resource() to be used on top of the configuration.
 
         Returns:
             obj: Updated Resource().
         """
 
-        collection = cls.get_collection(update)
+        collection = cls.get_collection(updates)
         if len(collection) == 1:
             resource = next(collection.resources())
         else:
@@ -343,17 +343,18 @@ class Config(object):
         config.filename = cls.content_filename
 
         if updates:
+            updates_ = updates.copy()
             if merge:
                 for field in Config.reset_fields:
-                    setattr(updates, field, None)
-                updates.merge(config, validate=False)
+                    setattr(updates_, field, None)
+                updates_.merge(config, validate=False)
             else:
-                updates.migrate(config, validate=False)
+                updates_.migrate(config, validate=False)
         else:
-            updates = config
-        updates.seal(validate=False)
+            updates_ = config
+        updates_.seal(validate=False)
 
-        return updates
+        return updates_
 
     @classmethod
     def _init_logs(cls, args):
@@ -364,7 +365,7 @@ class Config(object):
         by the Cli class parser.
 
         Args:
-            args (list): Command line arguments from sys.argv.
+            args (list): Command line arguments.
         """
 
         cls.debug_logs = Cli.read_arg('--debug', False, args)

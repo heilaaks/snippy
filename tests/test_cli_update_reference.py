@@ -359,7 +359,8 @@ class TestCliUpdateReference(object):
         formats.
 
         Each update must generate different timestamp in content ``updated``
-        attribute.
+        attribute. Also the last update must produce the same resource as
+        the first update.
 
         The content in editor is explicitly defined in the test to avoid
         false positives from the test helpers that actually use the code
@@ -371,26 +372,53 @@ class TestCliUpdateReference(object):
                 Content.deepcopy(Reference.GITLOG)
             ]
         }
+        content['data'][0]['tags'] = ('commit',)
+        content['data'][0]['digest'] = '2dcb254063ccb5bbc27796df96033f89dae33dde53dbc038d4532e1a798c97c0'
         template = Content.dump_mkdn(content['data'][0])
         edited_gitlog.return_value = template
-        cause = snippy.run(['snippy', 'update', '-d', '5c2071094dbfaa33', '--editor', '--format', 'mkdn'])
+        cause = snippy.run(['snippy', 'update', '-d', '5c2071094dbfaa33', '--editor', '--format', 'mkdn', '--tags', 'commit'])
         edited_gitlog.assert_called_with(template)
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+        content['data'][0]['tags'] = ('git',)
+        content['data'][0]['digest'] = 'b2228e2cc6e3d7fe01257f615175a1f33e617b0cfba55199a93e7e48dcdbecf1'
         template = Content.dump_text(content['data'][0])
         edited_gitlog.return_value = template
         content['data'][0]['updated'] = '2018-07-22T13:11:13.678729+00:00'
-        cause = snippy.run(['snippy', 'update', '-d', '5c2071094dbfaa33', '--editor', '--format', 'text'])
+        cause = snippy.run(['snippy', 'update', '-d', '2dcb254063ccb5bbc', '--editor', '--format', 'text', '--tags', 'git'])
         edited_gitlog.assert_called_with(template)
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
+        content['data'][0]['tags'] = ('commit',)
+        content['data'][0]['digest'] = '2dcb254063ccb5bbc27796df96033f89dae33dde53dbc038d4532e1a798c97c0'
         template = Content.dump_mkdn(content['data'][0])
         edited_gitlog.return_value = template
         content['data'][0]['updated'] = '2018-08-22T13:11:13.678729+00:00'
-        cause = snippy.run(['snippy', 'update', '-d', '5c2071094dbfaa33', '--editor', '--format', 'mkdn'])
+        cause = snippy.run(['snippy', 'update', '-d', 'b2228e2cc6e3d7fe', '--editor', '--format', 'mkdn', '--tags', 'commit'])
         edited_gitlog.assert_called_with(template)
+        assert cause == Cause.ALL_OK
+        Content.assert_storage(content)
+
+    @staticmethod
+    @pytest.mark.usefixtures('import-gitlog', 'update-pytest-utc')
+    def test_cli_update_reference_016(snippy, edited_gitlog):
+        """Update reference with editor.
+
+        Update existing resource without doing any changes to the resource.
+        The ``updated`` timestamp must not be changed because the resource
+        was not changed.
+        """
+
+        content = {
+            'data': [
+                Reference.GITLOG
+            ]
+        }
+        edited_gitlog.return_value = Content.dump_text(content['data'][0])
+        cause = snippy.run(['snippy', 'update', '-d', '5c2071094dbfaa', '--format', 'text'])
+        edited_gitlog.assert_called_with(Content.dump_text(Reference.GITLOG))
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 

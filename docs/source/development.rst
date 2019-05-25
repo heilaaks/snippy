@@ -13,7 +13,7 @@ draft installation instructions for other Linux distributions.
    add the python3 virtualenv modules to Python user script directory. This
    allows for example creating own Linux user for Snippy development which
    has an isolated virtual environment setup from global Python modules.
-   
+
    In case you want different virtual environment setup, you have to modify
    the examples.
 
@@ -255,29 +255,42 @@ Follow the instructions to install the project on a RHEL Linux.
 Workflows
 ---------
 
-After virtual environments and Docker CE have been installed succesfully,
+Testing
+~~~~~~~
+
+After virtual environments and the Docker CE have been installed succesfully,
 build the Snippy container image and run the PostgreSQL database container.
 The PostgreSQL database is one of the supported databases and tests are run
 with it.
 
-For development, prefer a virtual environment with the latest Python release.
-Run ``tox`` to test against all supported Python releases.
-
-The Snippy continuous integration will run all tests with the default SQLite
-and PostgreSQL databases with the exception of tests with a real server or
-docker. It is recomended to run ``make test-server`` and ``make test-docker``
-until these are included into the automated continuous integration.
+The local PostgreSQL username and passwords are synchronized with the Travis
+CI PostgreSQL service. The default user is ``postgres`` and the password is
+a empty string.
 
 .. code:: bash
 
     # Compile Docker image for the 'test-docker' make target.
     make docker
 
-    # Start PostgreSQL in container.
+    # Start PostgreSQL in a container.
     sudo docker run -d --name postgres -e POSTGRES_PASSWORD= -p 5432:5432 -d postgres
 
-    # Work with Python virtual environment.
+For the Snippy development, prefer a virtual environment with the latest
+Python release and Python 2.7. The continuous integration will run all
+the tests against all supported Python version but the most problems can
+be captured by testing with the latest Python 3 version and Python 2.7.
+
+.. code:: bash
+
+    # Work in a Python virtual environment.
     workon p37-snippy
+
+The Snippy continuous integration will run all tests with the default SQLite
+and PostgreSQL databases with the exception of tests with a real server or
+docker. It is recomended to run ``make test-server`` and ``make test-docker``
+until these are included into the continuous integration tests.
+
+.. code:: bash
 
     # Run the default development tests. This does not include docker, server
     # or tests with other databases than SQLite.
@@ -315,13 +328,70 @@ until these are included into the automated continuous integration.
 
     # Run test coverage.
     make coverage
+    
+    # Open coverage report in a web browser.
+    file:///<home>/devel/snippy/htmlcov/index.html
+
+Documentation
+~~~~~~~~~~~~~
+
+The documentation includes manual and automated documentation. Automated
+documentation is extracted from source code docstrings and from the Swagger
+definitions in the ``swagger-2.0.yml`` file.
+
+.. code:: bash
 
     # Create documents.
     make docs
+    
+    # Open the document in a web brower.
+    file:///<home>/devel/snippy/docs/build/html/development.html#documentation
+
+Shell completions
+~~~~~~~~~~~~~~~~~
+
+Shell completion testing is done with a manual testing. Install the Snippy
+tool and Bash completion scripts with below examples.
+
+.. code:: bash
+
+    # Install and upgrade Snippy.
+    make install
 
     # Install the Bash completion.
     python runner export --complete bash
     sudo cp snippy.bash-completion /etc/bash_completion.d/snippy.bash-completion
+
+API design
+~~~~~~~~~~
+
+The swagger editor is used to update the Snippy API design. Run the Swagger
+editor in a container and update the ``swagger-2.0.yml`` API design. The
+Swagger version 2 is the baseline for the design. The ``swagger-3.0.yml``
+file is always generated with the Swagger editor from the ``swagger-2.0.yml``.
+
+Snippy uses JSON schemas generated from the ``swagger-2.0.yml``. The generated
+JSON schemas are used in Snippy server to validate HTTP requests and in tests
+to validate the Snippy server HTTP responses.
+
+.. code:: bash
+
+    # Start the Swagger editor.
+    docker run -d -p 9000:8080 swaggerapi/swagger-editor
+
+    # Edit the swagger-2.0.yml with the Swagger editor GUI in a web browser.
+    http://localhost:9000
+
+    # Convert the API design to OpenAPI version 3 with the Swagger editor
+    # and save the changes to the swagger-3.0.yml.
+    Edit - Convert to OpenAPI 3
+
+    # Create JSON API schema.
+    make jsonschema
+
+    # Run tests with the updated JSON schema. If the JSON schema file names
+    # change, code and test code using the files must be updated.
+    make test
 
 Terms
 -----

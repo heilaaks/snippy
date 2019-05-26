@@ -9,15 +9,15 @@ draft installation instructions for other Linux distributions.
 
 .. note::
 
-   The instructions install used virtual environments with ``python3`` and
-   add the python3 virtualenv modules to Python user script directory. This
-   allows for example creating own Linux user for Snippy development which
-   has an isolated virtual environment setup from global Python modules.
+   The instructions install virtual environments with ``python3`` and add
+   the Python 3 virtual environment modules to Python user script directory.
+   This allows for example creating own Linux user for Snippy development
+   which has an isolated virtual environment setup from global Python modules.
 
    In case you want different virtual environment setup, you have to modify
    the examples.
 
-   The virtual environemts are installed under user ${HOME}/.cache/snippy.
+   The virtual environments are installed under ``${HOME}/.cache/snippy``.
 
 .. note::
 
@@ -283,7 +283,7 @@ be captured by testing with the latest Python 3 version and Python 2.7.
 .. code:: bash
 
     # Work in a Python virtual environment.
-    workon p37-snippy
+    workon snippy-python3.7
 
 The Snippy continuous integration will run all tests with the default SQLite
 and PostgreSQL databases with the exception of tests with a real server or
@@ -404,7 +404,8 @@ Terms
 | attribute       | Content attribute like ``brief``, ``links`` or ``tags``.   |
 +-----------------+------------------------------------------------------------+
 | category        | Content category that is one of ``snippet``, ``solution``  |
-|                 | or ``reference``.                                          |
+|                 | or ``reference``. This term can also refer to a field      |
+|                 | category ``groups`` or ``tags``.                           |
 +-----------------+------------------------------------------------------------+
 | collection      | Collection is a set of resources objects.                  |
 +-----------------+------------------------------------------------------------+

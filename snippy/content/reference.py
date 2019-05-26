@@ -27,4 +27,4 @@ class Reference(ContentTypeBase):
     """Reference management."""
 
     def __init__(self, storage, run_cli=True):
-        super(Reference, self).__init__(storage, run_cli, Const.REFERENCE)
+        super(Reference, self).__init__(storage, Const.REFERENCE, run_cli)

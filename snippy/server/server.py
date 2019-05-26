@@ -31,6 +31,7 @@ except ImportError:
 
 from snippy.cause import Cause
 from snippy.config.config import Config
+from snippy.constants import Constants as Const
 from snippy.content.fields import Fields
 from snippy.content.reference import Reference
 from snippy.content.snippet import Snippet
@@ -85,7 +86,8 @@ class Server(object):  # pylint: disable=too-few-public-methods
         snippet = Snippet(self.storage, run_cli=False)
         solution = Solution(self.storage, run_cli=False)
         reference = Reference(self.storage, run_cli=False)
-        fields = Fields(self.storage)
+        groups = Fields(self.storage, Const.GROUPS, run_cli=False)
+        tags = Fields(self.storage, Const.TAGS, run_cli=False)
         self.api.req_options.media_handlers.update({'application/vnd.api+json': falcon.media.JSONHandler()})
         self.api.resp_options.media_handlers.update({'application/vnd.api+json': falcon.media.JSONHandler()})
         self.api.add_route(Config.server_base_path_rest.rstrip('/'), ApiHello())
@@ -99,10 +101,8 @@ class Server(object):  # pylint: disable=too-few-public-methods
         self.api.add_route(urljoin(Config.server_base_path_rest, 'references'), ApiReferences(reference))
         self.api.add_route(urljoin(Config.server_base_path_rest, 'references/{identity}'), ApiReferencesId(reference))
         self.api.add_route(urljoin(Config.server_base_path_rest, 'references/{identity}/{field}'), ApiReferencesIdField(reference))
-        self.api.add_route(urljoin(Config.server_base_path_rest, 'groups'), ApiGroups(fields))
-        self.api.add_route(urljoin(Config.server_base_path_rest, 'groups/{sgrp}'), ApiGroups(fields))
-        self.api.add_route(urljoin(Config.server_base_path_rest, 'tags'), ApiTags(fields))
-        self.api.add_route(urljoin(Config.server_base_path_rest, 'tags/{stag}'), ApiTags(fields))
+        self.api.add_route(urljoin(Config.server_base_path_rest, 'groups'), ApiGroups(groups))
+        self.api.add_route(urljoin(Config.server_base_path_rest, 'tags'), ApiTags(tags))
 
         # Reset cause just before starting the server. If there were any
         # failures during the server statup phase, they are still stored

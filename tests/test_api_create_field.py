@@ -62,7 +62,7 @@ class TestApiCreateField(object):
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/api/snippy/rest/groups/docs',
+            path='/api/snippy/rest/groups',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_405
@@ -98,7 +98,7 @@ class TestApiCreateField(object):
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/api/snippy/rest/tags/python,docs',
+            path='/api/snippy/rest/tags',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_405

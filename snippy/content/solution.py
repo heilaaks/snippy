@@ -27,4 +27,4 @@ class Solution(ContentTypeBase):
     """Solution management."""
 
     def __init__(self, storage, run_cli=True):
-        super(Solution, self).__init__(storage, run_cli, Const.SOLUTION)
+        super(Solution, self).__init__(storage, Const.SOLUTION, run_cli)

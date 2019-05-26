@@ -29,7 +29,7 @@ from snippy.content.migrate import Migrate
 class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
     """Base class for content types."""
 
-    def __init__(self, storage, run_cli, category):
+    def __init__(self, storage, category, run_cli):
         self._logger = Logger.get_logger(__name__)
         self._category = category
         self._run_cli = run_cli
@@ -38,9 +38,15 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
 
     @property
     def collection(self):
-        """Get collection."""
+        """Collection storing the content resources."""
 
         return self._collection
+
+    @property
+    def category(self):
+        """Content or field category."""
+
+        return self._category
 
     @collection.setter
     def collection(self, value):
@@ -78,6 +84,19 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
                 Config.use_ansi,
                 Config.debug_logs
             )
+
+    def unique(self):
+        """Search unique tags or groups."""
+
+        self._logger.debug('searching unique: %s', self._category)
+        uniques = self._storage.uniques(
+            self._category,
+            scat=Config.search_cat_kws,
+            sall=Config.search_all_kws,
+            stag=Config.search_tag_kws,
+            sgrp=Config.search_grp_kws
+        )
+        print(uniques)
 
     def update(self):
         """Update content."""
@@ -204,6 +223,8 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
             self.create()
         elif Config.is_operation_search:
             self.search()
+        elif Config.is_operation_unique:
+            self.unique()
         elif Config.is_operation_update:
             self.update()
         elif Config.is_operation_delete:

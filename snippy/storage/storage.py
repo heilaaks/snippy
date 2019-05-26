@@ -71,7 +71,7 @@ class Storage(object):
 
         return collection
 
-    def unique_values(self, field):
+    def uniques(self, field, scat, sall, stag, sgrp):
         """Get unique values for given field.
 
         Args:
@@ -82,7 +82,7 @@ class Storage(object):
         """
 
         self._logger.debug('search unique values for field: ', field)
-        values = self._database.select_distinct(field)
+        values = self._database.select_distinct(field, scat, sall, stag, sgrp)
 
         return values
 

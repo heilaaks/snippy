@@ -39,6 +39,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
     DELETE = 'delete'
     EXPORT = 'export'
     IMPORT = 'import'
+    UNIQUE = 'unique'
     OPERATIONS = ('create', 'search', 'update', 'delete', 'export', 'import')
 
     ATTRIBUTES = ('category', 'data', 'brief', 'description', 'name', 'groups', 'tags',
@@ -291,14 +292,14 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
 
     @category.setter
     def category(self, value):
-        """Set content category.
+        """Set content or field category.
 
         The content category is important when content is created. In case of
         the ``create`` operation, there must be only one category.
         """
 
         value = Parser.format_list(value)
-        if len(value) == 1 and set(value).issubset(Const.CATEGORIES):
+        if len(value) == 1 and set(value).issubset(Const.CATEGORIES) or set(value).issubset(Const.FIELD_CATEGORIES):
             value = value[0]
         else:
             value = Const.UNKNOWN_CATEGORY

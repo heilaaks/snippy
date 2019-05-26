@@ -318,7 +318,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
             'content-length': '0',
             'content-type': 'application/vnd.api+json'
         }
-        result = testing.TestClient(server.server.api).simulate_options('/api/snippy/rest/groups/docker')
+        result = testing.TestClient(server.server.api).simulate_options('/api/snippy/rest/groups')
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
         assert not result.text
@@ -328,7 +328,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
     def test_api_hello_api_015(server):
         """Test HTTP OPTIONS with /tags API endpoint.
 
-        Send OPTIONS /tags/{tag] to get allowed methods.
+        Send OPTIONS /tags to get allowed methods.
         """
 
         expect_headers = {
@@ -336,35 +336,14 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
             'content-length': '0',
             'content-type': 'application/vnd.api+json'
         }
-        result = testing.TestClient(server.server.api).simulate_options('/api/snippy/rest/tags/docker')
+        result = testing.TestClient(server.server.api).simulate_options('/api/snippy/rest/tags')
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
         assert not result.text
 
     @staticmethod
     @pytest.mark.usefixtures('mock-server')
-    def test_api_hello_api_016(server):
-        """Test HTTP OPTIONS with /groups API endpoint.
-
-        Send OPTIONS /groups to get allowed methods for keywords API. Note
-        that this does not call the groups API but keywords API. The reason is
-        that the route /groups does not have the parameter and in this case id
-        does not lead to /groups but to /{keywords} API.
-        """
-
-        expect_headers = {
-            'allow': 'GET,OPTIONS',
-            'content-length': '0',
-            'content-type': 'application/vnd.api+json'
-        }
-        result = testing.TestClient(server.server.api).simulate_options('/api/snippy/rest/groups')
-        assert result.status == falcon.HTTP_200
-        assert result.headers == expect_headers
-        assert not result.text
-
-    @staticmethod
-    @pytest.mark.usefixtures('mock-server')
-    def test_api_hello_api_017(caplog, osenviron):
+    def test_api_hello_api_016(caplog, osenviron):
         """Test server configuration.
 
         Send GET /api/snippy/rest/v2 to get server hello response. In this
@@ -406,7 +385,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
 
     @staticmethod
     @pytest.mark.usefixtures('mock-server')
-    def test_api_hello_api_018(caplog, osenviron):
+    def test_api_hello_api_017(caplog, osenviron):
         """Test server configuration.
 
         Send GET /api/snippy/rest/v3 to get server hello response. In this
@@ -444,7 +423,7 @@ class TestApiHello(object):  # pylint: disable=too-many-public-methods
 
     @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'mock-server')
-    def test_api_hello_api_019(snippy, osenviron, capsys):
+    def test_api_hello_api_018(snippy, osenviron, capsys):
         """Test search operation with server configuration.
 
         When server is run in a Docker container, it must accept command

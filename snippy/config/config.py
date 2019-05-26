@@ -233,6 +233,7 @@ class Config(object):
         # Parsed from defined configuration.
         cls.is_operation_create = bool(cls.operation == 'create')
         cls.is_operation_search = bool(cls.operation == 'search')
+        cls.is_operation_unique = bool(cls.operation == 'unique')
         cls.is_operation_update = bool(cls.operation == 'update')
         cls.is_operation_delete = bool(cls.operation == 'delete')
         cls.is_operation_export = bool(cls.operation == 'export')

@@ -27,4 +27,4 @@ class Snippet(ContentTypeBase):
     """Snippet management."""
 
     def __init__(self, storage, run_cli=True):
-        super(Snippet, self).__init__(storage, run_cli, Const.SNIPPET)
+        super(Snippet, self).__init__(storage, Const.SNIPPET, run_cli)

@@ -1,6 +1,10 @@
 ## WORKING
-   - [ ] Fix JSON API v1.x requires links for collection responses too. Individual resource not found or attrbute results null otherwise empty list.
    - [ ] Implement and test /groups and /tags API endpoints.
+   - [ ]   Unique column names are not read with PostgreSQL. This is used in unique.
+   - [ ]   PUT/PATCH for tags groups api end points are not tested since they pass when the groups/tags class does not inherit base class and those are not implemented?
+   - [ ] Fix JSON API v1.x requires links for collection responses too. Individual resource not found or attrbute results null otherwise empty list.
+   - [ ] Remove #!/usr/bin/env python from other than main since it is not needed.
+   - [ ] Remove hooks and add snippy.db in gitignore and remove file from git.
    - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format. Try tldr. External tool? No more dependencies would be nice.
    - [ ] Add support to find dead links. External tool? No more dependencies would be nice.
    - [ ] Fix test_logger_017. The P3 is not correct? The links in p2 are in the same elemnet separated with \n that should be the case with P3.

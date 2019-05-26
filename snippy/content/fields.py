@@ -19,12 +19,11 @@
 
 """fields: Content fields management."""
 
-from snippy.constants import Constants as Const
 from snippy.content.base import ContentTypeBase
 
 
 class Fields(ContentTypeBase):
-    """Content field management."""
+    """Content fields."""
 
-    def __init__(self, storage, run_cli=False):
-        super(Fields, self).__init__(storage, run_cli, Const.ALL_CATEGORIES)
+    def __init__(self, storage, category, run_cli=False):
+        super(Fields, self).__init__(storage, category, run_cli)

@@ -49,6 +49,11 @@ class Constants(object):  # pylint: disable=too-few-public-methods
     UNKNOWN_CATEGORY = 'unknown'
     CATEGORIES = (SNIPPET, SOLUTION, REFERENCE)
 
+    # Field categories.
+    GROUPS = 'groups'
+    TAGS = 'tags'
+    FIELD_CATEGORIES = (GROUPS, TAGS)
+
     # Content delimiters to convert between string and tuple presentations.
     DELIMITER_DATA = NEWLINE
     DELIMITER_GROUPS = ','

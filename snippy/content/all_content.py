@@ -30,7 +30,7 @@ class AllContent(ContentTypeBase):
     """Content field management."""
 
     def __init__(self, storage, run_cli=True):
-        super(AllContent, self).__init__(storage, run_cli, Const.ALL_CATEGORIES)
+        super(AllContent, self).__init__(storage, Const.ALL_CATEGORIES, run_cli)
 
     def import_all(self):
         """Import content."""

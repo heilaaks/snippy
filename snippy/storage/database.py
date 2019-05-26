@@ -56,6 +56,7 @@ class Database(object):
 
     QUERY_TYPE_REGEX = 'regex'
     QUERY_TYPE_TOTAL = 'total'
+    QUERY_TYPE_FIELD = 'field'
 
     RE_CATCH_UNIQUE_SQLITE_COLUMN = re.compile(r'''
         contents[.]{1}  # Match leading table name.
@@ -238,7 +239,7 @@ class Database(object):
         """
 
         collection = Collection()
-        query, qargs = self._get_query(scat, sall, stag, sgrp, uuid, digest, identity, data, Database.QUERY_TYPE_REGEX)
+        query, qargs = self._get_query(None, scat, sall, stag, sgrp, uuid, digest, identity, data, Database.QUERY_TYPE_REGEX)
         if query:
             rows = self._select(query, qargs)
             self._logger.debug('selected: %d :rows: %s', len(rows), rows)
@@ -283,28 +284,33 @@ class Database(object):
 
         return collection
 
-    def select_distinct(self, column):
+    def select_distinct(self, column, scat, sall, stag, sgrp):
         """Select unique values from given column.
 
         Args:
             column (str): column name.
+            scat (tuple): Search category keyword list.
+            sall (tuple): Search all keyword list.
+            stag (tuple): Search tag keyword list.
+            sgrp (tuple): Search group keyword list.
 
         Returns:
             tuple: List of unique values in given column.
         """
 
         uniques = ()
-        if column not in self._columns:
-            self._logger.security('unidentified column name cannot be accepted: %s', column)
+        #if column not in self._columns:
+        #    self._logger.security('unidentified column name cannot be accepted: %s', column)
 
-            return uniques
+        #    return uniques
 
         if self._connection:
             self._logger.debug('select distinct values from columns: %s', column)
+            query, qargs = self._get_query(column, scat, sall, stag, sgrp, None, None, None, None, Database.QUERY_TYPE_FIELD)
             try:
                 with closing(self._connection.cursor()) as cursor:
-                    cursor.execute('SELECT DISTINCT {} FROM contents'.format(column))
-                    uniques = [tup[0] for tup in cursor.fetchall()]
+                    cursor.execute(query, qargs)
+                    uniques = cursor.fetchall()
             except (sqlite3.Error, psycopg2.Error) as error:
                 Cause.push(Cause.HTTP_500, 'selecting all from database failed with exception {}'.format(error))
         else:
@@ -330,7 +336,7 @@ class Database(object):
         """
 
         count = 0
-        query, qargs = self._get_query(scat, sall, stag, sgrp, uuid, digest, identity, data, Database.QUERY_TYPE_TOTAL)
+        query, qargs = self._get_query(None, scat, sall, stag, sgrp, uuid, digest, identity, data, Database.QUERY_TYPE_TOTAL)
         if query:
             rows = self._select(query, qargs)
             try:
@@ -612,7 +618,7 @@ class Database(object):
 
         return rows
 
-    def _get_query(self, scat, sall, stag, sgrp, suuid, sdigest, sidentity, sdata, query_type):  # noqa pylint: disable=too-many-arguments,too-many-locals,too-many-branches
+    def _get_query(self, column, scat, sall, stag, sgrp, suuid, sdigest, sidentity, sdata, query_type):  # noqa pylint: disable=too-many-arguments,too-many-locals,too-many-branches
         """Build SQL query."""
 
         query = ()
@@ -622,18 +628,20 @@ class Database(object):
 
         if query_type == Database.QUERY_TYPE_TOTAL:
             query_pointer = self._query_count
-        else:
+        elif query_type == Database.QUERY_TYPE_REGEX:
             query_pointer = self._query_regex
+        else:
+            query_pointer = self._query_field
 
         if sall:
             columns = ['data', 'brief', 'description', 'groups', 'tags', 'links', 'digest']
-            query, qargs = query_pointer(sall, columns, sgrp, scat)
+            query, qargs = query_pointer(sall, columns, sgrp, scat, column)
         elif stag:
             columns = ['tags']
-            query, qargs = query_pointer(stag, columns, sgrp, scat)
+            query, qargs = query_pointer(stag, columns, sgrp, scat, column)
         elif sgrp:
             columns = ['groups']
-            query, qargs = query_pointer(sgrp, columns, (), scat)
+            query, qargs = query_pointer(sgrp, columns, (), scat, column)
         elif sdigest is not None:
             if query_type == Database.QUERY_TYPE_TOTAL:
                 query = ('SELECT count(*) FROM contents WHERE digest LIKE {0}'.format(self._placeholder))
@@ -663,7 +671,7 @@ class Database(object):
 
         return query, qargs
 
-    def _query_regex(self, keywords, columns, groups, categories):
+    def _query_regex(self, keywords, columns, groups, categories, _):
         """Filtered regex query that can limit the results."""
 
         query = ('SELECT * FROM contents WHERE ')
@@ -683,11 +691,31 @@ class Database(object):
 
         return query, qargs
 
-    def _query_count(self, keywords, columns, groups, categories):
+    def _query_count(self, keywords, columns, groups, categories, _):
         """Count total hits of filtered regex query."""
 
         query = ('SELECT count(*) FROM contents WHERE ')
         query, qargs = self._add_regex_filters(query, keywords, columns, groups, categories)
+
+        return query, qargs
+
+    def _query_field(self, keywords, columns, groups, categories, column):
+        """Get unique field values.
+
+        Column names cannot be set with query arguments. In order to avoid
+        security problems with user input, the column names are hardcoded.
+        """
+
+        if column == 'tags':
+            query = ('SELECT tags, COUNT(tags) FROM contents WHERE ')
+        else:
+            query = ('SELECT groups, COUNT(groups) FROM contents WHERE ')
+
+        query, qargs = self._add_regex_filters(query, keywords, columns, groups, categories)
+        if column == 'tags':
+            query = query + 'GROUP BY tags ORDER BY tags ASC'
+        else:
+            query = query + 'GROUP BY groups ORDER BY groups ASC'
 
         return query, qargs
 

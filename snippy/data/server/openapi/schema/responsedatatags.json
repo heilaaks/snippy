@@ -1,0 +1,25 @@
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "tags"
+      ]
+    },
+    "id": {
+      "type": "string",
+      "enum": [
+        null
+      ]
+    },
+    "attributes": {
+      "$ref": "_definitions.json#/definitions/responseAttributesTags"
+    }
+  },
+  "required": [
+    "type",
+    "attributes"
+  ],
+  "$schema": "http://json-schema.org/schema#"
+}

@@ -8,7 +8,7 @@ info:
   contact:
     email: laaksonen.heikki.j@gmail.com
   license:
-    name: GNU AGPLv3 or later
+    name: GNU AGPL v3.0 or later
     url: https://github.com/heilaaks/snippy/blob/master/LICENSE
   version: 0.11.0
 servers:
@@ -786,11 +786,237 @@ paths:
         500:
           description: Internal server error
           content: {}
+  /tags:
+    get:
+      tags:
+      - tags
+      summary: Get unique tags.
+      parameters:
+      - name: scat
+        in: query
+        description: |
+          # Brief
+
+          Limit search to resources in defined categories.
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - snippet
+            - solution
+            - reference
+      - name: sall
+        in: query
+        description: |
+          # Brief
+
+          Search given keywords.
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: stag
+        in: query
+        description: |
+          # Brief
+
+          Limit search to resources that have defined tags.
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: sgrp
+        in: query
+        description: |
+          # Brief
+
+          Limit search to resources that are in defined groups.
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: digest
+        in: query
+        description: |
+          # Brief
+
+          Limit search to resources that are have given digest.
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: uuid
+        in: query
+        description: |
+          # Brief
+
+          Limit search to resources that are have given uuid.
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: filter
+        in: query
+        description: |
+          # Brief
+
+          Filter search result with given regexp.
+        schema:
+          type: string
+          default: "."
+      responses:
+        200:
+          description: OK
+          content:
+            application/vnd.api+json; charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/responseTags'
+        400:
+          description: Request not syntactically correct
+          content:
+            application/vnd.api+json; charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/responseErrors'
+        404:
+          description: Resource not found
+          content:
+            application/vnd.api+json; charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/responseErrors'
+        500:
+          description: Internal server error
+          content: {}
+  /groups:
+    get:
+      tags:
+      - groups
+      summary: Get unique groups.
+      parameters:
+      - name: scat
+        in: query
+        description: |
+          # Brief
+
+          Limit search to resources in defined categories.
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - snippet
+            - solution
+            - reference
+      - name: sall
+        in: query
+        description: |
+          # Brief
+
+          Search given keywords.
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: stag
+        in: query
+        description: |
+          # Brief
+
+          Limit search to resources that have defined tags.
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: sgrp
+        in: query
+        description: |
+          # Brief
+
+          Limit search to resources that are in defined groups.
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: digest
+        in: query
+        description: |
+          # Brief
+
+          Limit search to resources that are have given digest.
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: uuid
+        in: query
+        description: |
+          # Brief
+
+          Limit search to resources that are have given uuid.
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: filter
+        in: query
+        description: |
+          # Brief
+
+          Filter search result with given regexp.
+        schema:
+          type: string
+          default: "."
+      responses:
+        200:
+          description: OK
+          content:
+            application/vnd.api+json; charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/responseGroups'
+        400:
+          description: Request not syntactically correct
+          content:
+            application/vnd.api+json; charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/responseErrors'
+        404:
+          description: Resource not found
+          content:
+            application/vnd.api+json; charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/responseErrors'
+        500:
+          description: Internal server error
+          content: {}
   /:
     get:
       tags:
       - hello
-      summary: Server hello
+      summary: Get server hello.
       responses:
         200:
           description: OK
@@ -885,6 +1111,20 @@ components:
         Optional filename. This attribute can be used for example to export the resource into file
         which name is defined by this attribute-
       default: ""
+    responseDataTags:
+      required:
+      - attributes
+      - type
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - tags
+        id:
+          type: string
+        attributes:
+          $ref: '#/components/schemas/responseAttributesTags'
     paginationLinks:
       required:
       - first
@@ -948,7 +1188,7 @@ components:
       description: |
         # Brief
 
-        Resource `data` attributes for all API endoints HTTP responses.
+        Resource `data` attributes for all content API endoints.
 
         Different resource categories require different attributes. Creating and updating resources have
         different mandatory resource attribute requirements. For example `snippets` require `data` but
@@ -991,6 +1231,15 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/error'
+    responseAttributesGroups:
+      type: object
+      properties:
+        groups:
+          $ref: '#/components/schemas/attributeGroupsDictionary'
+      description: |
+        # Brief
+
+        Resource `data` attributes groups API endpont.
     error:
       required:
       - module
@@ -1018,6 +1267,15 @@ components:
 
         Automatically generated UTC timestamp when the resource is created. The time is defined with
         RFC 3339 profile of the ISO 8601 specification.
+    responseAttributesTags:
+      type: object
+      properties:
+        tags:
+          $ref: '#/components/schemas/attributeTagsDictionary'
+      description: |
+        # Brief
+
+        Resource `data` attributes tags API endpont.
     attributeUuid:
       type: string
       description: |
@@ -1031,6 +1289,13 @@ components:
 
         Optional name for the resource.
       default: ""
+    responseGroups:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/responseDataGroups'
     requestData:
       required:
       - attributes
@@ -1053,6 +1318,17 @@ components:
         Optional list of groups to which the resource belongs.
       items:
         type: string
+    attributeGroupsDictionary:
+      type: object
+      additionalProperties:
+        type: integer
+      description: |
+        # Brief
+
+        Unique values for groups with count for each group value.
+      example:
+        python: 8
+        java: 1
     attributeUpdated:
       type: string
       description: |
@@ -1069,6 +1345,31 @@ components:
           $ref: '#/components/schemas/responseData'
         link:
           $ref: '#/components/schemas/resourceLink'
+    attributeTagsDictionary:
+      type: object
+      additionalProperties:
+        type: integer
+      description: |
+        # Brief
+
+        Unique values for tags with count for each tag value.
+      example:
+        linux: 10
+        docker: 4
+    responseDataGroups:
+      required:
+      - attributes
+      - type
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - groups
+        id:
+          type: string
+        attributes:
+          $ref: '#/components/schemas/responseAttributesGroups'
     attributeVersions:
       type: array
       description: |
@@ -1097,6 +1398,13 @@ components:
             $ref: '#/components/schemas/responseData'
         links:
           $ref: '#/components/schemas/paginationLinks'
+    responseTags:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/responseDataTags'
     metaInfo:
       required:
       - docs
@@ -1199,6 +1507,12 @@ components:
         '*/*':
           schema:
             $ref: '#/components/schemas/responseCollectionPost'
+    200-groups:
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: '#/components/schemas/responseGroups'
     400:
       description: Request not syntactically correct
       content:
@@ -1229,6 +1543,12 @@ components:
         '*/*':
           schema:
             $ref: '#/components/schemas/responseErrors'
+    200-tags:
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: '#/components/schemas/responseTags'
     409:
       description: More than one resource found
       content:

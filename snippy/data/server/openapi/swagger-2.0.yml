@@ -9,7 +9,7 @@ info:
   contact:
     email: "laaksonen.heikki.j@gmail.com"
   license:
-    name: "GNU AGPLv3 or later"
+    name: "GNU AGPL v3.0 or later"
     url: "https://github.com/heilaaks/snippy/blob/master/LICENSE"
 schemes: ["http", "https"]
 host: "localhost:8080"
@@ -210,11 +210,61 @@ paths:
           $ref: "#/responses/404"
         500:
           $ref: "#/responses/500"
+  /tags:
+    get:
+      tags:
+        - "tags"
+      summary: "Get unique tags."
+      description: ""
+      produces:
+        - "application/vnd.api+json; charset=UTF-8"
+      parameters:
+        - $ref: '#/parameters/scat'
+        - $ref: '#/parameters/sall'
+        - $ref: '#/parameters/stag'
+        - $ref: '#/parameters/sgrp'
+        - $ref: '#/parameters/digest'
+        - $ref: '#/parameters/uuid'
+        - $ref: '#/parameters/filter'
+      responses:
+        200:
+          $ref: "#/responses/200-tags"
+        400:
+          $ref: "#/responses/400"
+        404:
+          $ref: "#/responses/404"
+        500:
+          $ref: "#/responses/500"
+  /groups:
+    get:
+      tags:
+        - "groups"
+      summary: "Get unique groups."
+      description: ""
+      produces:
+        - "application/vnd.api+json; charset=UTF-8"
+      parameters:
+        - $ref: '#/parameters/scat'
+        - $ref: '#/parameters/sall'
+        - $ref: '#/parameters/stag'
+        - $ref: '#/parameters/sgrp'
+        - $ref: '#/parameters/digest'
+        - $ref: '#/parameters/uuid'
+        - $ref: '#/parameters/filter'
+      responses:
+        200:
+          $ref: "#/responses/200-groups"
+        400:
+          $ref: "#/responses/400"
+        404:
+          $ref: "#/responses/404"
+        500:
+          $ref: "#/responses/500"
   /:
     get:
       tags:
         - "hello"
-      summary: "Server hello"
+      summary: "Get server hello."
       description: ""
       produces:
         - "application/vnd.api+json; charset=UTF-8"
@@ -230,6 +280,14 @@ responses:
     description: OK
     schema:
       $ref: "#/definitions/responseCollectionGet"
+  "200-tags":
+    description: OK
+    schema:
+      $ref: "#/definitions/responseTags"
+  "200-groups":
+    description: OK
+    schema:
+      $ref: "#/definitions/responseGroups"
   "200-hello":
     description: OK
     schema:
@@ -372,6 +430,28 @@ definitions:
       # Brief
 
       Automatically assigned message digest that uniquely identifies the resource.
+  attributeGroupsDictionary:
+    type: object
+    additionalProperties:
+      type: integer
+    example:
+      python: 8
+      java: 1
+    description: |
+      # Brief
+
+      Unique values for groups with count for each group value.
+  attributeTagsDictionary:
+    type: object
+    additionalProperties:
+      type: integer
+    example:
+      linux: 10
+      docker: 4
+    description: |
+      # Brief
+
+      Unique values for tags with count for each tag value.
 
   requestAttributes:
     type: object
@@ -446,7 +526,7 @@ definitions:
     description: |
       # Brief
 
-      Resource `data` attributes for all API endoints HTTP responses.
+      Resource `data` attributes for all content API endoints.
       
       Different resource categories require different attributes. Creating and updating resources have
       different mandatory resource attribute requirements. For example `snippets` require `data` but
@@ -454,6 +534,26 @@ definitions:
       `snippets`.
 
       Because of these reasons, JSON schema definition does not define the required properties.
+  responseAttributesTags:
+    type: object
+    additionalProperties: False
+    properties:
+      tags:
+        $ref: '#/definitions/attributeTagsDictionary'
+    description: |
+      # Brief
+
+      Resource `data` attributes tags API endpont.
+  responseAttributesGroups:
+    type: object
+    additionalProperties: False
+    properties:
+      groups:
+        $ref: '#/definitions/attributeGroupsDictionary'
+    description: |
+      # Brief
+
+      Resource `data` attributes groups API endpont.
 
   requestData:
     type: object
@@ -496,6 +596,34 @@ definitions:
     required:
       - type
       - attributes
+  responseDataTags:
+    type: object
+    properties:
+      type:
+        type: string
+        enum: [tags]
+      id:
+        type: string
+        enum: [null]
+      attributes:
+        $ref: '#/definitions/responseAttributesTags'
+    required:
+      - type
+      - attributes
+  responseDataGroups:
+    type: object
+    properties:
+      type:
+        type: string
+        enum: [groups]
+      id:
+        type: string
+        enum: [null]
+      attributes:
+        $ref: '#/definitions/responseAttributesGroups'
+    required:
+      - type
+      - attributes
   responseResource:
     type: object
     properties:
@@ -528,6 +656,26 @@ definitions:
     required:
       - meta
       - data
+  responseTags:
+    type: object
+    additionalProperties: false
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/responseDataTags'
+    required:
+      - meta
+  responseGroups:
+    type: object
+    additionalProperties: false
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/responseDataGroups'
+    required:
+      - meta
   responseErrors:
     type: object
     properties:

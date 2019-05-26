@@ -1,0 +1,12 @@
+{
+  "type": "object",
+  "additionalProperties": {
+    "type": "integer"
+  },
+  "example": {
+    "linux": 10,
+    "docker": 4
+  },
+  "description": "# Brief\n\nUnique values for tags with count for each tag value.\n",
+  "$schema": "http://json-schema.org/schema#"
+}

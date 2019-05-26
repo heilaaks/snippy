@@ -46,10 +46,22 @@
       "$ref": "_definitions.json#/definitions/attributeDigest"
     },
     {
+      "$ref": "_definitions.json#/definitions/attributeGroupsDictionary"
+    },
+    {
+      "$ref": "_definitions.json#/definitions/attributeTagsDictionary"
+    },
+    {
       "$ref": "_definitions.json#/definitions/requestAttributes"
     },
     {
       "$ref": "_definitions.json#/definitions/responseAttributes"
+    },
+    {
+      "$ref": "_definitions.json#/definitions/responseAttributesTags"
+    },
+    {
+      "$ref": "_definitions.json#/definitions/responseAttributesGroups"
     },
     {
       "$ref": "_definitions.json#/definitions/requestData"
@@ -64,6 +76,12 @@
       "$ref": "_definitions.json#/definitions/responseData"
     },
     {
+      "$ref": "_definitions.json#/definitions/responseDataTags"
+    },
+    {
+      "$ref": "_definitions.json#/definitions/responseDataGroups"
+    },
+    {
       "$ref": "_definitions.json#/definitions/responseResource"
     },
     {
@@ -71,6 +89,12 @@
     },
     {
       "$ref": "_definitions.json#/definitions/responseCollectionGet"
+    },
+    {
+      "$ref": "_definitions.json#/definitions/responseTags"
+    },
+    {
+      "$ref": "_definitions.json#/definitions/responseGroups"
     },
     {
       "$ref": "_definitions.json#/definitions/responseErrors"

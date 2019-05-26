@@ -1,0 +1,16 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "data": {
+      "type": "array",
+      "items": {
+        "$ref": "_definitions.json#/definitions/responseDataTags"
+      }
+    }
+  },
+  "required": [
+    "meta"
+  ],
+  "$schema": "http://json-schema.org/schema#"
+}

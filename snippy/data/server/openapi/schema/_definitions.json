@@ -91,6 +91,28 @@
       "type": "string",
       "description": "# Brief\n\nAutomatically assigned message digest that uniquely identifies the resource.\n"
     },
+    "attributeGroupsDictionary": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "example": {
+        "python": 8,
+        "java": 1
+      },
+      "description": "# Brief\n\nUnique values for groups with count for each group value.\n"
+    },
+    "attributeTagsDictionary": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "example": {
+        "linux": 10,
+        "docker": 4
+      },
+      "description": "# Brief\n\nUnique values for tags with count for each tag value.\n"
+    },
     "requestAttributes": {
       "type": "object",
       "additionalProperties": false,
@@ -178,7 +200,27 @@
           "$ref": "#/definitions/attributeDigest"
         }
       },
-      "description": "# Brief\n\nResource `data` attributes for all API endoints HTTP responses.\n\nDifferent resource categories require different attributes. Creating and updating resources have\ndifferent mandatory resource attribute requirements. For example `snippets` require `data` but\n`references` require `links` attribute. PATCH and PUT can be send without `data` attribute for\n`snippets`.\n\nBecause of these reasons, JSON schema definition does not define the required properties.\n"
+      "description": "# Brief\n\nResource `data` attributes for all content API endoints.\n\nDifferent resource categories require different attributes. Creating and updating resources have\ndifferent mandatory resource attribute requirements. For example `snippets` require `data` but\n`references` require `links` attribute. PATCH and PUT can be send without `data` attribute for\n`snippets`.\n\nBecause of these reasons, JSON schema definition does not define the required properties.\n"
+    },
+    "responseAttributesTags": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "tags": {
+          "$ref": "#/definitions/attributeTagsDictionary"
+        }
+      },
+      "description": "# Brief\n\nResource `data` attributes tags API endpont.\n"
+    },
+    "responseAttributesGroups": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "groups": {
+          "$ref": "#/definitions/attributeGroupsDictionary"
+        }
+      },
+      "description": "# Brief\n\nResource `data` attributes groups API endpont.\n"
     },
     "requestData": {
       "type": "object",
@@ -248,6 +290,54 @@
         "attributes"
       ]
     },
+    "responseDataTags": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "tags"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "enum": [
+            null
+          ]
+        },
+        "attributes": {
+          "$ref": "#/definitions/responseAttributesTags"
+        }
+      },
+      "required": [
+        "type",
+        "attributes"
+      ]
+    },
+    "responseDataGroups": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "groups"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "enum": [
+            null
+          ]
+        },
+        "attributes": {
+          "$ref": "#/definitions/responseAttributesGroups"
+        }
+      },
+      "required": [
+        "type",
+        "attributes"
+      ]
+    },
     "responseResource": {
       "type": "object",
       "properties": {
@@ -295,6 +385,36 @@
       "required": [
         "meta",
         "data"
+      ]
+    },
+    "responseTags": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/responseDataTags"
+          }
+        }
+      },
+      "required": [
+        "meta"
+      ]
+    },
+    "responseGroups": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/responseDataGroups"
+          }
+        }
+      },
+      "required": [
+        "meta"
       ]
     },
     "responseErrors": {

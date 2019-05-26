@@ -1,6 +1,6 @@
 ## WORKING
    - [ ] Fix JSON API v1.x requires links for collection responses too. Individual resource not found or attrbute results null otherwise empty list.
-   - [ ] Design and change /groups and /tags to GET groups and tags not content. Like unique tags and groups.
+   - [ ] Implement and test /groups and /tags API endpoints.
    - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format. Try tldr. External tool? No more dependencies would be nice.
    - [ ] Add support to find dead links. External tool? No more dependencies would be nice.
    - [ ] Fix test_logger_017. The P3 is not correct? The links in p2 are in the same elemnet separated with \n that should be the case with P3.

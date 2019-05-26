@@ -1,0 +1,11 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "tags": {
+      "$ref": "_definitions.json#/definitions/attributeTagsDictionary"
+    }
+  },
+  "description": "# Brief\n\nResource `data` attributes tags API endpont.\n",
+  "$schema": "http://json-schema.org/schema#"
+}

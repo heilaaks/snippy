@@ -1,0 +1,12 @@
+{
+  "type": "object",
+  "additionalProperties": {
+    "type": "integer"
+  },
+  "example": {
+    "python": 8,
+    "java": 1
+  },
+  "description": "# Brief\n\nUnique values for groups with count for each group value.\n",
+  "$schema": "http://json-schema.org/schema#"
+}

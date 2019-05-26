@@ -223,9 +223,6 @@ paths:
         - $ref: '#/parameters/sall'
         - $ref: '#/parameters/stag'
         - $ref: '#/parameters/sgrp'
-        - $ref: '#/parameters/digest'
-        - $ref: '#/parameters/uuid'
-        - $ref: '#/parameters/filter'
       responses:
         200:
           $ref: "#/responses/200-tags"
@@ -248,9 +245,6 @@ paths:
         - $ref: '#/parameters/sall'
         - $ref: '#/parameters/stag'
         - $ref: '#/parameters/sgrp'
-        - $ref: '#/parameters/digest'
-        - $ref: '#/parameters/uuid'
-        - $ref: '#/parameters/filter'
       responses:
         200:
           $ref: "#/responses/200-groups"

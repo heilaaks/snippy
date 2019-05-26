@@ -844,39 +844,6 @@ paths:
           type: array
           items:
             type: string
-      - name: digest
-        in: query
-        description: |
-          # Brief
-
-          Limit search to resources that are have given digest.
-        style: form
-        explode: false
-        schema:
-          type: array
-          items:
-            type: string
-      - name: uuid
-        in: query
-        description: |
-          # Brief
-
-          Limit search to resources that are have given uuid.
-        style: form
-        explode: false
-        schema:
-          type: array
-          items:
-            type: string
-      - name: filter
-        in: query
-        description: |
-          # Brief
-
-          Filter search result with given regexp.
-        schema:
-          type: string
-          default: "."
       responses:
         200:
           description: OK
@@ -957,39 +924,6 @@ paths:
           type: array
           items:
             type: string
-      - name: digest
-        in: query
-        description: |
-          # Brief
-
-          Limit search to resources that are have given digest.
-        style: form
-        explode: false
-        schema:
-          type: array
-          items:
-            type: string
-      - name: uuid
-        in: query
-        description: |
-          # Brief
-
-          Limit search to resources that are have given uuid.
-        style: form
-        explode: false
-        schema:
-          type: array
-          items:
-            type: string
-      - name: filter
-        in: query
-        description: |
-          # Brief
-
-          Filter search result with given regexp.
-        schema:
-          type: string
-          default: "."
       responses:
         200:
           description: OK

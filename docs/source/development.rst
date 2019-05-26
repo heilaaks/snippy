@@ -314,6 +314,12 @@ until these are included into the continuous integration tests.
     # Run all tests.
     make test-all
 
+    # Run test coverage.
+    make coverage
+
+    # Open coverage report in a web browser.
+    file:///<home>/devel/snippy/htmlcov/index.html
+
     # Run lint.
     make lint
 
@@ -326,12 +332,6 @@ until these are included into the continuous integration tests.
     # Clean all generated files and empty the SQLite database file.
     make clean-all
 
-    # Run test coverage.
-    make coverage
-    
-    # Open coverage report in a web browser.
-    file:///<home>/devel/snippy/htmlcov/index.html
-
 Documentation
 ~~~~~~~~~~~~~
 
@@ -343,15 +343,15 @@ definitions in the ``swagger-2.0.yml`` file.
 
     # Create documents.
     make docs
-    
+
     # Open the document in a web brower.
     file:///<home>/devel/snippy/docs/build/html/development.html#documentation
 
 Shell completions
 ~~~~~~~~~~~~~~~~~
 
-Shell completion testing is done with a manual testing. Install the Snippy
-tool and Bash completion scripts with below examples.
+Shell completion testing is done by manually testing the commands. Install
+the Snippy tool and Bash completion scripts with below examples.
 
 .. code:: bash
 
@@ -361,13 +361,15 @@ tool and Bash completion scripts with below examples.
     # Install the Bash completion.
     python runner export --complete bash
     sudo cp snippy.bash-completion /etc/bash_completion.d/snippy.bash-completion
+    exec bash
 
 API design
 ~~~~~~~~~~
 
-The swagger editor is used to update the Snippy API design. Run the Swagger
-editor in a container and update the ``swagger-2.0.yml`` API design. The
-Swagger version 2 is the baseline for the design. The ``swagger-3.0.yml``
+The Swagger editor is used to update the Snippy REST API design. Run the
+Swagger editor in a container and update the ``swagger-2.0.yml`` design.
+The Swagger version 2 is the baseline for the design because it still has
+wider support in open source tools than version 3. The ``swagger-3.0.yml``
 file is always generated with the Swagger editor from the ``swagger-2.0.yml``.
 
 Snippy uses JSON schemas generated from the ``swagger-2.0.yml``. The generated
@@ -377,7 +379,7 @@ to validate the Snippy server HTTP responses.
 .. code:: bash
 
     # Start the Swagger editor.
-    docker run -d -p 9000:8080 swaggerapi/swagger-editor
+    docker run -d -p 9000:8080 --name swagger-editor swaggerapi/swagger-editor
 
     # Edit the swagger-2.0.yml with the Swagger editor GUI in a web browser.
     http://localhost:9000
@@ -389,8 +391,8 @@ to validate the Snippy server HTTP responses.
     # Create JSON API schema.
     make jsonschema
 
-    # Run tests with the updated JSON schema. If the JSON schema file names
-    # change, code and test code using the files must be updated.
+    # Run tests with the updated JSON schema. If the JSON schema filenames
+    # changed, the code and test code using the files must be updated.
     make test
 
 Terms

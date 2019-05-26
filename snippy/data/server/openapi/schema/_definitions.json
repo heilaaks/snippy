@@ -299,12 +299,6 @@
             "tags"
           ]
         },
-        "id": {
-          "type": "string",
-          "enum": [
-            null
-          ]
-        },
         "attributes": {
           "$ref": "#/definitions/responseAttributesTags"
         }
@@ -321,12 +315,6 @@
           "type": "string",
           "enum": [
             "groups"
-          ]
-        },
-        "id": {
-          "type": "string",
-          "enum": [
-            null
           ]
         },
         "attributes": {
@@ -392,14 +380,11 @@
       "additionalProperties": false,
       "properties": {
         "data": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/responseDataTags"
-          }
+          "$ref": "#/definitions/responseDataTags"
         }
       },
       "required": [
-        "meta"
+        "data"
       ]
     },
     "responseGroups": {
@@ -407,14 +392,11 @@
       "additionalProperties": false,
       "properties": {
         "data": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/responseDataGroups"
-          }
+          "$ref": "#/definitions/responseDataGroups"
         }
       },
       "required": [
-        "meta"
+        "data"
       ]
     },
     "responseErrors": {

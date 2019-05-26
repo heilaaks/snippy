@@ -596,9 +596,6 @@ definitions:
       type:
         type: string
         enum: [tags]
-      id:
-        type: string
-        enum: [null]
       attributes:
         $ref: '#/definitions/responseAttributesTags'
     required:
@@ -610,9 +607,6 @@ definitions:
       type:
         type: string
         enum: [groups]
-      id:
-        type: string
-        enum: [null]
       attributes:
         $ref: '#/definitions/responseAttributesGroups'
     required:
@@ -655,21 +649,17 @@ definitions:
     additionalProperties: false
     properties:
       data:
-        type: array
-        items:
-          $ref: '#/definitions/responseDataTags'
+        $ref: '#/definitions/responseDataTags'
     required:
-      - meta
+      - data
   responseGroups:
     type: object
     additionalProperties: false
     properties:
       data:
-        type: array
-        items:
-          $ref: '#/definitions/responseDataGroups'
+        $ref: '#/definitions/responseDataGroups'
     required:
-      - meta
+      - data
   responseErrors:
     type: object
     properties:

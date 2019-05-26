@@ -3,14 +3,11 @@
   "additionalProperties": false,
   "properties": {
     "data": {
-      "type": "array",
-      "items": {
-        "$ref": "_definitions.json#/definitions/responseDataTags"
-      }
+      "$ref": "_definitions.json#/definitions/responseDataTags"
     }
   },
   "required": [
-    "meta"
+    "data"
   ],
   "$schema": "http://json-schema.org/schema#"
 }

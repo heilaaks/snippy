@@ -1055,8 +1055,6 @@ components:
           type: string
           enum:
           - tags
-        id:
-          type: string
         attributes:
           $ref: '#/components/schemas/responseAttributesTags'
     paginationLinks:
@@ -1224,12 +1222,12 @@ components:
         Optional name for the resource.
       default: ""
     responseGroups:
+      required:
+      - data
       type: object
       properties:
         data:
-          type: array
-          items:
-            $ref: '#/components/schemas/responseDataGroups'
+          $ref: '#/components/schemas/responseDataGroups'
     requestData:
       required:
       - attributes
@@ -1300,8 +1298,6 @@ components:
           type: string
           enum:
           - groups
-        id:
-          type: string
         attributes:
           $ref: '#/components/schemas/responseAttributesGroups'
     attributeVersions:
@@ -1333,12 +1329,12 @@ components:
         links:
           $ref: '#/components/schemas/paginationLinks'
     responseTags:
+      required:
+      - data
       type: object
       properties:
         data:
-          type: array
-          items:
-            $ref: '#/components/schemas/responseDataTags'
+          $ref: '#/components/schemas/responseDataTags'
     metaInfo:
       required:
       - docs

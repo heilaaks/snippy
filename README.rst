@@ -1,3 +1,5 @@
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fheilaaks%2Fsnippy.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fheilaaks%2Fsnippy?ref=badge_shield)
+
 |badge-pypiv| |badge-pys| |badge-pyv| |badge-cov| |badge-docs| |badge-build| |badge-docker|
 
 Snippy
@@ -92,3 +94,7 @@ Related work
 .. _development: https://snippy.readthedocs.io/en/latest/development.html
 
 .. _Heroku example: https://snippy-server.herokuapp.com/api/snippets?sall=docker&limit=5
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fheilaaks%2Fsnippy.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fheilaaks%2Fsnippy?ref=badge_large)

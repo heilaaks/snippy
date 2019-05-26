@@ -48,7 +48,7 @@ class Api(ConfigSourceBase):
             parameters (dict): Configuration parameters.
         """
 
-        if parameters['operation'] == Api.SEARCH:
+        if parameters['operation'] in (Api.SEARCH, Api.UNIQUE):
             if not any(field in parameters for field in ('sall', 'stag', 'sgrp', 'data', 'uuid', 'digest', 'identity')):
                 parameters['sall'] = ('.')
 

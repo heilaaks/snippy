@@ -26,6 +26,8 @@ from snippy.constants import Constants as Const
 from snippy.logger import Logger
 from snippy.server.rest.base import ApiResource
 from snippy.server.rest.base import ApiNotImplemented
+from snippy.server.rest.generate import Generate
+from snippy.server.rest.validate import Validate
 
 
 class ApiGroups(object):
@@ -51,7 +53,6 @@ class ApiGroups(object):
             sgrp (str): Search groups ``sgrp`` path parameter.
         """
 
-        print("REQUEST")
         self._logger.debug('run: %s %s', request.method, request.uri)
         if scat:
             request.params['scat'] = scat
@@ -65,19 +66,18 @@ class ApiGroups(object):
         if sgrp:
             request.params['sgrp'] = sgrp
         api = Api(self._category, Api.UNIQUE, request.params)
-        print(api)
         Config.load(api)
         self._content.run()
-        #if not self._content.collection and Config.search_limit != 0:
-        #    Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find resources')
-        #if Cause.is_ok():
-        #    response.content_type = ApiResource.MEDIA_JSON_API
-        #    response.body = Generate.collection(self._content.collection, request, response, pagination=True)
-        #    response.status = Cause.http_status()
-        #else:
-        #    response.content_type = ApiResource.MEDIA_JSON_API
-        #    response.body = Generate.error(Cause.json_message())
-        #    response.status = Cause.http_status()
+        if not self._content.uniques:
+            Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find unique fields for groups attribute')
+        if Cause.is_ok():
+            response.content_type = ApiResource.MEDIA_JSON_API
+            response.body = Generate.fields('groups', self._content.uniques, request, response)
+            response.status = Cause.http_status()
+        else:
+            response.content_type = ApiResource.MEDIA_JSON_API
+            response.body = Generate.error(Cause.json_message())
+            response.status = Cause.http_status()
 
         Cause.reset()
         self._logger.debug('end: %s %s', request.method, request.uri)
@@ -113,7 +113,7 @@ class ApiTags(ApiResource):
     """Access content ``tags`` attributes."""
 
     def __init__(self, fields):
-        super(ApiTags, self).__init__(fields, Const.ALL_CATEGORIES)
+        super(ApiTags, self).__init__(fields)
 
     def on_get(self, request, response, sall=None, stag=None, sgrp=None):
         """Search content based on tags field."""

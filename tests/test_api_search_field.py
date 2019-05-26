@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""test_api_search_field: Test GET /resource attribute API."""
+"""test_api_search_field: Test search fields API endpoint."""
 
 from falcon import testing
 import falcon
@@ -36,7 +36,6 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
     """Test GET resource attribute API."""
 
     @staticmethod
-    @pytest.mark.skip(reason="WIP")
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
     def test_api_unique_groups_001(server):
         """Get specific content based on ``groups`` attribute.
@@ -46,34 +45,22 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '5790'
+            'content-length': '82'
         }
         expect_body = {
-            'meta': {
-                'count': 3,
-                'limit': 20,
-                'offset': 0,
-                'total': 3
-            },
-            'data': [{
-                'type': 'snippet',
-                'id': Snippet.REMOVE_UUID,
-                'attributes': Storage.remove
-            }, {
-                'type': 'snippet',
-                'id': Snippet.FORCED_UUID,
-                'attributes': Storage.forced
-            }, {
-                'type': 'solution',
-                'id': Solution.KAFKA_UUID,
-                'attributes': Storage.dkafka
-            }]
+            'data': {
+                'type': 'groups',
+                'attributes': {
+                    'groups': {
+                        'docker': 3,
+                        'python': 1
+                    }
+                }
+            }
         }
         result = testing.TestClient(server.server.api).simulate_get(
             path='/api/snippy/rest/groups',
-            headers={'accept': 'application/vnd.api+json'},
-            query_string='sall=docker,python')
-        print(result.json)
+            headers={'accept': 'application/vnd.api+json'})
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)

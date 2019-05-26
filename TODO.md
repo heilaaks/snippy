@@ -2,6 +2,8 @@
    - [ ] Implement and test /groups and /tags API endpoints.
    - [ ]   Unique column names are not read with PostgreSQL. This is used in unique.
    - [ ]   PUT/PATCH for tags groups api end points are not tested since they pass when the groups/tags class does not inherit base class and those are not implemented?
+   - [ ]   Add validation of tags and groups api JSON
+   - [ ]   Refactor the api_snippets/solutions/refercens supers and class (really needed?)
    - [ ] Fix JSON API v1.x requires links for collection responses too. Individual resource not found or attrbute results null otherwise empty list.
    - [ ] Remove #!/usr/bin/env python from other than main since it is not needed.
    - [ ] Remove hooks and add snippy.db in gitignore and remove file from git.

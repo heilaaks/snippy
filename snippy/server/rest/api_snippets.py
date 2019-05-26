@@ -29,18 +29,18 @@ class ApiSnippets(ApiResource):
     """Query snippets."""
 
     def __init__(self, content):
-        super(ApiSnippets, self).__init__(content, Const.SNIPPET)
+        super(ApiSnippets, self).__init__(content)
 
 
 class ApiSnippetsId(ApiResourceId):
     """Query snippets based on digest."""
 
     def __init__(self, content):
-        super(ApiSnippetsId, self).__init__(content, Const.SNIPPET)
+        super(ApiSnippetsId, self).__init__(content)
 
 
 class ApiSnippetsIdField(ApiResourceIdField):
     """Query snippets with resource ID and attribute."""
 
     def __init__(self, content):
-        super(ApiSnippetsIdField, self).__init__(content, Const.SNIPPET)
+        super(ApiSnippetsIdField, self).__init__(content)

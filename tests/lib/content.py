@@ -480,6 +480,10 @@ class Content(object):  # pylint: disable=too-many-public-methods, too-many-line
         contains default content stored in the database format which needs to
         be modified to match the response from the JSON REST API.
 
+        With field category types like ``groups`` or ``tags`` there is no need
+        to convert the expected dictionary. These resources are never stored
+        in a list.
+
         Args:
             expect (dict): Excepted JSON in REST API response.
 
@@ -502,6 +506,9 @@ class Content(object):  # pylint: disable=too-many-public-methods, too-many-line
                 content['versions'] = list(content['versions'])
 
         if 'data' not in expect:
+            return expect
+
+        if not isinstance(expect['data'], list) and expect['data']['type'] in ('groups', 'tags'):
             return expect
 
         expect = copy.deepcopy(expect)

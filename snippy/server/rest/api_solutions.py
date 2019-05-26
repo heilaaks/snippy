@@ -29,18 +29,18 @@ class ApiSolutions(ApiResource):
     """Query solutions."""
 
     def __init__(self, content):
-        super(ApiSolutions, self).__init__(content, Const.SOLUTION)
+        super(ApiSolutions, self).__init__(content)
 
 
 class ApiSolutionsId(ApiResourceId):
     """Query solutions based on resource ID."""
 
     def __init__(self, content):
-        super(ApiSolutionsId, self).__init__(content, Const.SOLUTION)
+        super(ApiSolutionsId, self).__init__(content)
 
 
 class ApiSolutionsIdField(ApiResourceIdField):
     """Query solution with resource ID and attribute."""
 
     def __init__(self, content):
-        super(ApiSolutionsIdField, self).__init__(content, Const.SOLUTION)
+        super(ApiSolutionsIdField, self).__init__(content)

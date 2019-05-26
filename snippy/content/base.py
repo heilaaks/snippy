@@ -35,6 +35,13 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
         self._run_cli = run_cli
         self._storage = storage
         self._collection = None
+        self._uniques = ()
+
+    @property
+    def category(self):
+        """Content or field category."""
+
+        return self._category
 
     @property
     def collection(self):
@@ -43,10 +50,10 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
         return self._collection
 
     @property
-    def category(self):
-        """Content or field category."""
+    def uniques(self):
+        """Unique values of field."""
 
-        return self._category
+        return self._uniques
 
     @collection.setter
     def collection(self, value):
@@ -86,17 +93,16 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
             )
 
     def unique(self):
-        """Search unique tags or groups."""
+        """Search unique fields."""
 
-        self._logger.debug('searching unique: %s', self._category)
-        uniques = self._storage.uniques(
+        self._logger.debug('searching unique field: %s', self._category)
+        self._uniques = self._storage.uniques(
             self._category,
             scat=Config.search_cat_kws,
             sall=Config.search_all_kws,
             stag=Config.search_tag_kws,
             sgrp=Config.search_grp_kws
         )
-        print(uniques)
 
     def update(self):
         """Update content."""

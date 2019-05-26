@@ -29,18 +29,18 @@ class ApiReferences(ApiResource):
     """Query references."""
 
     def __init__(self, content):
-        super(ApiReferences, self).__init__(content, Const.REFERENCE)
+        super(ApiReferences, self).__init__(content)
 
 
 class ApiReferencesId(ApiResourceId):
     """Query references based on resource ID."""
 
     def __init__(self, content):
-        super(ApiReferencesId, self).__init__(content, Const.REFERENCE)
+        super(ApiReferencesId, self).__init__(content)
 
 
 class ApiReferencesIdField(ApiResourceIdField):
     """Query references with resource ID and attribute."""
 
     def __init__(self, content):
-        super(ApiReferencesIdField, self).__init__(content, Const.REFERENCE)
+        super(ApiReferencesIdField, self).__init__(content)

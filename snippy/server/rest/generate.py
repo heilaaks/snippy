@@ -22,7 +22,10 @@
 import gzip
 import json
 import math
+import operator
 import re
+from collections import OrderedDict
+
 try:
     import StringIO  # Only in Python 2.
 except ImportError:
@@ -208,6 +211,38 @@ class Generate(object):
         return cls.compress(request, response, cls.dumps(data))
 
     @classmethod
+    def fields(cls, attribute, uniques, request, response):
+        """Generate HTTP body for fields API endpoints.
+
+        Created body follows the JSON API specification.
+
+        Args:
+            attribute (str): Resource attribute which unique values are sent
+            uniques (dict): Unique values for the field.
+
+        Returns:
+            body: JSON body as a string or compressed bytes.
+        """
+
+        # Follow CamelCase in field names because expected usage is from
+        # Javascript that uses CamelCase.
+        fields = {}
+        for field in uniques:
+            fields[field[0]] = field[1]
+        fields = OrderedDict(sorted(fields.items(), key=operator.itemgetter(1), reverse=True))
+        data = {
+            'data': {},
+        }
+        data['data'] = {
+            'type': attribute,
+            'attributes': {
+                attribute: fields
+            }
+        }
+
+        return cls.compress(request, response, cls.dumps(data))
+
+    @classmethod
     def error(cls, causes):
         """Generate HTTP body with an error.
 
@@ -218,7 +253,6 @@ class Generate(object):
 
         Returns:
             body: JSON body as a string or compressed bytes.
-
         """
 
         # Follow CamelCase in field names because expected usage is from

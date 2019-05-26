@@ -43,9 +43,9 @@ class ApiResource(object):
     # client always knows explicitly how to decode HTTP responses.
     MEDIA_JSON_API = 'application/vnd.api+json; charset=UTF-8'
 
-    def __init__(self, content=None, category=None):
+    def __init__(self, content=None):
         self._logger = Logger.get_logger(__name__)
-        self._category = category
+        self._category = content.category if content else None
         self._content = content
 
     @Logger.timeit(refresh_oid=True)
@@ -160,9 +160,9 @@ class ApiResource(object):
 class ApiResourceId(object):
     """Access resources with resource ID."""
 
-    def __init__(self, content, category):
+    def __init__(self, content):
         self._logger = Logger.get_logger(__name__)
-        self._category = category
+        self._category = content.category
         self._content = content
 
     @Logger.timeit(refresh_oid=True)
@@ -311,9 +311,9 @@ class ApiResourceId(object):
 class ApiResourceIdField(object):
     """Access content with resource ID and attribute."""
 
-    def __init__(self, content, category):
+    def __init__(self, content):
         self._logger = Logger.get_logger(__name__)
-        self._category = category
+        self._category = content.category
         self._content = content
 
     @Logger.timeit(refresh_oid=True)

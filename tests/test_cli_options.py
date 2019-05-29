@@ -63,6 +63,7 @@ class TestCliOptions(object):  # pylint: disable=too-many-public-methods
         '    --sgrp [KW,...]               search keywords only from groups',
         '    --filter REGEXP               filter search result with regexp',
         '    --limit INT                   maximum number of search results',
+        '    --sort FIELD                  sort search result based on fields',
         '    --no-ansi                     remove ANSI characters from output',
         '',
         'migration options:',

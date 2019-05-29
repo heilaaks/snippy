@@ -16,6 +16,7 @@ New features
 ~~~~~~~~~~~~
 
 * Add Bash completion support.
+* Add ``sort`` command line option to sort search result.
 
 Bugfixes
 ~~~~~~~~

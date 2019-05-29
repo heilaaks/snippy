@@ -60,6 +60,7 @@ class Cli(ConfigSourceBase):
         '  --sgrp [KW,...]               search keywords only from groups',
         '  --filter REGEXP               filter search result with regexp',
         '  --limit INT                   maximum number of search results',
+        '  --sort FIELD                  sort search result based on fields',
         '  --no-ansi                     remove ANSI characters from output'
     )
     ARGS_MIGRATE = (
@@ -189,6 +190,7 @@ class Cli(ConfigSourceBase):
         search.add_argument('--sgrp', nargs='*', type=Parser.to_unicode, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
         search.add_argument('--filter', type=Parser.to_unicode, dest='search_filter', default=argparse.SUPPRESS, help=argparse.SUPPRESS)
         search.add_argument('--limit', type=int, default=Cli.LIMIT_DEFAULT_CLI, help=argparse.SUPPRESS)
+        search.add_argument('--sort', nargs='*', type=Parser.to_unicode, default='brief', help=argparse.SUPPRESS)
 
         # migration options
         migrat = parser.add_argument_group(title='migration options', description=Const.NEWLINE.join(Cli.ARGS_MIGRATE))

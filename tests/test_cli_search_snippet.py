@@ -1369,6 +1369,110 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods, 
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+    @staticmethod
+    @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited')
+    def test_cli_search_snippet_046(snippy, capsys):
+        """Search snippets with ``sort`` option.
+
+        Search resources and sort the results based on the ``created`` time
+        attribute in descending order.
+        """
+
+        output = (
+            '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+            '',
+            '   $ docker rm --volumes $(docker ps --all --quiet)',
+            '',
+            '   # cleanup,container,docker,docker-ce,moby',
+            '   > https://docs.docker.com/engine/reference/commandline/rm/',
+            '',
+            '2. Remove docker image with force @docker [53908d68425c61dc]',
+            '',
+            '   $ docker rm --force redis',
+            '',
+            '   # cleanup,container,docker,docker-ce,moby',
+            '   > https://docs.docker.com/engine/reference/commandline/rm/',
+            '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
+            '',
+            '3. Test if specific port is open @linux [f3fd167c64b6f97e]',
+            '',
+            '   $ nc -v 10.183.19.189 443',
+            '   $ nmap 10.183.19.189',
+            '',
+            '   # linux,netcat,networking,port',
+            '   > https://www.commandlinux.com/man-page/man1/nc.1.html',
+            '',
+            '4. Remove all exited containers and dangling images @docker [49d6916b6711f13d]',
+            '',
+            '   $ docker rm $(docker ps --all -q -f status=exited)',
+            '   $ docker images -q --filter dangling=true | xargs docker rmi',
+            '',
+            '   # cleanup,container,docker,docker-ce,image,moby',
+            '   > https://docs.docker.com/engine/reference/commandline/images/',
+            '   > https://docs.docker.com/engine/reference/commandline/rm/',
+            '   > https://docs.docker.com/engine/reference/commandline/rmi/',
+            '',
+            'OK',
+            ''
+        )
+        cause = snippy.run(['snippy', 'search', '--sall', '.', '--sort', 'created', '--no-ansi', ])
+        out, err = capsys.readouterr()
+        assert cause == Cause.ALL_OK
+        assert out == Const.NEWLINE.join(output)
+        assert not err
+
+    @staticmethod
+    @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited')
+    def test_cli_search_snippet_047(snippy, capsys):
+        """Search snippets with ``sort`` option.
+
+        Search resources and sort results first based on the ``created`` time
+        and then based on the ``brief`` attribute in ascending order.
+        """
+
+        output = (
+            '1. Test if specific port is open @linux [f3fd167c64b6f97e]',
+            '',
+            '   $ nc -v 10.183.19.189 443',
+            '   $ nmap 10.183.19.189',
+            '',
+            '   # linux,netcat,networking,port',
+            '   > https://www.commandlinux.com/man-page/man1/nc.1.html',
+            '',
+            '2. Remove all exited containers and dangling images @docker [49d6916b6711f13d]',
+            '',
+            '   $ docker rm $(docker ps --all -q -f status=exited)',
+            '   $ docker images -q --filter dangling=true | xargs docker rmi',
+            '',
+            '   # cleanup,container,docker,docker-ce,image,moby',
+            '   > https://docs.docker.com/engine/reference/commandline/images/',
+            '   > https://docs.docker.com/engine/reference/commandline/rm/',
+            '   > https://docs.docker.com/engine/reference/commandline/rmi/',
+            '',
+            '3. Remove docker image with force @docker [53908d68425c61dc]',
+            '',
+            '   $ docker rm --force redis',
+            '',
+            '   # cleanup,container,docker,docker-ce,moby',
+            '   > https://docs.docker.com/engine/reference/commandline/rm/',
+            '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
+            '',
+            '4. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+            '',
+            '   $ docker rm --volumes $(docker ps --all --quiet)',
+            '',
+            '   # cleanup,container,docker,docker-ce,moby',
+            '   > https://docs.docker.com/engine/reference/commandline/rm/',
+            '',
+            'OK',
+            ''
+        )
+        cause = snippy.run(['snippy', 'search', '--sall', '.', '--sort=-created,-brief', '--no-ansi'])
+        out, err = capsys.readouterr()
+        assert cause == Cause.ALL_OK
+        assert out == Const.NEWLINE.join(output)
+        assert not err
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

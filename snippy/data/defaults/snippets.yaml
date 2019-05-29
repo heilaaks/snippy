@@ -850,7 +850,43 @@ data:
   uuid: 1cc165f0-32d5-4431-b374-42d2a5ed0680
   versions:
   - git>=2.9.0
+- brief: Common git workflow
+  category: snippet
+  created: '2019-05-29T10:32:55.112015+00:00'
+  data:
+  - git branch -a
+  - git checkout -b branch
+  - git push origin branch
+  - git revert -n SHA
+  - git log --graph --decorate --pretty=oneline --abbrev-commit
+  - 'git rebase --interactive HEAD~N  #  Squash last N commits.'
+  - 'git rebase --interactive SHA  #  Squash from last branched commit.'
+  - git push origin branch --force
+  - git pull --rebase --autostash origin master
+  - git push origin branch --force
+  - 'git push --delete origin branch  #  Delete remote branch.'
+  - 'git branch -d branch  #  Delete local branch.'
+  - git tag -a 0.1.0 -m "Add new release 0.1.0"
+  - git push -u origin 0.1.0
+  description: Common git workflow for basic development.
+  digest: 827d295b25499f49ac18ada2e260b0d40856717642fa0282f727e5f085ebc869
+  filename: git-devel-workflow.md
+  groups:
+  - git
+  links:
+  - https://blog.carbonfive.com/2017/08/28/always-squash-and-rebase-your-git-commits/
+  - https://github.com/k88hudson/git-flight-rules
+  - https://stackoverflow.com/a/2003515
+  name: git-devel-workflow
+  source: https://github.com/heilaaks/snippy
+  tags:
+  - git
+  - workflow
+  updated: '2019-05-29T10:32:55.112015+00:00'
+  uuid: 84c2684e-a0e8-4b32-8608-54c45645c1e1
+  versions:
+  - git>=2
 meta:
   homepage: https://github.com/heilaaks/snippy
-  updated: '2019-05-01T11:31:23.056827+00:00'
+  updated: '2019-05-29T17:20:10.301780+00:00'
   version: 0.11a0

@@ -299,10 +299,10 @@ class Database(object):
         """
 
         uniques = ()
-        #if column not in self._columns:
-        #    self._logger.security('unidentified column name cannot be accepted: %s', column)
+        if column not in self._columns:
+            self._logger.security('unidentified column name cannot be accepted: %s', column)
 
-        #    return uniques
+            return uniques
 
         if self._connection:
             self._logger.debug('select distinct values from columns: %s', column)
@@ -525,9 +525,6 @@ class Database(object):
                 else:
                     connection = sqlite3.connect(location, check_same_thread=False)
                 connection.create_function('REGEXP', 2, lambda regex, value: bool(re.search(regex, value, re.IGNORECASE)))
-                with closing(connection.cursor()) as cursor:
-                    cursor.execute("pragma table_info('contents')")
-                    self._columns = [column[1] for column in cursor.fetchall()]
                 self._logger.debug('sqlite3 database persisted in: %s', location)
             elif self._db == Const.DB_POSTGRESQL:
                 # This allows adding connection parameters like connect_timeout
@@ -559,6 +556,11 @@ class Database(object):
 
             with closing(connection.cursor()) as cursor:
                 cursor.execute(schema)
+
+            with closing(connection.cursor()) as cursor:
+                cursor.execute("SELECT * FROM contents LIMIT 0")
+                self._columns = [desc[0] for desc in cursor.description]
+
         except (sqlite3.Error, psycopg2.Error) as error:
             self._set_error(error)
 

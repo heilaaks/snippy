@@ -3,10 +3,13 @@
    - [ ]   Unique column names are not read with PostgreSQL. This is used in unique.
    - [ ]   PUT/PATCH for tags groups api end points are not tested since they pass when the groups/tags class does not inherit base class and those are not implemented?
    - [ ]   Add validation of tags and groups api JSON
-   - [ ]   Refactor the api_snippets/solutions/refercens supers and class (really needed?)
+   - [ ]   Refactor the api_snippets/solutions/refercens supers and class (really needed?)
+   - [ ] Fix export does not obey --format text if there is the filename attribute defined to *.md. the --format text should force the format the --format text should force the format.
+   - [ ] Fix search does not find from versions. Maybe other fields missing too.
+   - [ ] Fix multiline input for source. This reads both lines and the output wraps them because only one string expected without newlines.
    - [ ] Fix JSON API v1.x requires links for collection responses too. Individual resource not found or attrbute results null otherwise empty list.
-   - [ ] Remove #!/usr/bin/env python from other than main since it is not needed.
-   - [ ] Remove hooks and add snippy.db in gitignore and remove file from git.
+   - [ ] Remove #!/usr/bin/env python from other than main since it is not needed.
+   - [ ] Remove hooks and add snippy.db in gitignore and remove file from git.
    - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format. Try tldr. External tool? No more dependencies would be nice.
    - [ ] Add support to find dead links. External tool? No more dependencies would be nice.
    - [ ] Fix test_logger_017. The P3 is not correct? The links in p2 are in the same elemnet separated with \n that should be the case with P3.
@@ -167,7 +170,7 @@
    - [ ] Update documents.
 
 ## BUBLING UNDER
-   - [ ] Try ULID https://github.com/ahawker/ulid (does this support P2.7) or https://github.com/mdomke/python-ulid as in https://opensource.zalando.com/restful-api-guidelines/#resources
+   - [ ] Try ULID https://github.com/ahawker/ulid (does this support P2.7) or https://github.com/mdomke/python-ulid as in https://opensource.zalando.com/restful-api-guidelines/#resources
    - [ ] Add 'internal server errors' from logger scribling to Sphinx docs. Check that this part is there.
    - [ ] Add optional extra fields for logging.warning('test', extra={'foo': 'bar'}) which might be good for json. What fields to add?
    - [ ] There is a pylint bug that it does not see see Python decorators being used with underscore // https://github.com/PyCQA/pylint/issues/409

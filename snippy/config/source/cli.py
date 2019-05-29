@@ -35,8 +35,8 @@ class Cli(ConfigSourceBase):
     """Command line argument parser."""
 
     ARGS_COPYRIGHT = (
-        'Snippy version ' + __version__ + ' - license GNU AGPLv3 or later',
         'Copyright 2017-2019 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',
+        'Snippy ' + __version__ + ' licensed under GNU Affero General Public License v3.0 or later',
         'Homepage ' + __homepage__
     )
     ARGS_USAGE = ('snippy [-v, --version] [-h, --help] <operation> [<options>] [-vv] [-q]')

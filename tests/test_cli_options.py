@@ -91,8 +91,8 @@ class TestCliOptions(object):  # pylint: disable=too-many-public-methods
         '    List more examples.',
         '      $ snippy --help examples',
         '',
-        'Snippy version ' + __version__ + ' - license GNU AGPLv3 or later',
         'Copyright 2017-2019 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',
+        'Snippy ' + __version__ + ' licensed under GNU Affero General Public License v3.0 or later',
         'Homepage ' + __homepage__,
         ''
     )
@@ -141,8 +141,8 @@ class TestCliOptions(object):  # pylint: disable=too-many-public-methods
         '      $ snippy export --scat solution -f solutions.yaml',
         '      $ snippy import --scat solution -f solutions.yaml',
         '',
-        'Snippy version ' + __version__ + ' - license GNU AGPLv3 or later',
         'Copyright 2017-2019 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',
+        'Snippy ' + __version__ + ' licensed under GNU Affero General Public License v3.0 or later',
         'Homepage ' + __homepage__,
         ''
     )

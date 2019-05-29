@@ -23,7 +23,7 @@ __copyright__ = '2017-2019, Heikki J. Laaksonen'
 __description__ = 'Snippy is a software development and maintenance notes manager.'
 __email__ = 'laaksonen.heikki.j@gmail.com'
 __homepage__ = 'https://github.com/heilaaks/snippy'
-__license__ = 'GNU Affero General Public License v3 or later'
+__license__ = 'GNU Affero General Public License v3.0 or later'
 __title__ = 'snippy'
 __version__ = '0.11a0'
 

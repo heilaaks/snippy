@@ -9,7 +9,7 @@ info:
   contact:
     email: "laaksonen.heikki.j@gmail.com"
   license:
-    name: "GNU AGPL v3.0 or later"
+    name: "GNU Affero General Public License v3.0 or later"
     url: "https://github.com/heilaaks/snippy/blob/master/LICENSE"
 schemes: ["http", "https"]
 host: "localhost:8080"

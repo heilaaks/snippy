@@ -37,9 +37,9 @@ class TestApiCreateField(object):
     @staticmethod
     @pytest.mark.usefixtures('caller')
     def test_api_update_field_001(server):
-        """Try to update groups fields from API.
+        """Try to update ``groups`` from /groups API endpoint.
 
-        Try to send not supported PUT /groups.
+        Try to send PUT /groups that is not supported.
         """
 
         request_body = {
@@ -65,7 +65,6 @@ class TestApiCreateField(object):
             path='/api/snippy/rest/groups',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
-        print(result.json)
         assert result.status == falcon.HTTP_405
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
@@ -74,7 +73,35 @@ class TestApiCreateField(object):
     @staticmethod
     @pytest.mark.usefixtures('caller')
     def test_api_update_field_002(server):
-        """Try to update tags fields from API.
+        """"Try to update ``groups`` from /groups API endpoint.
+
+        Try to send PUT /groups/{id} that is not supported.
+        """
+
+        request_body = {
+            'data': [{
+                'type': 'reference',
+                'attributes': Request.gitlog
+            }]
+        }
+        expect_headers = {
+            'content-type': 'application/vnd.api+json',
+            'content-length': '0'
+        }
+        expect_body = None
+        result = testing.TestClient(server.server.api).simulate_put(
+            path='/api/snippy/rest/groups/1',
+            headers={'accept': 'application/json'},
+            body=json.dumps(request_body))
+        assert result.status == falcon.HTTP_404
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(None)
+
+    @staticmethod
+    @pytest.mark.usefixtures('caller')
+    def test_api_update_field_003(server):
+        """Try to update ``tags`` from /tags API endpoint.
 
         Try to send not supported PUT /tags.
         """

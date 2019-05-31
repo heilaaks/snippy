@@ -24,10 +24,6 @@ import falcon
 import pytest
 
 from tests.lib.content import Content
-from tests.lib.content import Storage
-from tests.lib.snippet import Snippet
-from tests.lib.solution import Solution
-from tests.lib.reference import Reference
 
 pytest.importorskip('gunicorn')
 
@@ -37,10 +33,10 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
     @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
-    def test_api_unique_groups_001(server):
-        """Get specific content based on ``groups`` attribute.
+    def test_api_search_groups_001(server):
+        """Get unique content based on ``groups`` attribute.
 
-        Send GET /groups to get unique groups.
+        Send GET /groups to get unique groups from all content categories.
         """
 
         expect_headers = {
@@ -66,336 +62,186 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         Content.assert_restapi(result.json, expect_body)
 
     @staticmethod
-    @pytest.mark.skip(reason="WIP")
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
     def test_api_search_groups_002(server):
-        """Get specific content based on ``groups`` attribute.
+        """Get unique content based on ``groups`` attribute.
 
-        Call GET /groups/docker,python to get content from the docker and
-        python groups with search all keywords and content limit applied.
+        Send GET /groups to get unique groups only from solution category.
         """
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '4948'
+            'content-length': '69'
         }
         expect_body = {
-            'meta': {
-                'count': 2,
-                'limit': 20,
-                'offset': 0,
-                'total': 2
-            },
-            'data': [{
-                'type': 'reference',
-                'id': Reference.PYTEST_UUID,
-                'attributes': Storage.pytest
-            }, {
-                'type': 'solution',
-                'id': Solution.KAFKA_UUID,
-                'attributes': Storage.dkafka
-            }]
+            'data': {
+                'type': 'groups',
+                'attributes': {
+                    'groups': {
+                        'docker': 1
+                    }
+                }
+            }
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/api/snippy/rest/groups/docker,python',
+            path='/api/snippy/rest/groups',
             headers={'accept': 'application/vnd.api+json'},
-            query_string='sall=test&limit=20&sort=brief')
+            query_string='scat=solution')
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
     @staticmethod
-    @pytest.mark.skip(reason="WIP")
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
     def test_api_search_groups_003(server):
-        """Get specific content based on ``groups`` attribute.
+        """Get unique content based on ``groups`` attribute.
 
-        Call GET /groups/docker,python to get content from the docker and
-        python groups with search all keywords and limit applied. In this case
-        the search is limited only to snippet and solution categories and the
-        search hit from references should not be returned.
+        Send GET /groups to get unique groups. In this case the ``limit``
+        query parameter is set to zero. The limit parameter does not have
+        any effect in the groups API endpoint.
         """
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '4371'
+            'content-length': '82'
         }
         expect_body = {
-            'meta': {
-                'count': 1,
-                'limit': 20,
-                'offset': 0,
-                'total': 1
-            },
-            'data': [{
-                'type': 'solution',
-                'id': Solution.KAFKA_UUID,
-                'attributes': Storage.dkafka
-            }]
+            'data': {
+                'type': 'groups',
+                'attributes': {
+                    'groups': {
+                        'docker': 3,
+                        'python': 1
+                    }
+                }
+            }
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/api/snippy/rest/groups/docker,python',
+            path='/api/snippy/rest/groups',
             headers={'accept': 'application/vnd.api+json'},
-            query_string='sall=test&limit=20&sort=brief&scat=snippet,solution')
+            query_string='limit=0')
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
     @staticmethod
-    @pytest.mark.skip(reason="WIP")
-    @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
+    @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
     def test_api_search_groups_004(server):
         """Get specific content based on ``groups`` attribute.
 
-        Try to call GET /groups/docker,python and limit search to content
-        categories defined in plural forms. This must not work because only
-        the singular formats for the content category ``--scat`` option are
-        supported.
+        Send GET /groups to get unique groups. In this case the ``sall``
+        query parameter is used to limit the search. The search is made
+        from all categories by default.
         """
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '551'
+            'content-length': '69'
         }
         expect_body = {
-            'meta': Content.get_api_meta(),
-            'errors': [{
-                'status': '400',
-                'statusString': '400 Bad Request',
-                'module': 'snippy.testing.testing:123',
-                'title': "content categories: ('snippets', 'solutions') :are not a subset of: ('snippet', 'solution', 'reference')"
-            }, {
-                'status': '404',
-                'statusString': '404 Not Found',
-                'module': 'snippy.testing.testing:123',
-                'title': 'cannot find resources'
-            }]
+            'data': {
+                'type': 'groups',
+                'attributes': {
+                    'groups': {
+                        'python': 1
+                    }
+                }
+            }
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/api/snippy/rest/groups/docker,python',
+            path='/api/snippy/rest/groups',
             headers={'accept': 'application/vnd.api+json'},
-            query_string='sall=test&limit=20&sort=brief&scat=snippets,solutions')
-        assert result.status == falcon.HTTP_400
-        assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_body)
-
-    @staticmethod
-    @pytest.mark.skip(reason="WIP")
-    @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
-    def test_api_search_groups_005(server):
-        """Try to get specific content based on ``groups`` attribute.
-
-        Try to call GET /groups/missing with a group that is not found.
-        """
-
-        expect_headers = {
-            'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '340'
-        }
-        expect_body = {
-            'meta': Content.get_api_meta(),
-            'errors': [{
-                'status': '404',
-                'statusString': '404 Not Found',
-                'module': 'snippy.testing.testing:123',
-                'title': 'cannot find resources'
-            }]
-        }
-        result = testing.TestClient(server.server.api).simulate_get(
-            path='/api/snippy/rest/groups/missing',
-            headers={'accept': 'application/vnd.api+json'})
-        assert result.status == falcon.HTTP_404
-        assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_body)
-
-    @staticmethod
-    @pytest.mark.skip(reason="WIP")
-    @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
-    def test_api_search_groups_006(server):
-        """Try to get specific content based on ``groups`` attribute.
-
-        Try to call GET /missing/docker with a field name that is not
-        found.
-        """
-
-        expect_headers = {
-            'content-type': 'application/vnd.api+json',
-            'content-length': '0'
-        }
-        result = testing.TestClient(server.server.api).simulate_get(
-            path='/api/snippy/rest/missing/docker',
-            headers={'accept': 'application/vnd.api+json'})
-        assert result.status == falcon.HTTP_404
-        assert result.headers == expect_headers
-
-    @staticmethod
-    @pytest.mark.skip(reason="WIP")
-    @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
-    def test_api_search_groups_007(server):
-        """Get specific content based on ``groups`` attribute.
-
-        Call GET /groups/docker to get all content from the docker group.
-        In this case the search query parameter uuid is defined to match
-        multiple contents and category is limited to snippets only. This is
-        a different situation because the uuid is used as a search parameter,
-        not part of the URI. In case URI, a non unique identity like uuid or
-        digest must return error. But matching multiple contents with unique
-        identity is possible in case of a parameter.
-        """
-
-        expect_headers = {
-            'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1489'
-        }
-        expect_body = {
-            'meta': {
-                'count': 2,
-                'limit': 20,
-                'offset': 0,
-                'total': 2
-            },
-            'data': [{
-                'type': 'snippet',
-                'id': Snippet.REMOVE_UUID,
-                'attributes': Storage.remove
-            }, {
-                'type': 'snippet',
-                'id': Snippet.FORCED_UUID,
-                'attributes': Storage.forced
-            }]
-        }
-        result = testing.TestClient(server.server.api).simulate_get(
-            path='/api/snippy/rest/groups/docker',
-            headers={'accept': 'application/vnd.api+json'},
-            query_string='scat=snippet&uuid=1')
+            query_string='sall=pytest')
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
     @staticmethod
-    @pytest.mark.skip(reason="WIP")
-    @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
-    def test_api_search_groups_008(server):
-        """Get specific content based on ``groups`` attribute.
+    @pytest.mark.usefixtures('default-snippets', 'caller')
+    def test_api_search_groups_005(server):
+        """Try to get unique content based on ``groups`` attribute.
 
-        Try to call GET /groups/docker to get all content from the docker
-        group. In this case one of the scat search keywords defining the
-        category is not correct and error must be returned.
+        Try to send GET /groups to get unique groups. In this case the ``scat``
+        query parameter limits the search to solution category. There are no
+        resources stored in the searched category.
         """
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '563'
+            'content-length': '365'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
-                'status': '400',
-                'statusString': '400 Bad Request',
-                'module': 'snippy.testing.testing:123',
-                'title': "content categories: ('reference', 'snippet', 'solutions') :are not a subset of: ('snippet', 'solution', 'reference')"
-            }, {
                 'status': '404',
                 'statusString': '404 Not Found',
                 'module': 'snippy.testing.testing:123',
-                'title': 'cannot find resources'
+                'title': 'cannot find unique fields for groups attribute'
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/api/snippy/rest/groups/docker',
+            path='/api/snippy/rest/groups',
             headers={'accept': 'application/vnd.api+json'},
-            query_string='scat=snippet,solutions,reference&uuid=1')
-        assert result.status == falcon.HTTP_400
+            query_string='scat=solution')
+        assert result.status == falcon.HTTP_404
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
     @staticmethod
-    @pytest.mark.skip(reason="WIP")
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
     def test_api_search_tags_001(server):
-        """Get specific content based on ``tags`` attribute.
+        """Get unique content based on ``tags`` attribute.
 
-        Call GET /tags/moby to get all content with a moby tag.
+        Send GET /tags to get unique groups from all content categories.
         """
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '5790'
+            'content-length': '245'
         }
         expect_body = {
-            'meta': {
-                'count': 3,
-                'limit': 20,
-                'offset': 0,
-                'total': 3
-            },
-            'data': [{
-                'type': 'snippet',
-                'id': Snippet.REMOVE_UUID,
-                'attributes': Storage.remove
-            }, {
-                'type': 'snippet',
-                'id': Snippet.FORCED_UUID,
-                'attributes': Storage.forced
-            }, {
-                'type': 'solution',
-                'id': Solution.KAFKA_UUID,
-                'attributes': Storage.dkafka
-            }]
+            'data': {
+                'type': 'tags',
+                'attributes': {
+                    'tags': {
+                        'docker': 3,
+                        'moby': 3,
+                        'cleanup': 2,
+                        'container': 2,
+                        'docker-ce': 2,
+                        'driver': 1,
+                        'kafka': 1,
+                        'kubernetes': 1,
+                        'logging': 1,
+                        'logs2kafka': 1,
+                        'plugin': 1,
+                        'docs': 1,
+                        'pytest': 1,
+                        'python': 1
+                    }
+                }
+            }
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/api/snippy/rest/tags/moby',
+            path='/api/snippy/rest/tags',
             headers={'accept': 'application/vnd.api+json'})
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
 
     @staticmethod
-    @pytest.mark.skip(reason="WIP")
-    @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
+    @pytest.mark.usefixtures('default-snippets', 'caller')
     def test_api_search_tags_002(server):
-        """Get specific content based on ``tags`` attribute.
+        """Try to get unique content based on ``tags`` attribute.
 
-        Call GET /tags/volume,python to get all content with a volume or
-        python tag.
+        Try to send GET /groups to get unique groups. In this case the ``scat``
+        query parameter limits the search to solution category. There are no
+        resources stored in the searched category.
         """
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '647'
-        }
-        expect_body = {
-            'meta': {
-                'count': 1,
-                'limit': 20,
-                'offset': 0,
-                'total': 1
-            },
-            'data': [{
-                'type': 'reference',
-                'id': Reference.PYTEST_UUID,
-                'attributes': Storage.pytest
-            }]
-        }
-        result = testing.TestClient(server.server.api).simulate_get(
-            path='/api/snippy/rest/tags/volume,python',
-            headers={'accept': 'application/vnd.api+json'})
-        assert result.status == falcon.HTTP_200
-        assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_body)
-
-    @staticmethod
-    @pytest.mark.skip(reason="WIP")
-    @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
-    def test_api_search_tags_003(server):
-        """Try to get specific content based on ``tags`` attribute.
-
-        Try to call GET /tags/missing with a tag that is not found.
-        """
-
-        expect_headers = {
-            'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '340'
+            'content-length': '363'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -403,12 +249,13 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
                 'status': '404',
                 'statusString': '404 Not Found',
                 'module': 'snippy.testing.testing:123',
-                'title': 'cannot find resources'
+                'title': 'cannot find unique fields for tags attribute'
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/api/snippy/rest/tags/missing',
-            headers={'accept': 'application/vnd.api+json'})
+            path='/api/snippy/rest/tags',
+            headers={'accept': 'application/vnd.api+json'},
+            query_string='scat=solution')
         assert result.status == falcon.HTTP_404
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)

@@ -226,10 +226,7 @@ class Generate(object):
 
         # Follow CamelCase in field names because expected usage is from
         # Javascript that uses CamelCase.
-        fields = {}
-        for field in uniques:
-            fields[field[0]] = field[1]
-        fields = OrderedDict(sorted(fields.items(), key=operator.itemgetter(1), reverse=True))
+        fields = OrderedDict(sorted(uniques.items(), key=operator.itemgetter(1), reverse=True))
         data = {
             'data': {},
         }

@@ -451,7 +451,6 @@ class Config(object):
 
         request_resource = json.loads(cls._read_resource('data/server/openapi/schema', 'requestresource.json'))
         request_collection = json.loads(cls._read_resource('data/server/openapi/schema', 'requestcollection.json'))
-        schema = Const.EMPTY
         schema = {
             'oneOf': [request_resource, request_collection]
         }

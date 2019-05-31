@@ -274,6 +274,10 @@ class Content(object):  # pylint: disable=too-many-public-methods, too-many-line
             expect (dict): Excepted JSON in REST API response.
         """
 
+        if result is None and result is expect:
+            assert 1
+            return
+
         try:
             cls._schema.validate(result)
         except ValidationError as error:

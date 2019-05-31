@@ -137,6 +137,7 @@ class Helper(object):
         response_collection_get = json.loads(cls._read_resource('data/server/openapi/schema', 'responsecollectionget.json'))
         response_collection_post = json.loads(cls._read_resource('data/server/openapi/schema', 'responsecollectionpost.json'))
         response_groups = json.loads(cls._read_resource('data/server/openapi/schema', 'responsegroups.json'))
+        response_tags = json.loads(cls._read_resource('data/server/openapi/schema', 'responsetags.json'))
         response_errors = json.loads(cls._read_resource('data/server/openapi/schema', 'responseerrors.json'))
         response_hello = json.loads(cls._read_resource('data/server/openapi/schema', 'responsehello.json'))
         schema = {
@@ -144,6 +145,7 @@ class Helper(object):
                 response_collection_get,
                 response_collection_post,
                 response_groups,
+                response_tags,
                 response_errors,
                 response_hello,
                 response_resource

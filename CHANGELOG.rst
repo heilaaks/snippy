@@ -15,8 +15,9 @@ Breaking changes
 New features
 ~~~~~~~~~~~~
 
-* Add Bash completion support.
-* Add ``sort`` command line option to sort search result.
+* Add new API endpoints to query distinct values of attributes.
+* Add Bash completion support for command line interface.
+* Add ``sort`` command line option to sort search results.
 
 Bugfixes
 ~~~~~~~~

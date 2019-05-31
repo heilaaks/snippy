@@ -39,8 +39,7 @@ from snippy.content.solution import Solution
 from snippy.logger import CustomGunicornLogger
 from snippy.logger import Logger
 from snippy.server.gunicorn_server import GunicornServer as SnippyServer
-from snippy.server.rest.api_fields import ApiGroups
-from snippy.server.rest.api_fields import ApiTags
+from snippy.server.rest.api_fields import ApiAttributes
 from snippy.server.rest.api_hello import ApiHello
 from snippy.server.rest.api_references import ApiReferences
 from snippy.server.rest.api_references import ApiReferencesId
@@ -101,8 +100,8 @@ class Server(object):  # pylint: disable=too-few-public-methods
         self.api.add_route(urljoin(Config.server_base_path_rest, 'references'), ApiReferences(reference))
         self.api.add_route(urljoin(Config.server_base_path_rest, 'references/{identity}'), ApiReferencesId(reference))
         self.api.add_route(urljoin(Config.server_base_path_rest, 'references/{identity}/{field}'), ApiReferencesIdField(reference))
-        self.api.add_route(urljoin(Config.server_base_path_rest, 'groups'), ApiGroups(groups))
-        self.api.add_route(urljoin(Config.server_base_path_rest, 'tags'), ApiTags(tags))
+        self.api.add_route(urljoin(Config.server_base_path_rest, 'groups'), ApiAttributes(groups))
+        self.api.add_route(urljoin(Config.server_base_path_rest, 'tags'), ApiAttributes(tags))
 
         # Reset cause just before starting the server. If there were any
         # failures during the server statup phase, they are still stored

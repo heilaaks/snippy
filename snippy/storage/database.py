@@ -38,7 +38,7 @@ except ImportError:
         import psycopg2  # noqa pylint: disable=ungrouped-imports
     except ImportError:
         class psycopg2(object):  # noqa pylint: disable=C,R
-            """Dummy psycopg2 class to use exceptions."""
+            """Dummy psycopg2 class to use with exceptions."""
 
         setattr(psycopg2, 'Error', sqlite3.Error)
         setattr(psycopg2, 'DataError', sqlite3.DataError)
@@ -49,6 +49,7 @@ from snippy.logger import Logger
 from snippy.cause import Cause
 from snippy.config.config import Config
 from snippy.content.collection import Collection
+from snippy.content.parser import Parser
 
 
 class Database(object):
@@ -285,7 +286,13 @@ class Database(object):
         return collection
 
     def select_distinct(self, column, scat, sall, stag, sgrp):
-        """Select unique values from given column.
+        """Select unique values from the given column.
+
+        Because the database stores list attributes as a string where values
+        are separated with delimiters, a conversion is needed. This method
+        returns a dictionaty where each key is an unique value in requested
+        column. The values in the returned dictionary are the counts for
+        each distinct column value.
 
         Args:
             column (str): column name.
@@ -295,10 +302,10 @@ class Database(object):
             sgrp (tuple): Search group keyword list.
 
         Returns:
-            tuple: List of unique values in given column.
+            dict: Dictionary of unique values with counts.
         """
 
-        uniques = ()
+        uniques = {}
         if column not in self._columns:
             self._logger.security('unidentified column name cannot be accepted: %s', column)
 
@@ -310,13 +317,20 @@ class Database(object):
             try:
                 with closing(self._connection.cursor()) as cursor:
                     cursor.execute(query, qargs)
-                    uniques = cursor.fetchall()
+                    values = cursor.fetchall()
             except (sqlite3.Error, psycopg2.Error) as error:
                 Cause.push(Cause.HTTP_500, 'selecting all from database failed with exception {}'.format(error))
         else:
             Cause.push(Cause.HTTP_500, 'internal error prevented selecting all content from database')
 
-        return tuple(uniques)
+        for value in values:
+            for tag in Parser.format_list(value[0]):
+                if tag in uniques:
+                    uniques[tag] = uniques[tag] + value[1]
+                else:
+                    uniques[tag] = value[1]
+
+        return uniques
 
     def _count_content(self, scat=(), sall=(), stag=(), sgrp=(), uuid=None, digest=None, identity=None, data=None):
         """Count content based on search criteria.

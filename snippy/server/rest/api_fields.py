@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""api_fields: JSON REST API for content attributes."""
+"""api_fields: JSON REST API for resource attributes."""
 
 from snippy.cause import Cause
 from snippy.config.config import Config
@@ -27,11 +27,10 @@ from snippy.logger import Logger
 from snippy.server.rest.base import ApiResource
 from snippy.server.rest.base import ApiNotImplemented
 from snippy.server.rest.generate import Generate
-from snippy.server.rest.validate import Validate
 
 
-class ApiGroups(object):
-    """Access content ``groups`` attributes."""
+class ApiAttributes(object):
+    """Access unique resource attributes."""
 
     def __init__(self, content):
         self._logger = Logger.get_logger(__name__)
@@ -39,40 +38,27 @@ class ApiGroups(object):
         self._content = content
 
     @Logger.timeit(refresh_oid=True)
-    def on_get(self, request, response, scat=None, sall=None, stag=None, sgrp=None):
-        """Search unique groups.
+    def on_get(self, request, response):
+        """Search unique resource attributes.
 
-        By default the search is made from all content categories.
+        Search is made from all content categories by default.
 
         Args:
             request (obj): Falcon Request().
             response (obj): Falcon Response().
-            scat (str): Search categories ``scat`` path parameter.
-            sall (str): Search all ``sall`` path parameter.
-            stag (str): Search tags ``stag`` path parameter.
-            sgrp (str): Search groups ``sgrp`` path parameter.
         """
 
         self._logger.debug('run: %s %s', request.method, request.uri)
-        if scat:
-            request.params['scat'] = scat
-        else:
+        if 'scat' not in request.params:
             request.params['scat'] = Const.CATEGORIES
-
-        if sall:
-            request.params['sall'] = sall
-        if stag:
-            request.params['stag'] = stag
-        if sgrp:
-            request.params['sgrp'] = sgrp
         api = Api(self._category, Api.UNIQUE, request.params)
         Config.load(api)
         self._content.run()
         if not self._content.uniques:
-            Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find unique fields for groups attribute')
+            Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find unique fields for %s attribute' % self._category)
         if Cause.is_ok():
             response.content_type = ApiResource.MEDIA_JSON_API
-            response.body = Generate.fields('groups', self._content.uniques, request, response)
+            response.body = Generate.fields(self._category, self._content.uniques, request, response)
             response.status = Cause.http_status()
         else:
             response.content_type = ApiResource.MEDIA_JSON_API
@@ -82,61 +68,30 @@ class ApiGroups(object):
         Cause.reset()
         self._logger.debug('end: %s %s', request.method, request.uri)
 
+    @staticmethod
     @Logger.timeit(refresh_oid=True)
-    def on_post(self, request, response, **kwargs):
+    def on_post(request, response):
         """Create new field."""
 
         ApiNotImplemented.send(request, response)
 
+    @staticmethod
     @Logger.timeit(refresh_oid=True)
-    def on_put(self, request, response, **kwargs):
+    def on_put(request, response):
         """Change field."""
 
         ApiNotImplemented.send(request, response)
 
+    @staticmethod
     @Logger.timeit(refresh_oid=True)
-    def on_delete(self, request, response, **kwargs):
+    def on_delete(request, response):
         """Delete field."""
 
         ApiNotImplemented.send(request, response)
 
     @staticmethod
     @Logger.timeit(refresh_oid=True)
-    def on_options(_, response, sall=None, stag=None, sgrp=None):
-        """Respond with allowed methods."""
-
-        response.status = Cause.HTTP_200
-        response.set_header('Allow', 'GET,OPTIONS')
-
-
-class ApiTags(ApiResource):
-    """Access content ``tags`` attributes."""
-
-    def __init__(self, fields):
-        super(ApiTags, self).__init__(fields)
-
-    def on_get(self, request, response, sall=None, stag=None, sgrp=None):
-        """Search content based on tags field."""
-
-        if 'scat' not in request.params:
-            request.params['scat'] = [Const.SNIPPET, Const.SOLUTION, Const.REFERENCE]
-        super(ApiTags, self).on_get(request, response, stag=stag)
-
-    @Logger.timeit(refresh_oid=True)
-    def on_post(self, request, response, **kwargs):
-        """Create new field."""
-
-        ApiNotImplemented.send(request, response)
-
-    @Logger.timeit(refresh_oid=True)
-    def on_delete(self, request, response, **kwargs):
-        """Delete field."""
-
-        ApiNotImplemented.send(request, response)
-
-    @staticmethod
-    @Logger.timeit(refresh_oid=True)
-    def on_options(_, response, sall=None, stag=None, sgrp=None):
+    def on_options(_, response):
         """Respond with allowed methods."""
 
         response.status = Cause.HTTP_200

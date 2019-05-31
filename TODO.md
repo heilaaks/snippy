@@ -1,13 +1,12 @@
 ## WORKING
-   - [ ] Implement and test /groups and /tags API endpoints.
-   - [ ]   Unique column names are not read with PostgreSQL. This is used in unique.
-   - [ ]   PUT/PATCH for tags groups api end points are not tested since they pass when the groups/tags class does not inherit base class and those are not implemented?
-   - [ ]   Add validation of tags and groups api JSON
-   - [ ]   Refactor the api_snippets/solutions/refercens supers and class (really needed?)
+   - [ ]  Refactor the api_snippets/solutions/refercens supers and class (really needed?) and fix lint.
+   - [ ] Fix Falcon on_get and the query parameters in method. Those are never there.
    - [ ] Fix export does not obey --format text if there is the filename attribute defined to *.md. the --format text should force the format the --format text should force the format.
    - [ ] Fix search does not find from versions. Maybe other fields missing too.
    - [ ] Fix multiline input for source. This reads both lines and the output wraps them because only one string expected without newlines.
    - [ ] Fix JSON API v1.x requires links for collection responses too. Individual resource not found or attrbute results null otherwise empty list.
+   - [ ] Add links unique attribute? Would be good to check if unique links are valid and how many repeated links there are.
+   - [ ] Add 'languages' attribyte.
    - [ ] Remove #!/usr/bin/env python from other than main since it is not needed.
    - [ ] Remove hooks and add snippy.db in gitignore and remove file from git.
    - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format. Try tldr. External tool? No more dependencies would be nice.

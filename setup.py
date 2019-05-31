@@ -47,8 +47,9 @@ extras_docs = (
 )
 extras_tests = (
     'bandit==1.6.0',
+    'docker==4.0.1 ; python_version>"3.4"',
+    'docker==4.0.1 ; python_version=="2.7.*"',
     'docker==3.7.2 ; python_version=="3.4.*"',
-    'docker==4.0.1',
     'flake8==3.7.7',
     'logging_tree==1.8',
     'mock==3.0.5',

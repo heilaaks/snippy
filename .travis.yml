@@ -10,6 +10,7 @@ services:
 
 install:
     - "python -m pip install codecov"
+    - "make upgrade-wheel"
     - "make install-tests"
 
 before_script:

@@ -51,7 +51,7 @@ paths:
         description: |
           # Brief
 
-          Limit search to resources that have defined tags.
+          Limit search to resources that have any of the given tags.
         style: form
         explode: false
         schema:
@@ -63,7 +63,7 @@ paths:
         description: |
           # Brief
 
-          Limit search to resources that are in defined groups.
+          Limit search to resources that are in any of the given groups.
         style: form
         explode: false
         schema:
@@ -99,7 +99,7 @@ paths:
         description: |
           # Brief
 
-          Filter search result with given regexp.
+          Filter search results with a regexp.
         schema:
           type: string
           default: "."
@@ -273,6 +273,10 @@ paths:
           Resource identity that can be either digest or UUID. Partial identities are allowed
           but they may result multiple matching resources which is an error. The ``id`` path
           parameter must uniquely identify the requested resource.
+
+          Even though the code supports digest and partial identities, it is recommended to
+          use full length UUID. The full length UUID remains the same for whole life time of
+          the resource. The digest will change when the resource attributes change.
         required: true
         schema:
           type: string
@@ -324,6 +328,10 @@ paths:
           Resource identity that can be either digest or UUID. Partial identities are allowed
           but they may result multiple matching resources which is an error. The ``id`` path
           parameter must uniquely identify the requested resource.
+
+          Even though the code supports digest and partial identities, it is recommended to
+          use full length UUID. The full length UUID remains the same for whole life time of
+          the resource. The digest will change when the resource attributes change.
         required: true
         schema:
           type: string
@@ -391,6 +399,10 @@ paths:
           Resource identity that can be either digest or UUID. Partial identities are allowed
           but they may result multiple matching resources which is an error. The ``id`` path
           parameter must uniquely identify the requested resource.
+
+          Even though the code supports digest and partial identities, it is recommended to
+          use full length UUID. The full length UUID remains the same for whole life time of
+          the resource. The digest will change when the resource attributes change.
         required: true
         schema:
           type: string
@@ -474,6 +486,10 @@ paths:
           Resource identity that can be either digest or UUID. Partial identities are allowed
           but they may result multiple matching resources which is an error. The ``id`` path
           parameter must uniquely identify the requested resource.
+
+          Even though the code supports digest and partial identities, it is recommended to
+          use full length UUID. The full length UUID remains the same for whole life time of
+          the resource. The digest will change when the resource attributes change.
         required: true
         schema:
           type: string
@@ -528,6 +544,10 @@ paths:
           Resource identity that can be either digest or UUID. Partial identities are allowed
           but they may result multiple matching resources which is an error. The ``id`` path
           parameter must uniquely identify the requested resource.
+
+          Even though the code supports digest and partial identities, it is recommended to
+          use full length UUID. The full length UUID remains the same for whole life time of
+          the resource. The digest will change when the resource attributes change.
         required: true
         schema:
           type: string
@@ -596,6 +616,10 @@ paths:
           Resource identity that can be either digest or UUID. Partial identities are allowed
           but they may result multiple matching resources which is an error. The ``id`` path
           parameter must uniquely identify the requested resource.
+
+          Even though the code supports digest and partial identities, it is recommended to
+          use full length UUID. The full length UUID remains the same for whole life time of
+          the resource. The digest will change when the resource attributes change.
         required: true
         schema:
           type: string
@@ -641,7 +665,7 @@ paths:
         description: |
           # Brief
 
-          Limit search to resources that have defined tags.
+          Limit search to resources that have any of the given tags.
         style: form
         explode: false
         schema:
@@ -653,7 +677,7 @@ paths:
         description: |
           # Brief
 
-          Limit search to resources that are in defined groups.
+          Limit search to resources that are in any of the given groups.
         style: form
         explode: false
         schema:
@@ -689,7 +713,7 @@ paths:
         description: |
           # Brief
 
-          Filter search result with given regexp.
+          Filter search results with a regexp.
         schema:
           type: string
           default: "."
@@ -825,7 +849,7 @@ paths:
         description: |
           # Brief
 
-          Limit search to resources that have defined tags.
+          Limit search to resources that have any of the given tags.
         style: form
         explode: false
         schema:
@@ -837,7 +861,7 @@ paths:
         description: |
           # Brief
 
-          Limit search to resources that are in defined groups.
+          Limit search to resources that are in any of the given groups.
         style: form
         explode: false
         schema:
@@ -905,7 +929,7 @@ paths:
         description: |
           # Brief
 
-          Limit search to resources that have defined tags.
+          Limit search to resources that have any of the given tags.
         style: form
         explode: false
         schema:
@@ -917,7 +941,7 @@ paths:
         description: |
           # Brief
 
-          Limit search to resources that are in defined groups.
+          Limit search to resources that are in any of the given groups.
         style: form
         explode: false
         schema:
@@ -1502,7 +1526,7 @@ components:
       description: |
         # Brief
 
-        Limit search to resources that are in defined groups.
+        Limit search to resources that are in any of the given groups.
       style: form
       explode: false
       schema:
@@ -1572,7 +1596,7 @@ components:
       description: |
         # Brief
 
-        Filter search result with given regexp.
+        Filter search results with a regexp.
       schema:
         type: string
         default: "."
@@ -1582,7 +1606,7 @@ components:
       description: |
         # Brief
 
-        Limit search to resources that have defined tags.
+        Limit search to resources that have any of the given tags.
       style: form
       explode: false
       schema:
@@ -1675,13 +1699,14 @@ components:
         Resource identity that can be either digest or UUID. Partial identities are allowed
         but they may result multiple matching resources which is an error. The ``id`` path
         parameter must uniquely identify the requested resource.
+
+        Even though the code supports digest and partial identities, it is recommended to
+        use full length UUID. The full length UUID remains the same for whole life time of
+        the resource. The digest will change when the resource attributes change.
       required: true
       schema:
         type: string
-      example:
-      - 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319
-      - 54e41e9b52a02b63
-      - 54e41e9b52a02b63,db712a82662d6932
+      example: 27cd5827-b6ef-4067-b5ac-3ceac07dde9f
     sall:
       name: sall
       in: query

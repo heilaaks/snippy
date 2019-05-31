@@ -47,7 +47,8 @@ extras_docs = (
 )
 extras_tests = (
     'bandit==1.6.0',
-    'docker==3.7.2',
+    'docker==3.7.2 ; python_version=="3.4.*"',
+    'docker==4.0.1',
     'flake8==3.7.7',
     'logging_tree==1.8',
     'mock==3.0.5',
@@ -61,7 +62,7 @@ extras_tests = (
     'pytest-mock==1.10.4',
     'pytest-xdist==1.28.0',
     'requests',
-    'tox==3.11.1'
+    'tox==3.12.1'
 )
 
 meta = {}

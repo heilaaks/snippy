@@ -71,10 +71,10 @@ jobs:
         - "make test-postgresql"
         - "make test-in-memory"
 
-    - stage: "test osx"
+    - stage: "test maxOS"
       os: osx
       osx_image: xcode10
-      python: "3.6"
+      language: generic
       script:
         - "make test"
         - "make test-postgresql"

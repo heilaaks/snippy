@@ -23,11 +23,10 @@ import sys
 
 from snippy.cause import Cause
 from snippy.config.config import Config
+from snippy.constants import Constants as Const
 from snippy.config.source.cli import Cli
 from snippy.content.all_content import AllContent
-from snippy.content.reference import Reference
-from snippy.content.snippet import Snippet
-from snippy.content.solution import Solution
+from snippy.content.content import Content
 from snippy.logger import Logger
 from snippy.storage.storage import Storage
 
@@ -78,11 +77,11 @@ class Snippy(object):
         """Run CLI command."""
 
         if Config.is_category_snippet:
-            Snippet(self.storage).run()
+            Content(self.storage, Const.SNIPPET).run()
         elif Config.is_category_solution:
-            Solution(self.storage).run()
+            Content(self.storage, Const.SOLUTION).run()
         elif Config.is_category_reference:
-            Reference(self.storage).run()
+            Content(self.storage, Const.REFERENCE).run()
         elif Config.is_multi_category and (Config.is_operation_search or Config.is_operation_export or Config.is_operation_import):
             AllContent(self.storage).run()
         else:

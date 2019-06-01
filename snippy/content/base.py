@@ -26,7 +26,7 @@ from snippy.logger import Logger
 from snippy.content.migrate import Migrate
 
 
-class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
+class ContentBase(object):  # pylint: disable=too-many-instance-attributes
     """Base class for content types."""
 
     def __init__(self, storage, category, run_cli):

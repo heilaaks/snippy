@@ -32,10 +32,8 @@ except ImportError:
 from snippy.cause import Cause
 from snippy.config.config import Config
 from snippy.constants import Constants as Const
+from snippy.content.content import Content
 from snippy.content.fields import Fields
-from snippy.content.reference import Reference
-from snippy.content.snippet import Snippet
-from snippy.content.solution import Solution
 from snippy.logger import CustomGunicornLogger
 from snippy.logger import Logger
 from snippy.server.gunicorn_server import GunicornServer as SnippyServer
@@ -82,9 +80,9 @@ class Server(object):  # pylint: disable=too-few-public-methods
             self.api = falcon.API(media_type='application/vnd.api+json')
         except AttributeError:
             raise ImportError
-        snippet = Snippet(self.storage, run_cli=False)
-        solution = Solution(self.storage, run_cli=False)
-        reference = Reference(self.storage, run_cli=False)
+        snippet = Content(self.storage, Const.SNIPPET, run_cli=False)
+        solution = Content(self.storage, Const.SOLUTION, run_cli=False)
+        reference = Content(self.storage, Const.REFERENCE, run_cli=False)
         groups = Fields(self.storage, Const.GROUPS, run_cli=False)
         tags = Fields(self.storage, Const.TAGS, run_cli=False)
         self.api.req_options.media_handlers.update({'application/vnd.api+json': falcon.media.JSONHandler()})

@@ -17,13 +17,13 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""fields: Content fields management."""
+"""content: Content management."""
 
 from snippy.content.base import ContentBase
 
 
-class Fields(ContentBase):
-    """Content fields."""
+class Content(ContentBase):
+    """Content management."""
 
-    def __init__(self, storage, category, run_cli=False):
-        super(Fields, self).__init__(storage, category, run_cli)
+    def __init__(self, storage, category, run_cli=True):
+        super(Content, self).__init__(storage, category, run_cli)

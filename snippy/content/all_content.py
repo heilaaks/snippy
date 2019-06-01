@@ -22,11 +22,11 @@
 from snippy.cause import Cause
 from snippy.config.config import Config
 from snippy.constants import Constants as Const
-from snippy.content.base import ContentTypeBase
+from snippy.content.base import ContentBase
 from snippy.content.migrate import Migrate
 
 
-class AllContent(ContentTypeBase):
+class AllContent(ContentBase):
     """Content field management."""
 
     def __init__(self, storage, run_cli=True):

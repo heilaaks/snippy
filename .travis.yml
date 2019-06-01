@@ -18,9 +18,6 @@ before_script:
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then psql -c 'create database travis_ci_test;' -U postgres; fi
 
 jobs:
-  allow_failures:
-    - os: osx
-
   include:
     - stage: "test Linux"
       python: "2.7"

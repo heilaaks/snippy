@@ -213,7 +213,7 @@ paths:
   /tags:
     get:
       tags:
-        - "tags"
+        - "fields"
       summary: "Get unique tags."
       description: ""
       produces:
@@ -235,7 +235,7 @@ paths:
   /groups:
     get:
       tags:
-        - "groups"
+        - "fields"
       summary: "Get unique groups."
       description: ""
       produces:

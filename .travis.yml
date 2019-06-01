@@ -15,7 +15,7 @@ install:
   - "make install-tests"
 
 before_script:
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; psql -c 'create database travis_ci_test;' -U postgres; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then psql -c 'create database travis_ci_test;' -U postgres; fi
 
 jobs:
   allow_failures:

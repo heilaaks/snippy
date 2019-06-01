@@ -15,9 +15,9 @@ Breaking changes
 New features
 ~~~~~~~~~~~~
 
-* Add new API endpoints to query distinct values of attributes.
+* Add new REST API endpoints to query distinct values of attributes.
 * Add Bash completion support for command line interface.
-* Add ``sort`` command line option to sort search results.
+* Add ``--sort`` command line option to sort search results.
 
 Bugfixes
 ~~~~~~~~
@@ -96,8 +96,8 @@ Breaking changes
 * Change content field ``versions`` from string to array `[2019.01.26]`_.
 * Change UTC offset format from +0000 to +00:00 `[2018.12.16]`_.
 * Change server command line options `[2019.01.04]`_.
-* Change ``filter`` option behaviour `[2018.09.02]`_.
-* Change ``editor`` option and add ``no-editor`` option `[2019.01.06]`_.
+* Change ``--filter`` option behaviour `[2018.09.02]`_.
+* Change ``--editor`` option and add ``no-editor`` option `[2019.01.06]`_.
 * Add new content field ``description`` `[2018.09.08]`_.
 
 New features
@@ -111,8 +111,8 @@ New features
 * Add comment auto-alignment for snippets when printed to terminal.
 * Add ``description`` field in text content templates.
 * Add ``uuid`` field for CLI and REST API operations.
-* Add ``limit`` option for CLI operations.
-* Add search category ``scat`` option for CLI operations.
+* Add ``--limit`` option for CLI operations.
+* Add search category ``--scat`` option for CLI operations.
 
 Bugfixes
 ~~~~~~~~

@@ -4,7 +4,7 @@ cache: pip
 
 stages:
   - "test Linux"
-  - "test maxOS"
+  - "test macOS"
 
 services:
   - postgresql
@@ -15,7 +15,7 @@ install:
   - "make install-tests"
 
 before_script:
-  - "psql -c 'create database travis_ci_test;' -U postgres"
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; psql -c 'create database travis_ci_test;' -U postgres; fi
 
 jobs:
   allow_failures:
@@ -71,13 +71,12 @@ jobs:
         - "make test-postgresql"
         - "make test-in-memory"
 
-    - stage: "test maxOS"
+    - stage: "test macOS"
       os: osx
       osx_image: xcode10
       language: generic
       script:
         - "make test"
-        - "make test-postgresql"
         - "make test-in-memory"
 
 after_success:

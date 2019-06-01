@@ -20,48 +20,56 @@ before_script:
 jobs:
   include:
     - stage: "test Linux"
+      name: "Python 2.7"
       python: "2.7"
       script:
         - "make test"
         - "make test-postgresql"
         - "make test-in-memory"
     - stage: "test Linux"
+      name: "Python 3.4"
       python: "3.4"
       script:
         - "make test"
         - "make test-postgresql"
         - "make test-in-memory"
     - stage: "test Linux"
+      name: "Python 3.5"
       python: "3.5"
       script:
         - "make test"
         - "make test-postgresql"
         - "make test-in-memory"
     - stage: "test Linux"
+      name: "Python 3.6"
       python: "3.6"
       script:
         - "make test"
         - "make test-postgresql"
         - "make test-in-memory"
     - stage: "test Linux"
+      name: "Python 3.7"
       python: "3.7"
       script:
         - "make test"
         - "make test-postgresql"
         - "make test-in-memory"
     - stage: "test Linux"
+      name: "Python 3.8-dev"
       python: "3.8-dev"
       script:
         - "make test"
         - "make test-postgresql"
         - "make test-in-memory"
     - stage: "test Linux"
+      name: "PyPy2"
       python: "pypy"
       script:
         - "make test"
         - "make test-postgresql"
         - "make test-in-memory"
     - stage: "test Linux"
+      name: "PyPy3"
       python: "pypy3"
       script:
         - "make test"
@@ -69,12 +77,21 @@ jobs:
         - "make test-in-memory"
 
     - stage: "test macOS"
+      name: "Python 2.7"
       os: osx
       osx_image: xcode10
-      language: generic
+      language: shell
       script:
         - "make test"
         - "make test-in-memory"
+    - stage: "test macOS"
+      name: "Python 3.7"
+      os: osx
+      osx_image: xcode10
+      language: shell
+      script:
+        - "make test PYTHON=python3"
+        - "make test-in-memory PYTHON=python3"
 
 after_success:
   - codecov

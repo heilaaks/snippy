@@ -39,9 +39,9 @@ from snippy.logger import Logger
 from snippy.server.gunicorn_server import GunicornServer as SnippyServer
 from snippy.server.rest.api_fields import ApiAttributes
 from snippy.server.rest.api_hello import ApiHello
-from snippy.server.rest.base import ApiResource
-from snippy.server.rest.base import ApiResourceId
-from snippy.server.rest.base import ApiResourceIdField
+from snippy.server.rest.api_content import ApiContent
+from snippy.server.rest.api_content import ApiContentId
+from snippy.server.rest.api_content import ApiContentIdField
 
 
 class Server(object):  # pylint: disable=too-few-public-methods
@@ -83,15 +83,15 @@ class Server(object):  # pylint: disable=too-few-public-methods
         self.api.resp_options.media_handlers.update({'application/vnd.api+json': falcon.media.JSONHandler()})
         self.api.add_route(Config.server_base_path_rest.rstrip('/'), ApiHello())
         self.api.add_route(urljoin(Config.server_base_path_rest, 'hello'), ApiHello())
-        self.api.add_route(urljoin(Config.server_base_path_rest, 'snippets'), ApiResource(snippet))
-        self.api.add_route(urljoin(Config.server_base_path_rest, 'snippets/{identity}'), ApiResourceId(snippet))
-        self.api.add_route(urljoin(Config.server_base_path_rest, 'snippets/{identity}/{field}'), ApiResourceIdField(snippet))
-        self.api.add_route(urljoin(Config.server_base_path_rest, 'solutions'), ApiResource(solution))
-        self.api.add_route(urljoin(Config.server_base_path_rest, 'solutions/{identity}'), ApiResourceId(solution))
-        self.api.add_route(urljoin(Config.server_base_path_rest, 'solutions/{identity}/{field}'), ApiResourceIdField(solution))
-        self.api.add_route(urljoin(Config.server_base_path_rest, 'references'), ApiResource(reference))
-        self.api.add_route(urljoin(Config.server_base_path_rest, 'references/{identity}'), ApiResourceId(reference))
-        self.api.add_route(urljoin(Config.server_base_path_rest, 'references/{identity}/{field}'), ApiResourceIdField(reference))
+        self.api.add_route(urljoin(Config.server_base_path_rest, 'snippets'), ApiContent(snippet))
+        self.api.add_route(urljoin(Config.server_base_path_rest, 'snippets/{identity}'), ApiContentId(snippet))
+        self.api.add_route(urljoin(Config.server_base_path_rest, 'snippets/{identity}/{field}'), ApiContentIdField(snippet))
+        self.api.add_route(urljoin(Config.server_base_path_rest, 'solutions'), ApiContent(solution))
+        self.api.add_route(urljoin(Config.server_base_path_rest, 'solutions/{identity}'), ApiContentId(solution))
+        self.api.add_route(urljoin(Config.server_base_path_rest, 'solutions/{identity}/{field}'), ApiContentIdField(solution))
+        self.api.add_route(urljoin(Config.server_base_path_rest, 'references'), ApiContent(reference))
+        self.api.add_route(urljoin(Config.server_base_path_rest, 'references/{identity}'), ApiContentId(reference))
+        self.api.add_route(urljoin(Config.server_base_path_rest, 'references/{identity}/{field}'), ApiContentIdField(reference))
         self.api.add_route(urljoin(Config.server_base_path_rest, 'groups'), ApiAttributes(groups))
         self.api.add_route(urljoin(Config.server_base_path_rest, 'tags'), ApiAttributes(tags))
 

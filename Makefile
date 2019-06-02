@@ -86,6 +86,9 @@ test-postgresql:
 test-in-memory:
 	$(PYTHON) -m pytest -x ${COVERAGE} --snippy-db in-memory -m "not (docker or server)" $(PYTEST_CORES)
 
+test-cli:
+	$(PYTHON) -m pytest ./tests/test_cli* -x ${COVERAGE} --snippy-db sqlite -m "not (docker or server)" $(PYTEST_CORES)
+
 test-tox:
 	tox
 

@@ -117,8 +117,7 @@ jobs:
       env:
         - PATH=/c/Python37:/c/Python37/Scripts:$PATH
       script:
-        - "make test"
-        - "make test-in-memory"
+        - "make test-cli"
 
 after_success:
   - codecov

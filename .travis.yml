@@ -10,11 +10,16 @@ stages:
 services:
   - postgresql
 
+env:
+  global:
+    - V=1
+    - QUIET=
+
 install:
   - if [ "$TRAVIS_OS_NAME" = "windows" ]; then choco install make python; fi
-  - "python -m pip install codecov"
+  - "make install-codecov"
   - "make upgrade-wheel"
-  - "make install-tests"
+  - "make install-test"
 
 before_script:
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then psql -c 'create database travis_ci_test;' -U postgres; fi
@@ -81,7 +86,7 @@ jobs:
         - "make test-postgresql"
         - "make test-in-memory"
     - stage: "test Linux"
-      name: "lint"
+      name: "lint python3"
       python: "3.7"
       script:
         - "make lint"
@@ -99,19 +104,18 @@ jobs:
       os: osx
       osx_image: xcode10
       language: shell
-      install:
-        - "python3 -m pip install codecov"
-        - "make upgrade-wheel PYTHON=python3"
-        - "make install-tests PYTHON=python3"
+      env:
+        - PYTHON=python3
+        - V=1
+        - QUIET=
       script:
-        - "make test PYTHON=python3"
-        - "make test-in-memory PYTHON=python3"
+        - "make test"
+        - "make test-in-memory"
 
     - stage: "test Windows"
       name: "Python 3.7"
       os: windows
       language: shell
-      env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
       script:
         - "make test"
         - "make test-in-memory"

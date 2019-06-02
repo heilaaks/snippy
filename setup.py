@@ -45,7 +45,7 @@ extras_docs = (
     'sphinx_rtd_theme==0.4.3',
     'sphinx-autobuild==0.7.1'
 )
-extras_tests = (
+extras_test = (
     'bandit==1.6.0',
     'docker==4.0.1 ; python_version>"3.4"',
     'docker==4.0.1 ; python_version=="2.7.*"',
@@ -127,11 +127,11 @@ setup(
         'Topic :: Utilities'
     ],
     extras_require={
-        'devel': extras_dev + extras_docs + extras_server + extras_tests,
+        'devel': extras_dev + extras_docs + extras_server + extras_test,
         'docs': extras_docs,
         'server': extras_server,
-        'test': extras_server + extras_tests,
+        'test': extras_server + extras_test,
     },
-    tests_require=extras_tests,
+    tests_require=extras_test,
     test_suite='tests'
 )

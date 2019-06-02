@@ -32,4 +32,5 @@ server.key
 
 # Snippy data
 snippy.bash-completion
+snippy.db
 snippy-test.db*

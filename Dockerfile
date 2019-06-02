@@ -34,7 +34,6 @@ RUN apk add --virtual .build-deps \
     find ${PYTHONUSERBASE}/lib -type d -name __pycache__ -exec rm -r {} \+ && \
     find ${PYTHONUSERBASE}/bin ! -regex '\(.*snippy\)' -type f -exec rm -f {} + && \
     mkdir /volume && \
-    rm -f ${PYTHONUSERBASE}/lib/python3.6/site-packages/snippy/data/storage/snippy.db && \
     snippy import \
         --defaults \
         --scat all \

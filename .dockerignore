@@ -4,3 +4,6 @@ __pycache__
 *.pyd
 .git
 
+# Snippy data
+snippy/data/storage/snippy.db
+snippy/data/storage/snippy-test.db*

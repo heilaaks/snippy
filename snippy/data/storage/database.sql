@@ -1,6 +1,8 @@
 -- database.sql
 --
--- Snippy - command, solution, reference and code snippet manager.
+-- SPDX-License-Identifier: AGPL-3.0-or-later
+-- 
+-- snippy - software development and maintenance notes manager.
 -- Copyright 2017-2019 Heikki J. Laaksonen  <laaksonen.heikki.j@gmail.com>
 --
 -- This program is free software: you can redistribute it and/or modify

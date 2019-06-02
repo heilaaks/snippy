@@ -1,4 +1,5 @@
 [MESSAGES CONTROL]
+
 # The class object inheritance is required in Python 2.
 disable=useless-object-inheritance
 

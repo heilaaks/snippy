@@ -106,8 +106,6 @@ jobs:
       language: shell
       env:
         - PYTHON=python3
-        - V=1
-        - QUIET=
       script:
         - "make test"
         - "make test-in-memory"
@@ -116,6 +114,8 @@ jobs:
       name: "Python 3.7"
       os: windows
       language: shell
+      env:
+        - PATH=/c/Python37:/c/Python37/Scripts:$PATH
       script:
         - "make test"
         - "make test-in-memory"

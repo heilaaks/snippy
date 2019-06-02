@@ -256,7 +256,7 @@ class Logger(object):
             sys.stdout.flush()
             try:
                 signal(SIGPIPE, signal_sigpipe)
-            except (UnboundLocalError, ValueError):
+            except (NameError, UnboundLocalError, ValueError):
                 pass  # SIGPIPE is not available in Windows.
 
     @classmethod

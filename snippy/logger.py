@@ -29,7 +29,11 @@ import time
 from collections import OrderedDict
 from functools import wraps
 from random import getrandbits
-from signal import signal, getsignal, SIGPIPE, SIG_DFL
+from signal import signal, getsignal, SIG_DFL
+try:
+    from signal import SIGPIPE
+except ImportError:
+    pass  # SIGPIPE is not available in Windows.
 
 import json
 
@@ -242,11 +246,17 @@ class Logger(object):
         # $ snippy search --sall . -vv | head -n 20
         # $ snippy search --sall . -vv | tail -n 20
         if message:
-            signal_sigpipe = getsignal(SIGPIPE)
-            signal(SIGPIPE, SIG_DFL)
+            try:
+                signal_sigpipe = getsignal(SIGPIPE)
+                signal(SIGPIPE, SIG_DFL)
+            except (NameError, ValueError):
+                pass  # SIGPIPE is not available in Windows.
             print(message)
             sys.stdout.flush()
-            signal(SIGPIPE, signal_sigpipe)
+            try:
+                signal(SIGPIPE, signal_sigpipe)
+            except (UnboundLocalError, ValueError):
+                pass  # SIGPIPE is not available in Windows.
 
     @classmethod
     def print_status(cls, status):

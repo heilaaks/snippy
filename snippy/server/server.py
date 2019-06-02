@@ -20,7 +20,11 @@
 """server: JSON RESTish API server."""
 
 import sys
-from signal import signal, getsignal, SIGPIPE, SIG_DFL
+from signal import signal, getsignal, SIG_DFL
+try:
+    from signal import SIGPIPE
+except ImportError:
+    pass  # SIGPIPE is not available in Windows.
 import ssl
 
 import falcon
@@ -106,9 +110,15 @@ class Server(object):  # pylint: disable=too-few-public-methods
         # 'broken pipe' error with grep. See more information from Logger
         # print_stdout method. Example command below works because of this.
         #
-        # $ snippy --server-host localhost:8080 -vv | grep -A2 -B2 'operation: run :'
-        signal_sigpipe = getsignal(SIGPIPE)
-        signal(SIGPIPE, SIG_DFL)
+        # $ snippy --server-host localhost:8080 -vv --defaults | grep -E -A2 -B2 'run method|end method'
+        try:
+            signal_sigpipe = getsignal(SIGPIPE)
+            signal(SIGPIPE, SIG_DFL)
+        except (NameError, ValueError):
+            pass  # SIGPIPE is not available in Windows.
         SnippyServer(self.api, options).run()
         sys.stdout.flush()
-        signal(SIGPIPE, signal_sigpipe)
+        try:
+            signal(SIGPIPE, signal_sigpipe)
+        except (UnboundLocalError, ValueError):
+            pass  # SIGPIPE is not available in Windows.

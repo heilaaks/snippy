@@ -34,7 +34,7 @@ from snippy.meta import __version__
 class ApiHello(ApiResource):
     """Hello API."""
 
-    def on_get(self, request, response, _sall=None, _stag=None, _sgrp=None):
+    def on_get(self, request, response):
         """Get server /hello API endpoint.
 
         The route is not measured and logs must not be printed from here if
@@ -76,7 +76,7 @@ class ApiHello(ApiResource):
             self._logger.debug('end: %s %s', request.method, request.uri)
 
     @Logger.timeit(refresh_oid=True)
-    def on_options(self, request, response, _sall=None, _stag=None, _sgrp=None):
+    def on_options(self, request, response):
         """Respond with allowed methods for Hello!"""
 
         self._logger.debug('run: %s %s', request.method, request.uri)

@@ -1,5 +1,4 @@
 ## WORKING
-   - [ ] Add # SPDX-License-Identifier: AGPL-3.0-or-later for file headers to help machine reading of license.
    - [ ] Fix Falcon on_get and the query parameters in method. Those are never there.
    - [ ] Fix export does not obey --format text if there is the filename attribute defined to *.md. the --format text should force the format the --format text should force the format.
    - [ ] Fix search does not find from versions. Maybe other fields missing too.

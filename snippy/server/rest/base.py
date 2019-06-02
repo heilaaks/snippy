@@ -50,7 +50,7 @@ class ApiResource(object):
         self._content = content
 
     @Logger.timeit(refresh_oid=True)
-    def on_post(self, request, response, **kwargs):  # pylint: disable=unused-argument
+    def on_post(self, request, response):
         """Create new resource.
 
         Args:
@@ -76,8 +76,9 @@ class ApiResource(object):
         Cause.reset()
         self._logger.debug('end: %s %s', request.method, request.uri)
 
+    @staticmethod
     @Logger.timeit(refresh_oid=True)
-    def on_put(self, request, response, **kwargs):  # pylint: disable=unused-argument,no-self-use
+    def on_put(request, response):
         """Update content.
 
         Args:
@@ -88,24 +89,15 @@ class ApiResource(object):
         ApiNotImplemented.send(request, response)
 
     @Logger.timeit(refresh_oid=True)
-    def on_get(self, request, response, sall=None, stag=None, sgrp=None):
+    def on_get(self, request, response):
         """Search resources.
 
         Args:
             request (obj): Falcon Request().
             response (obj): Falcon Response().
-            sall (str): Search all ``sall`` path parameter.
-            stag (str): Search tags ``stag`` path parameter.
-            sgrp (str): Search groups ``sgrp`` path parameter.
         """
 
         self._logger.debug('run: %s %s', request.method, request.uri)
-        if sall:
-            request.params['sall'] = sall
-        if stag:
-            request.params['stag'] = stag
-        if sgrp:
-            request.params['sgrp'] = sgrp
         api = Api(self._category, Api.SEARCH, request.params)
         Config.load(api)
         self._content.run()
@@ -124,7 +116,7 @@ class ApiResource(object):
         self._logger.debug('end: %s %s', request.method, request.uri)
 
     @Logger.timeit(refresh_oid=True)
-    def on_delete(self, request, response, **kwargs):  # pylint: disable=unused-argument
+    def on_delete(self, request, response):
         """Delete resource.
 
         Args:
@@ -143,15 +135,12 @@ class ApiResource(object):
 
     @staticmethod
     @Logger.timeit(refresh_oid=True)
-    def on_options(_, response, sall=None, stag=None, sgrp=None):  # pylint: disable=unused-argument
+    def on_options(_, response):
         """Respond with allowed methods.
 
         Args:
             request (obj): Falcon Request().
             response (obj): Falcon Response().
-            sall (str): Search all ``sall`` path parameter.
-            stag (str): Search tags ``stag`` path parameter.
-            sgrp (str): Search groups ``sgrp`` path parameter.
         """
 
         response.status = Cause.HTTP_200

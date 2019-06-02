@@ -22,6 +22,8 @@
 
 from __future__ import print_function
 
+import sys
+
 import mock
 import pytest
 
@@ -197,6 +199,7 @@ class TestCliOptions(object):  # pylint: disable=too-many-public-methods
         Content.delete()
 
     @staticmethod
+    @pytest.mark.skipif(sys.platform == "win32", reason="does not work on windows")
     @pytest.mark.usefixtures('mock-server')
     def test_help_option_004(capsys, caplog, osenviron):
         """Test running only the snippy.

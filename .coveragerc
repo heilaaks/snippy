@@ -1,0 +1,8 @@
+[run]
+branch = True
+source = snippy
+omit = snippy/data/*,snippy/devel/*
+parallel = True
+
+[report]
+show_missing = True

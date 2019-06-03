@@ -1,11 +1,11 @@
-dist: xenial
 language: python
+dist: xenial
 cache: pip
 
 stages:
-  - "test Linux"
-  - "test macOS"
-  - "test Windows"
+  - test Linux
+  - test macOS
+  - test Windows
 
 services:
   - postgresql
@@ -17,107 +17,81 @@ env:
 
 install:
   - if [ "$TRAVIS_OS_NAME" = "windows" ]; then choco install make python; fi
-  - "make install-codecov"
-  - "make upgrade-wheel"
-  - "make install-test"
+  - make upgrade-wheel
+  - make install-coverage
+  - make install-test
 
 before_script:
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then psql -c 'create database travis_ci_test;' -U postgres; fi
+
+script:
+  - make test
+  - make test-postgresql
+  - make test-in-memory
 
 jobs:
   allow_failures:
     - os: windows
 
   include:
-    - stage: "test Linux"
-      name: "Python 2.7"
-      python: "2.7"
+    - name: Python 2.7
+      python: 2.7
+      stage: test Linux
+    - name: Python 3.4
+      python: 3.4
+      stage: test Linux
+    - name: Python 3.5
+      python: 3.5
+      stage: test Linux
+    - name: Python 3.6
+      python: 3.6
+      stage: test Linux
+    - name: Python 3.7
+      python: 3.7
+      stage: test Linux
+    - name: Python 3.8
+      python: 3.8-dev
+      stage: test Linux
+    - name: PyPy2
+      python: pypy
+      stage: test Linux
+    - name: PyPy3
+      python: pypy3
+      stage: test Linux
+    - name: lint python3
+      python: 3.7
+      stage: test Linux
       script:
-        - "make test"
-        - "make test-postgresql"
-        - "make test-in-memory"
-    - stage: "test Linux"
-      name: "Python 3.4"
-      python: "3.4"
-      script:
-        - "make test"
-        - "make test-postgresql"
-        - "make test-in-memory"
-    - stage: "test Linux"
-      name: "Python 3.5"
-      python: "3.5"
-      script:
-        - "make test"
-        - "make test-postgresql"
-        - "make test-in-memory"
-    - stage: "test Linux"
-      name: "Python 3.6"
-      python: "3.6"
-      script:
-        - "make test"
-        - "make test-postgresql"
-        - "make test-in-memory"
-    - stage: "test Linux"
-      name: "Python 3.7"
-      python: "3.7"
-      script:
-        - "make test"
-        - "make test-postgresql"
-        - "make test-in-memory"
-    - stage: "test Linux"
-      name: "Python 3.8"
-      python: "3.8-dev"
-      script:
-        - "make test"
-        - "make test-postgresql"
-        - "make test-in-memory"
-    - stage: "test Linux"
-      name: "PyPy2"
-      python: "pypy"
-      script:
-        - "make test"
-        - "make test-postgresql"
-        - "make test-in-memory"
-    - stage: "test Linux"
-      name: "PyPy3"
-      python: "pypy3"
-      script:
-        - "make test"
-        - "make test-postgresql"
-        - "make test-in-memory"
-    - stage: "test Linux"
-      name: "lint python3"
-      python: "3.7"
-      script:
-        - "make lint"
+        - make lint
 
-    - stage: "test macOS"
-      name: "Python 2.7"
+    - name: Python 2.7
       os: osx
       osx_image: xcode10
       language: shell
+      stage: test macOS
       script:
-        - "make test"
-        - "make test-in-memory"
-    - stage: "test macOS"
-      name: "Python 3.7"
+        - make test
+        - make test-in-memory
+    - name: Python 3.7
+      stage: test macOS
       os: osx
       osx_image: xcode10
       language: shell
       env:
         - PYTHON=python3
       script:
-        - "make test"
-        - "make test-in-memory"
+        - make test
+        - make test-in-memory
 
-    - stage: "test Windows"
-      name: "Python 3.7"
+    - name: Python 3.7
+      stage: test Windows
       os: windows
       language: shell
       env:
         - PATH=/c/Python37:/c/Python37/Scripts:$PATH
       script:
-        - "make test-cli"
+        - make test-cli
 
 after_success:
   - codecov
+  - coverage combine

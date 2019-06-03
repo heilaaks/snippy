@@ -61,8 +61,8 @@ install-test:
 install-server:
 	$(PYTHON) -m pip install $(QUIET) $(INSTALL_USER) .[server]
 
-install-codecov:
-	$(PYTHON) -m pip install $(QUIET) $(INSTALL_USER) codecov
+install-coverage:
+	$(PYTHON) -m pip install $(QUIET) $(INSTALL_USER) codecov coveralls
 
 outdated:
 	$(PYTHON) -m pip list --outdated

@@ -231,6 +231,7 @@ class Config(object):
 
         # options
         cls.editor = cls.source.editor
+        cls.template_format_used = cls.source.template_format_used
         cls.template_format = cls.source.template_format
         cls.use_ansi = not cls.source.no_ansi
         cls.failure = cls.source.failure
@@ -528,13 +529,23 @@ class Config(object):
     def get_operation_file(cls, collection=None):
         """Return filename for the operation.
 
-        Use the resource ``filename`` attribute only in case of an export
-        operation when there is a single resource in collection and when
-        user did not define ``--file`` option.
+        Deciding filename and format with export operation:
+
+        1. The ``--file`` option always overrides any filename and format in
+           case of export operation.
+
+        2. When the ``--file`` option is not used, the ``--format`` option
+           always overrides the file format in case of export operation.
+
+        3. If ``--file`` or ``--format`` command line options are not used,
+           the resource ``filename`` attribute will define the filename and
+           format in case of export operation.
+
+        4. If none of the above conditions are met, default values are used.
 
         If collection is provided with more than one resource, the operation
-        file is still updated. The collection might be a search result from
-        different category than originally defined.
+        file is still updated. The collection contain resources from different
+        category than originally defined.
 
         Args:
             collection (obj): Resources in Collection() container.
@@ -547,6 +558,11 @@ class Config(object):
         if cls.is_operation_export and collection and not cls.source.operation_file:
             if len(collection) == 1 and next(collection.resources()).filename:
                 filename = next(collection.resources()).filename
+                if cls.template_format_used:
+                    filename_old = next(collection.resources()).filename
+                    name, _ = os.path.splitext(filename_old)
+                    filename = name + '.' + cls.template_format.lower()
+                    cls._logger.debug('format option override the defined file format: %s :with: %s' % (filename_old, filename))
             else:
                 categories = collection.category_list()
                 filename = cls._operation_filename(categories)

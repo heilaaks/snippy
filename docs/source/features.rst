@@ -4,14 +4,60 @@ Features
 Terminal
 --------
 
-Content managed by Snippy is divided into two categories called snippets and
-solutions. Snippets are short command examples and solutions are longer
-solution descriptions. You can add metadata like links and tags to help to
-search content.
+Notes managed by the ``snippy`` are divided into three categories called
+``snippet``, ``solution`` and ``reference``. Snippets are short command
+examples and solutions are longer solution descriptions. The references
+are collection of links. You can add metadata like links and tags to help
+to search content.
 
 You can operate snippet or solution content with six basic operations: create,
 search, update, delete, import and export. These operations manage the content
-in persistent file storage installed into the same place as the tool. 
+in persistent file storage installed into the same place as the tool.
+
+Command line operations
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Create
+^^^^^^
+
+Search
+^^^^^^
+
+Update
+^^^^^^
+
+Delete
+^^^^^^
+
+Export
+^^^^^^
+
+When notes are exported, the filename and file format are defined with the
+following logic. There can be a difference depending on how many notes are
+exported.
+
+1. The ``--file`` option always overrides any filename and format regardless
+   of how many notes are exported.
+
+2. When the ``--file`` option is not used, the ``--format`` option always
+   overrides the file format. This applies regadless of how many notes are
+   exported.
+
+3. If the ``--file`` or ``--format`` options are not used, the ``filename``
+   attribute will define the filename and file format if there is a single
+   note to be exported.
+
+4. If none of the above conditions are met, a default values are used.
+
+   The default filename in case of a single note is ``[category]s.mkdn``.
+   The default filename in case of multiple notes is ``contents.mkdn``.
+
+
+Import
+^^^^^^
+
+Server
+^^^^^^
 
 Server
 ------

@@ -163,10 +163,11 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
     @staticmethod
     @pytest.mark.usefixtures('default-solutions', 'export-time')
     def test_cli_export_solution_007(snippy):
-        """Export defined solution with digest.
+        """Export solution with ``--digest`` option.
 
-        Export defined solution based on message digest. File name is defined
-        in solution metadata but not by command line -f|--file option.
+        Export resource based on message digest. The File name is defined in
+        solution ``filename`` attribute but not with ``--file``command line
+        option.
         """
 
         content = {
@@ -871,6 +872,50 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             mock_file.assert_called_once_with('./solution-template.mkdn', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_called_with(Const.NEWLINE.join(Solution.TEMPLATE_MKDN))
+
+    @staticmethod
+    @pytest.mark.usefixtures('import-kafka', 'export-time')
+    def test_cli_export_solution_041(snippy):
+        """Export defined solution with digest.
+
+        Export text native content when the ``filename`` attribute defines the
+        default file as text file. In this case the ``--format`` option defines
+        that the exported file must be Markdown file. Command line option must
+        always override other configuration.
+        """
+
+        content = {
+            'meta': Content.get_cli_meta(),
+            'data': [
+                Solution.KAFKA
+            ]
+        }
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '-d', 'ee3f2ab7c63d6965', '--format', 'mkdn'])
+            assert cause == Cause.ALL_OK
+            Content.assert_mkdn(mock_file, 'kubernetes-docker-log-driver-kafka.mkdn', content)
+
+    @staticmethod
+    @pytest.mark.usefixtures('import-kafka-mkdn', 'export-time')
+    def test_cli_export_solution_042(snippy):
+        """Export defined solution with digest.
+
+        Export Markdown native content when the ``filename`` attribute defines
+        the default file as Markdown file. In this case the ``--format`` option
+        defines  that the exported file must be text file. Command line option
+        must always override other configuration.
+        """
+
+        content = {
+            'meta': Content.get_cli_meta(),
+            'data': [
+                Solution.KAFKA_MKDN
+            ]
+        }
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '-d', 'c54c8a896b94ea35', '--format', 'text'])
+            assert cause == Cause.ALL_OK
+            Content.assert_text(mock_file, 'kubernetes-docker-log-driver-kafka.text', content)
 
     @classmethod
     def teardown_class(cls):

@@ -1,6 +1,6 @@
 ## WORKING
-   - [ ] Fix export does not obey --format text if there is the filename attribute defined to *.md. the --format text should force the format the --format text should force the format.
    - [ ] Fix search does not find from versions. Maybe other fields missing too.
+   - [ ] Add --snippy-logs like --snippy-db to Pytest to force logs.
    - [ ] Fix multiline input for source. This reads both lines and the output wraps them because only one string expected without newlines.
    - [ ] Fix JSON API v1.x requires links for collection responses too. Individual resource not found or attrbute results null otherwise empty list.
    - [ ] Add links unique attribute? Would be good to check if unique links are valid and how many repeated links there are.

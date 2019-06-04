@@ -372,6 +372,10 @@ class Cli(ConfigSourceBase):
             arguments (dict): Command line arguments.
         """
 
+        arguments['format_used'] = False
+        if 'format' in arguments:
+            arguments['format_used'] = True
+
         if arguments['failure']:
             arguments['format'] = Const.CONTENT_FORMAT_MKDN
             return

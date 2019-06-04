@@ -782,7 +782,7 @@ def update_kafka_time_mock(mocker):
 
 
 @pytest.fixture(scope='function', name='update-three-kafka-utc')
-def update_kafka_three_time_many_mock(mocker):
+def update_kafka_three_time_mock(mocker):
     """Mock timestamps to update 'kafka' solution."""
 
     updates = (

@@ -1,3 +1,12 @@
+[BASIC]
+# Regular expression matching correct function names. Overrides function-
+# naming-style. This is changed only because of Python 2. The same regepx
+# is already applied with Python 3. Python 2 does not get updates anymore
+# from Pylint and this is applied here. This is the same as in issue [1].
+#
+# [1] https://github.com/PyCQA/pylint/pull/2149
+method-rgx=(([a-z_][a-z0-9_]{2,})|(_[a-z0-9_]*)|(__[a-z][a-z0-9_]+__))$
+
 [MESSAGES CONTROL]
 
 # The class object inheritance is required in Python 2.
@@ -8,12 +17,13 @@ disable=useless-object-inheritance
 # The falcon class is ignored because it causes warnings from
 # predefined HTTP status codes.
 #
-# Ignored because closing from contextlib causes unnecessary
-# warning from 'with' clause.
-ignored-classes=closing,falcon
+# Ignored because closing from contextlib causes unnecessary warning from
+# 'with' clause. The 'closing' and 'falcon' are from Python 2 and 3. The
+# 'gzip' is only from Python 2 lint.
+ignored-classes=closing,falcon,gzip
 
-# Ignored because test cases replace the implementations with
-# mock that has additional member attributes.
+# Ignored because test cases replace the implementations with mock that has
+# additional member attributes.
 ignored-modules=json,yaml
 
 [FORMAT]

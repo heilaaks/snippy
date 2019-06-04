@@ -464,8 +464,6 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
                 Content.deepcopy(Solution.NGINX)
             ]
         }
-        print(content['data'][0]['data'])
-        #sys-exit()
         content['data'][0]['data'] = content['data'][0]['data'][:4] + ('    # Changed.',) + content['data'][0]['data'][5:]
         content['data'][0]['description'] = 'Changed.'
         content['data'][0]['updated'] = Content.KAFKA_TIME

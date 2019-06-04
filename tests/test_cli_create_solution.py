@@ -56,7 +56,6 @@ class TestCliCreateSolution(object):
         tags = Const.DELIMITER_TAGS.join(content['data'][0]['tags'])
         links = Const.DELIMITER_LINKS.join(content['data'][0]['links'])
         cause = snippy.run(['snippy', 'create', '--scat', 'solution', '--content', data, '--brief', brief, '--groups', groups, '--tags', tags, '--links', links, '--format', 'text'])  # pylint: disable=line-too-long
-        print(Content.output())
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 

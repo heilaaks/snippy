@@ -27,6 +27,7 @@ Bugfixes
 * Fix ``--format`` option with the export operation.
 * Fix parsing of text formatted solution.
 * Fix update operation when content does not change.
+* Fix terminal colors on Windows.
 
 Security
 ~~~~~~~~

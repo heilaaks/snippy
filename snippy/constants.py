@@ -42,6 +42,9 @@ class Constants(object):  # pylint: disable=too-few-public-methods
         BINARY_TYPE = bytes
     PYTHON37 = bool(sys.version_info >= (3, 7))
 
+    # Windows
+    WINDOWS = sys.platform == 'win32'  # This applies also to win64.
+
     # Content categories.
     SNIPPET = 'snippet'
     SOLUTION = 'solution'

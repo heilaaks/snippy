@@ -4,3 +4,4 @@ gunicorn==19.9.0
 jsonschema==3.0.1
 psycopg2==2.8.2
 pyyaml
+colorama

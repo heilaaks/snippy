@@ -252,6 +252,28 @@ Follow the instructions to install the project on a RHEL Linux.
     # Follow the 'generic instructions' for the Snippy virtual environment
     # installation from the Fedora chapter.
 
+Windows
+~~~~~~~
+
+Follow the instructions to install the project on a Windows.
+
+.. code:: bash
+
+   # Install make and Python.
+   choco install make python
+
+   # Clone and install manually.
+   git config --global http.proxy http://<proxy>:8080
+   git clone https://github.com/heilaaks/snippy.git .
+   python -m pip install pip setuptools wheel twine --upgrade --proxy <proxy>:8080
+   python -m pip install .[devel] --proxy <proxy>:8080
+   python -m pip install pipenv --proxy <proxy>:8080
+   pipenv shell
+   pipenv install --dev
+   pipenv lock -r --dev > requirements-dev.txt
+   pip install setuptools-scm --proxy <proxy>:8080
+   pip install -r requirements-dev.txt --proxy <proxy>:8080
+
 Workflows
 ---------
 

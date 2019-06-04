@@ -26,7 +26,8 @@ from setuptools import setup, find_packages
 
 
 requires = (
-    'pyyaml'
+    'pyyaml',
+    'colorama ; sys_platform == "win32"'
 )
 extras_server = (
     'falcon==2.0.0',

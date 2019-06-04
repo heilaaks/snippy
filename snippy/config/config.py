@@ -122,6 +122,11 @@ class Config(object):
         if args is None:
             args = []
 
+        # Initialize colored CLI output for Windows.
+        if Const.WINDOWS:
+            from colorama import init
+            init()
+
         # Set logger and development configuration.
         cls._init_logs(args)
 

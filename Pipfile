@@ -30,5 +30,6 @@ gunicorn = "==19.9.0"
 jsonschema = "==3.0.1"
 pyyaml = "*"
 psycopg2 = "*"
+colorama = "*"
 
 [requires]

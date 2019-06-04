@@ -40,6 +40,13 @@ _snippy_complete()
         return 0;
     fi
 
+    if [[ ${prev} == --sort ]] ; then
+        opts="data brief description name groups tags links source versions filename created updated uuid digest"
+        COMPREPLY=($(compgen -W "${opts}" -- ${cur}))
+
+        return 0;
+    fi
+
     if [[ ${prev} == --storage-type ]] ; then
         opts="sqlite postgresql cockroachdb in-memory"
         COMPREPLY=($(compgen -W "${opts}" -- ${cur}))
@@ -58,7 +65,7 @@ _snippy_complete()
             ;;
 
             (search)
-            opts="--scat --sall --stag --sgrp --filter --limit --digest --uuid --format --no-ansi"
+            opts="--scat --sall --stag --sgrp --filter --limit --sort --digest --uuid --format --no-ansi"
             ;;
 
             (update)

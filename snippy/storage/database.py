@@ -651,7 +651,22 @@ class Database(object):
             query_pointer = self._query_field
 
         if sall:
-            columns = ['data', 'brief', 'description', 'groups', 'tags', 'links', 'digest']
+            columns = (
+                'data',
+                'brief',
+                'description',
+                'name',
+                'groups',
+                'tags',
+                'links',
+                'source',
+                'versions',
+                'filename',
+                'created',
+                'updated',
+                'uuid',
+                'digest'
+            )
             query, qargs = query_pointer(sall, columns, sgrp, scat, column)
         elif stag:
             columns = ['tags']

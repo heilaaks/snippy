@@ -523,6 +523,25 @@ is better suited for complex algorithms and their parameters.
 
 .. _Google docstring: https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html
 
+Test cases
+~~~~~~~~~~
+
+Each test cases must have a docstring that defines the purpose of the test.
+The test case docstring must have a one liner brief description and empty
+line after the brief. The description part of the test case docstring can
+be freely formatted.
+
+.. code-block:: python
+
+  @staticmethod
+  @pytest.mark.usefixtures('default-snippets')
+  def test_cli_search_snippet_001(snippy, capsys):
+     """Search snippets with ``--sall`` option.
+
+     Search snippets from all resource attributes. A ``brief`` attribute
+     of a single snippet produces a match.
+     """
+
 Heroku app
 ----------
 

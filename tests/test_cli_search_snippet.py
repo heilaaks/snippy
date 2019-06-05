@@ -34,10 +34,10 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods, 
     @staticmethod
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_001(snippy, capsys):
-        """Search snippets with ``sall`` option.
+        """Search snippets with ``--sall`` option.
 
-        Search snippets from all fields. The match is made from one
-        snippet content data.
+        Search snippets from all resource attributes. A ``data`` attribute
+        of a single snippet produces a match.
         """
 
         output = (
@@ -61,10 +61,10 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods, 
     @staticmethod
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_002(snippy, capsys):
-        """Search snippets with ``sall`` option.
+        """Search snippets with ``--sall`` option.
 
-        Search snippets from all fields. The match is made from one snippet
-        brief description.
+        Search snippets from all resource attributes. A ``brief`` attribute
+        of a single snippet produces a match.
         """
 
         output = (
@@ -87,10 +87,10 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods, 
     @staticmethod
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_003(snippy, capsys):
-        """Search snippets with ``sall`` option.
+        """Search snippets with ``--sall`` option.
 
-        Search snippets from all fields. The match is made from two snippets
-        group metadata.
+        Search snippets from all resource attributes. A ``group`` attribute
+        in two different snippets produces a match.
         """
 
         output = (
@@ -121,10 +121,10 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods, 
     @staticmethod
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_004(snippy, capsys):
-        """Search snippets with ``sall`` option.
+        """Search snippets with ``--sall`` option.
 
-        Search snippets from all fields. The match is made from two snippets
-        tags metadata.
+        Search snippets from all resource attributes. A ``tags`` attribute
+        in two different snippets produces a match.
         """
 
         output = (
@@ -155,10 +155,10 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods, 
     @staticmethod
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_005(snippy, capsys):
-        """Search snippets with ``sall`` option.
+        """Search snippets with ``--sall`` option.
 
-        Search snippets from all fields. The match is made from one snippet
-        links metadata.
+        Search snippets from all resource attributes. A ``links`` attribute
+        of a single snippet produces a match.
         """
 
         output = (
@@ -182,10 +182,10 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods, 
     @staticmethod
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_006(snippy, capsys):
-        """Search snippets with ``sall`` option.
+        """Search snippets with ``--sall`` option.
 
-        Search snippets from all fields. The match is made from one snippet
-        digest.
+        Search snippets from all resource attributes. A ``digest`` attribute
+        of a single snippet produces a match.
         """
 
         output = (
@@ -209,11 +209,11 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods, 
     @staticmethod
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_007(snippy, capsys):
-        """Search snippets with ``sall`` option.
+        """Search snippets with ``--sall`` option.
 
-        Search snippets from all fields with two keywords. The match is made
-        from two different snippets. In this search keywords are separated
-        by comma.
+        Search snippets from all resource attributes by defining two search
+        keywords separated by *comma*. The match is made from two different
+        snippets.
         """
 
         output = (
@@ -244,11 +244,11 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods, 
     @staticmethod
     @pytest.mark.usefixtures('default-snippets', 'import-netcat')
     def test_cli_search_snippet_008(snippy, capsys):
-        """Search snippets with ``sall`` option.
+        """Search snippets with ``--sall`` option.
 
-        Search snippets from all fields with three keywords. The match is made
-        two different snippts. In this case search keywords are separated by
-        spaces.
+        Search snippets from all resource attributes by defining two search
+        keywords separated by *space*. The match is made from two different
+        snippets.
         """
 
         output = (
@@ -279,10 +279,11 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods, 
     @staticmethod
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_009(snippy, capsys):
-        """Search snippets with ``sall`` option.
+        """Search snippets with ``--sall`` option.
 
-        List all snippets by defining search criteria of search all to
-        'match any'.
+        Search snippets from all resource attributes by defining the search
+        keyword to match any content with a *dot*. This must match to all
+        snippets.
         """
 
         output = (
@@ -313,44 +314,11 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods, 
     @staticmethod
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_010(snippy, capsys):
-        """Search snippets with ``sall`` option.
+        """Search snippets with ``--sall`` option.
 
-        List all snippets by leaving search criteria for 'search all fields'
-        out completely. This is translated to 'match any'.
-        """
-
-        output = (
-            '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
-            '',
-            '   $ docker rm --volumes $(docker ps --all --quiet)',
-            '',
-            '   # cleanup,container,docker,docker-ce,moby',
-            '   > https://docs.docker.com/engine/reference/commandline/rm/',
-            '',
-            '2. Remove docker image with force @docker [53908d68425c61dc]',
-            '',
-            '   $ docker rm --force redis',
-            '',
-            '   # cleanup,container,docker,docker-ce,moby',
-            '   > https://docs.docker.com/engine/reference/commandline/rm/',
-            '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
-            '',
-            'OK',
-            ''
-        )
-        cause = snippy.run(['snippy', 'search', '--sall', '--no-ansi'])
-        out, err = capsys.readouterr()
-        assert cause == Cause.ALL_OK
-        assert out == Const.NEWLINE.join(output)
-        assert not err
-
-    @staticmethod
-    @pytest.mark.usefixtures('default-snippets')
-    def test_cli_search_snippet_011(snippy, capsys):
-        """Search snippets with ``sall`` option.
-
-        List all snippets by leaving search criteria of search all as empty.
-        This is translated to 'match any'.
+        Search snippets from all resource attributes by defining the search
+        keyword to match any content with an *empty string*. This must match
+        to all snippets.
         """
 
         output = (
@@ -373,6 +341,40 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods, 
             ''
         )
         cause = snippy.run(['snippy', 'search', '--sall', '', '--no-ansi'])
+        out, err = capsys.readouterr()
+        assert cause == Cause.ALL_OK
+        assert out == Const.NEWLINE.join(output)
+        assert not err
+
+    @staticmethod
+    @pytest.mark.usefixtures('default-snippets')
+    def test_cli_search_snippet_011(snippy, capsys):
+        """Search snippets with ``--sall`` option.
+
+        Search snippets from all resource attributes by leaving the search
+        keywords out. This must match to all snippets.
+        """
+
+        output = (
+            '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+            '',
+            '   $ docker rm --volumes $(docker ps --all --quiet)',
+            '',
+            '   # cleanup,container,docker,docker-ce,moby',
+            '   > https://docs.docker.com/engine/reference/commandline/rm/',
+            '',
+            '2. Remove docker image with force @docker [53908d68425c61dc]',
+            '',
+            '   $ docker rm --force redis',
+            '',
+            '   # cleanup,container,docker,docker-ce,moby',
+            '   > https://docs.docker.com/engine/reference/commandline/rm/',
+            '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
+            '',
+            'OK',
+            ''
+        )
+        cause = snippy.run(['snippy', 'search', '--sall', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -1470,6 +1472,245 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods, 
         )
         cause = snippy.run(['snippy', 'search', '--sall', '.', '--sort=-created,-brief', '--no-ansi'])
         out, err = capsys.readouterr()
+        assert cause == Cause.ALL_OK
+        assert out == Const.NEWLINE.join(output)
+        assert not err
+
+    @staticmethod
+    def test_cli_search_snippet_048(snippy, capsys):
+        """Search snippets with ``--sall`` option.
+
+        Search snippets from all resource attributes. A ``name`` attribute
+        of a single snippet produces a match.
+        """
+
+        Content.store({
+            'category': Const.SNIPPET,
+            'data': [
+                'tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./'],
+            'brief': 'Manipulate compressed tar files',
+            'name': 'docker',
+            'groups': ['linux'],
+            'tags': ['howto', 'linux', 'tar', 'untar']
+        })
+        output = (
+            '1. Manipulate compressed tar files @linux [d1c975e194b7c26a]',
+            '',
+            '   $ tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./',
+            '',
+            '   # howto,linux,tar,untar',
+            '',
+            'OK',
+            ''
+        )
+        cause = snippy.run(['snippy', 'search', '--all', 'docker', '--no-ansi'])
+        out, err = capsys.readouterr()
+        assert cause == Cause.ALL_OK
+        assert out == Const.NEWLINE.join(output)
+        assert not err
+
+    @staticmethod
+    def test_cli_search_snippet_049(snippy, capsys):
+        """Search snippets with ``--sall`` option.
+
+        Search snippets from all resource attributes. A ``source`` attribute
+        of a single snippet produces a match.
+        """
+
+        Content.store({
+            'category': Const.SNIPPET,
+            'data': [
+                'tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./'],
+            'brief': 'Manipulate compressed tar files',
+            'groups': ['linux'],
+            'tags': ['howto', 'linux', 'tar', 'untar'],
+            'source': 'docker'
+        })
+        output = (
+            '1. Manipulate compressed tar files @linux [89f7fc446f0214d4]',
+            '',
+            '   $ tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./',
+            '',
+            '   # howto,linux,tar,untar',
+            '',
+            'OK',
+            ''
+        )
+        cause = snippy.run(['snippy', 'search', '--all', 'docker', '--no-ansi'])
+        out, err = capsys.readouterr()
+        assert cause == Cause.ALL_OK
+        assert out == Const.NEWLINE.join(output)
+        assert not err
+
+    @staticmethod
+    def test_cli_search_snippet_050(snippy, capsys):
+        """Search snippets with ``--sall`` option.
+
+        Search snippets from all resource attributes. A ``versions`` attribute
+        of a single snippet produces a match.
+        """
+
+        Content.store({
+            'category': Const.SNIPPET,
+            'data': [
+                'tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./'],
+            'brief': 'Manipulate compressed tar files',
+            'groups': ['linux'],
+            'tags': ['howto', 'linux', 'tar', 'untar'],
+            'versions': ['docker==1.19.0']
+        })
+        output = (
+            '1. Manipulate compressed tar files @linux [c61f79ea6d0a6bbd]',
+            '',
+            '   $ tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./',
+            '',
+            '   # howto,linux,tar,untar',
+            '',
+            'OK',
+            ''
+        )
+        cause = snippy.run(['snippy', 'search', '--all', 'docker', '--no-ansi'])
+        out, err = capsys.readouterr()
+        assert cause == Cause.ALL_OK
+        assert out == Const.NEWLINE.join(output)
+        assert not err
+
+    @staticmethod
+    def test_cli_search_snippet_051(snippy, capsys):
+        """Search snippets with ``--sall`` option.
+
+        Search snippets from all resource attributes. A ``filename`` attribute
+        of a single snippet produces a match.
+        """
+
+        Content.store({
+            'category': Const.SNIPPET,
+            'data': [
+                'tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./'],
+            'brief': 'Manipulate compressed tar files',
+            'groups': ['linux'],
+            'tags': ['howto', 'linux', 'tar', 'untar'],
+            'filename': 'docker.md'
+        })
+        output = (
+            '1. Manipulate compressed tar files @linux [8bc24a6e27182c6d]',
+            '',
+            '   $ tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./',
+            '',
+            '   # howto,linux,tar,untar',
+            '',
+            'OK',
+            ''
+        )
+        cause = snippy.run(['snippy', 'search', '--all', 'docker', '--no-ansi'])
+        out, err = capsys.readouterr()
+        assert cause == Cause.ALL_OK
+        assert out == Const.NEWLINE.join(output)
+        assert not err
+
+    @staticmethod
+    def test_cli_search_snippet_052(snippy, capsys):
+        """Search snippets with ``--sall`` option.
+
+        Search snippets from all resource attributes. A ``created`` attribute
+        of a single snippet produces a match. The match must be made from a
+        partial timestamp based on year-month-date.
+        """
+
+        Content.store({
+            'category': Const.SNIPPET,
+            'data': [
+                'tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./'],
+            'brief': 'Manipulate compressed tar files',
+            'groups': ['linux'],
+            'tags': ['howto', 'linux', 'tar', 'untar'],
+            'created': '2019-03-02T02:02:02.000001+00:00'
+        })
+        output = (
+            '1. Manipulate compressed tar files @linux [89f7fc446f0214d4]',
+            '',
+            '   $ tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./',
+            '',
+            '   # howto,linux,tar,untar',
+            '',
+            'OK',
+            ''
+        )
+        cause = snippy.run(['snippy', 'search', '--all', '2019-03-02', '--no-ansi'])
+        out, err = capsys.readouterr()
+        out = Helper.remove_ansi(out)
+        assert cause == Cause.ALL_OK
+        assert out == Const.NEWLINE.join(output)
+        assert not err
+
+    @staticmethod
+    def test_cli_search_snippet_053(snippy, capsys):
+        """Search snippets with ``--sall`` option.
+
+        Search snippets from all resource attributes. A ``updated`` attribute
+        of a single snippet produces a match. The match must be made from a
+        partial timestamp based on hours:mins:secs.
+        """
+
+        Content.store({
+            'category': Const.SNIPPET,
+            'data': [
+                'tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./'],
+            'brief': 'Manipulate compressed tar files',
+            'groups': ['linux'],
+            'tags': ['howto', 'linux', 'tar', 'untar'],
+            'created': '2019-03-02T01:01:01.000001+00:00',
+            'updated': '2019-03-02T02:02:02.000001+00:00'
+        })
+        output = (
+            '1. Manipulate compressed tar files @linux [89f7fc446f0214d4]',
+            '',
+            '   $ tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./',
+            '',
+            '   # howto,linux,tar,untar',
+            '',
+            'OK',
+            ''
+        )
+        cause = snippy.run(['snippy', 'search', '--all', '02:02:02', '--no-ansi'])
+        out, err = capsys.readouterr()
+        out = Helper.remove_ansi(out)
+        assert cause == Cause.ALL_OK
+        assert out == Const.NEWLINE.join(output)
+        assert not err
+
+    @staticmethod
+    def test_cli_search_snippet_054(snippy, capsys):
+        """Search snippets with ``--sall`` option.
+
+        Search snippets from all resource attributes. A ``uuid`` attribute
+        of a single snippet produces a match. The match must be made from a
+        partial timestamp based on hours:mins:secs.
+        """
+
+        Content.store({
+            'category': Const.SNIPPET,
+            'data': [
+                'tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./'],
+            'brief': 'Manipulate compressed tar files',
+            'groups': ['linux'],
+            'tags': ['howto', 'linux', 'tar', 'untar'],
+            'created': '2019-03-02T01:01:01.000001+00:00',
+            'updated': '2019-03-02T02:02:02.000001+00:00'
+        })
+        output = (
+            '1. Manipulate compressed tar files @linux [89f7fc446f0214d4]',
+            '',
+            '   $ tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./',
+            '',
+            '   # howto,linux,tar,untar',
+            '',
+            'OK',
+            ''
+        )
+        cause = snippy.run(['snippy', 'search', '--all', 'a1cd5827', '--no-ansi'])
+        out, err = capsys.readouterr()
+        out = Helper.remove_ansi(out)
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
         assert not err

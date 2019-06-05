@@ -74,7 +74,7 @@ class TestApiUpdateSolution(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '4383'
+            'content-length': '4400'
         }
         expect_body = {
             'links': {
@@ -117,6 +117,7 @@ class TestApiUpdateSolution(object):
                 'links': (),
                 'source': '',
                 'versions': (),
+                'languages': (),
                 'filename': '',
                 'created': Content.BEATS_TIME,
                 'updated': Content.NGINX_TIME,
@@ -135,7 +136,7 @@ class TestApiUpdateSolution(object):
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2627'
+            'content-length': '2644'
         }
         expect_body = {
             'links': {
@@ -373,7 +374,7 @@ class TestApiUpdateSolution(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '4254'
+            'content-length': '4271'
         }
         expect_body = {
             'links': {

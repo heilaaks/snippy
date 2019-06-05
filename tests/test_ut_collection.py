@@ -243,6 +243,7 @@ class TestUtCollection(object):
             '   ! digest      : e79ae51895908c5a40e570dc60a4dd594febdecf781c77c7b3cad37f9e0b7240 (True)',
             '   ! filename    : ',
             '   ! id          : a1cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+            '   ! languages   : ',
             '   ! name        : ',
             '   ! source      : ',
             '   ! updated     : 2018-02-02T02:02:02.000001+00:00',
@@ -331,6 +332,7 @@ class TestUtCollection(object):
                 'links': None,
                 'source': None,
                 'versions': None,
+                'languages': None,
                 'filename': None
             }]
         })
@@ -348,5 +350,6 @@ class TestUtCollection(object):
         assert resource.links == ()
         assert resource.source == ''
         assert resource.versions == ()
+        assert resource.languages == ()
         assert resource.filename == ''
         assert resource.digest == '6dae3799010719ca694b86514ec404cd6b6047a2979b3dbaf75fa51576ad269c'

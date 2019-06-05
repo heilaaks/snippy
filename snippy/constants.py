@@ -64,6 +64,7 @@ class Constants(object):  # pylint: disable=too-few-public-methods
     DELIMITER_LINKS = NEWLINE
     DELIMITER_TAGS = ','
     DELIMITER_VERSIONS = ','
+    DELIMITER_LANGUAGES = ','
 
     # Separate snippet data from optional comment.
     SNIPPET_COMMENT = '  #  '

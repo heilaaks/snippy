@@ -54,6 +54,7 @@ class TestUtContentParserDict(object):
                 'links': [],
                 'source': '',
                 'versions': [],
+                'languages': [],
                 'filename': '',
                 'created': '2015-10-14T19:56:31.000001+00:00',
                 'updated': '2016-10-14T19:56:31.000001+00:00',
@@ -74,6 +75,7 @@ class TestUtContentParserDict(object):
         assert resource.links == ()
         assert resource.source == ''
         assert resource.versions == ()
+        assert resource.languages == ()
         assert resource.filename == ''
         assert resource.created == '2015-10-14T19:56:31.000001+00:00'
         assert resource.updated == '2016-10-14T19:56:31.000001+00:00'
@@ -98,6 +100,7 @@ class TestUtContentParserDict(object):
                 'links': [],
                 'source': '',
                 'versions': (),
+                'languages': (),
                 'filename': '',
                 'created': '2015-10-14T19:56:31.000001+00:00',
                 'updated': '2016-10-14T19:56:31.000001+00:00',
@@ -127,6 +130,7 @@ class TestUtContentParserDict(object):
                 'links': [],
                 'source': '',
                 'versions': (),
+                'languages': (),
                 'filename': '',
                 'created': '2015-10-14T19:56:31.000001+00:00',
                 'updated': '2016-10-14T19:56:31.000001+00:00',

@@ -389,7 +389,16 @@ definitions:
     description: |
       # Brief
 
-      Optional list of services and versions related to the resource.
+      Optional list of versions related to the resource.
+  attributeLanguages:
+    type: array
+    items:
+      type: string
+    default: []
+    description: |
+      # Brief
+
+      Optional list of languages related to the resource.
   attributeFilename:
     type: string
     default: ""
@@ -469,6 +478,8 @@ definitions:
         $ref: '#/definitions/attributeSource'
       versions:
         $ref: '#/definitions/attributeVersions'
+      languages:
+        $ref: '#/definitions/attributeLanguages'
       filename:
         $ref: '#/definitions/attributeFilename'
     description: |
@@ -507,6 +518,8 @@ definitions:
         $ref: '#/definitions/attributeSource'
       versions:
         $ref: '#/definitions/attributeVersions'
+      languages:
+        $ref: '#/definitions/attributeLanguages'
       filename:
         $ref: '#/definitions/attributeFilename'
       created:
@@ -797,7 +810,7 @@ parameters:
       # Brief
 
       Resource field.
-    enum: [category, data, brief, description, name, groups, tags, links, source, versions, filename, created, updated, uuid, digest]
+    enum: [category, data, brief, description, name, groups, tags, links, source, versions, languages, filename, created, updated, uuid, digest]
     x-example:
       "brief"
   id:
@@ -935,8 +948,8 @@ parameters:
     required: false
     items:
       type: string
-      enum: [category, data, brief, description, name, groups, tags, links, source, versions, filename, created, updated, uuid, digest]
-    default: category, data, brief, description, name,groups, tags, links, source, versions, filename, created, updated, uuid, digest
+      enum: [category, data, brief, description, name, groups, tags, links, source, versions, languages, filename, created, updated, uuid, digest]
+    default: category, data, brief, description, name,groups, tags, links, source, versions, languages, filename, created, updated, uuid, digest
     description: |
       # Brief
 
@@ -946,7 +959,7 @@ parameters:
     type: string
     required: false
     default: brief
-    enum: [category, data, brief, description, name, groups, tags, links, source, versions, filename, created, updated, uuid, digest]
+    enum: [category, data, brief, description, name, groups, tags, links, source, versions, languages, filename, created, updated, uuid, digest]
     in: query
     description: |
       # Brief

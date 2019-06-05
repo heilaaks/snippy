@@ -72,6 +72,10 @@ class ContentParserText(ContentParserBase):
     VERSIONS[Const.SNIPPET] = '# Add optional comma separated list of key-value versions below.\n'
     VERSIONS[Const.REFERENCE] = VERSIONS[Const.SNIPPET]
 
+    LANGUAGES = {}
+    LANGUAGES[Const.SNIPPET] = '# Add optional comma separated list of languages below.\n'
+    LANGUAGES[Const.REFERENCE] = LANGUAGES[Const.SNIPPET]
+
     FILENAME = {}
     FILENAME[Const.SNIPPET] = '# Add optional filename below.\n'
     FILENAME[Const.REFERENCE] = FILENAME[Const.SNIPPET]
@@ -191,6 +195,19 @@ class ContentParserText(ContentParserBase):
         (?P<versions>.*$)       # Catch metadata value till end of the line.
         ''', re.MULTILINE | re.VERBOSE)
 
+    REGEXP['languages'] = {}
+    REGEXP['languages'][Const.SNIPPET] = re.compile(r'''
+        (?:%s|%s)               # Match snippet or reference languages.
+        (?P<languages>.*?)      # Catch languages.
+        (?:\n{2}|[#]|$)         # Match newlines or next header indicated by hash or end of the string.
+        ''' % (re.escape(LANGUAGES[Const.SNIPPET]), re.escape(LANGUAGES[Const.REFERENCE])), re.DOTALL | re.VERBOSE)
+    REGEXP['languages'][Const.REFERENCE] = REGEXP['languages'][Const.SNIPPET]
+    REGEXP['languages'][Const.SOLUTION] = re.compile(r'''
+        languages               # Match metadata key at the beginning of line.
+        \s+[:]{1}\s             # Match spaces and column between key and value.
+        (?P<languages>.*$)      # Catch metadata value till end of the line.
+        ''', re.MULTILINE | re.VERBOSE)
+
     REGEXP['filename'] = {}
     REGEXP['filename'][Const.SNIPPET] = re.compile(r'''
         (?:%s|%s)               # Match snippet or reference filename.
@@ -234,6 +251,7 @@ class ContentParserText(ContentParserBase):
                 'links': self._read_links(category, content),
                 'source': self._read_source(category, content),
                 'versions': self._read_versions(category, content),
+                'languages': self._read_languages(category, content),
                 'filename': self._read_filename(category, content),
                 'created': self.read_meta_value(category, 'created', content),
                 'updated': self.read_meta_value(category, 'updated', content),
@@ -521,6 +539,30 @@ class ContentParserText(ContentParserBase):
         """
 
         return self.parse_versions(category, self.REGEXP['versions'].get(category, None), text)
+
+    def _read_languages(self, category, text):
+        """Read content tags from text string.
+
+        Args:
+            category (str): Content category.
+            text (str): Content text string.
+
+        Returns:
+            tuple: Tuple of utf-8 encoded languages.
+        """
+
+        languages = ()
+        if category not in Const.CATEGORIES:
+            return self.format_list(languages)
+
+        match = self.REGEXP['languages'][category].search(text)
+        if match:
+            languages = [match.group('languages')]
+            self._logger.debug('parsed content languages: %s', languages)
+        else:
+            self._logger.debug('parser did not find content for languages: {}'.format(text))
+
+        return self.format_list(languages)
 
     def _read_filename(self, category, text):
         """Read content filename from text string.

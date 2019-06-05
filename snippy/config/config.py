@@ -93,6 +93,7 @@ class Config(object):
         namespace.append('content_name={}'.format(cls.content_name.encode('utf-8')))
         namespace.append('content_filename={}'.format(cls.content_filename))
         namespace.append('content_versions={}'.format(cls.content_versions))
+        namespace.append('content_languages={}'.format(cls.content_languages))
         namespace.append('content_source={}'.format(cls.content_source))
         namespace.append('run_healthcheck={}'.format(cls.run_healthcheck))
         namespace.append('search_all_kws={}'.format(cls.search_all_kws))
@@ -210,6 +211,7 @@ class Config(object):
         cls.content_links = cls.source.links
         cls.content_source = cls.source.source
         cls.content_versions = cls.source.versions
+        cls.content_languages = cls.source.languages
         cls.content_filename = cls.source.filename
 
         # search
@@ -348,6 +350,7 @@ class Config(object):
         config.links = cls.content_links
         config.source = cls.content_source
         config.versions = cls.content_versions
+        config.languages = cls.content_languages
         config.filename = cls.content_filename
 
         if updates:

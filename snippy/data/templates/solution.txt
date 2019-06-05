@@ -36,11 +36,12 @@
 ## Meta
 ################################################################################
 
-category : <category>
-created  : <created>
-digest   : <digest>
-name     : <name>
-source   : <source>
-updated  : <updated>
-uuid     : <uuid>
-versions : <versions>
+category  : <category>
+created   : <created>
+digest    : <digest>
+languages : <languages>
+name      : <name>
+source    : <source>
+updated   : <updated>
+uuid      : <uuid>
+versions  : <versions>

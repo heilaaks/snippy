@@ -41,7 +41,7 @@ _snippy_complete()
     fi
 
     if [[ ${prev} == --sort ]] ; then
-        opts="data brief description name groups tags links source versions filename created updated uuid digest"
+        opts="data brief description name groups tags links source versions languages filename created updated uuid digest"
         COMPREPLY=($(compgen -W "${opts}" -- ${cur}))
 
         return 0;

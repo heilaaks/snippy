@@ -63,7 +63,7 @@ class TestApiCreateSolution(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2092'}
+            'content-length': '2109'}
         expect_body = {
             'data': [{
                 'type': 'solution',
@@ -110,7 +110,7 @@ class TestApiCreateSolution(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '6393'
+            'content-length': '6427'
         }
         expect_body = {
             'data': [{
@@ -179,7 +179,7 @@ class TestApiCreateSolution(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2760'
+            'content-length': '2777'
         }
         expect_body = {
             'links': {
@@ -231,7 +231,7 @@ class TestApiCreateSolution(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2830'
+            'content-length': '2847'
         }
         expect_body = {
             'links': {
@@ -412,6 +412,7 @@ class TestApiCreateSolution(object):
                 'links': ('alink2', 'blink1'),
                 'source': 'short source link',
                 'versions': ('versions==1.1-alpha',),
+                'languages': ('python',),
                 'filename': 'shortfilename.yaml',
                 'created': Content.REGEXP_TIME,
                 'updated': Content.REGEXP_TIME,
@@ -432,13 +433,14 @@ class TestApiCreateSolution(object):
                     'links': ['  blink1  ', '    alink2   '],
                     'source': '  short source link   ',
                     'versions': ['  versions==1.1-alpha   '],
+                    'languages': ['  python   '],
                     'filename': '  shortfilename.yaml   '
                 }
             }]
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '658'}
+            'content-length': '683'}
         expect_body = {
             'data': [{
                 'type': 'solution',

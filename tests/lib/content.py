@@ -509,6 +509,8 @@ class Content(object):  # pylint: disable=too-many-public-methods, too-many-line
                 content['links'] = list(content['links'])
             if 'versions' in content:
                 content['versions'] = list(content['versions'])
+            if 'languages' in content:
+                content['languages'] = list(content['languages'])
 
         if 'data' not in expect:
             return expect

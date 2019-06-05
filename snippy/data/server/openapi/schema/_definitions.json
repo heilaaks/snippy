@@ -68,7 +68,15 @@
         "type": "string"
       },
       "default": [],
-      "description": "# Brief\n\nOptional list of services and versions related to the resource.\n"
+      "description": "# Brief\n\nOptional list of versions related to the resource.\n"
+    },
+    "attributeLanguages": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "# Brief\n\nOptional list of languages related to the resource.\n"
     },
     "attributeFilename": {
       "type": "string",
@@ -144,6 +152,9 @@
         "versions": {
           "$ref": "#/definitions/attributeVersions"
         },
+        "languages": {
+          "$ref": "#/definitions/attributeLanguages"
+        },
         "filename": {
           "$ref": "#/definitions/attributeFilename"
         }
@@ -183,6 +194,9 @@
         },
         "versions": {
           "$ref": "#/definitions/attributeVersions"
+        },
+        "languages": {
+          "$ref": "#/definitions/attributeLanguages"
         },
         "filename": {
           "$ref": "#/definitions/attributeFilename"

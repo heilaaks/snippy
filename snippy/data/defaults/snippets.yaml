@@ -11,6 +11,7 @@ data:
   filename: ''
   groups:
   - docker
+  languages: []
   links:
   - https://docs.docker.com/engine/reference/commandline/rm/
   - https://docs.docker.com/engine/reference/commandline/rmi/
@@ -40,6 +41,7 @@ data:
   filename: ''
   groups:
   - linux
+  languages: []
   links:
   - http://www.skrenta.com/rt/man/grep.1.html
   - https://stackoverflow.com/questions/16956810/how-do-i-find-all-files-containing-specific-text-on-linux/
@@ -63,6 +65,7 @@ data:
   filename: ''
   groups:
   - docker
+  languages: []
   links:
   - https://docs.docker.com/engine/reference/commandline/exec/
   - https://docs.docker.com/engine/reference/commandline/run/
@@ -95,6 +98,7 @@ data:
   filename: ''
   groups:
   - linux
+  languages: []
   links:
   - http://www.skrenta.com/rt/man/screen.1.html
   name: ''
@@ -119,6 +123,7 @@ data:
   filename: ''
   groups:
   - docker
+  languages: []
   links:
   - https://docs.docker.com/engine/reference/commandline/build/
   name: ''
@@ -145,6 +150,7 @@ data:
   filename: ''
   groups:
   - docker
+  languages: []
   links:
   - https://docs.docker.com/compose/install/
   - https://github.com/docker/compose/releases/
@@ -177,6 +183,7 @@ data:
   filename: ''
   groups:
   - docker
+  languages: []
   links:
   - https://docs.docker.com/engine/reference/commandline/service_ls/
   - https://docs.docker.com/engine/reference/commandline/stack/
@@ -208,6 +215,7 @@ data:
   filename: ''
   groups:
   - docker
+  languages: []
   links:
   - https://github.com/moby/moby/issues/23302
   name: ''
@@ -235,6 +243,7 @@ data:
   filename: ''
   groups:
   - kubernetes
+  languages: []
   links:
   - https://kubernetes.io/docs/user-guide/kubectl-cheatsheet/
   name: ''
@@ -261,6 +270,7 @@ data:
   filename: ''
   groups:
   - security
+  languages: []
   links:
   - https://wiki.openssl.org/index.php/Command_Line_Utilities
   name: ''
@@ -284,6 +294,7 @@ data:
   filename: ''
   groups:
   - git
+  languages: []
   links:
   - http://snipplr.com/view/62314/perform-git-pull-on-subdirectory-recursive/
   - https://stackoverflow.com/questions/3497123/run-git-pull-over-all-subdirectories
@@ -305,6 +316,7 @@ data:
   filename: ''
   groups:
   - git
+  languages: []
   links:
   - https://git-scm.com/book/id/v2/Git-Basics-Viewing-the-Commit-History
   - https://github.com/k88hudson/git-flight-rules
@@ -335,6 +347,7 @@ data:
   filename: ''
   groups:
   - docker
+  languages: []
   links:
   - https://docs.docker.com/engine/installation/#server
   - https://docs.docker.com/engine/installation/linux/docker-ce/fedora/
@@ -363,6 +376,7 @@ data:
   filename: ''
   groups:
   - elasticsearch
+  languages: []
   links:
   - https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-update-settings.html
   name: ''
@@ -403,6 +417,7 @@ data:
   filename: ''
   groups:
   - elasticsearch
+  languages: []
   links:
   - https://www.elastic.co/guide/en/elasticsearch/reference/current/watcher-api.html
   name: ''
@@ -428,6 +443,7 @@ data:
   filename: ''
   groups:
   - elasticsearch
+  languages: []
   links:
   - https://www.elastic.co/guide/en/elasticsearch/plugins/current/intro.html
   name: ''
@@ -463,6 +479,7 @@ data:
   filename: ''
   groups:
   - docker
+  languages: []
   links:
   - https://docs.docker.com/engine/installation/linux/docker-ce/fedora/#install-using-the-repository
   - https://docs.docker.com/install/linux/docker-ce/fedora/
@@ -498,6 +515,7 @@ data:
   filename: ''
   groups:
   - elasticsearch
+  languages: []
   links:
   - https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-templates.html
   name: ''
@@ -532,6 +550,7 @@ data:
   filename: ''
   groups:
   - elasticsearch
+  languages: []
   links:
   - https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-delete-index.html
   name: ''
@@ -565,6 +584,7 @@ data:
   filename: ''
   groups:
   - elasticsearch
+  languages: []
   links:
   - https://www.elastic.co/guide/en/elasticsearch/reference/current/cat.html
   name: ''
@@ -592,6 +612,7 @@ data:
   filename: ''
   groups:
   - git
+  languages: []
   links:
   - https://gist.github.com/tafkey/664266c00387c98631b3
   name: ''
@@ -613,6 +634,7 @@ data:
   filename: ''
   groups:
   - linux
+  languages: []
   links:
   - https://stackoverflow.com/a/16944931
   name: ''
@@ -636,6 +658,7 @@ data:
   filename: ''
   groups:
   - linux
+  languages: []
   links:
   - https://stackoverflow.com/a/7878763
   name: ''
@@ -663,6 +686,7 @@ data:
   filename: ''
   groups:
   - linux
+  languages: []
   links: []
   name: ''
   source: ''
@@ -684,6 +708,7 @@ data:
   filename: ''
   groups:
   - docker
+  languages: []
   links:
   - https://docs.docker.com/engine/reference/commandline/rm/
   name: ''
@@ -707,6 +732,7 @@ data:
   filename: ''
   groups:
   - docker
+  languages: []
   links:
   - https://docs.docker.com/engine/reference/commandline/rm/
   - https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes
@@ -733,6 +759,7 @@ data:
   filename: ''
   groups:
   - docker
+  languages: []
   links:
   - https://docs.docker.com/config/pruning/
   - https://docs.docker.com/engine/reference/commandline/images/
@@ -762,6 +789,7 @@ data:
   filename: ''
   groups:
   - linux
+  languages: []
   links:
   - https://www.commandlinux.com/man-page/man1/nc.1.html
   name: ''
@@ -785,6 +813,7 @@ data:
   filename: ''
   groups:
   - git
+  languages: []
   links:
   - https://stackoverflow.com/a/1340245
   - https://stackoverflow.com/a/52065732
@@ -812,6 +841,7 @@ data:
   filename: ''
   groups:
   - linux
+  languages: []
   links:
   - https://superuser.com/a/260079
   - https://unix.stackexchange.com/a/55973
@@ -837,6 +867,7 @@ data:
   filename: git-rebase-master.md
   groups:
   - git
+  languages: []
   links:
   - https://github.com/git/git/tree/master/Documentation/RelNotes
   - https://stackoverflow.com/a/43262939
@@ -873,6 +904,7 @@ data:
   filename: git-devel-workflow.md
   groups:
   - git
+  languages: []
   links:
   - https://blog.carbonfive.com/2017/08/28/always-squash-and-rebase-your-git-commits/
   - https://github.com/k88hudson/git-flight-rules
@@ -888,5 +920,5 @@ data:
   - git>=2
 meta:
   homepage: https://github.com/heilaaks/snippy
-  updated: '2019-05-29T17:20:10.301780+00:00'
+  updated: '2019-06-05T20:17:10.926825+00:00'
   version: 0.11a0

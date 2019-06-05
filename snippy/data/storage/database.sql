@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS contents
                   , links       text DEFAULT ''
                   , source      text DEFAULT ''
                   , versions    text DEFAULT ''
+                  , languages   text DEFAULT ''
                   , filename    text DEFAULT ''
                   , created     TIMESTAMP WITH TIME ZONE
                   , updated     TIMESTAMP WITH TIME ZONE

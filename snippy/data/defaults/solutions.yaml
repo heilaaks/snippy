@@ -89,6 +89,7 @@ data:
   filename: howto-debug-lxc-containers.mkdn
   groups:
   - containers
+  languages: []
   links:
   - https://linuxcontainers.org/lxc/downloads/
   - https://serverfault.com/a/438824
@@ -202,6 +203,7 @@ data:
   filename: howto-debug-elasticsearch.mkdn
   groups:
   - elasticsearch
+  languages: []
   links: []
   name: ''
   source: ''
@@ -320,6 +322,7 @@ data:
   filename: howto-debug-elastic-beats.mkdn
   groups:
   - beats
+  languages: []
   links:
   - https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-configuration-details.html
   - https://www.elastic.co/guide/en/beats/filebeat/master/enable-filebeat-debugging.html
@@ -427,6 +430,7 @@ data:
   filename: kubernetes-docker-log-driver-kafka.mkdn
   groups:
   - docker
+  languages: []
   links:
   - https://github.com/MickayG/moby-kafka-logdriver
   - https://github.com/garo/logs2kafka
@@ -486,6 +490,7 @@ data:
   filename: howto-debug-kafka.mkdn
   groups:
   - kafka
+  languages: []
   links:
   - https://kafka.apache.org/downloads
   name: ''
@@ -644,6 +649,7 @@ data:
   filename: howto-debug-docker.mkdn
   groups:
   - docker
+  languages: []
   links:
   - https://docs.docker.com/release-notes/docker-ce/
   - https://github.com/docker/compose/releases/
@@ -870,6 +876,7 @@ data:
   filename: howto-debug-nginx.mkdn
   groups:
   - nginx
+  languages: []
   links:
   - http://nginx.org/en/CHANGES
   - https://tenzer.dk/nginx-with-dynamic-upstreams/
@@ -1041,6 +1048,7 @@ data:
   filename: howto-debug-kubernetes.mkdn
   groups:
   - kubernetes
+  languages: []
   links:
   - https://blog.codeship.com/getting-started-with-kubernetes/
   - https://github.com/kubernetes/kubernetes/releases
@@ -1058,5 +1066,5 @@ data:
   versions: []
 meta:
   homepage: https://github.com/heilaaks/snippy
-  updated: '2019-05-01T11:31:23.098205+00:00'
+  updated: '2019-06-05T20:17:10.965799+00:00'
   version: 0.11a0

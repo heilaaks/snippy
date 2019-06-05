@@ -24,6 +24,9 @@
 # Add optional comma separated list of key-value versions below.
 <versions>
 
+# Add optional comma separated list of languages below.
+<languages>
+
 # Add optional filename below.
 <filename>
 

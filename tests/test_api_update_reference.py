@@ -73,7 +73,7 @@ class TestApiUpdateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '698'
+            'content-length': '715'
         }
         expect_body = {
             'links': {
@@ -116,6 +116,7 @@ class TestApiUpdateReference(object):
                 'links': Reference.PYTEST['links'],
                 'source': '',
                 'versions': (),
+                'languages': (),
                 'filename': '',
                 'created': Content.GITLOG_TIME,
                 'updated': Content.PYTEST_TIME,
@@ -133,7 +134,7 @@ class TestApiUpdateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '650'
+            'content-length': '667'
         }
         expect_body = {
             'links': {
@@ -324,7 +325,7 @@ class TestApiUpdateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '746'
+            'content-length': '763'
         }
         expect_body = {
             'links': {
@@ -459,6 +460,7 @@ class TestApiUpdateReference(object):
         storage['data'][0]['tags'] = ()
         storage['data'][0]['source'] = ''
         storage['data'][0]['versions'] = ()
+        storage['data'][0]['languages'] = ()
         storage['data'][0]['filename'] = ''
         storage['data'][0]['created'] = Content.GITLOG_TIME
         storage['data'][0]['updated'] = Content.PYTEST_TIME
@@ -475,13 +477,14 @@ class TestApiUpdateReference(object):
                     'tags': (),
                     'source': '',
                     'versions': (),
+                    'languages': (),
                     'filename': ''
                 }
             }
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '634'
+            'content-length': '651'
         }
         expect_body = {
             'links': {

@@ -8,6 +8,7 @@ data:
   filename: ''
   groups:
   - git
+  languages: []
   links:
   - https://writingfordevelopers.substack.com/p/how-to-write-commit-messages
   - https://chris.beams.io/posts/git-commit/
@@ -24,5 +25,5 @@ data:
   versions: []
 meta:
   homepage: https://github.com/heilaaks/snippy
-  updated: '2019-05-01T11:31:23.136868+00:00'
+  updated: '2019-06-05T20:17:11.004242+00:00'
   version: 0.11a0

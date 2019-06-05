@@ -1,9 +1,9 @@
 ## WORKING
+   - [ ] Add languages to digest once done.
    - [ ] Fix multiline input for source. This reads both lines and the output wraps them because only one string expected without newlines.
    - [ ] Add --snippy-logs like --snippy-db to Pytest to force logs.
    - [ ] Fix JSON API v1.x requires links for collection responses too. Individual resource not found or attrbute results null otherwise empty list.
    - [ ] Add links unique attribute? Would be good to check if unique links are valid and how many repeated links there are.
-   - [ ] Add 'languages' attribute.
    - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format. Try tldr. External tool? No more dependencies would be nice.
    - [ ] Add support to find dead links. External tool? No more dependencies would be nice.
    - [ ] Fix test_logger_017. The P3 is not correct? The links in p2 are in the same elemnet separated with \n that should be the case with P3.

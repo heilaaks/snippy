@@ -73,7 +73,7 @@ class TestApiUpdateSnippet(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '999'
+            'content-length': '1016'
         }
         expect_body = {
             'links': {
@@ -116,6 +116,7 @@ class TestApiUpdateSnippet(object):
                 'links': Snippet.REMOVE['links'],
                 'source': '',
                 'versions': (),
+                'languages': (),
                 'filename': '',
                 'created': Content.FORCED_TIME,
                 'updated': Content.REMOVE_TIME,
@@ -135,7 +136,7 @@ class TestApiUpdateSnippet(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '700'
+            'content-length': '717'
         }
         expect_body = {
             'links': {
@@ -178,6 +179,7 @@ class TestApiUpdateSnippet(object):
                 'links': (),
                 'source': '',
                 'versions': (),
+                'languages': (),
                 'filename': '',
                 'created': Content.FORCED_TIME,
                 'updated': Content.REMOVE_TIME,
@@ -195,7 +197,7 @@ class TestApiUpdateSnippet(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '643'
+            'content-length': '660'
         }
         expect_body = {
             'links': {
@@ -338,7 +340,7 @@ class TestApiUpdateSnippet(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '762'
+            'content-length': '779'
         }
         expect_body = {
             'links': {
@@ -390,7 +392,7 @@ class TestApiUpdateSnippet(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '886'
+            'content-length': '903'
         }
         expect_body = {
             'links': {

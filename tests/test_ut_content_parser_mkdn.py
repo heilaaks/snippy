@@ -56,16 +56,17 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines
             '',
             '## Meta',
             '',
-            '> category : snippet  ',
-            'created  : 2017-10-12T11:52:11.000001+00:00  ',
-            'digest   : 0a8b31f0ab442991e56dcaef1fc65aa6bff479c567e04dd7990948f201187c69  ',
-            'filename : snippet.txt',
-            'name     : example text',
-            'source   : https://www.random.org/',
-            'tags     : cleanup, container, docker, docker-ce, moby  ',
-            'updated  : 2017-10-12T11:52:11.000001+00:00  ',
-            'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
-            'versions : git<=1.1.1,python>=2.7.0,python==3.7.0',
+            '> category  : snippet  ',
+            'created   : 2017-10-12T11:52:11.000001+00:00  ',
+            'digest    : 0a8b31f0ab442991e56dcaef1fc65aa6bff479c567e04dd7990948f201187c69  ',
+            'filename  : snippet.txt',
+            'languages : language',
+            'name      : example text',
+            'source    : https://www.random.org/',
+            'tags      : cleanup, container, docker, docker-ce, moby  ',
+            'updated   : 2017-10-12T11:52:11.000001+00:00  ',
+            'uuid      : f21c6318-8830-11e8-a114-2c4d54508088  ',
+            'versions  : git<=1.1.1,python>=2.7.0,python==3.7.0',
             '',
         ))
         collection = Collection()
@@ -90,6 +91,7 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines
         )
         assert resource.source == 'https://www.random.org/'
         assert resource.versions == ('git<=1.1.1', 'python==3.7.0', 'python>=2.7.0')
+        assert resource.languages == ('language',)
         assert resource.filename == 'snippet.txt'
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
@@ -126,16 +128,17 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines
             '',
             '## Meta',
             '',
-            '> category : snippet  ',
-            'created  : 2017-10-12T11:52:11.000001+00:00  ',
-            'digest   : 0a8b31f0ab442991e56dcaef1fc65aa6bff479c567e04dd7990948f201187c69  ',
-            'filename :  ',
-            'name     :  ',
-            'source   :  ',
-            'tags     : cleanup, container, docker, docker-ce, moby  ',
-            'updated  : 2017-10-12T11:52:11.000001+00:00  ',
-            'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
-            'versions :',
+            '> category  : snippet  ',
+            'created   : 2017-10-12T11:52:11.000001+00:00  ',
+            'digest    : 0a8b31f0ab442991e56dcaef1fc65aa6bff479c567e04dd7990948f201187c69  ',
+            'filename  :  ',
+            'languages :  ',
+            'name      :  ',
+            'source    :  ',
+            'tags      : cleanup, container, docker, docker-ce, moby  ',
+            'updated   : 2017-10-12T11:52:11.000001+00:00  ',
+            'uuid      : f21c6318-8830-11e8-a114-2c4d54508088  ',
+            'versions  :',
             '',
             '---',
             '',
@@ -152,16 +155,17 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines
             '',
             '## Meta',
             '',
-            '> category : snippet  ',
-            'created  : 2017-10-12T11:52:11.000001+00:00  ',
-            'digest   : 0bcf78d5c36a96a556fa3293f9b68c3dca577ea9c7fa5de76b354ccf27885df2  ',
-            'filename :  ',
-            'name     :  ',
-            'source   :  ',
-            'tags     :  ',
-            'updated  : 2017-10-12T11:52:11.000001+00:00  ',
-            'uuid     : f31c752e-8830-11e8-a114-2c4d54508088  ',
-            'versions : ',
+            '> category  : snippet  ',
+            'created   : 2017-10-12T11:52:11.000001+00:00  ',
+            'digest    : 0bcf78d5c36a96a556fa3293f9b68c3dca577ea9c7fa5de76b354ccf27885df2  ',
+            'filename  :  ',
+            'languages :  ',
+            'name      :  ',
+            'source    :  ',
+            'tags      :  ',
+            'updated   : 2017-10-12T11:52:11.000001+00:00  ',
+            'uuid      : f31c752e-8830-11e8-a114-2c4d54508088  ',
+            'versions  : ',
             ''
         ))
         digest = '9dcf81a0484d6551a3a0a0cf892d22bfba6b25b0f0ec6ef7080a617e3cf0b092'
@@ -188,6 +192,7 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines
         )
         assert resource.source == ''
         assert resource.versions == ()
+        assert resource.languages == ()
         assert resource.filename == ''
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
@@ -211,6 +216,7 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines
         assert resource.links == ('https://github.com/moby/moby/issues/23302',)
         assert resource.source == ''
         assert resource.versions == ()
+        assert resource.languages == ()
         assert resource.filename == ''
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
@@ -241,16 +247,17 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines
             '',
             '## Meta',
             '',
-            '> category : snippet  ',
-            'created  : 2017-10-12T11:52:11.000001+00:00  ',
-            'digest   : 852ca349dc05fb75bccfac743318230b7fc5360e8d3d4e61674e71aba2e469ff  ',
-            'filename :  ',
-            'name     :  ',
-            'source   :  ',
-            'tags     : cleanup, container, docker, docker-ce, moby  ',
-            'updated  : 2017-10-12T11:52:11.000001+00:00  ',
-            'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
-            'versions : ',
+            '> category  : snippet  ',
+            'created   : 2017-10-12T11:52:11.000001+00:00  ',
+            'digest    : 852ca349dc05fb75bccfac743318230b7fc5360e8d3d4e61674e71aba2e469ff  ',
+            'filename  :  ',
+            'languages :  ',
+            'name      :  ',
+            'source    :  ',
+            'tags      : cleanup, container, docker, docker-ce, moby  ',
+            'updated   : 2017-10-12T11:52:11.000001+00:00  ',
+            'uuid      : f21c6318-8830-11e8-a114-2c4d54508088  ',
+            'versions  : ',
             '',
         ))
         collection = Collection()
@@ -269,6 +276,7 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines
         assert resource.links == ()
         assert resource.source == ''
         assert resource.versions == ()
+        assert resource.languages == ()
         assert resource.filename == ''
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
@@ -310,16 +318,17 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines
             '',
             '## Meta',
             '',
-            '> category : snippet  ',
-            'created  : 2018-05-07T11:13:17.000001+00:00  ',
-            'digest   : 1115c9c843d1ffae45997d68c96d02af83fef49db677a9a7298ba135436e4ca8  ',
-            'filename :  ',
-            'name     :  ',
-            'source   :  ',
-            'tags     : howto,linux,tar,untar  ',
-            'updated  : 2018-05-07T11:13:17.000001+00:00  ',
-            'uuid     : f21c8ed8-8830-11e8-a114-2c4d54508088  ',
-            'versions : ',
+            '> category  : snippet  ',
+            'created   : 2018-05-07T11:13:17.000001+00:00  ',
+            'digest    : 1115c9c843d1ffae45997d68c96d02af83fef49db677a9a7298ba135436e4ca8  ',
+            'filename  :  ',
+            'languages :  ',
+            'name      :  ',
+            'source    :  ',
+            'tags      : howto,linux,tar,untar  ',
+            'updated   : 2018-05-07T11:13:17.000001+00:00  ',
+            'uuid      : f21c8ed8-8830-11e8-a114-2c4d54508088  ',
+            'versions  : ',
             ''
         ))
         collection = Collection()
@@ -341,6 +350,7 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines
         assert resource.links == ()
         assert resource.source == ''
         assert resource.versions == ()
+        assert resource.languages == ()
         assert resource.filename == ''
         assert resource.created == '2018-05-07T11:13:17.000001+00:00'
         assert resource.updated == '2018-05-07T11:13:17.000001+00:00'
@@ -376,16 +386,17 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines
             '',
             '## Meta',
             '',
-            '> category : snippet  ',
-            'created  : 2017-10-12T11:52:11.000001+00:00  ',
-            'digest   : 0a8b31f0ab442991e56dcaef1fc65aa6bff479c567e04dd7990948f201187c69  ',
-            'filename :  ',
-            'name     :  ',
-            'source   :  ',
-            'tags     : cleanup, container, docker, docker-ce, moby  ',
-            'updated  : 2017-10-12T11:52:11.000001+00:00  ',
-            'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
-            'versions : ',
+            '> category  : snippet  ',
+            'created   : 2017-10-12T11:52:11.000001+00:00  ',
+            'digest    : 0a8b31f0ab442991e56dcaef1fc65aa6bff479c567e04dd7990948f201187c69  ',
+            'filename  :  ',
+            'languages :  ',
+            'name      :  ',
+            'source    :  ',
+            'tags      : cleanup, container, docker, docker-ce, moby  ',
+            'updated   : 2017-10-12T11:52:11.000001+00:00  ',
+            'uuid      : f21c6318-8830-11e8-a114-2c4d54508088  ',
+            'versions  : ',
             '',
         ))
         collection = Collection()
@@ -411,6 +422,7 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines
         )
         assert resource.source == ''
         assert resource.versions == ()
+        assert resource.languages == ()
         assert resource.filename == ''
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
@@ -446,16 +458,17 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines
             '',
             '## Meta',
             '',
-            '> category : snippet  ',
-            'created  : 2017-10-12T11:52:11.000001+00:00  ',
-            'digest   : 0a8b31f0ab442991e56dcaef1fc65aa6bff479c567e04dd7990948f201187c69  ',
-            'filename :  ',
-            'name     :  ',
-            'source   :  ',
-            'tags     : cleanup, container, docker, docker-ce, moby  ',
-            'updated  : 2017-10-12T11:52:11.000001+00:00  ',
-            'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
-            'versions : ',
+            '> category  : snippet  ',
+            'created   : 2017-10-12T11:52:11.000001+00:00  ',
+            'digest    : 0a8b31f0ab442991e56dcaef1fc65aa6bff479c567e04dd7990948f201187c69  ',
+            'filename  :  ',
+            'languages :  ',
+            'name      :  ',
+            'source    :  ',
+            'tags      : cleanup, container, docker, docker-ce, moby  ',
+            'updated   : 2017-10-12T11:52:11.000001+00:00  ',
+            'uuid      : f21c6318-8830-11e8-a114-2c4d54508088  ',
+            'versions  : ',
             '',
         ))
         collection = Collection()
@@ -478,6 +491,7 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines
         )
         assert resource.source == ''
         assert resource.versions == ()
+        assert resource.languages == ()
         assert resource.filename == ''
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
@@ -515,16 +529,17 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines
             '',
             '## Meta',
             '',
-            '> category : solution  ',
-            'created  : 2017-10-12T11:52:11.000001+00:00  ',
-            'digest   : e167e4e2e06eba6bf041d1b9d56c41f39d199ced9a2174f2e4b92c658a23c56c  ',
-            'filename :  ',
-            'name     :  ',
-            'source   :  ',
-            'tags     : cleanup, container, docker, docker-ce, moby  ',
-            'updated  : 2017-10-12T11:52:11.000001+00:00  ',
-            'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
-            'versions : docker==1.1.1,moby!=2.7.0',
+            '> category  : solution  ',
+            'created   : 2017-10-12T11:52:11.000001+00:00  ',
+            'digest    : e167e4e2e06eba6bf041d1b9d56c41f39d199ced9a2174f2e4b92c658a23c56c  ',
+            'filename  :  ',
+            'languages :  ',
+            'name      :  ',
+            'source    :  ',
+            'tags      : cleanup, container, docker, docker-ce, moby  ',
+            'updated   : 2017-10-12T11:52:11.000001+00:00  ',
+            'uuid      : f21c6318-8830-11e8-a114-2c4d54508088  ',
+            'versions  : docker==1.1.1,moby!=2.7.0',
             '',
         ))
         data = (
@@ -601,16 +616,17 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines
             '',
             '## Meta',
             '',
-            '> category : solution  ',
-            'created  : 2017-10-12T11:52:11.000001+00:00  ',
-            'digest   : e167e4e2e06eba6bf041d1b9d56c41f39d199ced9a2174f2e4b92c658a23c56c  ',
-            'filename :  ',
-            'name     :  ',
-            'source   :  ',
-            'tags     : cleanup, container, docker, docker-ce, moby  ',
-            'updated  : 2017-10-12T11:52:11.000001+00:00  ',
-            'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
-            'versions : ',
+            '> category  : solution  ',
+            'created   : 2017-10-12T11:52:11.000001+00:00  ',
+            'digest    : e167e4e2e06eba6bf041d1b9d56c41f39d199ced9a2174f2e4b92c658a23c56c  ',
+            'filename  :  ',
+            'languages :  ',
+            'name      :  ',
+            'source    :  ',
+            'tags      : cleanup, container, docker, docker-ce, moby  ',
+            'updated   : 2017-10-12T11:52:11.000001+00:00  ',
+            'uuid      : f21c6318-8830-11e8-a114-2c4d54508088  ',
+            'versions  : ',
             '',
         ))
         data = (
@@ -649,6 +665,7 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines
         assert resource.links == ()
         assert resource.source == ''
         assert resource.versions == ()
+        assert resource.languages == ()
         assert resource.filename == ''
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
@@ -692,16 +709,17 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines
             '',
             '## Meta',
             '',
-            '> category : solution  ',
-            'created  : 2017-10-12T11:52:11.000001+00:00  ',
-            'digest   : e167e4e2e06eba6bf041d1b9d56c41f39d199ced9a2174f2e4b92c658a23c56c  ',
-            'filename :  ',
-            'name     :  ',
-            'source   :  ',
-            'tags     : cleanup, container, docker, docker-ce, moby  ',
-            'updated  : 2017-10-12T11:52:11.000001+00:00  ',
-            'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
-            'versions : ',
+            '> category  : solution  ',
+            'created   : 2017-10-12T11:52:11.000001+00:00  ',
+            'digest    : e167e4e2e06eba6bf041d1b9d56c41f39d199ced9a2174f2e4b92c658a23c56c  ',
+            'filename  :  ',
+            'languages :  ',
+            'name      :  ',
+            'source    :  ',
+            'tags      : cleanup, container, docker, docker-ce, moby  ',
+            'updated   : 2017-10-12T11:52:11.000001+00:00  ',
+            'uuid      : f21c6318-8830-11e8-a114-2c4d54508088  ',
+            'versions  : ',
             '',
         ))
         data = (
@@ -740,6 +758,7 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines
         assert resource.links == ()
         assert resource.source == ''
         assert resource.versions == ()
+        assert resource.languages == ()
         assert resource.filename == ''
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
@@ -776,16 +795,17 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines
             '',
             '## Meta',
             '',
-            '> category : solution  ',
-            'created  : 2017-10-12T11:52:11.000001+00:00  ',
-            'digest   : e167e4e2e06eba6bf041d1b9d56c41f39d199ced9a2174f2e4b92c658a23c56c  ',
-            'filename :  ',
-            'name     :  ',
-            'source   :  ',
-            'tags     : cleanup, container, docker, docker-ce, moby  ',
-            'updated  : 2017-10-12T11:52:11.000001+00:00  ',
-            'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
-            'versions : ',
+            '> category  : solution  ',
+            'created   : 2017-10-12T11:52:11.000001+00:00  ',
+            'digest    : e167e4e2e06eba6bf041d1b9d56c41f39d199ced9a2174f2e4b92c658a23c56c  ',
+            'filename  :  ',
+            'languages :  ',
+            'name      :  ',
+            'source    :  ',
+            'tags      : cleanup, container, docker, docker-ce, moby  ',
+            'updated   : 2017-10-12T11:52:11.000001+00:00  ',
+            'uuid      : f21c6318-8830-11e8-a114-2c4d54508088  ',
+            'versions  : ',
             '',
         ))
         data = (
@@ -815,6 +835,7 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines
         assert resource.links == ()
         assert resource.source == ''
         assert resource.versions == ()
+        assert resource.languages == ()
         assert resource.filename == ''
         assert resource.uuid == 'f21c6318-8830-11e8-a114-2c4d54508088'
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
@@ -854,16 +875,17 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines
             '',
             '## Meta',
             '',
-            '> category : solution  ',
-            'created  : 2017-10-12T11:52:11.000001+00:00  ',
-            'digest   : e167e4e2e06eba6bf041d1b9d56c41f39d199ced9a2174f2e4b92c658a23c56c  ',
-            'filename :   ',
-            'name     :   ',
-            'source   :   ',
-            'tags     : cleanup, container, docker, docker-ce, moby  ',
-            'updated  : 2017-10-12T11:52:11.000001+00:00  ',
-            'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
-            'versions :',
+            '> category  : solution  ',
+            'created   : 2017-10-12T11:52:11.000001+00:00  ',
+            'digest    : e167e4e2e06eba6bf041d1b9d56c41f39d199ced9a2174f2e4b92c658a23c56c  ',
+            'filename  :   ',
+            'languages :   ',
+            'name      :   ',
+            'source    :   ',
+            'tags      : cleanup, container, docker, docker-ce, moby  ',
+            'updated   : 2017-10-12T11:52:11.000001+00:00  ',
+            'uuid      : f21c6318-8830-11e8-a114-2c4d54508088  ',
+            'versions  :',
             '',
         ))
         data = (
@@ -898,6 +920,7 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines
         assert resource.links == ()
         assert resource.source == ''
         assert resource.versions == ()
+        assert resource.languages == ()
         assert resource.filename == ''
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
@@ -943,16 +966,17 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines
             '',
             '## Meta',
             '',
-            '> category : solution  ',
-            'created  : 2017-10-12T11:52:11.000001+00:00  ',
-            'digest   : e167e4e2e06eba6bf041d1b9d56c41f39d199ced9a2174f2e4b92c658a23c56c  ',
-            'filename :  docker-example.txt ',
-            'name     :   ',
-            'source   :   ',
-            'tags     : cleanup, container, docker, docker-ce, moby  ',
-            'updated  : 2017-10-12T11:52:11.000001+00:00  ',
-            'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
-            'versions :',
+            '> category  : solution  ',
+            'created   : 2017-10-12T11:52:11.000001+00:00  ',
+            'digest    : e167e4e2e06eba6bf041d1b9d56c41f39d199ced9a2174f2e4b92c658a23c56c  ',
+            'filename  :  docker-example.txt ',
+            'languages :  example-language ',
+            'name      :   ',
+            'source    :   ',
+            'tags      : cleanup, container, docker, docker-ce, moby  ',
+            'updated   : 2017-10-12T11:52:11.000001+00:00  ',
+            'uuid      : f21c6318-8830-11e8-a114-2c4d54508088  ',
+            'versions  :',
             '',
         ))
         data = (
@@ -993,6 +1017,7 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines
         )
         assert resource.source == ''
         assert resource.versions == ()
+        assert resource.languages == ()
         assert resource.filename == 'docker-example.txt'
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.uuid == 'f21c6318-8830-11e8-a114-2c4d54508088'
@@ -1025,16 +1050,17 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines
             '',
             '## Meta',
             '',
-            '> category : solution  ',
-            'created  : 2019-01-04T10:54:49.265512+00:00  ',
-            'digest   : 18473ec207798670c302fb711a40df6555e8973e26481e4cd6b2ed205f5e633c  ',
-            'filename : kubernetes-docker-log-driver-kafka.mkdn  ',
-            'name     :   ',
-            'source   :   ',
-            'tags     : docker,driver,kafka,kubernetes,logging,logs2kafka,moby,plugin  ',
-            'updated  : 2019-01-05T10:54:49.265512+00:00  ',
-            'uuid     : 24cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
-            'versions : ',
+            '> category  : solution  ',
+            'created   : 2019-01-04T10:54:49.265512+00:00  ',
+            'digest    : 18473ec207798670c302fb711a40df6555e8973e26481e4cd6b2ed205f5e633c  ',
+            'filename  : kubernetes-docker-log-driver-kafka.mkdn  ',
+            'languages :   ',
+            'name      :   ',
+            'source    :   ',
+            'tags      : docker,driver,kafka,kubernetes,logging,logs2kafka,moby,plugin  ',
+            'updated   : 2019-01-05T10:54:49.265512+00:00  ',
+            'uuid      : 24cd5827-b6ef-4067-b5ac-3ceac07dde9f  ',
+            'versions  : ',
             ''
         ))
         data = (
@@ -1060,6 +1086,7 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines
         assert resource.links == ()
         assert resource.source == ''
         assert resource.versions == ()
+        assert resource.languages == ()
         assert resource.filename == 'kubernetes-docker-log-driver-kafka.mkdn'
         assert resource.created == '2019-01-04T10:54:49.265512+00:00'
         assert resource.uuid == '24cd5827-b6ef-4067-b5ac-3ceac07dde9f'
@@ -1082,16 +1109,17 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines
             '',
             '## Meta',
             '',
-            '> category : reference  ',
-            'created  : 2017-10-12T11:52:11.000001+00:00  ',
-            'digest   : ec6ff1c1e8c52bc2ca8de76c71cd2eebd4f5ca07e6bdd9bba42ad2154d40503b  ',
-            'filename :   ',
-            'name     :   ',
-            'source   :   ',
-            'tags     : cleanup, container, python, docker-ce, moby  ',
-            'updated  : 2018-10-12T11:52:11.000001+00:00  ',
-            'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
-            'versions : docker-ce==1.1.1,moby!=2.7.0,moby>2.6.0,docker-ce<1.1.1',
+            '> category  : reference  ',
+            'created   : 2017-10-12T11:52:11.000001+00:00  ',
+            'digest    : ec6ff1c1e8c52bc2ca8de76c71cd2eebd4f5ca07e6bdd9bba42ad2154d40503b  ',
+            'filename  :   ',
+            'languages : python  ',
+            'name      :   ',
+            'source    :   ',
+            'tags      : cleanup, container, python, docker-ce, moby  ',
+            'updated   : 2018-10-12T11:52:11.000001+00:00  ',
+            'uuid      : f21c6318-8830-11e8-a114-2c4d54508088  ',
+            'versions  : docker-ce==1.1.1,moby!=2.7.0,moby>2.6.0,docker-ce<1.1.1',
             '',
         ))
         links = (
@@ -1114,6 +1142,7 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines
         assert resource.links == links
         assert resource.source == ''
         assert resource.versions == ('docker-ce<1.1.1', 'docker-ce==1.1.1', 'moby!=2.7.0', 'moby>2.6.0')
+        assert resource.languages == ('python',)
         assert resource.filename == ''
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.updated == '2018-10-12T11:52:11.000001+00:00'
@@ -1136,16 +1165,17 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines
             '',
             '## Meta',
             '',
-            '> category : reference  ',
-            'created  : 2017-10-12T11:52:11.000001+00:00  ',
-            'digest   : 0bd50d9035d987a2407b0dfe68aea761fadf1306556bd5fafea3f59bef51c826  ',
-            'filename :   ',
-            'name     :   ',
-            'source   :   ',
-            'tags     : cleanup, container, python, docker-ce, moby  ',
-            'updated  : 2018-10-12T11:52:11.000001+00:00  ',
-            'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
-            'versions : docker_ce==1.1.1,moby!=2.7.0',
+            '> category  : reference  ',
+            'created   : 2017-10-12T11:52:11.000001+00:00  ',
+            'digest    : 0bd50d9035d987a2407b0dfe68aea761fadf1306556bd5fafea3f59bef51c826  ',
+            'filename  :   ',
+            'languages : shell,python  ',
+            'name      :   ',
+            'source    :   ',
+            'tags      : cleanup, container, python, docker-ce, moby  ',
+            'updated   : 2018-10-12T11:52:11.000001+00:00  ',
+            'uuid      : f21c6318-8830-11e8-a114-2c4d54508088  ',
+            'versions  : docker_ce==1.1.1,moby!=2.7.0',
             '',
         ))
         links = ('https://docs.docker.com/engine/reference/commandline/images/',)
@@ -1162,6 +1192,7 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines
         assert resource.links == links
         assert resource.source == ''
         assert resource.versions == ('docker_ce==1.1.1', 'moby!=2.7.0')
+        assert resource.languages == ('python', 'shell')
         assert resource.filename == ''
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.updated == '2018-10-12T11:52:11.000001+00:00'
@@ -1184,16 +1215,17 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines
             '',
             '## Meta',
             '',
-            '> category : reference  ',
-            'created  : 2017-10-12T11:52:11.000001+00:00  ',
-            'digest   : 0bd50d9035d987a2407b0dfe68aea761fadf1306556bd5fafea3f59bef51c826  ',
-            'filename :   ',
-            'name     :   ',
-            'source   :   ',
-            'tags     : cleanup, container, python, docker-ce, moby  ',
-            'updated  : 2018-10-12T11:52:11.000001+00:00  ',
-            'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
-            'versions : docker_ce==1.1.1,moby!=2.7.0',
+            '> category  : reference  ',
+            'created   : 2017-10-12T11:52:11.000001+00:00  ',
+            'digest    : 0bd50d9035d987a2407b0dfe68aea761fadf1306556bd5fafea3f59bef51c826  ',
+            'filename  :   ',
+            'languages :   ',
+            'name      :   ',
+            'source    :   ',
+            'tags      : cleanup, container, python, docker-ce, moby  ',
+            'updated   : 2018-10-12T11:52:11.000001+00:00  ',
+            'uuid      : f21c6318-8830-11e8-a114-2c4d54508088  ',
+            'versions  : docker_ce==1.1.1,moby!=2.7.0',
             '',
         ))
         links = ('https://docs.docker.com/engine/reference/commandline/images/',)
@@ -1210,6 +1242,7 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines
         assert resource.links == links
         assert resource.source == ''
         assert resource.versions == ('docker_ce==1.1.1', 'moby!=2.7.0')
+        assert resource.languages == ()
         assert resource.filename == ''
         assert resource.created == '2017-10-12T11:52:11.000001+00:00'
         assert resource.updated == '2018-10-12T11:52:11.000001+00:00'

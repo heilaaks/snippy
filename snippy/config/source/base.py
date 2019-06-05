@@ -44,8 +44,8 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
     OPERATIONS = ('create', 'search', 'update', 'delete', 'export', 'import')
 
     ATTRIBUTES = ('category', 'data', 'brief', 'description', 'name', 'groups', 'tags',
-                  'links', 'source', 'versions', 'filename', 'created', 'updated',
-                  'uuid', 'digest')
+                  'links', 'source', 'versions', 'languages', 'filename', 'created',
+                  'updated', 'uuid', 'digest')
 
     # Defaults
     DEFAULT_LOG_MSG_MAX = Logger.DEFAULT_LOG_MSG_MAX
@@ -73,6 +73,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
         self.failure_message = Const.EMPTY
         self.template_format = Const.CONTENT_FORMAT_MKDN
         self.template_format_used = False
+        self.languages = ()
         self.log_json = False
         self.log_msg_max = self.DEFAULT_LOG_MSG_MAX
         self.merge = False
@@ -131,6 +132,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
         namespace.append('filename={}'.format(self.filename))
         namespace.append('groups={}'.format(self.groups))
         namespace.append('identity={}'.format(self.identity))
+        namespace.append('languages={}'.format(self.languages))
         namespace.append('links={}'.format(self.links))
         namespace.append('log_json={}'.format(self.log_json))
         namespace.append('log_msg_max={}'.format(self.log_msg_max))
@@ -239,6 +241,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
         self.template_format_used = parameters.get('format_used', False)
         self.groups = parameters.get('groups', Const.DEFAULT_GROUPS)
         self.identity = parameters.get('identity', None)
+        self.languages = parameters.get('languages', ())
         self.links = parameters.get('links', ())
         self.log_json = parameters.get(*self.read_env('log_json', False))
         self.log_msg_max = parameters.get(*self.read_env('log_msg_max', self.DEFAULT_LOG_MSG_MAX))
@@ -451,6 +454,21 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
             self._reset_fields['versions'] = 'versions'
 
         self._versions = Parser.format_versions(value)  # pylint: disable=attribute-defined-outside-init
+
+    @property
+    def languages(self):
+        """Get content languages."""
+
+        return self._languages
+
+    @languages.setter
+    def languages(self, value):
+        """Convert content languages to tuple of utf-8 encoded unicode strings."""
+
+        if value is None:
+            self._reset_fields['languages'] = 'languages'
+
+        self._languages = Parser.format_list(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
     def filename(self):

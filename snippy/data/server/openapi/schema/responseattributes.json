@@ -32,6 +32,9 @@
     "versions": {
       "$ref": "_definitions.json#/definitions/attributeVersions"
     },
+    "languages": {
+      "$ref": "_definitions.json#/definitions/attributeLanguages"
+    },
     "filename": {
       "$ref": "_definitions.json#/definitions/attributeFilename"
     },

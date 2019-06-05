@@ -103,6 +103,15 @@ class ContentParserMkdn(ContentParserBase):
     REGEXP['versions'][Const.SOLUTION] = REGEXP['versions'][Const.SNIPPET]
     REGEXP['versions'][Const.REFERENCE] = REGEXP['versions'][Const.SNIPPET]
 
+    REGEXP['languages'] = {}
+    REGEXP['languages'][Const.SNIPPET] = re.compile(r'''
+        ^languages          # Match languages metadata key at the beginning of line.
+        \s+[:]{1}\s         # Match spaces and column between key and value.
+        (?P<languages>.*$)  # Catch languages value till end of the line.
+        ''', re.MULTILINE | re.VERBOSE)
+    REGEXP['languages'][Const.SOLUTION] = REGEXP['languages'][Const.SNIPPET]
+    REGEXP['languages'][Const.REFERENCE] = REGEXP['languages'][Const.SNIPPET]
+
     def __init__(self, timestamp, text, collection):
         """
         Args:
@@ -135,6 +144,7 @@ class ContentParserMkdn(ContentParserBase):
                 'links': self._read_links(category, content),
                 'source': self.read_meta_value(category, 'source', content),
                 'versions': self._read_versions(category, content),
+                'languages': self._read_languages(category, content),
                 'filename': self.read_meta_value(category, 'filename', content),
                 'created': self.read_meta_value(category, 'created', content),
                 'updated': self.read_meta_value(category, 'updated', content),
@@ -152,8 +162,8 @@ class ContentParserMkdn(ContentParserBase):
 
         category = Const.UNKNOWN_CATEGORY
         match = re.compile(r'''
-            [>\s]{2}category\s:\s   # Match category metadata field.
-            (?P<category>.*|$)      # Catch category.
+            [>\s]{2}category\s+:\s   # Match category metadata field.
+            (?P<category>.*|$)       # Catch category.
             ''', re.VERBOSE).search(text)
         if match:
             category = self.format_string(match.group('category'))
@@ -344,3 +354,27 @@ class ContentParserMkdn(ContentParserBase):
         """
 
         return self.parse_versions(category, self.REGEXP['versions'].get(category, None), text)
+
+    def _read_languages(self, category, text):
+        """Read content languages from text string.
+
+        Args:
+            category (str): Content category.
+            text (str): Content text string.
+
+        Returns:
+            tuple: Tuple of utf-8 encoded languages.
+        """
+
+        languages = ()
+        if category not in Const.CATEGORIES:
+            return self.format_list(languages)
+
+        match = self.read_meta_value(category, 'languages', text)
+        if match:
+            languages = [match]
+            self._logger.debug('parsed content languages: %s', languages)
+        else:
+            self._logger.debug('parser did not find content for languages: {}'.format(text))
+
+        return self.format_list(languages)

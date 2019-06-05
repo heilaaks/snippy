@@ -186,6 +186,7 @@ class Database(object):
                               , links
                               , source
                               , versions
+                              , languages
                               , filename
                               , created
                               , updated
@@ -194,7 +195,7 @@ class Database(object):
                       )
                       VALUES
                       (
-                              {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}
+                              {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}
                       )
             '''.format(self._placeholder)
         qargs = []
@@ -394,6 +395,7 @@ class Database(object):
                         , links       = {0}
                         , source      = {0}
                         , versions    = {0}
+                        , languages   = {0}
                         , filename    = {0}
                         , created     = {0}
                         , updated     = {0}
@@ -661,6 +663,7 @@ class Database(object):
                 'links',
                 'source',
                 'versions',
+                'languages',
                 'filename',
                 'created',
                 'updated',

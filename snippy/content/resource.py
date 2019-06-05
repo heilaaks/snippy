@@ -48,11 +48,12 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     LINKS = 8
     SOURCE = 9
     VERSIONS = 10
-    FILENAME = 11
-    CREATED = 12
-    UPDATED = 13
-    UUID = 14
-    DIGEST = 15
+    LANGUAGES = 11
+    FILENAME = 12
+    CREATED = 13
+    UPDATED = 14
+    UUID = 15
+    DIGEST = 16
 
     SNIPPET_TEMPLATE = 'b4bedc2603e3b9ea95bcf53cb7b8aa6efa31eabb788eed60fccf3d8029a6a6cc'
     SOLUTION_TEMPLATE_TEXT = 'be2ec3ade0e984463c1d3346910a05625897abd8d3feae4b2e54bfd6aecbde2d'
@@ -79,6 +80,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self._links = ()
         self._source = ''
         self._versions = ()
+        self._languages = ()
         self._filename = ''
         self._created = timestamp
         self._updated = timestamp
@@ -115,6 +117,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
                    self.links == resource.links and \
                    self.source == resource.source and \
                    self.versions == resource.versions and \
+                   self.languages == resource.languages and \
                    self.filename == resource.filename and \
                    self.created == resource.created and \
                    self.updated == resource.updated and \
@@ -269,6 +272,18 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self._versions = Parser.format_list(value)
 
     @property
+    def languages(self):
+        """Get resource languages."""
+
+        return self._languages
+
+    @languages.setter
+    def languages(self, value):
+        """Resource languages."""
+
+        self._languages = Parser.format_list(value)
+
+    @property
     def filename(self):
         """Get resource filename."""
 
@@ -398,6 +413,8 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
                 self.source = Parser.EXAMPLE_SOURCE
             if not self.versions:
                 self.versions = (Parser.EXAMPLE_VERSIONS.split(Const.DELIMITER_VERSIONS))
+            if not self.languages:
+                self.languages = (Parser.EXAMPLE_LANGUAGES.split(Const.DELIMITER_LANGUAGES))
             if not self.filename:
                 self.filename = Parser.EXAMPLE_FILENAME
 
@@ -501,6 +518,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self.links = source.links
         self.source = source.source
         self.versions = source.versions
+        self.languages = source.languages
         self.filename = source.filename
 
         return self.seal(validate)
@@ -543,6 +561,8 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             self.source = source.source
         if source.versions:
             self.versions = source.versions
+        if source.languages:
+            self.languages = source.languages
         if source.filename:
             self.filename = source.filename
 
@@ -579,6 +599,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             self.links = tuple(list_[Resource.LINKS].split(Const.DELIMITER_LINKS) if list_[Resource.LINKS] else [])
             self.source = list_[Resource.SOURCE]
             self.versions = tuple(list_[Resource.VERSIONS].split(Const.DELIMITER_VERSIONS) if list_[Resource.VERSIONS] else [])
+            self.languages = tuple(list_[Resource.LANGUAGES].split(Const.DELIMITER_LANGUAGES) if list_[Resource.LANGUAGES] else [])
             self.filename = list_[Resource.FILENAME]
             self.created = list_[Resource.CREATED]
             self.updated = list_[Resource.UPDATED]
@@ -596,6 +617,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             self.links = dict_.get('links', self.links)
             self.source = dict_.get('source', self.source)
             self.versions = dict_.get('versions', self.versions)
+            self.languages = dict_.get('languages', self.languages)
             self.filename = dict_.get('filename', self.filename)
             self.created = dict_.get('created', self.created) or self.created
             self.updated = dict_.get('updated', self.updated) or self.updated
@@ -678,6 +700,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             Const.DELIMITER_LINKS.join(map(Const.TEXT_TYPE, self.links)),
             self.source,
             Const.DELIMITER_VERSIONS.join(map(Const.TEXT_TYPE, sorted(self.versions))),
+            Const.DELIMITER_LANGUAGES.join(map(Const.TEXT_TYPE, sorted(self.languages))),
             self.filename,
             self.created,
             self.updated,
@@ -701,6 +724,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             'links': self.links,
             'source': self.source,
             'versions': self.versions,
+            'languages': self.languages,
             'filename': self.filename,
             'created': self.created,
             'updated': self.updated,
@@ -762,6 +786,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         text = text.replace('<links>', Const.DELIMITER_LINKS.join(self.links))
         text = text.replace('<source>', self.source)
         text = text.replace('<versions>', Const.DELIMITER_VERSIONS.join(self.versions))
+        text = text.replace('<languages>', Const.DELIMITER_LANGUAGES.join(self.languages))
         text = text.replace('<filename>', self.filename)
         text = text.replace('<created>', self.created)
         text = text.replace('<updated>', self.updated)
@@ -789,6 +814,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         mkdn = mkdn.replace('<links>', self._dump_mkdn_links())
         mkdn = mkdn.replace('<source>', self.source)
         mkdn = mkdn.replace('<versions>', Const.DELIMITER_VERSIONS.join(self.versions))
+        mkdn = mkdn.replace('<languages>', Const.DELIMITER_LANGUAGES.join(self.languages))
         mkdn = mkdn.replace('<filename>', self.filename)
         mkdn = mkdn.replace('<created>', self.created)
         mkdn = mkdn.replace('<updated>', self.updated)
@@ -937,6 +963,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             text = text + digest.format(indent=indent, key='digest', align=' ' * 6, value=self.digest, test=self.digest == self._compute_digest())  # noqa pylint: disable=line-too-long
             text = text + meta.format(indent=indent, key='filename', align=' ' * 4, value=self.filename)
             text = text + meta.format(indent=indent, key='id', align=' ' * 10, value=self._id)
+            text = text + meta.format(indent=indent, key='languages', align=' ' * 3, value=Const.DELIMITER_LANGUAGES.join(self.languages))
             text = text + meta.format(indent=indent, key='name', align=' ' * 8, value=self.name)
             text = text + meta.format(indent=indent, key='source', align=' ' * 6, value=self.source)
             text = text + meta.format(indent=indent, key='updated', align=' ' * 5, value=self.updated)

@@ -4,6 +4,6 @@
     "type": "string"
   },
   "default": [],
-  "description": "# Brief\n\nOptional list of versions related to the resource.\n",
+  "description": "# Brief\n\nOptional list of languages related to the resource.\n",
   "$schema": "http://json-schema.org/schema#"
 }

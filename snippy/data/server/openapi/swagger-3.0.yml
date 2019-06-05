@@ -135,6 +135,7 @@ paths:
             - links
             - source
             - versions
+            - languages
             - filename
             - created
             - updated
@@ -160,6 +161,7 @@ paths:
           - links
           - source
           - versions
+          - languages
           - filename
           - created
           - updated
@@ -643,6 +645,7 @@ paths:
           - links
           - source
           - versions
+          - languages
           - filename
           - created
           - updated
@@ -749,6 +752,7 @@ paths:
             - links
             - source
             - versions
+            - languages
             - filename
             - created
             - updated
@@ -774,6 +778,7 @@ paths:
           - links
           - source
           - versions
+          - languages
           - filename
           - created
           - updated
@@ -1019,6 +1024,8 @@ components:
           $ref: '#/components/schemas/attributeSource'
         versions:
           $ref: '#/components/schemas/attributeVersions'
+        languages:
+          $ref: '#/components/schemas/attributeLanguages'
         filename:
           $ref: '#/components/schemas/attributeFilename'
       description: |
@@ -1131,6 +1138,8 @@ components:
           $ref: '#/components/schemas/attributeSource'
         versions:
           $ref: '#/components/schemas/attributeVersions'
+        languages:
+          $ref: '#/components/schemas/attributeLanguages'
         filename:
           $ref: '#/components/schemas/attributeFilename'
         created:
@@ -1329,7 +1338,7 @@ components:
       description: |
         # Brief
 
-        Optional list of services and versions related to the resource.
+        Optional list of versions related to the resource.
       items:
         type: string
     attributeDigest:
@@ -1395,6 +1404,14 @@ components:
         # Brief
 
         Optional list of tags.
+      items:
+        type: string
+    attributeLanguages:
+      type: array
+      description: |
+        # Brief
+
+        Optional list of languages related to the resource.
       items:
         type: string
     attributeSource:
@@ -1554,6 +1571,7 @@ components:
         - links
         - source
         - versions
+        - languages
         - filename
         - created
         - updated
@@ -1637,6 +1655,7 @@ components:
         - links
         - source
         - versions
+        - languages
         - filename
         - created
         - updated
@@ -1762,6 +1781,7 @@ components:
           - links
           - source
           - versions
+          - languages
           - filename
           - created
           - updated

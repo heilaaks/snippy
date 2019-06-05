@@ -41,6 +41,7 @@ class ContentParserBase(object):
     TEXT_TAG_LINKS = '<links>'
     TEXT_TAG_SOURCE = '<source>'
     TEXT_TAG_VERSIONS = '<versions>'
+    TEXT_TAG_LANGUAGES = '<languages>'
     TEXT_TAG_FILENAME = '<filename>'
 
     # Match content template tags.
@@ -54,6 +55,7 @@ class ContentParserBase(object):
         |%s  # Match links.
         |%s  # Match source.
         |%s  # Match versions.
+        |%s  # Match languages.
         |%s  # Match filename.
         ''' % (re.escape(TEXT_TAG_DATA),
                re.escape(TEXT_TAG_BRIEF),
@@ -64,6 +66,7 @@ class ContentParserBase(object):
                re.escape(TEXT_TAG_LINKS),
                re.escape(TEXT_TAG_SOURCE),
                re.escape(TEXT_TAG_VERSIONS),
+               re.escape(TEXT_TAG_LANGUAGES),
                re.escape(TEXT_TAG_FILENAME)
                ), re.VERBOSE)  # pylint: disable=bad-continuation
 
@@ -81,6 +84,7 @@ class ContentParserBase(object):
     EXAMPLE_LINKS = 'https://www.example.com/add-links-here.html'
     EXAMPLE_SOURCE = 'https://www.example.com/source.md'
     EXAMPLE_VERSIONS = 'example=3.9.0,python>=3'
+    EXAMPLE_LANGUAGES = 'example-language'
     EXAMPLE_FILENAME = 'example-content.md'
 
     # Match content template texamples with the exception of groups.
@@ -93,6 +97,7 @@ class ContentParserBase(object):
         |(?:[\[\d\]\s]{4})?%s  # Match links that are optionally prefixed by '[1] ' in case of Markdown template.
         |%s                    # Match source.
         |%s                    # Match versions.
+        |%s                    # Match languages.
         |%s                    # Match filename.
         ''' % (re.escape(EXAMPLE_DATA),
                re.escape(EXAMPLE_BRIEF),
@@ -102,6 +107,7 @@ class ContentParserBase(object):
                re.escape(EXAMPLE_LINKS),
                re.escape(EXAMPLE_SOURCE),
                re.escape(EXAMPLE_VERSIONS),
+               re.escape(EXAMPLE_LANGUAGES),
                re.escape(EXAMPLE_FILENAME)
                ), re.VERBOSE)  # pylint: disable=bad-continuation
 

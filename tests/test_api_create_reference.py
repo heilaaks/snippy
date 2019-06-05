@@ -65,7 +65,7 @@ class TestApiCreateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '580'
+            'content-length': '597'
         }
         expect_body = {
             'data': [{
@@ -108,7 +108,7 @@ class TestApiCreateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '580'
+            'content-length': '597'
         }
         expect_body = {
             'data': [{
@@ -157,7 +157,7 @@ class TestApiCreateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1157'
+            'content-length': '1191'
         }
         expect_body = {
             'data': [{
@@ -210,7 +210,7 @@ class TestApiCreateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '759'
+            'content-length': '776'
         }
         expect_body = {
             'links': {
@@ -267,7 +267,7 @@ class TestApiCreateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '743'
+            'content-length': '760'
         }
         expect_body = {
             'links': {
@@ -443,7 +443,7 @@ class TestApiCreateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '658'}
+            'content-length': '675'}
         expect_body = {
             'data': [{
                 'type': 'reference',
@@ -482,6 +482,7 @@ class TestApiCreateReference(object):
                 'links': ('link1', 'link2'),
                 'source': 'short source link',
                 'versions': ('kafka==1.0.0',),
+                'languages': ('python',),
                 'filename': 'shortfilename.yaml',
                 'created': Content.REGEXP_TIME,
                 'updated': Content.REGEXP_TIME,
@@ -502,13 +503,14 @@ class TestApiCreateReference(object):
                     'links': ['  link1  ', '    link2   '],
                     'source': '  short source link   ',
                     'versions': ['  kafka==1.0.0   '],
+                    'languages': ['  python   '],
                     'filename': '  shortfilename.yaml   '
                 }
             }]
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '609'}
+            'content-length': '634'}
         expect_body = {
             'data': [{
                 'type': 'reference',
@@ -546,6 +548,7 @@ class TestApiCreateReference(object):
                 'links': ('link1', 'link2'),
                 'source': '',
                 'versions': (),
+                'languages': (),
                 'filename': '',
                 'created': Content.REGEXP_TIME,
                 'updated': Content.REGEXP_TIME,
@@ -563,7 +566,7 @@ class TestApiCreateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '506'}
+            'content-length': '523'}
         expect_body = {
             'data': [{
                 'type': 'reference',
@@ -608,6 +611,7 @@ class TestApiCreateReference(object):
                 'links': ('http://www.dot.com/link2', 'http://www.dot.com/link1'),
                 'source': '',
                 'versions': (),
+                'languages': (),
                 'filename': '',
                 'created': '2018-06-22T13:11:13.678729+00:00',
                 'updated': '2018-06-22T13:11:13.678729+00:00',
@@ -624,13 +628,14 @@ class TestApiCreateReference(object):
                     'groups': ['docker', 'docker', 'python'],
                     'tags': ['swarm', 'swarm', 'pypy'],
                     'links': ['http://www.dot.com/link2', 'http://www.dot.com/link2', 'http://www.dot.com/link1'],
-                    'versions': []
+                    'versions': [],
+                    'languages': []
                 }
             }]
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '579'
+            'content-length': '596'
         }
         expect_body = {
             'data': [{
@@ -672,7 +677,7 @@ class TestApiCreateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '580'
+            'content-length': '597'
         }
         expect_body = {
             'data': [{
@@ -706,7 +711,7 @@ class TestApiCreateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '587'
+            'content-length': '604'
         }
         expect_body = {
             'data': [{

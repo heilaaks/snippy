@@ -1366,9 +1366,9 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
     def test_parser_reference_007(self):
         """Test parsing reference.
 
-        Test case verifies that reference with versions, name, filename and
-        source fields is parsed correctly. In this case each field contains
-        a valid value.
+        Test case verifies that reference with versions, languages, name,
+        filename and source attributes are parsed correctly. In this case
+        each attribute contains a valid value.
         """
 
         text = '\n'.join((
@@ -1399,6 +1399,9 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
             '# Add optional comma separated list of key-value versions below.',
             'git<=1.1.1,python>=2.7.0,python==3.7.0',
             '',
+            '# Add optional comma separated list of languages below.',
+            'python,shell',
+            '',
             '# Add optional filename below.',
             'git.mkdn',
             '',
@@ -1421,6 +1424,7 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
         assert resource.links == links
         assert resource.source == 'https://github.com/'
         assert resource.versions == ('git<=1.1.1', 'python==3.7.0', 'python>=2.7.0')
+        assert resource.languages == ('python', 'shell')
         assert resource.filename == 'git.mkdn'
 
     def test_parser_unknown_001(self):

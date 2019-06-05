@@ -279,6 +279,7 @@ class Database(object):
                               , links
                               , source
                               , versions
+                              , languages
                               , filename
                               , created
                               , updated
@@ -287,7 +288,7 @@ class Database(object):
                       )
                       VALUES
                       (
-                              {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}
+                              {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}
                       )
         '''.format(cls._PLACEHOLDER)
         qargs = (
@@ -302,6 +303,7 @@ class Database(object):
             Const.DELIMITER_LINKS.join(map(Const.TEXT_TYPE, content.get('links', ()))),
             content.get('source', ''),
             Const.DELIMITER_VERSIONS.join(map(Const.TEXT_TYPE, content.get('versions', ()))),
+            Const.DELIMITER_LANGUAGES.join(map(Const.TEXT_TYPE, content.get('languages', ()))),
             content.get('filename', ''),
             content.get('created', Helper.IMPORT_TIME),
             content.get('updated', Helper.IMPORT_TIME),

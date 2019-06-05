@@ -65,6 +65,7 @@ class Helper(object):
         'links',
         'source',
         'versions',
+        'languages',
         'filename'
     )
 

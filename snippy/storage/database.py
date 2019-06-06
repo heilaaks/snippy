@@ -755,18 +755,24 @@ class Database(object):
         return query, qargs
 
     def _add_regex_filters(self, query, keywords, columns, groups, categories):
-        """Return regex query."""
+        """Return regex query.
+
+        Build SQL query to search from given columns. The columsn that are not
+        text columns must be case to text columns.
+
+        Args:
+            query (str): SQL query where the generated regexp query is added.
+            resource (list): Keywords
+            columns (list): List of columsn for which the regexp query is built.
+        """
 
         qargs = []
-
-        # Generate regexp search like:
-        #   1. '(data REGEXP ? OR brief REGEXP ? OR groups REGEXP ? OR tags REGEXP ? OR links REGEXP ?) AND (category=?) '
-        #   2. '(data REGEXP ? OR brief REGEXP ? OR groups REGEXP ? OR tags REGEXP ? OR links REGEXP ?) AND
-        #       (groups=? OR groups=?) AND (category=?) '
-        #   3. '(tags REGEXP ?) AND (category=? or category=?) '
         regex = '('
         for column in columns:
-            regex = regex + column + ' {0} {1} OR '.format(self._regexp, self._placeholder)
+            if column in ('uuid', 'created', 'updated'):
+                regex = regex + 'CAST(' + column + ' AS text)' + ' {0} {1} OR '.format(self._regexp, self._placeholder)
+            else:
+                regex = regex + column + ' {0} {1} OR '.format(self._regexp, self._placeholder)
         regex = regex[:-4]  # Remove last ' OR ' added by the loop.
         regex = regex + ') '
 

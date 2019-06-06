@@ -1581,6 +1581,39 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods, 
     def test_cli_search_snippet_051(snippy, capsys):
         """Search snippets with ``--sall`` option.
 
+        Search snippets from all resource attributes. A ``languages`` attribute
+        of a single snippet produces a match.
+        """
+
+        Content.store({
+            'category': Const.SNIPPET,
+            'data': [
+                'tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./'],
+            'brief': 'Manipulate compressed tar files',
+            'groups': ['linux'],
+            'tags': ['howto', 'linux', 'tar', 'untar'],
+            'languages': ['golang']
+        })
+        output = (
+            '1. Manipulate compressed tar files @linux [89f7fc446f0214d4]',
+            '',
+            '   $ tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./',
+            '',
+            '   # howto,linux,tar,untar',
+            '',
+            'OK',
+            ''
+        )
+        cause = snippy.run(['snippy', 'search', '--all', 'golang', '--no-ansi'])
+        out, err = capsys.readouterr()
+        assert cause == Cause.ALL_OK
+        assert out == Const.NEWLINE.join(output)
+        assert not err
+
+    @staticmethod
+    def test_cli_search_snippet_052(snippy, capsys):
+        """Search snippets with ``--sall`` option.
+
         Search snippets from all resource attributes. A ``filename`` attribute
         of a single snippet produces a match.
         """
@@ -1611,7 +1644,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods, 
         assert not err
 
     @staticmethod
-    def test_cli_search_snippet_052(snippy, capsys):
+    def test_cli_search_snippet_053(snippy, capsys):
         """Search snippets with ``--sall`` option.
 
         Search snippets from all resource attributes. A ``created`` attribute
@@ -1646,7 +1679,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods, 
         assert not err
 
     @staticmethod
-    def test_cli_search_snippet_053(snippy, capsys):
+    def test_cli_search_snippet_054(snippy, capsys):
         """Search snippets with ``--sall`` option.
 
         Search snippets from all resource attributes. A ``updated`` attribute
@@ -1682,7 +1715,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods, 
         assert not err
 
     @staticmethod
-    def test_cli_search_snippet_054(snippy, capsys):
+    def test_cli_search_snippet_055(snippy, capsys):
         """Search snippets with ``--sall`` option.
 
         Search snippets from all resource attributes. A ``uuid`` attribute

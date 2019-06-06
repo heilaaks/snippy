@@ -414,7 +414,7 @@ def _wait_process(process):
     conn = None
     while result != 200:
         try:
-            conn = httplib.HTTPConnection('127.0.0.1', port=port)
+            conn = httplib.HTTPConnection('127.0.0.1', port=int(port))
             conn.request('GET', '/api/snippy/rest/hello')
             resp = conn.getresponse()
             result = resp.status

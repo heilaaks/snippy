@@ -75,10 +75,10 @@ test:
 	$(PYTHON) -m pytest -x ${COVERAGE} --snippy-db sqlite -m "not (docker or server)" $(PYTEST_CORES)
 
 test-docker:
-	$(PYTHON) -m pytest -x ${COVERAGE} --snippy-db sqlite -m "docker"
+	$(PYTHON) -m pytest --snippy-db sqlite -m "docker"
 
 test-server:
-	$(PYTHON) -m pytest -x ${COVERAGE} --snippy-db sqlite -m "server"
+	$(PYTHON) -m pytest --snippy-db sqlite -m "server" $(PYTEST_CORES)
 
 test-postgresql:
 	$(PYTHON) -m pytest -x ${COVERAGE} --snippy-db postgresql -m "not (docker or server)"

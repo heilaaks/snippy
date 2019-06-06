@@ -167,6 +167,8 @@ JSON_LOAD = json.load
 def pytest_addoption(parser):
     """Pytest hook to add command line options.
 
+    This hook allows defining additional options for Snippy testing.
+
     Args:
         parser (obj): Pytest Parser() object.
     """
@@ -175,7 +177,14 @@ def pytest_addoption(parser):
         '--snippy-db',
         action='store',
         default=Database.DB_SQLITE,
-        help='test with database: {' + Database.DB_SQLITE + ' (default), ' + Database.DB_POSTGRESQL + ', ' + Database.DB_COCKROACHDB + '}'
+        help='Test with database: {' + Database.DB_SQLITE + ' (default), ' + Database.DB_POSTGRESQL + ', ' + Database.DB_COCKROACHDB + '}'
+    )
+
+    parser.addoption(
+        '--snippy-logs',
+        action='store_true',
+        default=False,
+        help='Add full log level.'
     )
 
 def pytest_sessionstart(session):
@@ -224,7 +233,7 @@ def mocked_snippy(mocker, request):
     _mock_uuids(mocker)
 
     database = request.config.getoption("--snippy-db")
-    snippy = _create_snippy(mocker, params, database)
+    snippy = _create_snippy(mocker, request, params, database)
     def fin():
         """Clear the resources at the end."""
 
@@ -250,7 +259,7 @@ def mocked_snippy_perf(mocker, request):
     """
 
     database = request.config.getoption("--snippy-db")
-    snippy = _create_snippy(mocker, ['--help'], database)
+    snippy = _create_snippy(mocker, request, ['--help'], database)
     def fin():
         """Clear the resources at the end."""
 
@@ -278,7 +287,7 @@ def server(mocker, request):
     # Mock server so that real Snippy server is not started.
     mocker.patch('snippy.server.server.SnippyServer')
     database = request.config.getoption("--snippy-db")
-    snippy = _create_snippy(mocker, params, database)
+    snippy = _create_snippy(mocker, request, params, database)
     snippy.run()
 
     def fin():
@@ -314,7 +323,7 @@ def server_db(mocker, request):
             patched = 'snippy.storage.database.psycopg2.connect'
 
         with mock.patch(patched, create=True) as mock_db_connect:
-            snippy = _create_snippy(mocker, params, database)
+            snippy = _create_snippy(mocker, request, params, database)
             snippy.run()
 
     def fin():
@@ -328,7 +337,13 @@ def server_db(mocker, request):
 
 @pytest.fixture(scope='function', name='process')
 def server_process(request):
-    """Run real server for testing purposes."""
+    """Run real server for testing purposes.
+
+    This will deadlock if there are too many logs in stdout [1]. Because of
+    this, it is not possible to use the ``--snippy-logs`` option here.
+
+    [1] https://stackoverflow.com/q/375427
+    """
 
     params = [
         'python',
@@ -381,7 +396,7 @@ def _wait_process(process):
     """
 
     re_catch_server_port = re.compile(r'''
-        snippy\sserver\srunning\sat[:]\s.*[:](?P<port>\d{4,5})  # Catch server port.
+        .*snippy\sserver\srunning\sat[:]\s.*[:](?P<port>\d{4,5})  # Catch server port.
         ''', re.MULTILINE | re.VERBOSE)
 
     port = 0
@@ -1168,7 +1183,7 @@ def _get_template_mkdn(dictionary):
 
     return collection.dump_mkdn(Config.templates)
 
-def _create_snippy(mocker, params, database):
+def _create_snippy(mocker, request, params, database):
     """Create snippy with mocks.
 
     Args:
@@ -1178,6 +1193,9 @@ def _create_snippy(mocker, params, database):
     Returns:
         obj: Snippy object.
     """
+
+    if request.config.getoption("--snippy-logs"):
+        params.append('--debug')
 
     # Mock only objects from the Snippy package. If system calls like os.open
     # are mocked from here, it will mock all the third party packages that are

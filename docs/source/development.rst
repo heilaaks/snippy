@@ -354,6 +354,15 @@ until these are included into the continuous integration tests.
     # Clean all generated files and empty the SQLite database file.
     make clean-all
 
+    # Run a test with debug logs.
+    pytest tests/test_api_create_snippet.py -k 001 -s --snippy-logs
+
+    # Run a test with PostgreSQL database.
+    pytest tests/test_api_create_snippet.py -k 001 -s --snippy-db postgresql
+
+    # Run a test with in-memory database.
+    pytest tests/test_api_create_snippet.py -k 001 -s --snippy-db in-memory
+
 Documentation
 ~~~~~~~~~~~~~
 

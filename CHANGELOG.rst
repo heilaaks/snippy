@@ -11,7 +11,7 @@ Breaking changes
 
 * Change content category command line options `[2019.05.04]`_.
 * Change content text templates metadata section `[2019.05.19]`_.
-* Add content field ``languages`` `[2019.06.05]`_.
+* Add content attribute ``languages`` `[2019.06.05]`_.
 
 New features
 ~~~~~~~~~~~~
@@ -28,7 +28,8 @@ Bugfixes
 * Fix ``--format`` option with the export operation.
 * Fix parsing of text formatted solution.
 * Fix update operation when content does not change.
-* Fix ``--sall`` option does not search all attributes.
+* Fix ``--sall`` option did not search all attributes.
+* Fix reading one line attributes like ``brief`` from multiple lines.
 * Fix terminal colors on Windows.
 
 Security
@@ -57,7 +58,7 @@ New features
 ~~~~~~~~~~~~
 
 * Add search shortcut for command line interface.
-* Add support for ``name``, ``source`` and ``versions`` content fields.
+* Add support for ``name``, ``source`` and ``versions`` content attributes.
 * Add ``gzip`` compression support for REST API responses.
 * Add option to import all default content when server is started.
 * Add environment variable support for server, storage and support options.
@@ -71,8 +72,8 @@ Bugfixes
 * Fix creating new content with prefilled templates.
 * Fix exporting and importing content template.
 * Fix error when content matching to a text template is saved.
-* Fix duplicated content field values when updating content.
-* Fix default value setting to ``groups`` field if no value was given.
+* Fix duplicated content attribute values when updating content.
+* Fix default value setting to ``groups`` attribute if no value was given.
 * Fix error message from duplicated content when defaults imported again.
 * All commits in `0.10.0`_.
 
@@ -95,13 +96,13 @@ Breaking changes
 ~~~~~~~~~~~~~~~~
 
 * Change Markdown as default format `[2019.01.27]`_.
-* Change content field ``group`` to ``groups`` `[2018.08.12]`_.
-* Change content field ``versions`` from string to array `[2019.01.26]`_.
+* Change content attributes ``group`` to ``groups`` `[2018.08.12]`_.
+* Change content attribute ``versions`` from string to array `[2019.01.26]`_.
 * Change UTC offset format from +0000 to +00:00 `[2018.12.16]`_.
 * Change server command line options `[2019.01.04]`_.
 * Change ``--filter`` option behaviour `[2018.09.02]`_.
 * Change ``--editor`` option and add ``no-editor`` option `[2019.01.06]`_.
-* Add new content field ``description`` `[2018.09.08]`_.
+* Add new content attribute ``description`` `[2018.09.08]`_.
 
 New features
 ~~~~~~~~~~~~
@@ -112,8 +113,8 @@ New features
 * Add support to output search results also in Markdown format.
 * Add one command to export and import all default content.
 * Add comment auto-alignment for snippets when printed to terminal.
-* Add ``description`` field in text content templates.
-* Add ``uuid`` field for CLI and REST API operations.
+* Add ``description`` attribute in text content templates.
+* Add ``uuid`` attribute for CLI and REST API operations.
 * Add ``--limit`` option for CLI operations.
 * Add search category ``--scat`` option for CLI operations.
 

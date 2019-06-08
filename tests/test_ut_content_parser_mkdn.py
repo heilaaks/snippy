@@ -498,6 +498,79 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines
         assert resource.uuid == 'f21c6318-8830-11e8-a114-2c4d54508088'
         assert resource.digest == 'b1ddb8f29d857a9f654c99a5c1c46cb1fd6d71aa321d4ba4063e9ae549a2b63d'
 
+    def test_parser_snippet_007(self):
+        """Test parsing snippet.
+
+        Test case verifies that snippet with multiline attributes that are
+        not intended to be multiline attributres are read correctly. In case
+        of Markdown content it is considered that it is less likely that user
+        makes a mistake with attributes that are meant as one liners. Because
+        of this, the ``brief`` attribute is the only one split to multiple
+        lines in this test.
+        """
+
+        text = Const.NEWLINE.join((
+            '# Remove all exited containers ',
+            ' and dangling images @docker',
+            '',
+            '> Remove all exited containers and dangling images. The command examples  ',
+            'first remove all exited containers and the all dangling images.',
+            '',
+            '> [1] https://docs.docker.com/engine/reference/commandline/images/  ',
+            '[2] https://docs.docker.com/engine/reference/commandline/rm/',
+            '',
+            '- Remove all exited containers',
+            '',
+            '    `$ docker rm $(docker ps --all -q -f status=exited)`',
+            '',
+            '- Remove all dangling images',
+            '',
+            '    `$ docker images -q --filter dangling=true | xargs docker rmi`',
+            '',
+            '## Meta',
+            '',
+            '> category  : snippet  ',
+            'created   : 2017-10-12T11:52:11.000001+00:00  ',
+            'digest    : 0a8b31f0ab442991e56dcaef1fc65aa6bff479c567e04dd7990948f201187c69  ',
+            'filename  : snippet.txt',
+            'languages : language',
+            'name      : example text',
+            'source    : https://www.random.org/',
+            'tags      : cleanup, container, docker, docker-ce, moby  ',
+            'updated   : 2017-10-12T11:52:11.000001+00:00  ',
+            'uuid      : f21c6318-8830-11e8-a114-2c4d54508088  ',
+            'versions  : git<=1.1.1,python>=2.7.0,python==3.7.0',
+            '',
+        ))
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
+        assert resource.category == Const.SNIPPET
+        assert resource.data == (
+            'docker rm $(docker ps --all -q -f status=exited)  #  Remove all exited containers',
+            'docker images -q --filter dangling=true | xargs docker rmi  #  Remove all dangling images'
+        )
+        assert resource.brief == 'Remove all exited containers and dangling images'
+        assert resource.description == (
+            'Remove all exited containers and dangling images. The command examples ' +
+            'first remove all exited containers and the all dangling images.'
+        )
+        assert resource.name == 'example text'
+        assert resource.groups == ('docker',)
+        assert resource.tags == ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
+        assert resource.links == (
+            'https://docs.docker.com/engine/reference/commandline/images/',
+            'https://docs.docker.com/engine/reference/commandline/rm/'
+        )
+        assert resource.source == 'https://www.random.org/'
+        assert resource.versions == ('git<=1.1.1', 'python==3.7.0', 'python>=2.7.0')
+        assert resource.languages == ('language',)
+        assert resource.filename == 'snippet.txt'
+        assert resource.created == '2017-10-12T11:52:11.000001+00:00'
+        assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
+        assert resource.uuid == 'f21c6318-8830-11e8-a114-2c4d54508088'
+        assert resource.digest == '3306409c0901e27d754a3273a5964652e2e8ea80fe82f3aa80d1aef6e8ab8cef'
+
     def test_parser_solution_001(self):
         """Test parsing solution.
 

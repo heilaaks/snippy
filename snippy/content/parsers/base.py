@@ -18,7 +18,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""base: Base class for text content parsers."""
+"""base: Base class for content parsers."""
 
 import re
 from collections import OrderedDict
@@ -30,6 +30,9 @@ from snippy.logger import Logger
 
 class ContentParserBase(object):
     """Base class for text content parser."""
+
+    # Defined in subclasses.
+    REGEXP = {}
 
     # Content template tags.
     TEXT_TAG_DATA = '<data>'
@@ -122,9 +125,9 @@ class ContentParserBase(object):
         @groups$
         ''', re.MULTILINE | re.VERBOSE)
 
-    # Temporar placeholder to align snippets in Markdown format. This
+    # Temporary placeholder to align snippets in Markdown format. This
     # is used with snippets that have multiple commands when only part
-    # of the commands have user comment. This is used in editor when
+    # of the commands have an user comment. This is used in editor when
     # content is updated or when it is exporeted in Markdown format.
     SNIPPET_DEFAULT_COMMENT = '<not documented>'
 
@@ -507,6 +510,100 @@ class ContentParserBase(object):
             cls._logger.debug('conversion to list of unicode unicode strings failed with unknown type %s : %s', type(value), value)
 
         return list_
+
+    def read_brief(self, category, text):
+        """Read content ``brief`` attribute.
+
+        Args:
+            category (str): Content category.
+            text (str): Content string.
+
+        Returns:
+            str: Utf-8 encoded unicode brief string.
+        """
+
+        brief = Const.EMPTY
+        if category not in Const.CATEGORIES:
+            return self.format_string(brief)
+
+        match = self.REGEXP['brief'][category].search(text)
+        if match:
+            brief = match.group('brief')
+            brief = Const.RE_MATCH_NEWLINES.sub(Const.SPACE, brief)
+            brief = Const.RE_MATCH_MULTIPE_WHITESPACES.sub(Const.SPACE, brief)
+            self._logger.debug('parsed content brief: %s', brief)
+        else:
+            self._logger.debug('parser did not find brief attribute: {}'.format(text))
+
+        return self.format_string(brief)
+
+    def read_description(self, category, text):
+        """Read content ``description`` attribute.
+
+        Args:
+            category (str): Content category.
+            text (str): Content string.
+
+        Returns:
+            str: Utf-8 encoded unicode description string.
+        """
+
+        description = Const.EMPTY
+        if category not in Const.CATEGORIES:
+            return self.format_string(description)
+
+        match = self.REGEXP['description'][category].search(text)
+        if match:
+            description = match.group('description')
+            description = re.sub(r'''
+                ^\s*[#]{1}\s    # Match start of each line (MULTILINE) with optional whitespaces in front of one hash.
+                ''', Const.EMPTY, description, flags=re.MULTILINE | re.VERBOSE)
+            description = Const.RE_MATCH_NEWLINES.sub(Const.SPACE, description)
+            description = Const.RE_MATCH_MULTIPE_WHITESPACES.sub(Const.SPACE, description)
+            self._logger.debug('parsed content description: %s', description)
+        else:
+            self._logger.debug('parser did not find content for description: {}'.format(text))
+
+        return self.format_string(description)
+
+    def read_groups(self, category, text):
+        """Read content ``groups`` attribute.
+
+        Args:
+            category (str): Content category.
+            text (str): Content string.
+
+        Returns:
+            tuple: Tuple of utf-8 encoded groups.
+        """
+
+        return self.parse_groups(category, self.REGEXP['groups'].get(category, None), text)
+
+    def read_links(self, category, text):
+        """Read content ``links`` attribute.
+
+        Args:
+            category (str): Content category.
+            text (str): Content string.
+
+        Returns:
+            tuple: Tuple of utf-8 encoded links.
+        """
+
+        return self.parse_links(category, self.REGEXP['links'].get(category, None), text)
+
+    def read_versions(self, category, text):
+        """Read content ``versions`` attribute.
+
+        Args:
+            category (str): Content category.
+            text (str): Content string.
+
+        Returns:
+            tuple: Tuple of utf-8 encoded versions.
+        """
+
+        return self.parse_versions(category, self.REGEXP['versions'].get(category, None), text)
 
     def read_meta_value(self, category, key, text):
         """Read content metadata value from a text string.

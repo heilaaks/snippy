@@ -59,7 +59,7 @@ class ContentParserMkdn(ContentParserBase):
         [#\s]+          # Match leading comment before brief.
         (?P<brief>.*)   # Catch brief.
         \s+[@]{1}       # Match string between brief and groups.
-        ''', re.VERBOSE)
+        ''', re.DOTALL | re.VERBOSE)
     REGEXP['brief'][Const.SOLUTION] = REGEXP['brief'][Const.SNIPPET]
     REGEXP['brief'][Const.REFERENCE] = REGEXP['brief'][Const.SNIPPET]
 
@@ -136,14 +136,14 @@ class ContentParserMkdn(ContentParserBase):
             resources.append({
                 'category': category,
                 'data': self._read_data(category, content),
-                'brief': self._read_brief(category, content),
-                'description': self._read_description(category, content),
+                'brief': self.read_brief(category, content),
+                'description': self.read_description(category, content),
                 'name': self.read_meta_value(category, 'name', content),
-                'groups': self._read_groups(category, content),
+                'groups': self.read_groups(category, content),
                 'tags': self._read_tags(category, content),
-                'links': self._read_links(category, content),
+                'links': self.read_links(category, content),
                 'source': self.read_meta_value(category, 'source', content),
-                'versions': self._read_versions(category, content),
+                'versions': self.read_versions(category, content),
                 'languages': self._read_languages(category, content),
                 'filename': self.read_meta_value(category, 'filename', content),
                 'created': self.read_meta_value(category, 'created', content),
@@ -244,67 +244,6 @@ class ContentParserMkdn(ContentParserBase):
 
         return tuple(data)
 
-    def _read_brief(self, category, text):
-        """Read content brief from text string.
-
-        Args:
-            category (str): Content category.
-            text (str): Content text string.
-
-        Returns:
-            str: Utf-8 encoded unicode brief string.
-        """
-
-        brief = ''
-        if category not in Const.CATEGORIES:
-            return self.format_string(brief)
-
-        match = self.REGEXP['brief'][category].search(text)
-        if match:
-            brief = match.group('brief')
-            self._logger.debug('parsed content brief: %s', brief)
-        else:
-            self._logger.debug('parser did not find content for brief: {}'.format(text))
-
-        return self.format_string(brief)
-
-    def _read_description(self, category, text):
-        """Read content description from text string.
-
-        Args:
-            category (str): Content category.
-            text (str): Content text string.
-
-        Returns:
-            str: Utf-8 encoded unicode brief string.
-        """
-
-        description = ''
-        if category not in Const.CATEGORIES:
-            return self.format_string(description)
-
-        match = self.REGEXP['description'][category].search(text)
-        if match:
-            description = Const.SPACE.join(match.group('description').replace('\n', ' ').split())
-            self._logger.debug('parsed content description: %s', description)
-        else:
-            self._logger.debug('parser did not find content for description: {}'.format(text))
-
-        return self.format_string(description)
-
-    def _read_groups(self, category, text):
-        """Read content groups from text string.
-
-        Args:
-            category (str): Content category.
-            text (str): Content text string.
-
-        Returns:
-            tuple: Tuple of utf-8 encoded groups.
-        """
-
-        return self.parse_groups(category, self.REGEXP['groups'].get(category, None), text)
-
     def _read_tags(self, category, text):
         """Read content tags from text string.
 
@@ -328,32 +267,6 @@ class ContentParserMkdn(ContentParserBase):
             self._logger.debug('parser did not find content for tags: {}'.format(text))
 
         return self.format_list(tags)
-
-    def _read_links(self, category, text):
-        """Read content links from text string.
-
-        Args:
-            category (str): Content category.
-            text (str): Content text string.
-
-        Returns:
-            tuple: Tuple of utf-8 encoded links.
-        """
-
-        return self.parse_links(category, self.REGEXP['links'].get(category, None), text)
-
-    def _read_versions(self, category, text):
-        """Read content versions from text string.
-
-        Args:
-            category (str): Content category.
-            text (str): Content text string.
-
-        Returns:
-            tuple: Tuple of utf-8 encoded versions.
-        """
-
-        return self.parse_versions(category, self.REGEXP['versions'].get(category, None), text)
 
     def _read_languages(self, category, text):
         """Read content languages from text string.

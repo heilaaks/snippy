@@ -533,6 +533,77 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
         assert resource.versions == ('alpine!=3.9',)
         assert resource.filename == ''
 
+    def test_parser_snippet_011(self):
+        """Test parsing snippet.
+
+        Test case verifies that snippet with multiline attributes that are
+        not intended to be multiline attributres are read correctly. For
+        example ``brief`` and ``name`` attributes are intended to be defined
+        as one liners.
+
+        In case of single item attributes like ``filename``, only the first
+        line or value must be read.
+        """
+
+        text = '\n'.join((
+            '# Commented lines will be ignored.',
+            '#',
+            '# Add mandatory snippet below.',
+            'tar tvf mytar.tar.gz',
+            '',
+            '# Add optional brief description below.',
+            'Manipulate compressed ',
+            'tar files',
+            '',
+            '# Add optional description below.',
+            'long description',
+            'in two lines',
+            '',
+            '# Add optional name below.',
+            'manage tar',
+            'files',
+            '',
+            '# Add optional comma separated list of groups below.',
+            'linux',
+            'tar',
+            '',
+            '# Add optional comma separated list of tags below.',
+            'howto,linux,tar,',
+            'untar',
+            '# Add optional links below one link per line.',
+            'https://alpinelinux.org/',
+            '',
+            '# Add optional source reference below.',
+            'https://github.com/tldr-pages/tldr/blob/master/pages/linux/alpine.md',
+            'https://not.com/read',
+            '',
+            '# Add optional comma separated list of key-value versions below.',
+            'python==3.7.0,alpine==3.9',
+            ',linux~4.9',
+            '# Add optional comma separated list of languages below.',
+            'python,shell',
+            'golang',
+            '# Add optional filename below.',
+            'tar-file-operations1.mkdn',
+            'tar-file-operations2.mkdn',
+            '',
+            ''
+        ))
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
+        assert resource.category == Const.SNIPPET
+        assert resource.data == ('tar tvf mytar.tar.gz',)
+        assert resource.brief == 'Manipulate compressed tar files'
+        assert resource.description == 'long description in two lines'
+        assert resource.name == 'manage tar files'
+        assert resource.groups == ('linux', 'tar')
+        assert resource.tags == ('howto', 'linux', 'tar', 'untar')
+        assert resource.links == ('https://alpinelinux.org/',)
+        assert resource.source == 'https://github.com/tldr-pages/tldr/blob/master/pages/linux/alpine.md'
+        assert resource.versions == ('alpine==3.9', 'linux~4.9', 'python==3.7.0')
+        assert resource.filename == 'tar-file-operations1.mkdn'
+
     def test_parser_solution_001(self):
         """Test parsing solution.
 
@@ -1425,6 +1496,92 @@ class TestUtContentParserText(object):  # pylint: disable=too-many-public-method
         assert resource.source == 'https://github.com/'
         assert resource.versions == ('git<=1.1.1', 'python==3.7.0', 'python>=2.7.0')
         assert resource.languages == ('python', 'shell')
+        assert resource.filename == 'git.mkdn'
+
+    def test_parser_reference_008(self):
+        """Test parsing reference.
+
+        Test case verifies that snippet with multiline attributes that are
+        not intended to be multiline attributres are read correctly. For
+        example ``brief`` and ``name`` attributes are intended to be defined
+        as one liners.
+
+        In case of single item attributes like ``filename``, only the first
+        line or value must be read.
+
+        The attributes that accept multiple values must be still separated
+        with attribute specific separator. A newline is interpreted as space.
+        If a single value attribute like ``name`` is split to multiple lines,
+        there will be one value which contains spaces.
+        """
+
+        text = '\n'.join((
+            '# Commented lines will be ignored.',
+            '#',
+            '# Add mandatory links below one link per line.',
+            'https://writingfordevelopers.substack.com/p/how-to-write-commit-messages',
+            'https://chris.beams.io/posts/git-commit/',
+            '',
+            '# Add optional brief description below.',
+            'How to write ',
+            'commit ',
+            'messages',
+            '',
+            '# Add optional description below.',
+            'How ',
+            'to ',
+            'write',
+            ' git ',
+            'commit',
+            '',
+            '# Add optional name below.',
+            'git',
+            'help',
+            'text',
+            '',
+            '# Add optional comma separated list of groups below.',
+            'git '
+            'linux',
+            '',
+            '# Add optional comma separated list of tags below.',
+            'commit,git',
+            'howto,message,scm',
+            '',
+            '# Add optional source reference below.',
+            'https://github1.com/',
+            'https://github2.com/',
+            '',
+            '# Add optional comma separated list of key-value versions below.',
+            'git<=1.1.1,python>=2.7.0,python==3.7.0',
+            '',
+            '# Add optional comma separated list of languages below.',
+            'python,shell'
+            ' golang',
+            '',
+            '# Add optional filename below.',
+            'git.mkdn',
+            'linux.mkdn',
+            '',
+            ''
+        ))
+        links = (
+            'https://writingfordevelopers.substack.com/p/how-to-write-commit-messages',
+            'https://chris.beams.io/posts/git-commit/'
+        )
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
+        assert resource.category == Const.REFERENCE
+        assert resource.data == links
+        assert resource.brief == 'How to write commit messages'
+        assert resource.description == 'How to write git commit'
+        assert resource.name == 'git help text'
+        assert resource.groups == ('git', 'linux')
+        assert resource.tags == ('commit', 'git', 'howto', 'message', 'scm')
+        assert resource.links == links
+        assert resource.source == 'https://github1.com/'
+        assert resource.versions == ('git<=1.1.1', 'python==3.7.0', 'python>=2.7.0')
+        assert resource.languages == ('golang', 'python', 'shell')
         assert resource.filename == 'git.mkdn'
 
     def test_parser_unknown_001(self):

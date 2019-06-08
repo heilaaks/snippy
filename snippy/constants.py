@@ -102,3 +102,11 @@ class Constants(object):  # pylint: disable=too-few-public-methods
     RE_DO_NOT_MATCH_ANYTHING = re.compile(r'''
         \A(?!x)x  # Never match anything.
         ''', re.VERBOSE)
+
+    RE_MATCH_NEWLINES = re.compile(u'''             # Unicode regexp compatible with Python 2 and 3.
+        (:?[\\r\\n\\x0B\\x0C\u0085\u2028\u2029]+)   # Match all newlines inluding Unicode line break characters.
+        ''', re.UNICODE | re.VERBOSE)               # https://stackoverflow.com/a/34936253
+
+    RE_MATCH_MULTIPE_WHITESPACES = re.compile(r'''
+        (:?[\s]{2,})  # Match multiple whitespaces.
+        ''', re.VERBOSE)

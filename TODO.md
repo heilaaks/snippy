@@ -1,5 +1,6 @@
 ## WORKING
    - [ ] Add plugin architecture like in Pytest to import external data. Make plugin first for tldr.
+   - [ ] Fix PLATFORM metadata for snippy*. When the meta is read, there is UNKNOWN for platform. What is this?
    - [ ] Fix JSON API v1.x requires links for collection responses too. Individual resource not found or attrbute results null otherwise empty list.
    - [ ] Add links unique attribute? Would be good to check if unique links are valid and how many repeated links there are.
    - [ ] Add support to find dead links. External tool? No more dependencies would be nice.

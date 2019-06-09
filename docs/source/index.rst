@@ -10,6 +10,7 @@ Welcome to Snippy documentation!
    installation
    features
    usage
+   plugins
    workflows
    api
    development

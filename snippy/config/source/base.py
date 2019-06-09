@@ -22,6 +22,7 @@
 
 import os
 import re
+import traceback
 from collections import OrderedDict
 
 from snippy.cause import Cause
@@ -31,7 +32,7 @@ from snippy.logger import Logger
 from snippy.meta import __version__
 
 
-class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes, too-many-public-methods
+class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes, too-many-public-methods, too-many-lines
     """Base class for configuration sources."""
 
     CREATE = 'create'
@@ -81,6 +82,9 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
         self.no_editor = False
         self.operation = None
         self.operation_file = Const.EMPTY
+        self.plugin = []
+        self.plugin_used = False
+        self.plugins = {}
         self.profiler = False
         self.quiet = False
         self.run_healthcheck = False
@@ -142,6 +146,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
         namespace.append('no_editor={}'.format(self.no_editor))
         namespace.append('operation={}'.format(self.operation))
         namespace.append('operation_file={}'.format(self.operation_file))
+        namespace.append('plugin={}'.format(self.plugin))
         namespace.append('profiler={}'.format(self.profiler))
         namespace.append('quiet={}'.format(self.quiet))
         namespace.append('remove_fields={}'.format(self.remove_fields))
@@ -250,6 +255,8 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
         self.no_ansi = parameters.get(*self.read_env('no_ansi', False))
         self.no_editor = parameters.get('no_editor', False)
         self.operation_file = parameters.get('operation_file', Const.EMPTY)
+        self.plugin = parameters.get('plugin', [])
+        self.plugin_used = bool('plugin' in parameters)
         self.profiler = parameters.get(*self.read_env('profile', False))
         self.quiet = parameters.get(*self.read_env('q', False))
         self.remove_fields = parameters.get('fields', self.ATTRIBUTES)
@@ -289,6 +296,28 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
         # The flag that tells if Snippy server is run is set after the
         # command line arguments and environment variables are parsed.
         self.run_server = bool(self.server_host)
+
+        # The plugin is always in a list to force at least one argument
+        # from the argparse module.
+        if self.plugin:
+            self.plugin = self.plugins[self.plugin[0]]
+
+        # TODO test to load plugin.
+        if self.plugin:
+            import sys
+            print(self.plugin.entry_points[0].value)
+            module = self.plugin.entry_points[0].value
+            try:
+                __import__(module)
+                print("pass")
+                mod = sys.modules[module]
+                print(mod)
+                test = getattr(mod, 'SnippyTldr')
+                test.run()
+                print("here")
+                print(vars(test))
+            except ImportError:
+                print("fail")
 
     @property
     def category(self):
@@ -949,3 +978,42 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
         """
 
         return '({})'.format(', '.join('\'{0}\''.format(w) for w in scat))
+
+    def get_plugin_short_names(self):
+        """Get plugin short names.
+
+        The short names are used when user or client identifies a plugin.
+
+        The plugins are idenfied with prefix ``snippy-`` in the plugin name.
+        The plugins are stored and operated without the ``snippy-`` prefix.
+
+        Returns:
+            tuple: List of plugin names.
+        """
+
+        return tuple(self.plugins.keys())
+
+    def read_plugins(self, args):
+        """Read plugins.
+
+        Reading of plugins all the time is too slow. This is a problem with
+        tests that slow down too much in case this would be read always.
+
+        Returns:
+            dict: ``Distribution`` objects from importlib_metadata.
+        """
+
+        plugins = {}
+        if '--plugin' not in args:
+            return
+
+        try:
+            import importlib_metadata
+            for distribution in importlib_metadata.distributions():
+                if distribution.metadata['Name'].startswith('snippy-'):
+                    name = distribution.metadata['Name'].replace('snippy-', Const.EMPTY)
+                    plugins[name] = distribution
+        except ImportError:
+            self._logger.debug('failed to read plugins: {}'.format(traceback.format_exc()))
+
+        self.plugins = plugins

@@ -27,6 +27,7 @@ from setuptools import setup, find_packages
 
 requires = (
     'pyyaml',
+    'importlib_metadata',
     'colorama ; sys_platform == "win32"'
 )
 extras_server = (

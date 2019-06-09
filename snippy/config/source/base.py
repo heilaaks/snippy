@@ -302,7 +302,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
         if self.plugin:
             self.plugin = self.plugins[self.plugin[0]]
 
-        # TODO test to load plugin.
+        # test to load plugin.
         if self.plugin:
             import sys
             print(self.plugin.entry_points[0].value)

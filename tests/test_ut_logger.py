@@ -26,6 +26,7 @@ import pytest
 
 from snippy.logger import Logger
 from tests.lib.content import Field
+from tests.lib.helper import Helper
 
 
 class TestUtLogger(object):
@@ -674,49 +675,57 @@ class TestUtLogger(object):
         )]
         output_p3 = (
             "format database row:",
-            "        [('0d364a0e-6b63-11e9-b176-2c4d54508088',",
-            "          'reference',",
-            "          'https://writingfordevelopers.substack.com/p/how-to-write-commit-messages\\n'",
-            "          'https://chris.beams.io/posts/git-commit/',",
-            "          'How to write commit messages',",
-            "          '',",
-            "          '',",
-            "          'git',",
-            "          'commit,git,howto,message,scm',",
-            "          'https://writingfordevelopers.substack.com/p/how-to-write-commit-messages\\n'",
-            "          'https://chris.beams.io/posts/git-commit/',",
-            "          '',",
-            "          '',",
-            "          '',",
-            "          '2018-06-22T13:10:33.295299+00:00',",
-            "          '2018-06-27T10:10:16.553052+00:00',",
-            "          '33da9768-1257-4419-b6df-881e19f07bbc',",
-            "          '6d221115da7b95409c59164632893a57419666135c08151ddbf0be976f3b20a3')]"
+            "[('0d364a0e-6b63-11e9-b176-2c4d54508088',",
+            "'reference',",
+            "'https://writingfordevelopers.substack.com/p/how-to-write-commit-messages\\n'",
+            "'https://chris.beams.io/posts/git-commit/',",
+            "'How to write commit messages',",
+            "'',",
+            "'',",
+            "'git',",
+            "'commit,git,howto,message,scm',",
+            "'https://writingfordevelopers.substack.com/p/how-to-write-commit-messages\\n'",
+            "'https://chris.beams.io/posts/git-commit/',",
+            "'',",
+            "'',",
+            "'',",
+            "'2018-06-22T13:10:33.295299+00:00',",
+            "'2018-06-27T10:10:16.553052+00:00',",
+            "'33da9768-1257-4419-b6df-881e19f07bbc',",
+            "'6d221115da7b95409c59164632893a57419666135c08151ddbf0be976f3b20a3')]"
         )
         output_p2 = (
             "format database row:",
-            "        [('0d364a0e-6b63-11e9-b176-2c4d54508088',",
-            "          'reference',",
-            "          'https://writingfordevelopers.substack.com/p/how-to-write-commit-messages\\nhttps://chris.beams.io/posts/git-commit/',",
-            "          'How to write commit messages',",
-            "          '',",
-            "          '',",
-            "          'git',",
-            "          'commit,git,howto,message,scm',",
-            "          'https://writingfordevelopers.substack.com/p/how-to-write-commit-messages\\nhttps://chris.beams.io/posts/git-commit/',",
-            "          '',",
-            "          '',",
-            "          '',",
-            "          '2018-06-22T13:10:33.295299+00:00',",
-            "          '2018-06-27T10:10:16.553052+00:00',",
-            "          '33da9768-1257-4419-b6df-881e19f07bbc',",
-            "          '6d221115da7b95409c59164632893a57419666135c08151ddbf0be976f3b20a3')]"
+            "[('0d364a0e-6b63-11e9-b176-2c4d54508088',",
+            "'reference',",
+            "'https://writingfordevelopers.substack.com/p/how-to-write-commit-messages\\nhttps://chris.beams.io/posts/git-commit/',",
+            "'How to write commit messages',",
+            "'',",
+            "'',",
+            "'git',",
+            "'commit,git,howto,message,scm',",
+            "'https://writingfordevelopers.substack.com/p/how-to-write-commit-messages\\nhttps://chris.beams.io/posts/git-commit/',",
+            "'',",
+            "'',",
+            "'',",
+            "'2018-06-22T13:10:33.295299+00:00',",
+            "'2018-06-27T10:10:16.553052+00:00',",
+            "'33da9768-1257-4419-b6df-881e19f07bbc',",
+            "'6d221115da7b95409c59164632893a57419666135c08151ddbf0be976f3b20a3')]"
         )
 
         # Log is pretty printed.
+        #
+        # The captured log is formatted to remove leading whitespaces in
+        # front of every row in the log. The Pytest changes the indenting
+        # of the log based a header for each log that is based on filename
+        # and line number. This makes the test output behave differently
+        # depending on this unit test filename and the line number where
+        # the logger.debug log. This is anomality is removed by removing
+        # the identation from captured log.
         logger.debug('format database row:\n%s', row)
-
-        assert '\n'.join(output_p3) in caplog.text or '\n'.join(output_p2) in caplog.text
+        text = Helper.RE_MATCH_LEADING_WHITEPSACES.sub('\n', caplog.text)
+        assert '\n'.join(output_p3) in text or '\n'.join(output_p2) in text
 
         caplog.clear()
         Logger.configure({
@@ -726,11 +735,11 @@ class TestUtLogger(object):
             'quiet': False,
             'very_verbose': False
         })
-
         output = (
             "format database row:",
             "[('0d364a0e-6b63-11e9-b176-2c4d54508088', 'reference', 'https://writingfordevelopers.substack.com/p/how-to-write-commit-messages\\nhttps://chris.beams.io/posts/git-commit/', 'How to write commit messages', '', '', 'git', 'commit,git,howto,message,scm', 'https://writingfordevelopers.substack.com/p/how-to-write-commit-messages\\nhttps://chris.beams.io/posts/git-commit/', '', '', '', '2018-06-22T13:10:33.295299+00:00', '2018-06-27T10:10:16.553052+00:00', '33da9768-1257-4419-b6df-881e19f07bbc', '6d221115da7b95409c59164632893a57419666135c08151ddbf0be976f3b20a3')]"  # noqa pylint: disable=line-too-long
         )
         # Log is not pretty printed because JSON logs are actived.
         logger.debug('format database row:\n%s', row)
-        assert '\n'.join(output) in caplog.text
+        text = Helper.RE_MATCH_LEADING_WHITEPSACES.sub('\n', caplog.text)
+        assert '\n'.join(output) in text

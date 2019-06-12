@@ -73,6 +73,10 @@ class Helper(object):
         \x1b[^m]*m    # Match all ANSI escape sequences.
         ''', re.VERBOSE)
 
+    RE_MATCH_LEADING_WHITEPSACES = re.compile(r'''
+        \n\s+   # Match newline and all leading whitespaces after it.
+        ''', re.VERBOSE)
+
     @classmethod
     def read_template(cls, filename):
         """Get default content template in text format.

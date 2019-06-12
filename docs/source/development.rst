@@ -5,7 +5,7 @@ Installation
 ------------
 
 The instructions are tested with Fedora 30 and Bash shell. There are also
-draft installation instructions for other Linux distributions.
+draft installation instructions for other Linux distributions and Windows.
 
 .. note::
 
@@ -269,7 +269,6 @@ Follow the instructions to install the project on a Windows.
    python -m pip install .[devel] --proxy <proxy>:8080
    python -m pip install pipenv --proxy <proxy>:8080
    pipenv shell
-   pipenv install --dev
    pipenv lock -r --dev > requirements-dev.txt
    pip install setuptools-scm --proxy <proxy>:8080
    pip install -r requirements-dev.txt --proxy <proxy>:8080
@@ -287,7 +286,7 @@ with it.
 
 The local PostgreSQL username and passwords are synchronized with the Travis
 CI PostgreSQL service. The default user is ``postgres`` and the password is
-a empty string.
+an empty string.
 
 .. code:: bash
 
@@ -299,23 +298,25 @@ a empty string.
 
 For the Snippy development, prefer a virtual environment with the latest
 Python release and Python 2.7. The continuous integration will run all
-the tests against all supported Python version but the most problems can
-be captured by testing with the latest Python 3 version and Python 2.7.
+the tests against all supported Python versions. Most of the problems can
+be captured before committing by running the tests with the latest Python 3
+release and with the Python 2.7.
 
 .. code:: bash
 
     # Work in a Python virtual environment.
     workon snippy-python3.7
 
-The Snippy continuous integration will run all tests with the default SQLite
-and PostgreSQL databases with the exception of tests with a real server or
-docker. It is recomended to run ``make test-server`` and ``make test-docker``
-until these are included into the continuous integration tests.
+The Snippy continuous integration will run all tests with the default SQLite,
+PostgreSQL and in-memory databases with the exception of the tests with a real
+server or with a docker container. It is recomended to run ``make test-server``
+and ``make test-docker`` manually until these tests are included also into the
+continuous integration tests.
 
 .. code:: bash
 
-    # Run the default development tests. This does not include docker, server
-    # or tests with other databases than SQLite.
+    # Run the default development tests. This does not include real server, real
+    # docker container or tests with other than SQLite database.
     make test
 
     # Run all tests against PostgreSQL.
@@ -324,10 +325,10 @@ until these are included into the continuous integration tests.
     # Run all tests against in-memory database.
     make test-in-memory
 
-    # Run all tests with server.
+    # Run all tests with a real server started on the same host.
     make test-server
 
-    # Run all tests with Docker image.
+    # Run all tests with a Docker container.
     make test-docker
 
     # Run tests against all supported Python versions.
@@ -345,16 +346,16 @@ until these are included into the continuous integration tests.
     # Run lint.
     make lint
 
-    # Clean all generated files but do not delete SQLite database file.
+    # Clean all generated files with the exception of SQLite database file.
     make clean
 
     # Clean only the SQLite database file.
     make clean-db
 
-    # Clean all generated files and empty the SQLite database file.
+    # Clean all generated files including the SQLite database file.
     make clean-all
 
-    # Run a test with debug logs.
+    # Run a test with debug logs enabled.
     pytest tests/test_api_create_snippet.py -k 001 -s --snippy-logs
 
     # Run a test with PostgreSQL database.
@@ -382,7 +383,7 @@ Shell completions
 ~~~~~~~~~~~~~~~~~
 
 Shell completion testing is done by manually testing the commands. Install
-the Snippy tool and Bash completion scripts with below examples.
+the Snippy tool and Bash completion scripts with the below examples.
 
 .. code:: bash
 
@@ -407,6 +408,13 @@ Snippy uses JSON schemas generated from the ``swagger-2.0.yml``. The generated
 JSON schemas are used in Snippy server to validate HTTP requests and in tests
 to validate the Snippy server HTTP responses.
 
+If the JSON schema filenames are changed or new files are generated, the code
+and tests using the JSON schema files must be updated. Note that only some of
+the generated files are used in the JSON schema validation. The Snippy server
+needs only the JSON schema files that define the HTTP methods received by the
+server and tests need only JSON schema files that are used to define the HTTP
+responses.
+
 .. code:: bash
 
     # Start the Swagger editor.
@@ -422,45 +430,46 @@ to validate the Snippy server HTTP responses.
     # Create JSON API schema.
     make jsonschema
 
-    # Run tests with the updated JSON schema. If the JSON schema filenames
-    # changed, the code and test code using the files must be updated.
+    # Run tests with the updated JSON schema.
     make test
 
 Terms
 -----
 
-+-----------------+------------------------------------------------------------+
-| Term            | Description                                                |
-+=================+============================================================+
-| attribute       | Content attribute like ``brief``, ``links`` or ``tags``.   |
-+-----------------+------------------------------------------------------------+
-| category        | Content category that is one of ``snippet``, ``solution``  |
-|                 | or ``reference``. This term can also refer to a field      |
-|                 | category ``groups`` or ``tags``.                           |
-+-----------------+------------------------------------------------------------+
-| collection      | Collection is a set of resources objects.                  |
-+-----------------+------------------------------------------------------------+
-| content         | Content is a software development note from one of the     |
-|                 | categories. A content is stored into a resource object.    |
-|                 | In a broader context, content, resource and note can be    |
-|                 | interpreted to have same meaning.                          |
-+-----------------+------------------------------------------------------------+
-| field           | Same as attribute.                                         |
-+-----------------+------------------------------------------------------------+
-| operation       | Command line operation like ``create`` or ``delete``. This |
-|                 | term refers also to a HTTP request in case of the REST API |
-|                 | server. This term also refers to processing the operation  |
-|                 | from start to an end.                                      |
-+-----------------+------------------------------------------------------------+
-| operation ID    | Unique operation identifier (OID) allocated for all log    |
-|                 | messages generation from a single operation.               |
-+-----------------+------------------------------------------------------------+
-| resource        | Resource is an object that can store a single content from |
-|                 | any of the categories.                                     |
-+-----------------+------------------------------------------------------------+
-| parameter       | URL parameter that defines for example a search criteria   |
-|                 | like ``sall`` or ``scat`` for a HTTP request.              |
-+-----------------+------------------------------------------------------------+
++-----------------+---------------------------------------------------------------+
+| Term            | Description                                                   |
++=================+===============================================================+
+| attribute       | |  Content attribute like ``brief``, ``links`` or ``tags``.   |
++-----------------+---------------------------------------------------------------+
+| category        | |  Content category that is one of ``snippet``, ``solution``  |
+|                 | |  or ``reference``. This term can also refer to a field      |
+|                 | |  category ``groups`` or ``tags``.                           |
++-----------------+---------------------------------------------------------------+
+| collection      | |  Collection is a set of resources objects.                  |
++-----------------+---------------------------------------------------------------+
+| content         | |  Content is a software development note from one of the     |
+|                 | |  categories. A content is stored into a resource object.    |
+|                 | |  In a broader context, content, resource and note can be    |
+|                 | |  interpreted to have same meaning.                          |
++-----------------+---------------------------------------------------------------+
+| field           | |  Same as attribute. It is better to use term ``attribute``  |
+|                 | |  because terms ``attribute`` and ``resource attribute`` are |
+|                 | |  standard terms when talking about REST API design.         |
++-----------------+---------------------------------------------------------------+
+| operation       | |  Command line operation like ``create`` or ``delete``. This |
+|                 | |  term refers also to a HTTP request in case of the REST API |
+|                 | |  server. This term also refers to processing the operation  |
+|                 | |  from start to an end.                                      |
++-----------------+---------------------------------------------------------------+
+| operation ID    | |  Unique operation identifier (OID) allocated for all log    |
+|                 | |  messages generation from a single operation.               |
++-----------------+---------------------------------------------------------------+
+| resource        | |  Resource is an object that can store a single content from |
+|                 | |  any of the categories.                                     |
++-----------------+---------------------------------------------------------------+
+| parameter       | |  URL parameter that defines for example a search criteria   |
+|                 | |  like ``sall`` or ``scat`` for a HTTP request.              |
++-----------------+---------------------------------------------------------------+
 
 Guidelines
 ----------
@@ -499,18 +508,72 @@ Error handling
 ~~~~~~~~~~~~~~
 
 Operations will flow from the beginning to an end. There are no intermediate
-exists or shortcust. The error handling must be made simple in order to keep
+exists or shortcuts. The error handling must be made simple in order to keep
 the implementation size and testing effort in control. The target is not to
 try to recover all possible errors but to fail operation as soon as the first
 failure is detected by setting an error cause.
 
-For example if the search category ``scat`` option has multiple categories
-and one of them is faulty, the ``scat`` option will be invalidated. This will
-not generate any search hits and it will minimize the database queries.
+For example if the search category ``--scat`` option has multiple categories
+and one of them is faulty, the ``--scat`` option will be invalidated. This
+will not generate any search hits and it will minimize the database queries.
 
-The REST API server must invalidate the HTTP request if any of the attributes
-or parameters is incorrect. That is, the server must not store valid values of
-some attributes and silently set faily attributes to default values.
+The REST API must invalidate the HTTP request if any of the attributes or
+parameters is incorrect. That is, the REST API must not store valid values
+of for attributes and silently set faulty attributes to a default values.
+
+Updating resource attributes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Following attributes can be freely modified by user within the limits of
+attribute definitions.
+
+- data
+- brief
+- description
+- name
+- group
+- tags
+- links
+- source
+- versions
+- languages
+- filename
+
+Attributes that cannot be changed by user are:
+
+- Category
+
+  The category is defined when the resource is created. After this, it cannot be
+  changed by updating it. The only way to change this attribute is to delete and
+  create the resource again.
+
+- Created
+
+  The created timestamp is set when the resource is created and it cannot be
+  modified. The only way to change this attribute is to delete and create the
+  resource again.
+
+- Updated
+
+  The updated timestamp is set when the resource is updated and it cannot be
+  modified.
+
+- UUID
+
+  The UUID attribute is intended to be externally visible UUID attribute that
+  is exposed outside the REST API server. The UUID is allocated always for the
+  resource and it never changes. In order to allocate one static identifier for
+  each resource, an UUID4 formatted ID attribute is used.
+
+  There is always a change of an `UUID4 collitions`_ if multiple servers are run
+  but it is considered so small that it does not matter.
+
+  .. _UUID4 collitions: https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random)
+
+- Digest
+
+  The digest attribute is always set by the tool based on sha256 hash algorithm.
+  The digest is automatically updated when resource attributes are updated.
 
 Testing
 -------

@@ -436,40 +436,35 @@ responses.
 Terms
 -----
 
-+-----------------+---------------------------------------------------------------+
-| Term            | Description                                                   |
-+=================+===============================================================+
-| attribute       | |  Content attribute like ``brief``, ``links`` or ``tags``.   |
-+-----------------+---------------------------------------------------------------+
-| category        | |  Content category that is one of ``snippet``, ``solution``  |
-|                 | |  or ``reference``. This term can also refer to a field      |
-|                 | |  category ``groups`` or ``tags``.                           |
-+-----------------+---------------------------------------------------------------+
-| collection      | |  Collection is a set of resources objects.                  |
-+-----------------+---------------------------------------------------------------+
-| content         | |  Content is a software development note from one of the     |
-|                 | |  categories. A content is stored into a resource object.    |
-|                 | |  In a broader context, content, resource and note can be    |
-|                 | |  interpreted to have same meaning.                          |
-+-----------------+---------------------------------------------------------------+
-| field           | |  Same as attribute. It is better to use term ``attribute``  |
-|                 | |  because terms ``attribute`` and ``resource attribute`` are |
-|                 | |  standard terms when talking about REST API design.         |
-+-----------------+---------------------------------------------------------------+
-| operation       | |  Command line operation like ``create`` or ``delete``. This |
-|                 | |  term refers also to a HTTP request in case of the REST API |
-|                 | |  server. This term also refers to processing the operation  |
-|                 | |  from start to an end.                                      |
-+-----------------+---------------------------------------------------------------+
-| operation ID    | |  Unique operation identifier (OID) allocated for all log    |
-|                 | |  messages generation from a single operation.               |
-+-----------------+---------------------------------------------------------------+
-| resource        | |  Resource is an object that can store a single content from |
-|                 | |  any of the categories.                                     |
-+-----------------+---------------------------------------------------------------+
-| parameter       | |  URL parameter that defines for example a search criteria   |
-|                 | |  like ``sall`` or ``scat`` for a HTTP request.              |
-+-----------------+---------------------------------------------------------------+
+==================  ============================================================================================
+Term                Decscription
+==================  ============================================================================================
+*attribute*         |  Content attribute like ``brief``, ``links`` or ``tags``.
+
+*category*          |  Content category that is one of ``snippet``, ``solution`` or ``reference``. This can also
+                    |  refer to a field category ``groups`` or ``tags``.
+
+*collection*        |  Collection is a set of resources objects.
+
+*content*           |  Content is a software development note from one of the categories. A content is
+                    |  stored into a resource object. In a broader view content, resource and a note can
+                    |  be interpreted to have a same meaning.
+
+*field*             |  Same as attribute. It is recommended to use the term ``attribute`` because it
+                    |  refers to a commonly used term in REST API design.
+
+*operation*         |  Command line operation like ``create`` or ``delete``. This term refers also to a HTTP
+                    |  request in case of the REST API server. This term also refers to processing of
+                    |  operation from start to an end.
+
+*operation ID*      |  Unique operation identifier (OID) allocated for all log messages generation from a
+                    |  single operation.
+
+*resource*          |  Resource is an object that can store a single content from any of the categories.
+
+*parameter*         |  An URL parameter that defines for example a search criteria like ``sall`` or ``scat`` for a
+                    |  HTTP request.
+==================  ============================================================================================
 
 Guidelines
 ----------
@@ -504,25 +499,128 @@ This rule tries also encourage a common look and feel for commit logs.
 Design
 ------
 
-Error handling
-~~~~~~~~~~~~~~
+REST API
+~~~~~~~~
 
-Operations will flow from the beginning to an end. There are no intermediate
-exists or shortcuts. The error handling must be made simple in order to keep
-the implementation size and testing effort in control. The target is not to
-try to recover all possible errors but to fail operation as soon as the first
-failure is detected by setting an error cause.
+The rest API follows `JSON API specification`_ version 1.1. The PATCH method
+works as defined in the `RFC 7386 - JSON Merge Patch`_.
 
-For example if the search category ``--scat`` option has multiple categories
-and one of them is faulty, the ``--scat`` option will be invalidated. This
-will not generate any search hits and it will minimize the database queries.
+.. _JSON API specification: https://jsonapi.org/format/1.1/
+.. _RFC 7386 - JSON Merge Patch: https://tools.ietf.org/html/rfc7386
 
-The REST API must invalidate the HTTP request if any of the attributes or
-parameters is incorrect. That is, the REST API must not store valid values
-of for attributes and silently set faulty attributes to a default values.
+Resource attributes
+~~~~~~~~~~~~~~~~~~~
 
-Updating resource attributes
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*Category*
+
+The ``category`` is defined when the resource is created. After this, it cannot
+be changed by updating it. The only way to change this attribute is to delete
+and create the resource again.
+
+*Data*
+
+The ``data`` attribute contains the actual content. This is a mandatory field
+for the ``snippets`` and ``solutions`` contents. Because the ``references`` are
+links, they do not store the information into the  ``data`` attribute but into
+the ``links`` attribute.
+
+*Brief*
+
+The ``brief`` is an optional attribute. It is a one-liner that describes the
+content very briefly.
+
+*Description*
+
+The ``description`` is an optional attribute. This is a longer explanation that
+provides more details than the ``brief`` attribute.
+
+*Name*
+
+The ``name`` is an optional attribute. This field is intended to work as a short
+name for the content. The intention is that this attribute could be used to refer
+and run for example a snippet content. The field does not have restrictions on
+characters but it should not contain whitespaces to allow to use it as a target
+or a name for an action.
+
+*Groups*
+
+The ``groups`` is an optional attribute. This field can store multiple values.
+The desing and usage is left to user how the groups are defined. The field does
+not have restrictions on characters but it is recommended that a group does not
+contain whitespaces.
+
+*Tags*
+
+The ``tags`` is an optional attribute. This field can store multiple values.
+The desing and usage is left to user how the tags are defined. The field does
+not have restrictions on characters but it is recommended that a group does not
+contain whitespaces.
+
+*Links*
+
+The ``links`` is a mandatory attribute for ``references`` content. For ``snippets``
+and ``solutions`` the field is optional. This field can store multiple values.
+The desing and usage is left to user how the fields are defined. The field is
+intended to store HTTP links. There is nothing that prevents storing for example
+file URI references.
+
+*Source*
+
+The ``source`` is an optional attribute. This field can store one value. The
+field is designed to contain a link to a source where the content was imported.
+For example the default content in snippet can set the ``source`` field to
+value ``https://github.com/heilaaks/snippy``.
+
+*Versions*
+
+The ``versions`` is an optional attribute. This field can store multiple values.
+This field is designed to contain information related to software versions used
+in the content. For example commands may change between software versions. This
+fields tries to track version information of the content. The field accepts only
+key-value pairs with mathematical operators ``>=``, ``<=``, ``!=``, ``==``, '>``,
+'<`` or ``~``. For example ``python>=3.7`` is a valid value for the field.
+
+*Languages*
+
+The ``languages`` is an optional attribute. This field can store multiple values.
+The field is intended to store programming languages related to the content.
+
+*Filename*
+
+The ``filename`` is an optional attribute. This field can store one values. The
+field is intended to store filenames like ``how-to-debug-nging.md``. This field
+can be used for example to automatically define the exported filename and format.
+
+*Created*
+
+The created timestamp is set when the resource is created and it cannot be
+modified. The only way to change this attribute is to delete and create the
+resource again.
+
+*Updated*
+
+The updated timestamp is set when the resource is updated and it cannot be
+modified.
+
+*Uuid*
+
+The UUID attribute is intended to be externally visible UUID attribute that
+is exposed outside the REST API server. The UUID is allocated always for the
+resource and it never changes. In order to allocate one static identifier for
+each resource, an UUID4 formatted ID attribute is used.
+
+There is always a change of an `UUID4 collitions`_ if multiple servers are run
+but it is considered so small that it does not matter.
+
+.. _UUID4 collitions: https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random)
+
+*Digest*
+
+The digest attribute is always set by the tool based on sha256 hash algorithm.
+The digest is automatically updated when resource attributes are updated.
+
+Updating
+~~~~~~~~
 
 Following attributes can be freely modified by user within the limits of
 attribute definitions.
@@ -541,39 +639,28 @@ attribute definitions.
 
 Attributes that cannot be changed by user are:
 
-- Category
+- category
+- created
+- updated
+- uuid
+- digest
 
-  The category is defined when the resource is created. After this, it cannot be
-  changed by updating it. The only way to change this attribute is to delete and
-  create the resource again.
+Error handling
+~~~~~~~~~~~~~~
 
-- Created
+Operations will flow from the beginning to an end. There are no intermediate
+exists or shortcuts. The error handling must be made simple in order to keep
+the implementation size and testing effort in control. The target is not to
+try to recover all possible errors but to fail operation as soon as the first
+failure is detected by setting an error cause.
 
-  The created timestamp is set when the resource is created and it cannot be
-  modified. The only way to change this attribute is to delete and create the
-  resource again.
+For example if the search category ``--scat`` option has multiple categories
+and one of them is faulty, the ``--scat`` option will be invalidated. This
+will not generate any search hits and it will minimize the database queries.
 
-- Updated
-
-  The updated timestamp is set when the resource is updated and it cannot be
-  modified.
-
-- UUID
-
-  The UUID attribute is intended to be externally visible UUID attribute that
-  is exposed outside the REST API server. The UUID is allocated always for the
-  resource and it never changes. In order to allocate one static identifier for
-  each resource, an UUID4 formatted ID attribute is used.
-
-  There is always a change of an `UUID4 collitions`_ if multiple servers are run
-  but it is considered so small that it does not matter.
-
-  .. _UUID4 collitions: https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random)
-
-- Digest
-
-  The digest attribute is always set by the tool based on sha256 hash algorithm.
-  The digest is automatically updated when resource attributes are updated.
+The REST API must invalidate the HTTP request if any of the attributes or
+parameters is incorrect. That is, the REST API must not store valid values
+of for attributes and silently set faulty attributes to a default values.
 
 Testing
 -------

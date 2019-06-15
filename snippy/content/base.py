@@ -213,6 +213,10 @@ class ContentBase(object):  # pylint: disable=too-many-instance-attributes
                     Cause.push(Cause.HTTP_BAD_REQUEST, 'updates for content: %.16s :could not be used' % digest)
             else:
                 Config.validate_search_context(collection, 'import')
+        elif Config.import_hook:
+            self._logger.debug('importing content with plugin')
+            collection = Migrate.import_hook(Config.import_hook, Config.get_plugin_uri())
+            self._storage.import_content(collection)
         else:
             self._logger.debug('importing content: %s', Config.get_operation_file())
             collection = Migrate.load(Config.get_operation_file())

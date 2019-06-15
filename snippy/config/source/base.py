@@ -22,6 +22,7 @@
 
 import os
 import re
+import sys
 import traceback
 from collections import OrderedDict
 
@@ -82,9 +83,9 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
         self.no_editor = False
         self.operation = None
         self.operation_file = Const.EMPTY
-        self.plugin = []
-        self.plugin_used = False
-        self.plugins = {}
+        self.plugin = []  # Plugin from configuration source.
+        self.plugin_used = False  # Plugin used in configuration source.
+        self.plugins = {}  # All plugins.
         self.profiler = False
         self.quiet = False
         self.run_healthcheck = False
@@ -103,6 +104,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
         self.storage_ssl_key = None
         self.storage_ssl_ca_cert = None
         self.template = False
+        self.import_hook = None
         self.uuid = None
         self.version = __version__
         self.very_verbose = False
@@ -293,31 +295,11 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
         self.very_verbose = parameters.get(*self.read_env('vv', False))
         self._repr = self._get_repr()
 
+        self._set_import_hook()
+
         # The flag that tells if Snippy server is run is set after the
         # command line arguments and environment variables are parsed.
         self.run_server = bool(self.server_host)
-
-        # The plugin is always in a list to force at least one argument
-        # from the argparse module.
-        if self.plugin:
-            self.plugin = self.plugins[self.plugin[0]]
-
-        # test to load plugin.
-        if self.plugin:
-            import sys
-            print(self.plugin.entry_points[0].value)
-            module = self.plugin.entry_points[0].value
-            try:
-                __import__(module)
-                print("pass")
-                mod = sys.modules[module]
-                print(mod)
-                test = getattr(mod, 'SnippyTldr')
-                test.run()
-                print("here")
-                print(vars(test))
-            except ImportError:
-                print("fail")
 
     @property
     def category(self):
@@ -994,7 +976,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
         return tuple(self.plugins.keys())
 
     def read_plugins(self, args):
-        """Read plugins.
+        """Read all plugins.
 
         Reading of plugins all the time is too slow. This is a problem with
         tests that slow down too much in case this would be read always.
@@ -1017,3 +999,26 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
             self._logger.debug('failed to read plugins: {}'.format(traceback.format_exc()))
 
         self.plugins = plugins
+
+    def _set_import_hook(self):
+        """Set import plugin.
+
+        This methods tests if user provided a plugin for import operation
+        and sets the import specific plugin variable.
+        """
+
+        self.import_hook = None
+        if self.plugin and self.operation == self.IMPORT:
+            self._logger.debug('import plugin used: {}'.format(self.plugin))
+            module = self.plugins[self.plugin].entry_points[0].value
+            try:
+                __import__(module)
+                try:
+                    modulespecs = sys.modules[module]
+                    import_hook = getattr(modulespecs, 'snippy_import_hook', None)
+                    if callable(import_hook):
+                        self.import_hook = import_hook
+                except KeyError:
+                    self._logger.debug('failed use plugin: {}'.format(traceback.format_exc()))
+            except ModuleNotFoundError:
+                self._logger.debug('failed to import plugin: {}'.format(traceback.format_exc()))

@@ -202,7 +202,7 @@ class Cli(ConfigSourceBase):
         migrat_meg.add_argument('-f', '--file', type=Parser.to_unicode, dest='operation_file', default='', help=argparse.SUPPRESS)
         migrat_meg.add_argument('--defaults', action='store_true', default=False, help=argparse.SUPPRESS)
         migrat_meg.add_argument('--template', action='store_true', default=False, help=argparse.SUPPRESS)
-        migrat_meg.add_argument('--plugin', nargs=1, choices=(self.get_plugin_short_names()), default=argparse.SUPPRESS, help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
+        migrat_meg.add_argument('--plugin', type=Parser.to_unicode, choices=(self.get_plugin_short_names()), default=argparse.SUPPRESS, help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
         migrat.add_argument('--complete', choices=completions, help=argparse.SUPPRESS)
 
         # support options

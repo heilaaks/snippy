@@ -24,6 +24,7 @@ from __future__ import print_function
 
 import json
 import os.path
+import traceback
 
 import yaml
 
@@ -155,4 +156,47 @@ class Migrate(object):
         else:
             Cause.push(Cause.HTTP_NOT_FOUND, 'cannot read file {}'.format(filename))
 
+        return collection
+
+    @classmethod
+    def import_hook(cls, import_hook, uri):
+        """Import content from external plugin.
+
+        Args:
+            import_hook (obj): External callable ``snippy_import_hook`` method.
+            uri (str): URI read from the ``--file`` command line option.
+
+        Returns:
+            obj: Imported notes in a ``Collection`` object.
+        """
+
+        collection = Collection()
+        try:
+            notes = import_hook("test", "test", uri)
+        except Exception:  # pylint: disable=broad-except
+            cls._logger.debug('failed to call import plugin: {}'.format(traceback.format_exc()))
+            Cause.push(Cause.HTTP_FORBIDDEN, 'failed to call import plugin - enable --debug logs')
+            return collection
+
+        if not notes:
+            Cause.push(Cause.HTTP_NOT_FOUND, 'no imported notes found')
+            return collection
+
+        try:
+            if len(notes) > 10000:
+                Cause.push(Cause.HTTP_FORBIDDEN, 'too many imported notes')
+                return collection
+        except TypeError:
+            Cause.push(Cause.HTTP_FORBIDDEN, 'failed to read the number of imported notes - implement len() for the plugin iterator')
+            return collection
+
+        try:
+            for note in notes:
+                print("note: %s", note)
+        except Exception:  # pylint: disable=broad-except
+            cls._logger.debug('failed to interate notes from plugin: {}'.format(traceback.format_exc()))
+            Cause.push(Cause.HTTP_FORBIDDEN, 'failed to call import plugin - enable --debug logs')
+            return collection
+
+        print("end")
         return collection

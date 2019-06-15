@@ -230,6 +230,7 @@ class Config(object):
         cls.defaults = cls.source.defaults
         cls.template = cls.source.template
         cls.complete = cls.source.complete
+        cls.import_hook = cls.source.import_hook
 
         # options
         cls.editor = cls.source.editor
@@ -577,6 +578,19 @@ class Config(object):
             cls.is_operation_file_yaml = bool(cls.operation_file_format == Const.CONTENT_FORMAT_YAML)
 
         return filename
+
+    @classmethod
+    def get_plugin_uri(cls):
+        """Return URI for the plugin.
+
+        This method reads the ``--file`` option directly as is to be used
+        with a plugin.
+
+        Returns:
+            str: URI to be used with the plugin.
+        """
+
+        return cls.source.operation_file
 
     @classmethod
     def is_supported_file_format(cls):

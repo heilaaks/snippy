@@ -215,7 +215,7 @@ class ContentBase(object):  # pylint: disable=too-many-instance-attributes
                 Config.validate_search_context(collection, 'import')
         elif Config.import_hook:
             self._logger.debug('importing content with plugin')
-            collection = Migrate.import_hook(Config.import_hook, Config.get_plugin_uri())
+            collection = Migrate.import_hook()
             self._storage.import_content(collection)
         else:
             self._logger.debug('importing content: %s', Config.get_operation_file())

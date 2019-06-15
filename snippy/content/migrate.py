@@ -159,12 +159,8 @@ class Migrate(object):
         return collection
 
     @classmethod
-    def import_hook(cls, import_hook, uri):
+    def import_hook(cls):
         """Import content from external plugin.
-
-        Args:
-            import_hook (obj): External callable ``snippy_import_hook`` method.
-            uri (str): URI read from the ``--file`` command line option.
 
         Returns:
             obj: Imported notes in a ``Collection`` object.
@@ -172,7 +168,7 @@ class Migrate(object):
 
         collection = Collection()
         try:
-            notes = import_hook("test", "test", uri)
+            notes = Config.hooks['import']("test", "test", Config.get_plugin_uri())
         except Exception:  # pylint: disable=broad-except
             cls._logger.debug('failed to call import plugin: {}'.format(traceback.format_exc()))
             Cause.push(Cause.HTTP_FORBIDDEN, 'failed to call import plugin - enable --debug logs')

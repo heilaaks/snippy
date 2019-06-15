@@ -22,7 +22,6 @@
 
 import os
 import re
-import sys
 import traceback
 from collections import OrderedDict
 
@@ -1012,13 +1011,16 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
             self._logger.debug('import plugin used: {}'.format(self.plugin))
             module = self.plugins[self.plugin].entry_points[0].value
             try:
-                __import__(module)
+                # This can be made without forcing the plugins to have a module
+                # with name 'plugin'. The intention is to force similar layout
+                # for all the plugins.
+                package = __import__(module)
                 try:
-                    modulespecs = sys.modules[module]
-                    import_hook = getattr(modulespecs, 'snippy_import_hook', None)
+                    module = getattr(package, 'plugin')
+                    import_hook = getattr(module, 'snippy_import_hook', None)
                     if callable(import_hook):
                         self.import_hook = import_hook
                 except KeyError:
                     self._logger.debug('failed use plugin: {}'.format(traceback.format_exc()))
-            except ModuleNotFoundError:
+            except ImportError:  # Python 2 does not have ModuleNotFoundError.
                 self._logger.debug('failed to import plugin: {}'.format(traceback.format_exc()))

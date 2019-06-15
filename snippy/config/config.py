@@ -230,7 +230,20 @@ class Config(object):
         cls.defaults = cls.source.defaults
         cls.template = cls.source.template
         cls.complete = cls.source.complete
-        cls.import_hook = cls.source.import_hook
+
+        # hooks
+        #
+        # There is a strange behaviour with Python 2 if the hook is assigned to
+        # Config class attribute. This will fail calling the hook with 'unbound
+        # method' error because the call expects Config class instance as first
+        # parameter. This would work with Python 3. This is related to a change
+        # between Python 2 and Python 3 [1]. Because of this, hooks are stored
+        # into a dictionary.
+        #
+        # [1] https://stackoverflow.com/a/16244344
+        cls.hooks = {}
+        cls.hooks['import'] = cls.source.import_hook
+        cls.import_hook = bool(cls.hooks['import'])
 
         # options
         cls.editor = cls.source.editor

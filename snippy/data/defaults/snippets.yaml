@@ -885,7 +885,7 @@ data:
   category: snippet
   created: '2019-05-29T10:32:55.112015+00:00'
   data:
-  - git branch -a
+  - 'git branch -a  #  List all branches.'
   - git checkout -b branch
   - git push origin branch
   - git revert -n SHA
@@ -896,11 +896,12 @@ data:
   - git pull --rebase --autostash origin master
   - git push origin branch --force
   - 'git push --delete origin branch  #  Delete remote branch.'
+  - 'git fetch --prune  #  Prune local branches.'
   - 'git branch -d branch  #  Delete local branch.'
   - git tag -a 0.1.0 -m "Add new release 0.1.0"
   - git push -u origin 0.1.0
   description: Common git workflow for basic development.
-  digest: 827d295b25499f49ac18ada2e260b0d40856717642fa0282f727e5f085ebc869
+  digest: c65f502fe4a769eb0dc571d1729ab2600310bcd6bb0998ef41479f2c214af690
   filename: git-devel-workflow.md
   groups:
   - git
@@ -914,11 +915,11 @@ data:
   tags:
   - git
   - workflow
-  updated: '2019-05-29T10:32:55.112015+00:00'
+  updated: '2019-06-13T06:04:27.898693+00:00'
   uuid: 84c2684e-a0e8-4b32-8608-54c45645c1e1
   versions:
   - git>=2
 meta:
   homepage: https://github.com/heilaaks/snippy
-  updated: '2019-06-05T20:17:10.926825+00:00'
+  updated: '2019-06-15T08:01:45.048028+00:00'
   version: 0.11a0

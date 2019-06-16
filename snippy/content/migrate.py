@@ -192,7 +192,9 @@ class Migrate(object):
 
         try:
             for note in notes:
-                print("note: %s", note)
+                print("===")
+                print("migrate: %s" % note)
+                print("===")
         except Exception:  # pylint: disable=broad-except
             cls._logger.debug('failed to interate notes from plugin: {}'.format(traceback.format_exc()))
             Cause.push(Cause.HTTP_FORBIDDEN, 'failed to call import plugin - enable --debug logs')

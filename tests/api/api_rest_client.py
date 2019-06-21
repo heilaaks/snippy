@@ -43,7 +43,7 @@ class RestApiPerformance(object):
         in any way. There is no connection to Snippy test suite with this
         client. This is just a play around client to verify things like
         perfromance of PyPy based server.
-        
+
         No documentation provided for this client.
 
         Reference PC: N/A loop : N/A / N/A loop : N/A / 100 loop : N/A

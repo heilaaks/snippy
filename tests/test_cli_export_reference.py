@@ -21,9 +21,9 @@
 """test_cli_export_reference: Test workflows for exporting references."""
 
 import json
+import pkg_resources
 
 import mock
-import pkg_resources
 import pytest
 import yaml
 

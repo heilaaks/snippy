@@ -21,9 +21,9 @@
 """test_cli_export_solution: Test workflows for exporting solutions."""
 
 import json
+import pkg_resources
 
 import mock
-import pkg_resources
 import pytest
 import yaml
 

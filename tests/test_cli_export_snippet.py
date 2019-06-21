@@ -21,9 +21,9 @@
 """test_cli_export_snippet: Test workflows for exporting snippets."""
 
 import json
+import pkg_resources
 
 import mock
-import pkg_resources
 import pytest
 import yaml
 

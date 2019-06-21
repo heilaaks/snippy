@@ -191,14 +191,14 @@ class Migrate(object):
             return collection
 
         try:
-            for note in notes:
-                print("===")
-                print("migrate: %s" % note)
-                print("===")
+            timestamp = Config.utcnow()
+            data = {
+                'data': notes
+            }
+            collection.load_dict(timestamp, data)
         except Exception:  # pylint: disable=broad-except
-            cls._logger.debug('failed to interate notes from plugin: {}'.format(traceback.format_exc()))
+            cls._logger.debug('failed to import content from plugin: {}'.format(traceback.format_exc()))
             Cause.push(Cause.HTTP_FORBIDDEN, 'failed to call import plugin - enable --debug logs')
             return collection
 
-        print("end")
         return collection

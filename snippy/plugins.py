@@ -75,14 +75,14 @@ class Parser(object):
             str: Utf-8 encoded unicode string.
         """
 
-        value = ''
+        brief = ''
         if category not in Const.CATEGORIES:
             cls._logger.debug('invalid content category for brief attrubute parser: %s', category)
-            return SnippyParser.format_string(value)
+            return SnippyParser.format_string(brief)
 
-        value = cls._format_string(value)
+        brief = cls._format_string(value)
 
-        return SnippyParser.format_string(value)
+        return SnippyParser.format_string(brief)
 
     @classmethod
     def format_description(cls, category, value):
@@ -99,14 +99,14 @@ class Parser(object):
             str: Utf-8 encoded unicode string.
         """
 
-        value = ''
+        description = ''
         if category not in Const.CATEGORIES:
             cls._logger.debug('invalid content category for description attrubute parser: %s', category)
-            return SnippyParser.format_string(value)
+            return SnippyParser.format_string(description)
 
-        value = cls._format_string(value)
+        description = cls._format_string(value)
 
-        return SnippyParser.format_string(value)
+        return SnippyParser.format_string(description)
 
     @classmethod
     def format_name(cls, category, value):
@@ -123,14 +123,61 @@ class Parser(object):
             str: Utf-8 encoded unicode string.
         """
 
-        value = ''
+        name = ''
         if category not in Const.CATEGORIES:
             cls._logger.debug('invalid content category for name attrubute parser: %s', category)
-            return SnippyParser.format_string(value)
+            return SnippyParser.format_string(name)
 
-        value = cls._format_string(value)
+        name = cls._format_string(value)
 
-        return SnippyParser.format_string(value)
+        return SnippyParser.format_string(name)
+
+    @classmethod
+    def format_groups(cls, category, value):
+        """Format content ``groups`` attribute.
+
+        Format a string that contains the ``groups`` attribute to format that
+        is accepted by the Snippy tool.
+
+        Args:
+            category (str): Content category.
+            value (str): Content ``groups`` in a string.
+
+        Returns:
+            tuple: Tuple of utf-8 encoded groups.
+        """
+
+        groups = ''
+        if category not in Const.CATEGORIES:
+            cls._logger.debug('invalid content category for groups attrubute parser: %s', category)
+            return SnippyParser.format_string(groups)
+
+        if not value:
+            value = Const.DEFAULT_GROUPS
+
+        return SnippyParser.format_list(value)
+
+    @classmethod
+    def format_tags(cls, category, value):
+        """Format content ``tags`` attribute.
+
+        Format a string that contains the ``tags`` attribute to format that
+        is accepted by the Snippy tool.
+
+        Args:
+            category (str): Content category.
+            value (str): Content ``tags`` in a string.
+
+        Returns:
+            tuple: Tuple of utf-8 encoded groups.
+        """
+
+        tags = ''
+        if category not in Const.CATEGORIES:
+            cls._logger.debug('invalid content category for tags attrubute parser: %s', category)
+            return SnippyParser.format_string(tags)
+
+        return SnippyParser.format_list(value)
 
     @staticmethod
     def _format_string(value):

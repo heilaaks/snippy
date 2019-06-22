@@ -95,6 +95,7 @@ class Config(object):
         namespace.append('content_versions={}'.format(cls.content_versions))
         namespace.append('content_languages={}'.format(cls.content_languages))
         namespace.append('content_source={}'.format(cls.content_source))
+        namespace.append('plugin={}'.format(cls.plugin))
         namespace.append('run_healthcheck={}'.format(cls.run_healthcheck))
         namespace.append('search_all_kws={}'.format(cls.search_all_kws))
         namespace.append('search_cat_kws={}'.format(cls.search_cat_kws))
@@ -230,6 +231,7 @@ class Config(object):
         cls.defaults = cls.source.defaults
         cls.template = cls.source.template
         cls.complete = cls.source.complete
+        cls.plugin = cls.source.plugin
 
         # hooks
         #
@@ -694,7 +696,7 @@ class Config(object):
             file_format = Const.CONTENT_FORMAT_TEXT
         elif name and extension in ('.yaml', '.yml'):
             file_format = Const.CONTENT_FORMAT_YAML
-        elif not cls.complete:
+        elif not cls.complete and not cls.plugin:
             Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot identify file format for file: {}'.format(filename))
 
         return file_format

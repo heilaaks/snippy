@@ -46,9 +46,11 @@ class Constants(object):  # pylint: disable=too-few-public-methods
     WINDOWS = sys.platform == 'win32'  # This applies also to win64.
 
     # Content categories.
+    CODE = 'code'
     SNIPPET = 'snippet'
     SOLUTION = 'solution'
     REFERENCE = 'reference'
+    TODO = 'todo'
     ALL_CATEGORIES = 'all'
     UNKNOWN_CATEGORY = 'unknown'
     CATEGORIES = (SNIPPET, SOLUTION, REFERENCE)

@@ -1451,6 +1451,41 @@ components:
         self:
           type: string
           description: Link pointing to resource.
+    pluginAttributes:
+      type: object
+      properties:
+        category:
+          $ref: '#/components/schemas/attributeCategory'
+        data:
+          $ref: '#/components/schemas/attributeData'
+        brief:
+          $ref: '#/components/schemas/attributeBrief'
+        description:
+          $ref: '#/components/schemas/attributeDescription'
+        name:
+          $ref: '#/components/schemas/attributeName'
+        groups:
+          $ref: '#/components/schemas/attributeGroups'
+        tags:
+          $ref: '#/components/schemas/attributeTags'
+        links:
+          $ref: '#/components/schemas/attributeLinks'
+        source:
+          $ref: '#/components/schemas/attributeSource'
+        versions:
+          $ref: '#/components/schemas/attributeVersions'
+        languages:
+          $ref: '#/components/schemas/attributeLanguages'
+        filename:
+          $ref: '#/components/schemas/attributeFilename'
+      description: |
+        # Brief
+
+        JSON schema validation for attributes read with external plugins like 'Snippy-tldr'.
+
+        Different resource categories require different attributes. For example `snippets` require `data`
+        but `references` require `links` attribute. Because of this, the JSON schema definition does not
+        define the required properties.
     attributeData:
       type: array
       description: |

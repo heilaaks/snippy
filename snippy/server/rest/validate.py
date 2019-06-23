@@ -42,6 +42,9 @@ class Schema(object):  # pylint: disable=too-few-public-methods
 
         Args:
             document (obj): JSON document that is validated.
+
+        Returns:
+            bool: True if the document is valid.
         """
 
         validated = False
@@ -69,7 +72,7 @@ class Schema(object):  # pylint: disable=too-few-public-methods
 
         schema = Config.server_schema()
         Draft7Validator.check_schema(schema)
-        resolver = RefResolver(base_uri=Config.server_schema_base_uri(), referrer=schema)
+        resolver = RefResolver(base_uri=Config.schema_base_uri(), referrer=schema)
         validator = Draft7Validator(schema, resolver=resolver, format_checker=None)
 
         return validator

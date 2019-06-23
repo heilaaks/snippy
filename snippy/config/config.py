@@ -484,7 +484,22 @@ class Config(object):
         return schema
 
     @classmethod
-    def server_schema_base_uri(cls):
+    def content_schema(cls):
+        """Get content attribute JSON schema.
+
+        Returns:
+            str: Content schema to validate attributes for clients.
+        """
+
+        request_attributes = json.loads(cls._read_resource('data/server/openapi/schema', 'pluginattributes.json'))
+        schema = {
+            'oneOf': [request_attributes]
+        }
+
+        return schema
+
+    @classmethod
+    def schema_base_uri(cls):
         """Get server API schema base URI.
 
         Returns:

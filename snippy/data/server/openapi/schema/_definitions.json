@@ -216,6 +216,49 @@
       },
       "description": "# Brief\n\nResource `data` attributes for all content API endoints.\n\nDifferent resource categories require different attributes. Creating and updating resources have\ndifferent mandatory resource attribute requirements. For example `snippets` require `data` but\n`references` require `links` attribute. PATCH and PUT can be send without `data` attribute for\n`snippets`.\n\nBecause of these reasons, JSON schema definition does not define the required properties.\n"
     },
+    "pluginAttributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "$ref": "#/definitions/attributeCategory"
+        },
+        "data": {
+          "$ref": "#/definitions/attributeData"
+        },
+        "brief": {
+          "$ref": "#/definitions/attributeBrief"
+        },
+        "description": {
+          "$ref": "#/definitions/attributeDescription"
+        },
+        "name": {
+          "$ref": "#/definitions/attributeName"
+        },
+        "groups": {
+          "$ref": "#/definitions/attributeGroups"
+        },
+        "tags": {
+          "$ref": "#/definitions/attributeTags"
+        },
+        "links": {
+          "$ref": "#/definitions/attributeLinks"
+        },
+        "source": {
+          "$ref": "#/definitions/attributeSource"
+        },
+        "versions": {
+          "$ref": "#/definitions/attributeVersions"
+        },
+        "languages": {
+          "$ref": "#/definitions/attributeLanguages"
+        },
+        "filename": {
+          "$ref": "#/definitions/attributeFilename"
+        }
+      },
+      "description": "# Brief\n\nJSON schema validation for attributes read with external plugins like 'Snippy-tldr'.\n\nDifferent resource categories require different attributes. For example `snippets` require `data`\nbut `references` require `links` attribute. Because of this, the JSON schema definition does not\ndefine the required properties.\n"
+    },
     "responseAttributesTags": {
       "type": "object",
       "additionalProperties": false,

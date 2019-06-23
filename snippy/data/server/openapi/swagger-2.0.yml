@@ -541,6 +541,44 @@ definitions:
       `snippets`.
 
       Because of these reasons, JSON schema definition does not define the required properties.
+
+  pluginAttributes:
+    type: object
+    additionalProperties: false
+    properties:
+      category:
+        $ref: '#/definitions/attributeCategory'
+      data:
+        $ref: '#/definitions/attributeData'
+      brief:
+        $ref: '#/definitions/attributeBrief'
+      description:
+        $ref: '#/definitions/attributeDescription'
+      name:
+        $ref: '#/definitions/attributeName'
+      groups:
+        $ref: '#/definitions/attributeGroups'
+      tags:
+        $ref: '#/definitions/attributeTags'
+      links:
+        $ref: '#/definitions/attributeLinks'
+      source:
+        $ref: '#/definitions/attributeSource'
+      versions:
+        $ref: '#/definitions/attributeVersions'
+      languages:
+        $ref: '#/definitions/attributeLanguages'
+      filename:
+        $ref: '#/definitions/attributeFilename'
+    description: |
+      # Brief
+
+      JSON schema validation for attributes read with external plugins like 'Snippy-tldr'.
+
+      Different resource categories require different attributes. For example `snippets` require `data`
+      but `references` require `links` attribute. Because of this, the JSON schema definition does not
+      define the required properties.
+
   responseAttributesTags:
     type: object
     additionalProperties: False
@@ -551,6 +589,7 @@ definitions:
       # Brief
 
       Resource `data` attributes tags API endpont.
+
   responseAttributesGroups:
     type: object
     additionalProperties: False

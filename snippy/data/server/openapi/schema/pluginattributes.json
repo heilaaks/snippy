@@ -1,0 +1,44 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "category": {
+      "$ref": "_definitions.json#/definitions/attributeCategory"
+    },
+    "data": {
+      "$ref": "_definitions.json#/definitions/attributeData"
+    },
+    "brief": {
+      "$ref": "_definitions.json#/definitions/attributeBrief"
+    },
+    "description": {
+      "$ref": "_definitions.json#/definitions/attributeDescription"
+    },
+    "name": {
+      "$ref": "_definitions.json#/definitions/attributeName"
+    },
+    "groups": {
+      "$ref": "_definitions.json#/definitions/attributeGroups"
+    },
+    "tags": {
+      "$ref": "_definitions.json#/definitions/attributeTags"
+    },
+    "links": {
+      "$ref": "_definitions.json#/definitions/attributeLinks"
+    },
+    "source": {
+      "$ref": "_definitions.json#/definitions/attributeSource"
+    },
+    "versions": {
+      "$ref": "_definitions.json#/definitions/attributeVersions"
+    },
+    "languages": {
+      "$ref": "_definitions.json#/definitions/attributeLanguages"
+    },
+    "filename": {
+      "$ref": "_definitions.json#/definitions/attributeFilename"
+    }
+  },
+  "description": "# Brief\n\nJSON schema validation for attributes read with external plugins like 'Snippy-tldr'.\n\nDifferent resource categories require different attributes. For example `snippets` require `data`\nbut `references` require `links` attribute. Because of this, the JSON schema definition does not\ndefine the required properties.\n",
+  "$schema": "http://json-schema.org/schema#"
+}

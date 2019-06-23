@@ -168,11 +168,7 @@ class Migrate(object):
 
         collection = Collection()
         try:
-            notes = Config.hooks['import'](
-                Logger.get_logger('snippy.plugin.import'),
-                Config.get_plugin_uri(),
-                "test",
-                "test")
+            notes = Config.hooks['import'](Logger.get_logger('snippy.plugin.import'), Config.get_plugin_uri())
         except Exception:  # pylint: disable=broad-except
             cls._logger.debug('failed to call import plugin: {}'.format(traceback.format_exc()))
             Cause.push(Cause.HTTP_FORBIDDEN, 'failed to call import plugin - enable --debug logs')

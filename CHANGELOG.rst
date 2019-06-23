@@ -31,6 +31,7 @@ Bugfixes
 * Fix ``--sall`` option did not search all attributes.
 * Fix reading one line attributes like ``brief`` from multiple lines.
 * Fix terminal colors on Windows.
+* All commits in `0.11.0`_.
 
 Security
 ~~~~~~~~
@@ -168,6 +169,7 @@ Security
 * Experimental alpha release.
 * All commits in `0.1.0`_.
 
+.. _0.11.0: https://github.com/heilaaks/snippy/compare/v0.10.0...master
 .. _0.10.0: https://github.com/heilaaks/snippy/compare/v0.9.0...master
 .. _0.9.0: https://github.com/heilaaks/snippy/compare/v0.8.0...heilaaks:v0.9.0
 .. _0.8.0: https://github.com/heilaaks/snippy/compare/v0.7.0...heilaaks:v0.8.0

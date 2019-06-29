@@ -34,7 +34,7 @@ extras_server = (
     'falcon==2.0.0',
     'gunicorn==19.9.0',
     'jsonschema==3.0.1',
-    'psycopg2==2.8.2 ; platform_python_implementation=="CPython"',
+    'psycopg2==2.8.3 ; platform_python_implementation=="CPython"',
     'psycopg2cffi==2.8.1 ; platform_python_implementation=="PyPy"'
 )
 extras_dev = (
@@ -43,15 +43,15 @@ extras_dev = (
 )
 extras_docs = (
     'sphinx==1.8.5 ; python_version<="3.4"',
-    'sphinx==2.1.1 ; python_version>"3.4"',
+    'sphinx==2.1.2 ; python_version>"3.4"',
     'sphinxcontrib-openapi==0.4.0',
     'sphinx_rtd_theme==0.4.3',
     'sphinx-autobuild==0.7.1'
 )
 extras_test = (
     'bandit==1.6.0',
-    'docker==4.0.1 ; python_version>"3.4"',
-    'docker==4.0.1 ; python_version=="2.7.*"',
+    'docker==4.0.2 ; python_version>"3.4"',
+    'docker==4.0.2 ; python_version=="2.7.*"',
     'docker==3.7.2 ; python_version=="3.4.*"',
     'flake8==3.7.7',
     'logging_tree==1.8',
@@ -61,12 +61,13 @@ extras_test = (
     'pyflakes==2.1.1',
     'pylint==1.9.4 ; python_version=="2.7.*"',
     'pylint==2.3.1 ; python_version>"2.7"',
-    'pytest==4.6.3',
+    'pytest==4.6.4 ; python_version<="3.4"',
+    'pytest==5.0.0 ; python_version>"3.4"',
     'pytest-cov==2.7.1',
     'pytest-mock==1.10.4',
-    'pytest-xdist==1.28.0',
+    'pytest-xdist==1.29.0',
     'requests',
-    'tox==3.12.1'
+    'tox==3.13.1'
 )
 
 meta = {}

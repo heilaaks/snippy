@@ -33,6 +33,6 @@ class TestUtPlugins(object):  # pylint: disable=too-few-public-methods
         """Test plugins schema validation"""
 
         test = Schema()
-        print("here %s" % test.validate({}))
+        test.validate({})
         test = Const.SNIPPET
         _ = Parser.format_data(Const.SNIPPET, "")

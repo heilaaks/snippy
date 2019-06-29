@@ -34,3 +34,6 @@ server.key
 snippy.bash-completion
 snippy.db
 snippy-test.db*
+
+# Editors
+.idea/

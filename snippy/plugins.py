@@ -207,6 +207,28 @@ class Parser(object):
 
         return list(SnippyParser.format_list(value))
 
+    @classmethod
+    def format_links(cls, category, value):
+        """Format content ``links`` attribute.
+
+        Format a string that contains the ``links`` attribute to format that
+        is accepted by the Snippy tool.
+
+        Args:
+            category (str): Content category.
+            value (str): Content ``links`` in a string.
+
+        Returns:
+            list: List of utf-8 encoded links.
+        """
+
+        links = ''
+        if category not in Const.CATEGORIES:
+            cls._logger.debug('invalid content category for links attrubute parser: %s', category)
+            return SnippyParser.format_string(links)
+
+        return list(SnippyParser.format_links(value))
+
     @staticmethod
     def _format_string(value):
         """Format content attributes in string format.

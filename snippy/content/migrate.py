@@ -166,13 +166,16 @@ class Migrate(object):
             obj: Imported notes in a ``Collection`` object.
         """
 
+        notes = {}
         collection = Collection()
         try:
             notes = Config.hooks['import'](Logger.get_logger('snippy.plugin.import'), Config.get_plugin_uri())
+        except KeyboardInterrupt:
+            cls._logger.debug('user interrupted import plugin: {}'.format(traceback.format_exc()))
+            Cause.push(Cause.HTTP_METHOD_NOT_ALLOWED, 'user interrupted import plugin')
         except Exception:  # pylint: disable=broad-except
             cls._logger.debug('failed to call import plugin: {}'.format(traceback.format_exc()))
             Cause.push(Cause.HTTP_FORBIDDEN, 'failed to call import plugin - enable --debug logs')
-            return collection
 
         if not notes:
             Cause.push(Cause.HTTP_NOT_FOUND, 'no imported notes found')
@@ -195,6 +198,5 @@ class Migrate(object):
         except Exception:  # pylint: disable=broad-except
             cls._logger.debug('failed to import content from plugin: {}'.format(traceback.format_exc()))
             Cause.push(Cause.HTTP_FORBIDDEN, 'failed to call import plugin - enable --debug logs')
-            return collection
 
         return collection

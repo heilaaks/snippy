@@ -1,4 +1,9 @@
 ## WORKING
+   - [ ] Fix copy pasting solution meta with empty 'source:' with trimmed newlines. This reads 'tags' meta to source field.
+   - [ ] Add --headers to help searching solutions to export the data to get the digest.
+   - [ ] Add support to search phrases like "brown fox daa" instead of splitting this separate words.
+   - [ ] Fix rebase to use two commands.
+   - [ ] Add git example to diff branch to master.
    - [ ] Add plugin architecture like in Pytest to import external data. Make plugin first for tldr.
    - [ ] Fix PLATFORM metadata for snippy*. When the meta is read, there is UNKNOWN for platform. What is this?
    - [ ] Snippet  #  Comment alignment does not work properly with unicode characters. Test importing tldr/pages.zh.

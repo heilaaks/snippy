@@ -623,8 +623,8 @@ class ContentParserBase(object):
 
         match = re.compile(r'''
             ^%s                 # Match metadata key at the beginning of line.
-            \s+[:]{1}\s         # Match spaces and column between key and value.
-            (?P<value>.*$)      # Catch metadata value till end of the line.
+            \s+[:]{1}\s*?       # Match spaces and column between key and value or end of line immediately after column.
+            (?P<value>.*$)      # Catch metadata value till end of the line it it exist.
             ''' % re.escape(key), re.MULTILINE | re.VERBOSE).search(text)
         if match:
             meta = match.group('value')

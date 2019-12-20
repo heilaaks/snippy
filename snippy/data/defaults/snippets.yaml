@@ -33,11 +33,17 @@ data:
   category: snippet
   created: '2017-10-16T12:09:34.000001+00:00'
   data:
-  - 'grep -rn ./ -e ''pattern''  #  recursive, line numbers, case sensitive'
-  - 'grep -rni ./ -e ''pattern''  #  recursive, line numbers, case insensitive'
-  - grep -rni ./ -e 'pattern' --include=\*.{ini,xml,cfg,conf,yaml}
+  - 'grep -rn ./ -e ''pattern''  #  Find recursively from folder.'
+  - 'grep -rni ./ -e ''pattern''  #  Case insensitive search.'
+  - 'grep -rni ./ -e ''pattern'' --include=\*.{ini,xml,cfg,conf,yaml}  #  Find with
+    file extensions.'
+  - 'grep -r --exclude-dir=''.*'' ''pattern''  #  Exclude hidden directories.'
+  - 'find /var/lib/docker/ -iname ''*.log'' | grep -rni -e ''panic''  #  Find only
+    from files.'
+  - 'find /var/lib/docker/ -iname ''*stderr*'' | xargs -0 grep -rn "panic"  #  Find
+    only from files.'
   description: ''
-  digest: e600c0bbe6d5f325d84a86312f9d17a73bb4f54d89ccddb005dfcef25209ec3a
+  digest: 7ce45259ffafa48b50ee469c5d2c12eb8fbb79981b089efdb194cfe357b06932
   filename: ''
   groups:
   - linux
@@ -49,8 +55,9 @@ data:
   source: ''
   tags:
   - find
+  - grep
   - linux
-  updated: '2019-03-14T11:22:25.518978+00:00'
+  updated: '2019-12-20T10:28:19.748584+00:00'
   uuid: f511fc21-dad2-4275-878d-039191a15505
   versions: []
 - brief: Run containers and connect to them
@@ -58,10 +65,13 @@ data:
   created: '2017-10-16T12:43:15.000001+00:00'
   data:
   - docker run -td heilaaks/snippy tail -f /dev/null
-  - docker exec -it 9782f882ab34 /bin/bash
-  - docker exec -it $(docker ps | egrep -m 1 'kibana:latest' | awk '{print $1}') /bin/bash
+  - 'docker run -it --entrypoint "" heilaaks/snippy /bin/bash  #  Override entrypoint.'
+  - 'docker exec -it 9782f882ab34 /bin/bash  #  Attach to running container.'
+  - 'docker exec -it heilaaks/snippy /bin/bash  #  Attach to running container.'
+  - 'docker exec -it $(docker ps | egrep -m 1 ''kibana:latest'' | awk ''{print $1}'')
+    /bin/bash  #  Attach to running container.'
   description: ''
-  digest: 4b9882c41365b0ea51b23004b610b2a017ee87156d173482876bb77e59f83b2a
+  digest: 62a0cb64b4c3f888d9d3f3cdd6ca63d2e0a9f62bf06ed51666a013b2650e7c98
   filename: ''
   groups:
   - docker
@@ -79,7 +89,7 @@ data:
   - lingering
   - moby
   - run
-  updated: '2017-10-16T12:43:15.000001+00:00'
+  updated: '2019-12-20T10:31:53.989606+00:00'
   uuid: 6af494d3-ddeb-479f-b43a-a4050f6a140b
   versions: []
 - brief: Compile with screen window manager
@@ -886,22 +896,25 @@ data:
   created: '2019-05-29T10:32:55.112015+00:00'
   data:
   - 'git branch -a  #  List all branches.'
-  - git checkout -b branch
-  - git push origin branch
-  - git revert -n SHA
-  - git log --graph --decorate --pretty=oneline --abbrev-commit
+  - 'git checkout -b branch  #  Create new branch.'
+  - 'git push origin branch  #  Create new branch.'
+  - 'git revert -n SHA  #  Revert commit.'
+  - 'git log --graph --decorate --pretty=oneline --abbrev-commit  #  Pretty print.'
   - 'git rebase --interactive HEAD~N  #  Squash last N commits.'
-  - 'git rebase --interactive SHA  #  Squash from last branched commit.'
-  - git push origin branch --force
-  - git pull --rebase --autostash origin master
-  - git push origin branch --force
+  - 'git rebase --interactive SHA  #  Squash from the last branched commit.'
+  - 'git push origin branch --force  #  Push squashed commits.'
+  - 'git fetch origin  #  Rebase local with remote master'
+  - 'git rebase origin/master  #  Rebase local with remote master'
+  - 'git push origin branch --force  #  Push rebased local branch.'
   - 'git push --delete origin branch  #  Delete remote branch.'
-  - 'git fetch --prune  #  Prune local branches.'
   - 'git branch -d branch  #  Delete local branch.'
+  - 'git fetch --prune  #  Prune local branches.'
+  - 'git diff --name-status master  #  Compare changed files in local branch.'
+  - 'git diff ci-demo origin/master  #  Compare changed files.'
   - git tag -a 0.1.0 -m "Add new release 0.1.0"
   - git push -u origin 0.1.0
   description: Common git workflow for basic development.
-  digest: c65f502fe4a769eb0dc571d1729ab2600310bcd6bb0998ef41479f2c214af690
+  digest: 31243bc677204d48fdd1965a8705acaf56d219600a3c842901c829a6af560399
   filename: git-devel-workflow.md
   groups:
   - git
@@ -915,11 +928,11 @@ data:
   tags:
   - git
   - workflow
-  updated: '2019-06-13T06:04:27.898693+00:00'
+  updated: '2019-12-20T10:19:46.838157+00:00'
   uuid: 84c2684e-a0e8-4b32-8608-54c45645c1e1
   versions:
   - git>=2
 meta:
   homepage: https://github.com/heilaaks/snippy
-  updated: '2019-06-15T08:01:45.048028+00:00'
+  updated: '2019-12-20T10:33:52.252057+00:00'
   version: 0.11a0

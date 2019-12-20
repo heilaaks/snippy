@@ -139,6 +139,27 @@ class TestCliSearchSolution(object):
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+    @staticmethod
+    @pytest.mark.usefixtures('default-solutions')
+    def test_cli_search_solution_006(snippy, capsys):
+        """Search solutions with ``headers`` option.
+
+        Search resources and print only the content headers.
+        """
+
+        output = (
+            '1. Debugging Elastic Beats @beats [4346ba4c79247430]',
+            '2. Debugging nginx @nginx [6cfe47a8880a8f81]',
+            '',
+            'OK',
+            ''
+        )
+        cause = snippy.run(['snippy', 'search', '--scat', 'solution', '--sall', '.', '--headers', '--no-ansi'])
+        out, err = capsys.readouterr()
+        assert cause == Cause.ALL_OK
+        assert out == Const.NEWLINE.join(output)
+        assert not err
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

@@ -422,6 +422,29 @@ class TestCliSearchReference(object):
         assert out == output
         assert not err
 
+    @staticmethod
+    @pytest.mark.usefixtures('default-references', 'import-remove', 'import-beats')
+    def test_cli_search_reference_017(snippy, capsys):
+        """Search references with ``headers`` option.
+
+        Search resources and print only the content headers. In this case the
+        search is limited to only defined resources and the content is sorted
+        based on ``brief`` field.
+        """
+
+        output = (
+            '1. Python regular expression @python [cb9225a81eab8ced]',
+            '2. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+            '',
+            'OK',
+            ''
+        )
+        cause = snippy.run(['snippy', 'search', 'regexp,docker,beats', '--headers', '--no-ansi', '--scat', 'reference,snippet', '--sort', 'brief'])  # pylint: disable=line-too-long
+        out, err = capsys.readouterr()
+        assert cause == Cause.ALL_OK
+        assert out == Const.NEWLINE.join(output)
+        assert not err
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

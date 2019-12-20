@@ -98,7 +98,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     def __str__(self):
         """Format string from the class object."""
 
-        return self.dump_term(index=1, use_ansi=True, debug_logs=True)
+        return self.dump_term(index=1, only_headers=False, use_ansi=True, debug_logs=True)
 
     def __eq__(self, resource):
         """Compare resources if they are equal."""
@@ -905,7 +905,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
 
         return links
 
-    def dump_term(self, index, use_ansi, debug_logs):  # noqa pylint: disable=too-many-statements
+    def dump_term(self, index, only_headers, use_ansi, debug_logs):  # noqa pylint: disable=too-many-statements
         """Convert resource for terminal output."""
 
         # In order to print unicode characters in Python 2, the strings
@@ -931,26 +931,29 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         if self.is_snippet():
             aligned_data = self._align_snippet_comments(self.data, use_ansi)
             text = text + header.format(i=index, brief=self.brief, groups=Const.DELIMITER_GROUPS.join(self.groups), digest=self.digest)
-            text = text + Const.NEWLINE
-            text = text + Const.EMPTY.join([data.format(indent=indent, symbol='$', line=line) for line in aligned_data])
-            text = text + Const.NEWLINE
-            text = text + tags.format(indent=indent, tag=Const.DELIMITER_TAGS.join(self.tags))
-            text = text + Const.EMPTY.join([links.format(indent=indent, link=link) for link in self.links])
-            text = text + Const.NEWLINE
+            if not only_headers:
+                text = text + Const.NEWLINE
+                text = text + Const.EMPTY.join([data.format(indent=indent, symbol='$', line=line) for line in aligned_data])
+                text = text + Const.NEWLINE
+                text = text + tags.format(indent=indent, tag=Const.DELIMITER_TAGS.join(self.tags))
+                text = text + Const.EMPTY.join([links.format(indent=indent, link=link) for link in self.links])
+                text = text + Const.NEWLINE
         elif self.is_solution():
             text = text + header.format(i=index, brief=self.brief, groups=Const.DELIMITER_GROUPS.join(self.groups), digest=self.digest)
-            text = text + Const.NEWLINE
-            text = text + tags.format(indent=indent, tag=Const.DELIMITER_TAGS.join(self.tags))
-            text = text + Const.EMPTY.join([links.format(indent=indent, link=link) for link in self.links])
-            text = text + Const.NEWLINE
-            text = text + Const.EMPTY.join([data.format(indent=indent, symbol=':', line=line) for line in self.data])
-            text = text + Const.NEWLINE
+            if not only_headers:
+                text = text + Const.NEWLINE
+                text = text + tags.format(indent=indent, tag=Const.DELIMITER_TAGS.join(self.tags))
+                text = text + Const.EMPTY.join([links.format(indent=indent, link=link) for link in self.links])
+                text = text + Const.NEWLINE
+                text = text + Const.EMPTY.join([data.format(indent=indent, symbol=':', line=line) for line in self.data])
+                text = text + Const.NEWLINE
         elif self.is_reference():
             text = text + header.format(i=index, brief=self.brief, groups=Const.DELIMITER_GROUPS.join(self.groups), digest=self.digest)
-            text = text + Const.NEWLINE
-            text = text + Const.EMPTY.join([links.format(indent=indent, link=link) for link in self.links])
-            text = text + tags.format(indent=indent, tag=Const.DELIMITER_TAGS.join(self.tags))
-            text = text + Const.NEWLINE
+            if not only_headers:
+                text = text + Const.NEWLINE
+                text = text + Const.EMPTY.join([links.format(indent=indent, link=link) for link in self.links])
+                text = text + tags.format(indent=indent, tag=Const.DELIMITER_TAGS.join(self.tags))
+                text = text + Const.NEWLINE
         else:
             self._logger.debug('internal error with content category: %s', self.category)
 

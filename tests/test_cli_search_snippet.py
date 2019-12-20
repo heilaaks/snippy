@@ -1750,6 +1750,53 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods, 
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+    @staticmethod
+    @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited')
+    def test_cli_search_snippet_056(snippy, capsys):
+        """Search snippets with ``headers`` option.
+
+        Search resources and print only the content headers.
+        """
+
+        output = (
+            '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+            '2. Remove all exited containers and dangling images @docker [49d6916b6711f13d]',
+            '3. Remove docker image with force @docker [53908d68425c61dc]',
+            '4. Test if specific port is open @linux [f3fd167c64b6f97e]',
+            '',
+            'OK',
+            ''
+        )
+        cause = snippy.run(['snippy', 'search', '--sall', '.', '--headers', '--no-ansi'])
+        out, err = capsys.readouterr()
+        assert cause == Cause.ALL_OK
+        assert out == Const.NEWLINE.join(output)
+        assert not err
+
+    @staticmethod
+    @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited')
+    def test_cli_search_snippet_057(snippy, capsys):
+        """Search snippets with ``headers`` option.
+
+        Search resources and print only the content headers and sort the
+        output based on ``digest``` .
+        """
+
+        output = (
+            '1. Remove all exited containers and dangling images @docker [49d6916b6711f13d]',
+            '2. Remove docker image with force @docker [53908d68425c61dc]',
+            '3. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+            '4. Test if specific port is open @linux [f3fd167c64b6f97e]',
+            '',
+            'OK',
+            ''
+        )
+        cause = snippy.run(['snippy', 'search', '--sall', '.', '--headers', '--sort', 'digest', '--no-ansi'])
+        out, err = capsys.readouterr()
+        assert cause == Cause.ALL_OK
+        assert out == Const.NEWLINE.join(output)
+        assert not err
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

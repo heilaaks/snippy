@@ -89,6 +89,7 @@ class ContentBase(object):  # pylint: disable=too-many-instance-attributes
             self.collection.dump_term(
                 Config.templates,
                 Config.template_format,
+                Config.only_headers,
                 Config.use_ansi,
                 Config.debug_logs
             )

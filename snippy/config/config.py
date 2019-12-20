@@ -252,6 +252,7 @@ class Config(object):
         cls.template_format_used = cls.source.template_format_used
         cls.template_format = cls.source.template_format
         cls.use_ansi = not cls.source.no_ansi
+        cls.only_headers = cls.source.only_headers
         cls.failure = cls.source.failure
         cls.failure_message = cls.source.failure_message
 

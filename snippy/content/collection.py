@@ -43,7 +43,7 @@ class Collection(object):  # pylint: disable=too-many-public-methods
 
         text = Const.EMPTY
         for i, resource in enumerate(self.resources(), start=1):
-            text = text + resource.dump_term(index=i, use_ansi=True, debug_logs=True)
+            text = text + resource.dump_term(index=i, only_headers=False, use_ansi=True, debug_logs=True)
 
         text = text + '\x1b[96;1m# \x1b[1;92mcollection meta\x1b[0m\n'
         text = text + '   \x1b[91m!\x1b[0m \x1b[2mtotal\x1b[0m : %d\n' % self._data['meta']['total']
@@ -319,12 +319,13 @@ class Collection(object):  # pylint: disable=too-many-public-methods
 
         return text
 
-    def dump_term(self, templates, template_format, use_ansi, debug_logs):
+    def dump_term(self, templates, template_format, only_headers, use_ansi, debug_logs):
         """Convert collection for terminal.
 
         Args:
            templates (dict): Dictionary that contains content templates.
            template_format (str): Define the output format
+           only_headers (bool): Define if only content headers are printed.
            use_ansi (bool): Define if ANSI characters are used.
            debug_logs (bool): Define if debut information is included.
         """
@@ -333,15 +334,16 @@ class Collection(object):  # pylint: disable=too-many-public-methods
         if template_format == Const.CONTENT_FORMAT_MKDN:
             text = self.dump_mkdn(templates)
         else:
-            text = self._dump_term(use_ansi, debug_logs)
+            text = self._dump_term(only_headers, use_ansi, debug_logs)
 
         self._logger.debug('printing content to terminal stdout')
         Logger.print_stdout(text)
 
-    def _dump_term(self, use_ansi, debug_logs):
+    def _dump_term(self, only_headers, use_ansi, debug_logs):
         """Convert collection into terminal format.
 
         Args:
+           only_headers (bool): Define if only content headers are printed.
            use_ansi (bool): Define if ANSI characters are used.
            debug_logs (bool): Define if debut information is included.
 
@@ -355,7 +357,7 @@ class Collection(object):  # pylint: disable=too-many-public-methods
             return text
 
         for i, resource in enumerate(self.resources(), start=1):
-            text = text + resource.dump_term(index=i, use_ansi=use_ansi, debug_logs=debug_logs)
+            text = text + resource.dump_term(index=i, only_headers=only_headers, use_ansi=use_ansi, debug_logs=debug_logs)
 
         # Set one empty line at the end of string for beautified output.
         if self:

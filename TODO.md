@@ -1,5 +1,4 @@
 ## WORKING
-   - [ ] Add --headers to help searching solutions to export the data to get the digest.
    - [ ] Add support to search phrases like "brown fox daa" instead of splitting this separate words.
    - [ ] Fix rebase to use two commands.
    - [ ] Add git example to diff branch to master.

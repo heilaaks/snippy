@@ -67,6 +67,7 @@ class TestCliOptions(object):  # pylint: disable=too-many-public-methods
         '    --filter REGEXP               filter search result with regexp',
         '    --limit INT                   maximum number of search results',
         '    --sort FIELD                  sort search result based on fields',
+        '    --headers                     print only content headers',
         '    --no-ansi                     remove ANSI characters from output',
         '',
         'migration options:',

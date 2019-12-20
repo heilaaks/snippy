@@ -19,6 +19,7 @@ New features
 * Add new REST API endpoints to query distinct values of attributes.
 * Add Bash completion support for command line interface.
 * Add ``--sort`` command line option to sort search results.
+* Add ``--headers`` command line option to print only content headers.
 
 Bugfixes
 ~~~~~~~~

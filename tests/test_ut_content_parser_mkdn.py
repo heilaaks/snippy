@@ -1599,6 +1599,132 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines
         assert resource.updated == '2019-01-27T13:17:51.831220+00:00'
         assert resource.uuid == '5d44f0ca-4d92-4736-b913-41ac38503b1d'
 
+    def test_parser_solution_009(self):
+        """Test parsing solution.
+
+        Test case verifies that Markdown content brief description is parsed
+        correctly. In this case the solution data contains '@' mark which is
+        also used in the Markdown solution header. The parser must read only
+        the first line of the solution to parse the header.
+        """
+
+        text = Const.NEWLINE.join((
+            '# How-to Makefiles @make',
+            '',
+            '> This solution gives examples how to use Makefiles.',
+            '',
+            '>',
+            '',
+            '## Description',
+            '',
+            'This solution defines how to use Makefiles in various use cases.',
+            '',
+            '## Solutions',
+            '',
+            '    # Make sure that the last line of the target is tabbed. If spaces',
+            '    # are used, it will break Makefile tab completion by adding extra',
+            '    # targets to e.g. \'make docker<tab><tab>\'.',
+            '    docker-build:',
+            '            $(export-env-conditionally)',
+            '            time docker build -t $(REGISTRY)$(IMAGE):$(VERSION) \\',
+            '                    --build-arg VERSION=$(VERSION) \\',
+            '                    --build-arg COMMIT_SHA=$(BUILD) \\',
+            '                    --build-arg BUILD_DATE=$(DATE) \\',
+            '                    --build-arg IMAGE_NAME=$(IMAGE):$(VERSION) .',
+            '',
+            '    docker-test:',
+            '            $(export-env-conditionally)',
+            '            echo "test ucim image: $(REGISTRY)$(IMAGE):$(VERSION)"',
+            '            time docker-compose -f Composefile.tests up --abort-on-container-exit || (docker-compose -f Composefile.tests down; exit 1)',  # pylint: disable=line-too-long
+            '            time docker-compose -f Composefile.tests down',
+            '',
+            '    help:',
+            '            set +x;',
+            '            @echo \'Cleaning targets:\'',
+            '            @echo \'  clean                 - Clean all targets.\'',
+            '            @echo \'\'',
+            '',
+            '## Commands',
+            '',
+            '## Configurations',
+            '',
+            '## References',
+            '',
+            '## Whiteboard',
+            '',
+            '## Meta',
+            '',
+            '> category : solution  ',
+            'created  : 2019-08-28T07:08:38.284222+00:00  ',
+            'digest   : eafc61a6d586384d5453671afba832885cbc082b99037a6e1038e59b7a216aa8  ',
+            'filename : howto-makefile.md  ',
+            'name     : how-to makefile  ',
+            'source   :  ',
+            'tags     : bash,make,makefile,howto  ',
+            'updated  : 2019-08-28T07:35:32.241764+00:00  ',
+            'uuid     : 66e4d19f-3ecc-40bc-941a-f08776395e08  ',
+            'versions :  ',
+            '',
+        ))
+        data = (
+            '## Description',
+            '',
+            'This solution defines how to use Makefiles in various use cases.',
+            '',
+            '## Solutions',
+            '',
+            '    # Make sure that the last line of the target is tabbed. If spaces',
+            '    # are used, it will break Makefile tab completion by adding extra',
+            '    # targets to e.g. \'make docker<tab><tab>\'.',
+            '    docker-build:',
+            '            $(export-env-conditionally)',
+            '            time docker build -t $(REGISTRY)$(IMAGE):$(VERSION) \\',
+            '                    --build-arg VERSION=$(VERSION) \\',
+            '                    --build-arg COMMIT_SHA=$(BUILD) \\',
+            '                    --build-arg BUILD_DATE=$(DATE) \\',
+            '                    --build-arg IMAGE_NAME=$(IMAGE):$(VERSION) .',
+            '',
+            '    docker-test:',
+            '            $(export-env-conditionally)',
+            '            echo "test ucim image: $(REGISTRY)$(IMAGE):$(VERSION)"',
+            '            time docker-compose -f Composefile.tests up --abort-on-container-exit || (docker-compose -f Composefile.tests down; exit 1)',  # pylint: disable=line-too-long
+            '            time docker-compose -f Composefile.tests down',
+            '',
+            '    help:',
+            '            set +x;',
+            '            @echo \'Cleaning targets:\'',
+            '            @echo \'  clean                 - Clean all targets.\'',
+            '            @echo \'\'',
+            '',
+            '## Commands',
+            '',
+            '## Configurations',
+            '',
+            '## References',
+            '',
+            '## Whiteboard',
+            ''
+        )
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
+        assert len(collection) == 1
+        assert resource.category == Const.SOLUTION
+        assert resource.data == data
+        assert resource.brief == 'How-to Makefiles'
+        assert resource.description == ('This solution gives examples how to use Makefiles.')
+        assert resource.name == 'how-to makefile'
+        assert resource.groups == ('make',)
+        assert resource.tags == ('bash', 'howto', 'make', 'makefile')
+        assert resource.links == ()
+        assert resource.source == ''
+        assert resource.versions == ()
+        assert resource.languages == ()
+        assert resource.filename == 'howto-makefile.md'
+        assert resource.created == '2019-08-28T07:08:38.284222+00:00'
+        assert resource.updated == '2019-08-28T07:35:32.241764+00:00'
+        assert resource.uuid == '66e4d19f-3ecc-40bc-941a-f08776395e08'
+
     def test_parser_reference_001(self):
         """Test parsing reference.
 

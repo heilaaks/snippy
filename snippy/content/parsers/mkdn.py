@@ -57,7 +57,7 @@ class ContentParserMkdn(ContentParserBase):
     REGEXP['brief'] = {}
     REGEXP['brief'][Const.SNIPPET] = re.compile(r'''
         [#\s]+          # Match leading comment before brief.
-        (?P<brief>.*)   # Catch brief.
+        (?P<brief>.*?)  # Catch brief.
         \s+[@]{1}       # Match string between brief and groups.
         ''', re.DOTALL | re.VERBOSE)
     REGEXP['brief'][Const.SOLUTION] = REGEXP['brief'][Const.SNIPPET]

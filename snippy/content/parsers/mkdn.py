@@ -126,10 +126,16 @@ class ContentParserMkdn(ContentParserBase):
         self._collection = collection
 
     def read_collection(self):
-        """Read collection from the given Markdown source."""
+        """Read collection from the given Markdown source.
+
+        The content is split based on reserved syntax. The reserved syntax to
+        separate two different contents is a string '---' that must be at the
+        beginning of a (multiline) string and have a newline immediately after
+        the reserved string.
+        """
 
         resources = []
-        contents = self._text.split('---')
+        contents = re.split('^[-]{3}$', self._text, flags=re.MULTILINE)
         for content in contents:
             content = self.remove_template_fillers(content)
             category = self._read_category(content)

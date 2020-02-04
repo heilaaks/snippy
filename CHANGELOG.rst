@@ -33,6 +33,7 @@ Bugfixes
 * Fix reading one line attributes like ``brief`` from multiple lines.
 * Fix terminal colors on Windows.
 * Fix parsing Markdown metadata from solution.
+* Fix parsing Markdown solution data with '---' string.
 * All commits in `0.11.0`_.
 
 Security

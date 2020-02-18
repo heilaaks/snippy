@@ -393,7 +393,7 @@ class ContentParserBase(object):
             links = cls.format_links(match)
             cls._logger.debug('parsed content links: %s', links)
         else:
-            cls._logger.debug('parser did not find content for links: {}'.format(text))
+            cls._logger.debug('parser did not find content for links: %s', text)
 
         return links
 
@@ -423,7 +423,7 @@ class ContentParserBase(object):
             versions = cls.format_list([match.group('versions')])
             cls._logger.debug('parsed content versions: %s', versions)
         else:
-            cls._logger.debug('parser did not find content for versions: {}'.format(text))
+            cls._logger.debug('parser did not find content for versions: %s', text)
 
         return cls.format_versions(versions)
 
@@ -533,7 +533,7 @@ class ContentParserBase(object):
             brief = Const.RE_MATCH_MULTIPE_WHITESPACES.sub(Const.SPACE, brief)
             self._logger.debug('parsed content brief: %s', brief)
         else:
-            self._logger.debug('parser did not find brief attribute: {}'.format(text))
+            self._logger.debug('parser did not find brief attribute: %s', text)
 
         return self.format_string(brief)
 
@@ -562,7 +562,7 @@ class ContentParserBase(object):
             description = Const.RE_MATCH_MULTIPE_WHITESPACES.sub(Const.SPACE, description)
             self._logger.debug('parsed content description: %s', description)
         else:
-            self._logger.debug('parser did not find content for description: {}'.format(text))
+            self._logger.debug('parser did not find content for description: %s', text)
 
         return self.format_string(description)
 
@@ -628,8 +628,8 @@ class ContentParserBase(object):
             ''' % re.escape(key), re.MULTILINE | re.VERBOSE).search(text)
         if match:
             meta = match.group('value')
-            self._logger.debug('parsed content metadata: {} : with value: {}'.format(key, text))
+            self._logger.debug('parsed content metadata: %s : with value: %s', key, text)
         else:
-            self._logger.debug('parser did not find content for key: {} :from metadata: {}'.format(key, text))
+            self._logger.debug('parser did not find content for key: %s :from metadata: %s', key, text)
 
         return self.format_string(meta)

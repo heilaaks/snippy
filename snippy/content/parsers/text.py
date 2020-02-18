@@ -358,7 +358,7 @@ class ContentParserText(ContentParserBase):
             data = self.format_data(category, match.group(1))
             self._logger.debug('parsed content data: %s', data)
         else:
-            self._logger.debug('parser did not find content for data: {}'.format(text))
+            self._logger.debug('parser did not find content for data: %s', text)
 
         # Format snippet command comments to internal format.
         if category == Const.SNIPPET:
@@ -395,7 +395,7 @@ class ContentParserText(ContentParserBase):
             name = Const.RE_MATCH_MULTIPE_WHITESPACES.sub(Const.SPACE, name)
             self._logger.debug('parsed content name: %s', name)
         else:
-            self._logger.debug('parser did not find content for name: {}'.format(text))
+            self._logger.debug('parser did not find content for name: %s', text)
 
         return self.format_string(name)
 
@@ -419,7 +419,7 @@ class ContentParserText(ContentParserBase):
             tags = [match.group('tags')]
             self._logger.debug('parsed content tags: %s', tags)
         else:
-            self._logger.debug('parser did not find content for tags: {}'.format(text))
+            self._logger.debug('parser did not find content for tags: %s', text)
 
         return self.format_list(tags)
 
@@ -443,7 +443,7 @@ class ContentParserText(ContentParserBase):
             source = match.group('source')
             self._logger.debug('parsed content source: %s', source)
         else:
-            self._logger.debug('parser did not find content for source: {}'.format(text))
+            self._logger.debug('parser did not find content for source: %s', text)
 
         return self.format_string(source)
 
@@ -467,7 +467,7 @@ class ContentParserText(ContentParserBase):
             languages = [match.group('languages')]
             self._logger.debug('parsed content languages: %s', languages)
         else:
-            self._logger.debug('parser did not find content for languages: {}'.format(text))
+            self._logger.debug('parser did not find content for languages: %s', text)
 
         return self.format_list(languages)
 
@@ -491,6 +491,6 @@ class ContentParserText(ContentParserBase):
             filename = match.group('filename')
             self._logger.debug('parsed content filename: %s', filename)
         else:
-            self._logger.debug('parser did not find content for filename: {}'.format(text))
+            self._logger.debug('parser did not find content for filename: %s', text)
 
         return self.format_string(filename)

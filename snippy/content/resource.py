@@ -759,7 +759,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             except (re.error, TypeError):
                 self._logger.info('failed to replace content data in text template: {}'.format(traceback.format_exc()))
                 self._logger.info('failed to replace content data: {}'.format(self.data))
-                self._logger.info('failed to replace content template: {}'.format(text))
+                self._logger.info('failed to replace content template: %s', text)
         else:
             # The replacing of the data is only relevant with a text formatted
             # solution . With other cases where for example Markdown solution

@@ -214,7 +214,7 @@ class ContentParserMkdn(ContentParserBase):
                 data = data.strip()
             self._logger.debug('parsed content data: %s', data)
         else:
-            self._logger.debug('parser did not find content for data: {}'.format(text))
+            self._logger.debug('parser did not find content for data: %s', text)
 
         return self.format_data(category, data)
 
@@ -270,7 +270,7 @@ class ContentParserMkdn(ContentParserBase):
             tags = [match]
             self._logger.debug('parsed content tags: %s', tags)
         else:
-            self._logger.debug('parser did not find content for tags: {}'.format(text))
+            self._logger.debug('parser did not find content for tags: %s', text)
 
         return self.format_list(tags)
 
@@ -294,6 +294,6 @@ class ContentParserMkdn(ContentParserBase):
             languages = [match]
             self._logger.debug('parsed content languages: %s', languages)
         else:
-            self._logger.debug('parser did not find content for languages: {}'.format(text))
+            self._logger.debug('parser did not find content for languages: %s', text)
 
         return self.format_list(languages)

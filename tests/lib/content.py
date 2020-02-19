@@ -319,7 +319,7 @@ class Content(object):  # pylint: disable=too-many-public-methods, too-many-line
         try:
             assert result_collection == expect_collection
             assert result_dictionary == expect_dictionary
-            json_file.assert_called_once_with(filename, 'w')
+            json_file.assert_called_once_with(filename, mode='w', encoding='utf-8')
         except AssertionError:
             Content._print_assert(result_collection, expect_collection)
             Content._print_assert(result_dictionary, expect_dictionary)
@@ -344,8 +344,9 @@ class Content(object):  # pylint: disable=too-many-public-methods, too-many-line
         try:
             assert result_collection == expect_collection
             assert result_markdown == expect_markdown
-            mkdn_mock.assert_called_once_with(filename, 'w')
+            mkdn_mock.assert_called_once_with(filename, mode='w', encoding='utf-8')
         except AssertionError:
+            print('assertion error: {}'.format(traceback.format_exc()))
             Content._print_assert(result_collection, expect_collection)
             Content._print_assert(result_markdown, expect_markdown)
             raise AssertionError
@@ -375,7 +376,7 @@ class Content(object):  # pylint: disable=too-many-public-methods, too-many-line
         try:
             assert result_collection == expect_collection
             assert result_text == expect_text
-            text.assert_called_once_with(filename, 'w')
+            text.assert_called_once_with(filename, mode='w', encoding='utf-8')
         except AssertionError:
             Content._print_assert(result_collection, expect_collection)
             Content._print_assert(result_text, expect_text)
@@ -403,9 +404,9 @@ class Content(object):  # pylint: disable=too-many-public-methods, too-many-line
             assert result_dictionary == expect_dictionary
             if isinstance(filenames, (list, tuple)):
                 for filename in filenames:
-                    yaml_file.assert_any_call(filename, 'w')
+                    yaml_file.assert_any_call(filename, mode='w', encoding='utf-8')
             else:
-                yaml_file.assert_called_once_with(filenames, 'w')
+                yaml_file.assert_called_once_with(filenames, mode='w', encoding='utf-8')
         except AssertionError:
             Content._print_assert(result_collection, expect_collection)
             Content._print_assert(result_dictionary, expect_dictionary)

@@ -52,7 +52,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
                 Snippet.FORCED
             ]
         }
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', autospec=True) as mock_file:
             cause = snippy.run(['snippy', 'export'])
             assert cause == Cause.ALL_OK
             Content.assert_mkdn(mock_file, './snippets.mkdn', content)
@@ -73,7 +73,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
                 Snippet.FORCED
             ]
         }
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', autospec=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--scat', 'snippet'])
             assert cause == Cause.ALL_OK
             Content.assert_mkdn(mock_file, './snippets.mkdn', content)
@@ -93,7 +93,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
                 Snippet.FORCED
             ]
         }
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', autospec=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-f', './defined-snippets.yaml'])
             assert cause == Cause.ALL_OK
             Content.assert_yaml(yaml, mock_file, './defined-snippets.yaml', content)
@@ -114,7 +114,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
                 Snippet.FORCED
             ]
         }
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', autospec=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-f', './defined-snippets.yml', '--scat', 'snippet'])
             assert cause == Cause.ALL_OK
             Content.assert_yaml(yaml, mock_file, './defined-snippets.yml', content)
@@ -129,7 +129,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         created.
         """
 
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', autospec=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-f', 'foo.bar'])
             assert cause == 'NOK: cannot identify file format for file: foo.bar'
             mock_file.assert_not_called()
@@ -152,7 +152,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
                 Snippet.FORCED
             ]
         }
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', autospec=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-d', '53908d68425c61dc'])
             assert cause == Cause.ALL_OK
             Content.assert_mkdn(mock_file, './snippets.mkdn', content)
@@ -172,7 +172,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
                 Snippet.FORCED
             ]
         }
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', autospec=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-d', '53908d68425c61dc', '-f', 'defined-snippet.yaml'])
             assert cause == Cause.ALL_OK
             Content.assert_yaml(yaml, mock_file, 'defined-snippet.yaml', content)
@@ -192,7 +192,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
                 Snippet.FORCED
             ]
         }
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', autospec=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-d', '53908d68425c61dc', '-f', 'defined-snippet.json'])
             assert cause == Cause.ALL_OK
             Content.assert_json(json, mock_file, 'defined-snippet.json', content)
@@ -212,7 +212,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
                 Content.deepcopy(Snippet.FORCED)
             ]
         }
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', autospec=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-d', '53908d68425c61dc', '-f', 'defined-snippet.txt'])
             assert cause == Cause.ALL_OK
             Content.assert_text(mock_file, 'defined-snippet.txt', content)
@@ -226,7 +226,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         found.
         """
 
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', autospec=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-d', '123456789abcdef0', '-f', 'defined-snippet.txt'])
             assert cause == 'NOK: cannot find content with message digest: 123456789abcdef0'
             Content.assert_text(mock_file, None, None)
@@ -247,7 +247,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
                 Snippet.FORCED
             ]
         }
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', autospec=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--sall', 'force'])
             assert cause == Cause.ALL_OK
             Content.assert_mkdn(mock_file, './snippets.mkdn', content)
@@ -267,7 +267,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
                 Snippet.FORCED
             ]
         }
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', autospec=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--sall', 'force', '-f', 'defined-snippet.yaml'])
             assert cause == Cause.ALL_OK
             Content.assert_yaml(yaml, mock_file, 'defined-snippet.yaml', content)
@@ -287,7 +287,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
                 Snippet.FORCED
             ]
         }
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', autospec=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--sall', 'force', '-f', 'defined-snippet.json'])
             assert cause == Cause.ALL_OK
             Content.assert_json(json, mock_file, 'defined-snippet.json', content)
@@ -307,7 +307,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
                 Content.deepcopy(Snippet.FORCED)
             ]
         }
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', autospec=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--sall', 'force', '-f', 'defined-snippet.txt'])
             assert cause == Cause.ALL_OK
             Content.assert_text(mock_file, 'defined-snippet.txt', content)
@@ -327,7 +327,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
                 Content.deepcopy(Snippet.FORCED)
             ]
         }
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', autospec=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--sall', 'force', '-f', 'defined-snippet.text'])
             assert cause == Cause.ALL_OK
             Content.assert_text(mock_file, 'defined-snippet.text', content)
@@ -349,7 +349,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
                 Content.deepcopy(Snippet.FORCED)
             ]
         }
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', autospec=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--sall', 'docker', '-f', 'defined-snippet.text'])
             assert cause == Cause.ALL_OK
             Content.assert_text(mock_file, 'defined-snippet.text', content)
@@ -362,7 +362,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         Try to export snippet based on search keyword that cannot befound.
         """
 
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', autospec=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--sall', 'notfound', '-f', 'defined-snippet.yaml'])
             assert cause == 'NOK: cannot find content with given search criteria'
             mock_file.assert_not_called()
@@ -383,7 +383,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
                 Snippet.REMOVE
             ]
         }
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', autospec=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--content', 'docker rm --volumes $(docker ps --all --quiet)'])
             assert cause == Cause.ALL_OK
             Content.assert_mkdn(mock_file, './snippets.mkdn', content)
@@ -403,7 +403,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
                 Snippet.REMOVE
             ]
         }
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', autospec=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-c', 'docker rm --volumes $(docker ps --all --quiet)', '-f', 'defined-snippet.yaml'])  # pylint: disable=line-too-long
             assert cause == Cause.ALL_OK
             Content.assert_yaml(yaml, mock_file, 'defined-snippet.yaml', content)
@@ -423,7 +423,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
                 Snippet.REMOVE
             ]
         }
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', autospec=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-c', 'docker rm --volumes $(docker ps --all --quiet)', '-f', 'defined-snippet.json'])  # pylint: disable=line-too-long
             assert cause == Cause.ALL_OK
             Content.assert_json(json, mock_file, 'defined-snippet.json', content)
@@ -443,7 +443,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
                 Content.deepcopy(Snippet.REMOVE)
             ]
         }
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', autospec=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-c', 'docker rm --volumes $(docker ps --all --quiet)', '-f', 'defined-snippet.txt'])  # pylint: disable=line-too-long
             assert cause == Cause.ALL_OK
             Content.assert_text(mock_file, 'defined-snippet.txt', content)
@@ -457,7 +457,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         on tool internal settings.
         """
 
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.open') as mock_file:
             cause = snippy.run(['snippy', 'export', '--template'])
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./snippet-template.mkdn', 'w')
@@ -473,7 +473,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         should result file name and format based on tool internal settings.
         """
 
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.open') as mock_file:
             cause = snippy.run(['snippy', 'export', '--scat', 'snippet', '--template'])
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./snippet-template.mkdn', 'w')
@@ -496,7 +496,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
                 Snippet.FORCED
             ]
         }
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', autospec=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--defaults'])
             assert cause == Cause.ALL_OK
             defaults_snippets = pkg_resources.resource_filename('snippy', 'data/defaults/snippets.yaml')
@@ -512,7 +512,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         for end user.
         """
 
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', autospec=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--defaults'])
             assert cause == 'NOK: no content found to be exported'
             mock_file.assert_not_called()
@@ -534,7 +534,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
                 Snippet.FORCED
             ]
         }
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', autospec=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--sall', 'docker'])
             assert cause == Cause.ALL_OK
             Content.assert_mkdn(mock_file, './snippets.mkdn', content)
@@ -554,7 +554,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
                 Snippet.FORCED
             ]
         }
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', autospec=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-f', './snippets.mkdn'])
             assert cause == Cause.ALL_OK
             Content.assert_mkdn(mock_file, './snippets.mkdn', content)
@@ -578,7 +578,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             'tags': ['howto', 'linux', 'tar', 'untar'],
             'category': Const.SNIPPET,
         })
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', autospec=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-f', './snippets.md'])
             assert cause == Cause.ALL_OK
             call = mock_file.return_value.__enter__.return_value.write.mock_calls[0][1][0]
@@ -627,7 +627,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             'versions  :  ',
             ''
         )
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', autospec=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-f', './snippets.mkdn'])
             assert cause == Cause.ALL_OK
             assert mock_file.return_value.__enter__.return_value.write.mock_calls[0][1][0] == '\n'.join(markdown)
@@ -642,7 +642,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         and the template text format.
         """
 
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.open') as mock_file:
             cause = snippy.run(['snippy', 'export', '--template', '--format', 'text'])
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./snippet-template.text', 'w')
@@ -658,7 +658,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         and the template Markdown format.
         """
 
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.open') as mock_file:
             cause = snippy.run(['snippy', 'export', '--template', '--format', 'mkdn'])
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./snippet-template.mkdn', 'w')

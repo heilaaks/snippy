@@ -22,6 +22,7 @@
 
 from __future__ import print_function
 
+import io
 import json
 import os.path
 import traceback
@@ -57,7 +58,7 @@ class Migrate(object):
             return
 
         cls._logger.debug('exporting contents %s', filename)
-        with open(filename, 'w') as outfile:
+        with io.open(filename, mode='w', encoding='utf-8') as outfile:
             try:
                 dictionary = {'meta': {'updated': Config.utcnow(),
                                        'version': __version__,

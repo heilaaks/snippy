@@ -352,7 +352,7 @@ class Database(object):
 
         if cls._DATABASE in (cls.DB_SQLITE, cls.DB_IN_MEMORY):
             if not Const.PYTHON2:
-                connection = sqlite3.connect(Database.get_storage(), check_same_thread=False, uri=True)
+                connection = sqlite3.connect(Database.get_storage(), check_same_thread=False, uri=True)  # pylint: disable=unexpected-keyword-arg
             else:
                 connection = sqlite3.connect(Database.get_storage(), check_same_thread=False)
         elif cls._DATABASE == cls.DB_POSTGRESQL:

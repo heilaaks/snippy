@@ -905,7 +905,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
 
         return links
 
-    def dump_term(self, index, only_headers, use_ansi, debug_logs):  # noqa pylint: disable=too-many-statements
+    def dump_term(self, index, only_headers, use_ansi, debug_logs):  # noqa pylint: disable=too-many-statements, too-many-locals
         """Convert resource for terminal output."""
 
         # In order to print unicode characters in Python 2, the strings

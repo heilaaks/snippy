@@ -538,7 +538,7 @@ class Database(object):
         try:
             if self._db == Const.DB_SQLITE:
                 if not Const.PYTHON2:
-                    connection = sqlite3.connect(location, check_same_thread=False, uri=True)
+                    connection = sqlite3.connect(location, check_same_thread=False, uri=True)  # pylint: disable=unexpected-keyword-arg
                 else:
                     connection = sqlite3.connect(location, check_same_thread=False)
                 connection.create_function('REGEXP', 2, lambda regex, value: bool(re.search(regex, value, re.IGNORECASE)))

@@ -1,6 +1,6 @@
 [BASIC]
 # Regular expression matching correct function names. Overrides function-
-# naming-style. This is changed only because of Python 2. The same regepx
+# naming-style. This is changed only because of Python 2. The same regexp
 # is already applied with Python 3. Python 2 does not get updates anymore
 # from Pylint and this is applied here. This is the same as in issue [1].
 #

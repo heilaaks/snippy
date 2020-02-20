@@ -224,7 +224,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         content['data'][0]['filename'] = Const.EMPTY
         content['data'][0]['digest'] = '0a2b29d2fde6b900375d68be93ac6142c5adafb27fb5d6294fab465090d82504'
         file_content = Content.get_file_content(Content.TEXT, content)
-        with mock.patch('snippy.content.migrate.open', file_content) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', file_content) as mock_file:
             cause = snippy.run(['snippy', 'import', '--scat', 'solution', '-d', 'ee3f2ab7c63d6965', '-f', 'kafka.text'])
             assert cause == Cause.ALL_OK
 
@@ -439,7 +439,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         content['data'][0]['filename'] = Const.EMPTY
         content['data'][0]['digest'] = '0a2b29d2fde6b900375d68be93ac6142c5adafb27fb5d6294fab465090d82504'
         file_content = Content.get_file_content(Content.TEXT, content)
-        with mock.patch('snippy.content.migrate.open', file_content) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', file_content) as mock_file:
             cause = snippy.run(['snippy', 'import', '--scat', 'solution', '-d', 'ee3f2ab7c63d6965', '-f', 'kafka.text'])
             assert cause == Cause.ALL_OK
 
@@ -471,7 +471,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         content['data'][0]['filename'] = ' kubernetes-docker-log-driver-kafka.txt '
         content['data'][0]['digest'] = 'ee3f2ab7c63d6965ac2531003807f00caee178f6e1cbb870105c7df86e6d5be2'
         file_content = Content.get_file_content(Content.TEXT, content)
-        with mock.patch('snippy.content.migrate.open', file_content) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', file_content) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', './kafka.text'])
             assert cause == Cause.ALL_OK
 
@@ -629,10 +629,10 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         default settings.
         """
 
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', autospec=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--scat', 'solution', '--template'])
             assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('./solution-template.mkdn', 'w')
+            mock_file.assert_called_once_with('./solution-template.mkdn', mode='w', encoding='utf-8')
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_called_with(Const.NEWLINE.join(Solution.TEMPLATE_MKDN))
 
@@ -668,7 +668,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         for end user.
         """
 
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--scat', 'solution', '--defaults'])
             assert cause == 'NOK: no content found to be exported'
             mock_file.assert_not_called()
@@ -850,10 +850,10 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         and the template text format.
         """
 
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', autospec=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--scat', 'solution', '--template', '--format', 'text'])
             assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('./solution-template.text', 'w')
+            mock_file.assert_called_once_with('./solution-template.text', mode='w', encoding='utf-8')
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_called_with(Const.NEWLINE.join(Solution.TEMPLATE_TEXT))
 
@@ -866,10 +866,10 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         and the template text format.
         """
 
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', autospec=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--scat', 'solution', '--template', '--format', 'mkdn'])
             assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('./solution-template.mkdn', 'w')
+            mock_file.assert_called_once_with('./solution-template.mkdn', mode='w', encoding='utf-8')
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_called_with(Const.NEWLINE.join(Solution.TEMPLATE_MKDN))
 

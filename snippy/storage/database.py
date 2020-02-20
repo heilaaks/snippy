@@ -20,6 +20,7 @@
 
 """database: Database management."""
 
+import io
 import os.path
 import re
 import sqlite3
@@ -530,7 +531,7 @@ class Database(object):
         schema = Const.EMPTY
         storage_schema = Config.storage_schema
         if os.path.isfile(storage_schema):
-            with open(storage_schema, 'rt') as schema_file:
+            with io.open(storage_schema, mode='r', encoding='utf-8') as schema_file:
                 try:
                     schema = schema_file.read()
                 except IOError as error:

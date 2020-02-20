@@ -91,7 +91,7 @@ class Migrate(object):
             Config.templates
         )
         cls._logger.debug('exporting content template %s', filename)
-        with open(filename, 'w') as outfile:
+        with io.open(filename, mode='w', encoding='utf-8') as outfile:
             try:
                 outfile.write(template)
             except IOError as error:
@@ -116,7 +116,7 @@ class Migrate(object):
             ))
             return
 
-        with open(filename, 'w') as outfile:
+        with io.open(filename, mode='w', encoding='utf-8') as outfile:
             try:
                 outfile.write(Config.completion[Config.complete])
             except IOError as error:
@@ -135,7 +135,7 @@ class Migrate(object):
 
         cls._logger.debug('importing contents from file %s', filename)
         if os.path.isfile(filename):
-            with open(filename, 'r') as infile:
+            with io.open(filename, mode='r', encoding='utf-8') as infile:
                 try:
                     timestamp = Config.utcnow()
                     if Config.is_operation_file_text:

@@ -226,6 +226,36 @@ class Database(object):
         return  schema
 
     @staticmethod
+    def get_schema_data():
+        """Return the content of database schema file."""
+
+        schema = (
+            'CREATE TABLE IF NOT EXISTS contents',
+            '          (',
+            '                    id          UUID PRIMARY KEY NOT NULL UNIQUE',
+            '                  , category    text DEFAULT "snippet"',
+            '                  , data        text NOT NULL UNIQUE',
+            '                  , brief       text DEFAULT ""',
+            '                  , description text DEFAULT ""',
+            '                  , name        text DEFAULT ""',
+            '                  , groups      text DEFAULT ""',
+            '                  , tags        text DEFAULT ""',
+            '                  , links       text DEFAULT ""',
+            '                  , source      text DEFAULT ""',
+            '                  , versions    text DEFAULT ""',
+            '                  , languages   text DEFAULT ""',
+            '                  , filename    text DEFAULT ""',
+            '                  , created     TIMESTAMP WITH TIME ZONE',
+            '                  , updated     TIMESTAMP WITH TIME ZONE',
+            '                  , uuid        UUID NOT NULL UNIQUE',
+            '                  , digest      CHAR(64)',
+            '          )',
+            ';',
+        )
+
+        return Const.NEWLINE.join(schema)
+
+    @staticmethod
     def get_storage():
         """Return the file where the database is located."""
 

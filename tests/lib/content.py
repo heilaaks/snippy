@@ -378,6 +378,7 @@ class Content(object):  # pylint: disable=too-many-public-methods, too-many-line
             assert result_text == expect_text
             text.assert_called_once_with(filename, mode='w', encoding='utf-8')
         except AssertionError:
+            print('assertion error: {}'.format(traceback.format_exc()))
             Content._print_assert(result_collection, expect_collection)
             Content._print_assert(result_text, expect_text)
             raise AssertionError
@@ -411,6 +412,21 @@ class Content(object):  # pylint: disable=too-many-public-methods, too-many-line
             Content._print_assert(result_collection, expect_collection)
             Content._print_assert(result_dictionary, expect_dictionary)
             raise AssertionError
+
+    @classmethod
+    def assert_arglist(cls, function, *args, **kwargs):
+        """Assert list of call arguments.
+
+        This function compares give list of arguments to mocked function call
+        arguments.
+
+        Args:
+            function (obj): Mocked function which call arguments are tested.
+            args (list): List of value arguments.
+            kwargs (dict): Key value argurments.
+        """
+
+        assert function.call_args == mock.call(*args, **kwargs)
 
     @staticmethod
     def get_api_meta():

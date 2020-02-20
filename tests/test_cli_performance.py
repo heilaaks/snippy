@@ -98,22 +98,22 @@ class TestCliPerformance(object):
         """Add default snippets for testing purposes."""
 
         file_content = Content.get_file_content(Content.TEXT, {'data': [Snippet.REMOVE]})
-        with mock.patch('snippy.content.migrate.open', file_content, create=True):
+        with mock.patch('snippy.content.migrate.io.open', file_content):
             cause = snippy.run(['snippy', 'import', '-f', 'remove.txt'] + Content.db_cli_params())
             assert cause == Cause.ALL_OK
 
         file_content = Content.get_file_content(Content.TEXT, {'data': [Snippet.FORCED]})
-        with mock.patch('snippy.content.migrate.open', file_content, create=True):
+        with mock.patch('snippy.content.migrate.io.open', file_content):
             cause = snippy.run(['snippy', 'import', '-f', 'forced.txt'] + Content.db_cli_params())
             assert cause == Cause.ALL_OK
 
         file_content = Content.get_file_content(Content.TEXT, {'data': [Solution.BEATS]})
-        with mock.patch('snippy.content.migrate.open', file_content, create=True):
+        with mock.patch('snippy.content.migrate.io.open', file_content):
             cause = snippy.run(['snippy', 'import', '-f', 'beats.txt'] + Content.db_cli_params())
             assert cause == Cause.ALL_OK
 
         file_content = Content.get_file_content(Content.TEXT, {'data': [Solution.NGINX]})
-        with mock.patch('snippy.content.migrate.open', file_content, create=True):
+        with mock.patch('snippy.content.migrate.io.open', file_content):
             cause = snippy.run(['snippy', 'import', '-f', 'nginx.txt'] + Content.db_cli_params())
             assert cause == Cause.ALL_OK
 

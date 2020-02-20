@@ -22,6 +22,7 @@
 
 from __future__ import print_function
 
+import io
 import re
 import textwrap
 
@@ -69,9 +70,9 @@ class Reference(object):
         tests = [filename for filename in tests if regex.match(filename)]
         for filename in tests:
             testfile = pkg_resources.resource_filename('tests', filename)
-            with open(testfile, 'r') as infile:
+            with io.open(testfile, mode='r', encoding='utf-8') as infile:
                 wf_brief = Const.EMPTY
-                testcase = infile.readlines()
+                testcase = infile.read().splitlines()  # Use read() for Python 2 and 3 compatibility with mocking.
                 for line_nbr, line in enumerate(testcase):
                     brief, line = Reference.get_brief(line, line_nbr, testcase)
                     if brief:

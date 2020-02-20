@@ -281,7 +281,8 @@ class TestCliOptions(object):  # pylint: disable=too-many-public-methods
         """Test printing test documentation from console.
 
         Print test cases. The ``--no-ansi`` option must work when set before
-        the ``--help`` option.
+        the ``--help`` option. There are two files out of three where tests
+        are read.
         """
 
         output = (
@@ -598,10 +599,10 @@ class TestCliOptions(object):  # pylint: disable=too-many-public-methods
         not defined and a default filename is used.
         """
 
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open') as mock_file:
             cause = snippy.run(['snippy', 'export', '--complete', 'bash'])
             assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('./snippy.bash-completion', 'w')
+            Content.assert_arglist(mock_file, './snippy.bash-completion', mode='w', encoding='utf-8')
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_called_with(Content.COMPLETE_BASH)
 
@@ -615,10 +616,10 @@ class TestCliOptions(object):  # pylint: disable=too-many-public-methods
         default.
         """
 
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open') as mock_file:
             cause = snippy.run(['snippy', 'export', '--complete', 'bash', '-f', './snippy'])
             assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('./snippy', 'w')
+            Content.assert_arglist(mock_file, './snippy', mode='w', encoding='utf-8')
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_called_with(Content.COMPLETE_BASH)
 
@@ -631,7 +632,7 @@ class TestCliOptions(object):  # pylint: disable=too-many-public-methods
         option is set to a file path that does not exist.
         """
 
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open') as mock_file:
             cause = snippy.run(['snippy', 'export', '--complete', 'bash', '-f', '/root/noaccess/snippy'])
             assert cause == 'NOK: cannot export bash completion file because path is not writable /root/noaccess/snippy'
             mock_file.assert_not_called()
@@ -645,7 +646,7 @@ class TestCliOptions(object):  # pylint: disable=too-many-public-methods
         option is set to a file path is not writable.
         """
 
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open') as mock_file:
             cause = snippy.run(['snippy', 'export', '--complete', 'bash', '-f', '/root/noaccess/snippy'])
             assert cause == 'NOK: cannot export bash completion file because path is not writable /root/noaccess/snippy'
             mock_file.assert_not_called()
@@ -663,7 +664,7 @@ class TestCliOptions(object):  # pylint: disable=too-many-public-methods
             "snippy: error: argument --complete: invalid choice: 'notfound' (choose from 'bash')",
             ''
         )
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--complete', 'notfound'])
             out, err = capsys.readouterr()
             assert not out

@@ -1092,7 +1092,11 @@ def devel_file_list(mocker):
 
 @pytest.fixture(scope='function', name='devel_file_data')
 def devel_file_data(mocker):
-    """Mock devel package file reading for tests."""
+    """Mock devel package file reading for tests.
+
+    This must mock all needed file reads because it is not possible to mock
+    the 'builtins.open' only from one module.
+    """
 
     testcase = (
         '#!/usr/bin/env python3',
@@ -1134,7 +1138,7 @@ def devel_file_data(mocker):
         '',
         '        ## Brief: Import all snippets. File name is not defined in commmand line. This should',
         '        ##        result tool internal default file name ./snippets.yaml being used by default.',
-        '        with mock.patch(\'snippy.content.migrate.open\', mock.mock_open(), create=True) as mock_file:',
+        '        with mock.patch(\'snippy.content.migrate.io.open\', file_content) as mock_file:',
         '            snippy = Snippy()',
         '            cause = snippy.run([\'snippy\', \'import\', \'--filter\', \'.*(\\$\\s.*)\'])  ## workflow',
         '            assert cause == Cause.ALL_OK',
@@ -1145,8 +1149,20 @@ def devel_file_data(mocker):
         '            snippy = None',
         '            Database.delete_storage()'
     )
-    file_content = mocker.mock_open(read_data=Const.NEWLINE.join(testcase))
-    mocker.patch('snippy.devel.reference.open', file_content, create=True)
+    mocked = mocker.patch('snippy.devel.reference.io.open')  # This mocks all 'io.open' calls.
+    handle = mocked.return_value.__enter__.return_value
+    reads = [
+        Const.NEWLINE.join(testcase),
+        Const.NEWLINE.join(testcase),
+        'dummy read 1',
+        'dummy read 2',
+        'dummy read 3',
+        'dummy read 4',
+        'dummy read 5',
+        'dummy read 6',
+        'dummy read 7',
+        Database.get_schema_data()]
+    handle.read.side_effect = lambda: reads.pop(0)
 
 @pytest.fixture(scope='function', name='devel_no_tests')
 def devel_no_tests(mocker):
@@ -1163,7 +1179,7 @@ def devel_no_tests(mocker):
     mocker.patch('snippy.devel.reference.pkg_resources.resource_isdir', side_effect=[ImportError("No module named 'tests'"), mocker.DEFAULT])
     mocker.patch('snippy.devel.reference.pkg_resources.resource_listdir', return_value=tests)
     file_content = mocker.mock_open(read_data=Const.EMPTY)
-    mocker.patch('snippy.devel.reference.open', file_content, create=True)
+    mocker.patch('snippy.devel.reference.io.open', file_content)
 
 ## Helpers
 
@@ -1230,7 +1246,7 @@ def _import_resources(snippy, mocker, resources):
     with mock.patch('snippy.content.migrate.os.path.isfile', return_value=True):
         for resource in resources:
             infile = mocker.mock_open(read_data=json.dumps({'data': [resource]}))
-            with mock.patch('snippy.content.migrate.open', infile):
+            with mock.patch('snippy.content.migrate.io.open', infile):
                 with mock.patch.object(Config, 'utcnow', side_effect=(timestamp,)*20):
                     cause = snippy.run(['snippy', 'import', '--file', 'resource.json'])
                     assert cause == Cause.ALL_OK
@@ -1244,10 +1260,10 @@ def _import_content_mkdn(snippy, mocker, contents, timestamps):
     with mock.patch('snippy.content.migrate.os.path.isfile', return_value=True):
         for idx, content in enumerate(contents, start=start):
             file_content = mocker.mock_open(read_data=_get_template_mkdn(content))
-            mocker.patch('snippy.content.migrate.open', file_content, create=True)
-            cause = snippy.run(['snippy', 'import', '-f', 'content.mkdn'])
-            assert cause == Cause.ALL_OK
-            assert len(Database.get_collection()) == idx
+            with mock.patch('snippy.content.migrate.io.open', file_content):
+                cause = snippy.run(['snippy', 'import', '-f', 'content.mkdn'])
+                assert cause == Cause.ALL_OK
+                assert len(Database.get_collection()) == idx
 
 def _add_utc_time(mocker, timestamps):
     """Add UTC time mock as side effect."""

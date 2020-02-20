@@ -41,7 +41,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
     @staticmethod
     @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_solution_001(snippy):
-        """Import all solutions.
+        """Import all solution resources.
 
         Import all solutions. File name is not defined in command line. This
         should result tool internal default file name and format being used.
@@ -54,19 +54,19 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             ]
         }
         file_content = Content.get_file_content(Content.MKDN, content)
-        with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', file_content) as mock_file:
             cause = snippy.run(['snippy', 'import', '--scat', 'solution'])
             assert cause == Cause.ALL_OK
             Content.assert_storage(content)
-            mock_file.assert_called_once_with('./solutions.mkdn', 'r')
+            Content.assert_arglist(mock_file, './solutions.mkdn', mode='r', encoding='utf-8')
 
     @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'yaml')
     def test_cli_import_solution_002(snippy):
-        """Import all solutions.
+        """Import all solution resources.
 
         Import all solutions from yaml file. File name and format are extracted
-        from command line option -f|--file.
+        from command line ``--file`` option.
         """
 
         content = {
@@ -76,21 +76,21 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             ]
         }
         file_content = Content.get_file_content(Content.YAML, content)
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open') as mock_file:
             yaml.safe_load.return_value = file_content
             cause = snippy.run(['snippy', 'import', '--scat', 'solution', '-f', './all-solutions.yaml'])
             assert cause == Cause.ALL_OK
             Content.assert_storage(content)
-            mock_file.assert_called_once_with('./all-solutions.yaml', 'r')
+            Content.assert_arglist(mock_file, './all-solutions.yaml', mode='r', encoding='utf-8')
 
     @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'yaml')
     def test_cli_import_solution_003(snippy):
-        """Import all solutions.
+        """Import all solution resources.
 
         Import all solutions from yaml file without specifying the solution
         category. File name and format are extracted from command line
-        option -f|--file.
+        ``--file`` option.
         """
 
         content = {
@@ -100,20 +100,20 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             ]
         }
         file_content = Content.get_file_content(Content.YAML, content)
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open') as mock_file:
             yaml.safe_load.return_value = file_content
             cause = snippy.run(['snippy', 'import', '-f', './all-solutions.yaml'])
             assert cause == Cause.ALL_OK
             Content.assert_storage(content)
-            mock_file.assert_called_once_with('./all-solutions.yaml', 'r')
+            Content.assert_arglist(mock_file, './all-solutions.yaml', mode='r', encoding='utf-8')
 
     @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'json')
     def test_cli_import_solution_004(snippy):
-        """Import all solutions.
+        """Import all solution resources.
 
         Import all solutions from json file. File name and format are extracted
-        from command line option -f|--file.
+        from command line ``--file`` option.
         """
 
         content = {
@@ -123,21 +123,21 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             ]
         }
         file_content = Content.get_file_content(Content.JSON, content)
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open') as mock_file:
             json.load.return_value = file_content
             cause = snippy.run(['snippy', 'import', '--scat', 'solution', '-f', './all-solutions.json'])
             assert cause == Cause.ALL_OK
             Content.assert_storage(content)
-            mock_file.assert_called_once_with('./all-solutions.json', 'r')
+            Content.assert_arglist(mock_file, './all-solutions.json', mode='r', encoding='utf-8')
 
     @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'json')
     def test_cli_import_solution_005(snippy):
-        """Import all solutions.
+        """Import all solution resources.
 
         Import all solutions from json file without specifying the solution
         category. File name and format are extracted from command line
-        option -f|--file.
+        ``--file`` option.
         """
 
         content = {
@@ -147,20 +147,20 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             ]
         }
         file_content = Content.get_file_content(Content.JSON, content)
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open') as mock_file:
             json.load.return_value = file_content
             cause = snippy.run(['snippy', 'import', '-f', './all-solutions.json'])
             assert cause == Cause.ALL_OK
             Content.assert_storage(content)
-            mock_file.assert_called_once_with('./all-solutions.json', 'r')
+            Content.assert_arglist(mock_file, './all-solutions.json', mode='r', encoding='utf-8')
 
     @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'default-solutions-utc')
     def test_cli_import_solution_006(snippy):
-        """Import all solutions.
+        """Import all solution resources.
 
         Import all solutions from txt file. File name and format are extracted
-        from command line option ``-f|--file``. File extension is '*.txt' in
+        from command line option ````--file````. File extension is '*.txt' in
         this case.
 
         Because text template does not have UUID, the UUID mock allocates a new
@@ -177,20 +177,20 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         content['data'][0]['uuid'] = Content.UUID1
         content['data'][1]['uuid'] = Content.UUID2
         file_content = Content.get_file_content(Content.TEXT, content)
-        with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', file_content) as mock_file:
             cause = snippy.run(['snippy', 'import', '--scat', 'solution', '-f', './all-solutions.txt'])
             assert cause == Cause.ALL_OK
             Content.assert_storage(content)
-            mock_file.assert_called_once_with('./all-solutions.txt', 'r')
+            Content.assert_arglist(mock_file, './all-solutions.txt', mode='r', encoding='utf-8')
 
     @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'default-solutions-utc')
     def test_cli_import_solution_007(snippy):
-        """Import all solutions.
+        """Import all solution resources.
 
         Import all solutions from txt file without specifying the solution
         category. File name and format are extracted from command line
-        option -f|--file. File extension is '*.txt' in this case.
+        ``--file`` option. File extension is '*.txt' in this case.
         """
 
         content = {
@@ -202,19 +202,19 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         content['data'][0]['uuid'] = Content.UUID1
         content['data'][1]['uuid'] = Content.UUID2
         file_content = Content.get_file_content(Content.TEXT, content)
-        with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', file_content) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', './all-solutions.txt'])
             assert cause == Cause.ALL_OK
             Content.assert_storage(content)
-            mock_file.assert_called_once_with('./all-solutions.txt', 'r')
+            Content.assert_arglist(mock_file, './all-solutions.txt', mode='r', encoding='utf-8')
 
     @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'default-solutions-utc')
     def test_cli_import_solution_008(snippy):
-        """Import all solutions.
+        """Import all solution resources.
 
         Import all solutions from txt file. File name and format are extracted
-        from command line option -f|--file. File extension is '*.text' in this
+        from command line ``--file`` option. File extension is '*.text' in this
         case.
         """
 
@@ -227,20 +227,20 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         content['data'][0]['uuid'] = Content.UUID1
         content['data'][1]['uuid'] = Content.UUID2
         file_content = Content.get_file_content(Content.TEXT, content)
-        with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', file_content) as mock_file:
             cause = snippy.run(['snippy', 'import', '--scat', 'solution', '-f', './all-solutions.text'])
             assert cause == Cause.ALL_OK
             Content.assert_storage(content)
-            mock_file.assert_called_once_with('./all-solutions.text', 'r')
+            Content.assert_arglist(mock_file, './all-solutions.text', mode='r', encoding='utf-8')
 
     @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'default-solutions-utc')
     def test_cli_import_solution_009(snippy):
-        """Import all solutions.
+        """Import all solution resources.
 
         Import all solutions from txt file without specifying the solution
         category. File name and format are extracted from command line option
-        -f|--file. File extension is '*.text' in this case.
+        ``--file``. File extension is '*.text' in this case.
         """
 
         content = {
@@ -252,16 +252,16 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         content['data'][0]['uuid'] = Content.UUID1
         content['data'][1]['uuid'] = Content.UUID2
         file_content = Content.get_file_content(Content.TEXT, content)
-        with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', file_content) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', './all-solutions.text'])
             assert cause == Cause.ALL_OK
             Content.assert_storage(content)
-            mock_file.assert_called_once_with('./all-solutions.text', 'r')
+            Content.assert_arglist(mock_file, './all-solutions.text', mode='r', encoding='utf-8')
 
     @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'yaml', 'import-beats', 'import-kafka-utc')
     def test_cli_import_solution_010(snippy):
-        """Import all solutions.
+        """Import all solution resources.
 
         Import solutions from yaml file when all but one of the solutions in
         the file is already stored. Because one solution was stored
@@ -280,39 +280,39 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         }
         content['data'][1]['uuid'] = Content.UUID1
         file_content = Content.get_file_content(Content.YAML, content)
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open') as mock_file:
             yaml.safe_load.return_value = file_content
             cause = snippy.run(['snippy', 'import', '--scat', 'solution', '--file', './all-solutions.yaml'])
             assert cause == Cause.ALL_OK
             content['data'][1]['uuid'] = Solution.BEATS_UUID
             Content.assert_storage(content)
-            mock_file.assert_called_once_with('./all-solutions.yaml', 'r')
+            Content.assert_arglist(mock_file, './all-solutions.yaml', mode='r', encoding='utf-8')
 
     @staticmethod
     @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_solution_011(snippy):
-        """Import all solutions.
+        """Import all solution resources.
 
         Try to import empty solution template. The operation will fail because
         content templates without any modifications cannot be imported.
         """
 
         file_content = mock.mock_open(read_data=Const.NEWLINE.join(Solution.TEMPLATE_TEXT))
-        with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', file_content) as mock_file:
             cause = snippy.run(['snippy', 'import', '--scat', 'solution', '-f', './solution-template.txt'])
             assert cause == 'NOK: content was not stored because it was matching to an empty template'
             Content.assert_storage(None)
-            mock_file.assert_called_once_with('./solution-template.txt', 'r')
+            Content.assert_arglist(mock_file, './solution-template.txt', mode='r', encoding='utf-8')
 
     @staticmethod
     def test_cli_import_solution_012(snippy):
-        """Import all solutions.
+        """Import all solution resources.
 
         Try to import solution from file which file format is not supported.
         This should result error text for end user and no files should be read.
         """
 
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open') as mock_file:
             cause = snippy.run(['snippy', 'import', '--scat', 'solution', '-f', './foo.bar'])
             assert cause == 'NOK: cannot identify file format for file: ./foo.bar'
             Content.assert_storage(None)
@@ -337,12 +337,12 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         content['data'][0]['updated'] = Content.KAFKA_TIME
         content['data'][0]['digest'] = 'c64d9cd40c15d5ce9905b282bf26c53c2ffdc32c1a7f268d6cf31364ef889a8a'
         file_content = Content.get_file_content(Content.YAML, content)
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open') as mock_file:
             yaml.safe_load.return_value = file_content
             cause = snippy.run(['snippy', 'import', '--scat', 'solution', '-d', '6cfe47a8880a8f81', '-f', 'one-solution.yaml'])
             assert cause == Cause.ALL_OK
             Content.assert_storage(content)
-            mock_file.assert_called_once_with('one-solution.yaml', 'r')
+            Content.assert_arglist(mock_file, 'one-solution.yaml', mode='r', encoding='utf-8')
 
     @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'yaml', 'import-nginx', 'update-kafka-utc')
@@ -362,12 +362,12 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         content['data'][0]['updated'] = Content.KAFKA_TIME
         content['data'][0]['digest'] = 'c64d9cd40c15d5ce9905b282bf26c53c2ffdc32c1a7f268d6cf31364ef889a8a'
         file_content = Content.get_file_content(Content.YAML, content)
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open') as mock_file:
             yaml.safe_load.return_value = file_content
             cause = snippy.run(['snippy', 'import', '-d', '6cfe47a8880a8f81', '-f', 'one-solution.yaml'])
             assert cause == Cause.ALL_OK
             Content.assert_storage(content)
-            mock_file.assert_called_once_with('one-solution.yaml', 'r')
+            Content.assert_arglist(mock_file, 'one-solution.yaml', mode='r', encoding='utf-8')
 
     @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'json', 'import-nginx', 'update-kafka-utc')
@@ -388,12 +388,12 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         content['data'][0]['updated'] = Content.KAFKA_TIME
         content['data'][0]['digest'] = 'c64d9cd40c15d5ce9905b282bf26c53c2ffdc32c1a7f268d6cf31364ef889a8a'
         file_content = Content.get_file_content(Content.JSON, content)
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open') as mock_file:
             json.load.return_value = file_content
             cause = snippy.run(['snippy', 'import', '--scat', 'solution', '-d', '6cfe47a8880a8f81', '-f', 'one-solution.json'])
             assert cause == Cause.ALL_OK
             Content.assert_storage(content)
-            mock_file.assert_called_once_with('one-solution.json', 'r')
+            Content.assert_arglist(mock_file, 'one-solution.json', mode='r', encoding='utf-8')
 
     @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'import-nginx', 'update-kafka-utc')
@@ -416,11 +416,11 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         content['data'][0]['updated'] = Content.KAFKA_TIME
         content['data'][0]['digest'] = 'ce3f7a0ab75dc74f7bbea68ae323c29b2361965975c0c8d34897551149d29118'
         file_content = Content.get_file_content(Content.TEXT, content)
-        with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', file_content) as mock_file:
             cause = snippy.run(['snippy', 'import', '--scat', 'solution', '-d', '6cfe47a8880a8f81', '-f', 'one-solution.txt'])
             assert cause == Cause.ALL_OK
             Content.assert_storage(content)
-            mock_file.assert_called_once_with('one-solution.txt', 'r')
+            Content.assert_arglist(mock_file, 'one-solution.txt', mode='r', encoding='utf-8')
 
     @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'import-nginx', 'update-kafka-utc')
@@ -443,11 +443,11 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         content['data'][0]['updated'] = Content.KAFKA_TIME
         content['data'][0]['digest'] = 'ce3f7a0ab75dc74f7bbea68ae323c29b2361965975c0c8d34897551149d29118'
         file_content = Content.get_file_content(Content.TEXT, content)
-        with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', file_content) as mock_file:
             cause = snippy.run(['snippy', 'import', '--scat', 'solution', '-d', '6cfe47a8880a8f81', '-f', 'one-solution.text'])
             assert cause == Cause.ALL_OK
             Content.assert_storage(content)
-            mock_file.assert_called_once_with('one-solution.text', 'r')
+            Content.assert_arglist(mock_file, 'one-solution.text', mode='r', encoding='utf-8')
 
     @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'import-nginx', 'update-kafka-utc')
@@ -469,11 +469,11 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         content['data'][0]['updated'] = Content.KAFKA_TIME
         content['data'][0]['digest'] = 'ce3f7a0ab75dc74f7bbea68ae323c29b2361965975c0c8d34897551149d29118'
         file_content = Content.get_file_content(Content.TEXT, content)
-        with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', file_content) as mock_file:
             cause = snippy.run(['snippy', 'import', '--scat', 'snippet', '-d', '6cfe47a8880a8f81', '-f', 'one-solution.text'])
             assert cause == Cause.ALL_OK
             Content.assert_storage(content)
-            mock_file.assert_called_once_with('one-solution.text', 'r')
+            Content.assert_arglist(mock_file, 'one-solution.text', mode='r', encoding='utf-8')
 
     @staticmethod
     @pytest.mark.usefixtures('import-nginx', 'import-nginx-utc')
@@ -499,7 +499,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         updates['data'][0]['updated'] = Content.KAFKA_TIME
         updates['data'][0]['digest'] = 'ce3f7a0ab75dc74f7bbea68ae323c29b2361965975c0c8d34897551149d29118'
         file_content = Content.get_file_content(Content.TEXT, updates)
-        with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', file_content) as mock_file:
             cause = snippy.run(['snippy', 'import', '--scat', 'solution', '-d', '123456789abcdef0', '-f', 'one-solution.text'])
             assert cause == 'NOK: cannot find content with message digest: 123456789abcdef0'
             Content.assert_storage(content)
@@ -519,12 +519,12 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             ]
         }
         file_content = Content.get_file_content(Content.YAML, content)
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open') as mock_file:
             yaml.safe_load.return_value = file_content
             cause = snippy.run(['snippy', 'import', '--scat', 'solution', '-f', 'one-solution.yaml'])
             assert cause == Cause.ALL_OK
             Content.assert_storage(content)
-            mock_file.assert_called_once_with('one-solution.yaml', 'r')
+            Content.assert_arglist(mock_file, 'one-solution.yaml', mode='r', encoding='utf-8')
 
     @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'json')
@@ -540,12 +540,12 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             ]
         }
         file_content = Content.get_file_content(Content.JSON, content)
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open') as mock_file:
             json.load.return_value = file_content
             cause = snippy.run(['snippy', 'import', '--scat', 'solution', '-f', 'one-solution.json'])
             assert cause == Cause.ALL_OK
             Content.assert_storage(content)
-            mock_file.assert_called_once_with('one-solution.json', 'r')
+            Content.assert_arglist(mock_file, 'one-solution.json', mode='r', encoding='utf-8')
 
     @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'import-nginx-utc')
@@ -563,11 +563,11 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         }
         content['data'][0]['uuid'] = Content.UUID1
         file_content = Content.get_file_content(Content.TEXT, content)
-        with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', file_content) as mock_file:
             cause = snippy.run(['snippy', 'import', '--scat', 'solution', '-f', 'one-solution.txt'])
             assert cause == Cause.ALL_OK
             Content.assert_storage(content)
-            mock_file.assert_called_once_with('one-solution.txt', 'r')
+            Content.assert_arglist(mock_file, 'one-solution.txt', mode='r', encoding='utf-8')
 
     @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'import-nginx-utc')
@@ -585,11 +585,11 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         }
         content['data'][0]['uuid'] = Content.UUID1
         file_content = Content.get_file_content(Content.TEXT, content)
-        with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', file_content) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', 'one-solution.txt'])
             assert cause == Cause.ALL_OK
             Content.assert_storage(content)
-            mock_file.assert_called_once_with('one-solution.txt', 'r')
+            Content.assert_arglist(mock_file, 'one-solution.txt', mode='r', encoding='utf-8')
 
     @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'import-nginx-utc')
@@ -607,11 +607,11 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         }
         content['data'][0]['uuid'] = Content.UUID1
         file_content = Content.get_file_content(Content.TEXT, content)
-        with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', file_content) as mock_file:
             cause = snippy.run(['snippy', 'import', '--scat', 'solution', '-f', 'one-solution.text'])
             assert cause == Cause.ALL_OK
             Content.assert_storage(content)
-            mock_file.assert_called_once_with('one-solution.text', 'r')
+            Content.assert_arglist(mock_file, 'one-solution.text', mode='r', encoding='utf-8')
 
     @staticmethod
     @pytest.mark.usefixtures('yaml')
@@ -629,13 +629,13 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             ]
         }
         file_content = Content.get_file_content(Content.YAML, content)
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open') as mock_file:
             yaml.safe_load.return_value = file_content
             cause = snippy.run(['snippy', 'import', '--scat', 'solution', '--defaults'])
             assert cause == Cause.ALL_OK
             Content.assert_storage(content)
             defaults_solutions = pkg_resources.resource_filename('snippy', 'data/defaults/solutions.yaml')
-            mock_file.assert_called_once_with(defaults_solutions, 'r')
+            Content.assert_arglist(mock_file, defaults_solutions, mode='r', encoding='utf-8')
 
     @staticmethod
     @pytest.mark.usefixtures('yaml', 'default-solutions', 'default-solutions-utc')
@@ -661,7 +661,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             ]
         }
         file_content = Content.get_file_content(Content.YAML, content)
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open') as mock_file:
             yaml.safe_load.return_value = file_content
             cause = snippy.run(['snippy', 'import', '--scat', 'solution', '--defaults'])
             assert cause in ('NOK: content data already exist with digest 6cfe47a8880a8f81',
@@ -670,7 +670,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
                              'NOK: content uuid already exist with digest 4346ba4c79247430')
             Content.assert_storage(content)
             defaults_solutions = pkg_resources.resource_filename('snippy', 'data/defaults/solutions.yaml')
-            mock_file.assert_called_once_with(defaults_solutions, 'r')
+            Content.assert_arglist(mock_file, defaults_solutions, mode='r', encoding='utf-8')
 
     @staticmethod
     @pytest.mark.usefixtures('isfile_true', 'import-content-utc')
@@ -693,11 +693,11 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         }
         content['data'][0]['uuid'] = Content.UUID2
         file_content = Content.get_file_content(Content.TEXT, content)
-        with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', file_content) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', './solution-template.txt'])
             assert cause == Cause.ALL_OK
             Content.assert_storage(content)
-            mock_file.assert_called_once_with('./solution-template.txt', 'r')
+            Content.assert_arglist(mock_file, './solution-template.txt', mode='r', encoding='utf-8')
 
     @staticmethod
     @pytest.mark.usefixtures('isfile_true')
@@ -710,11 +710,11 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         """
 
         file_content = mock.mock_open(read_data=Const.NEWLINE.join(Solution.TEMPLATE_TEXT))
-        with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', file_content) as mock_file:
             cause = snippy.run(['snippy', 'import', '--scat', 'solution', '--template', '--format', 'text'])
             assert cause == 'NOK: content was not stored because it was matching to an empty template'
             Content.assert_storage(None)
-            mock_file.assert_called_once_with('./solution-template.text', 'r')
+            Content.assert_arglist(mock_file, './solution-template.text', mode='r', encoding='utf-8')
 
     @staticmethod
     @pytest.mark.usefixtures('yaml')
@@ -732,27 +732,28 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             ]
         }
         file_content = Content.get_file_content(Content.YAML, content)
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open') as mock_file:
             yaml.safe_load.return_value = file_content
             cause = snippy.run(['snippy', 'import', '--scat', 'all', '--defaults'])
             assert cause == Cause.ALL_OK
             Content.assert_storage(content)
             defaults = []
-            defaults.append(mock.call(pkg_resources.resource_filename('snippy', 'data/defaults/snippets.yaml'), 'r'))
-            defaults.append(mock.call(pkg_resources.resource_filename('snippy', 'data/defaults/solutions.yaml'), 'r'))
-            defaults.append(mock.call(pkg_resources.resource_filename('snippy', 'data/defaults/references.yaml'), 'r'))
-            mock_file.assert_has_calls(defaults, any_order=True)
+            defaults.append(mock.call(pkg_resources.resource_filename('snippy', 'data/defaults/snippets.yaml'), encoding='utf-8', mode='r'))
+            defaults.append(mock.call(pkg_resources.resource_filename('snippy', 'data/defaults/solutions.yaml'), encoding='utf-8', mode='r'))
+            defaults.append(mock.call(pkg_resources.resource_filename('snippy', 'data/defaults/references.yaml'), encoding='utf-8', mode='r'))
+            for default in defaults:
+                assert default in mock_file.call_args_list
 
     @staticmethod
     @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_solution_030(snippy):
-        """Import all solutions.
+        """Import all solution resources.
 
         Try to import content with option ``scat``. This is not supported for
         import operation.
         """
 
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open') as mock_file:
             cause = snippy.run(['snippy', 'import', '--scat', 'all', '-f', './foo.yaml'])
             assert cause == 'NOK: import operation for content category \'all\' is supported only with default content'
             Content.assert_storage(None)
@@ -761,7 +762,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
     @staticmethod
     @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_solution_031(snippy):
-        """Import all solutions.
+        """Import all solution resources.
 
         Import all solutions from Markdown formatted file.
         """
@@ -773,11 +774,11 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             ]
         }
         file_content = Content.get_file_content(Content.MKDN, content)
-        with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', file_content) as mock_file:
             cause = snippy.run(['snippy', 'import', '--scat', 'solution', '-f', './all-solutions.md'])
             assert cause == Cause.ALL_OK
             Content.assert_storage(content)
-            mock_file.assert_called_once_with('./all-solutions.md', 'r')
+            Content.assert_arglist(mock_file, './all-solutions.md', mode='r', encoding='utf-8')
 
     @staticmethod
     @pytest.mark.usefixtures('isfile_true')
@@ -790,11 +791,11 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         """
 
         file_content = mock.mock_open(read_data=Const.NEWLINE.join(Solution.TEMPLATE_MKDN))
-        with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', file_content) as mock_file:
             cause = snippy.run(['snippy', 'import', '--scat', 'solution', '--template', '--format', 'mkdn'])
             assert cause == 'NOK: content was not stored because it was matching to an empty template'
             Content.assert_storage(None)
-            mock_file.assert_called_once_with('./solution-template.mkdn', 'r')
+            Content.assert_arglist(mock_file, './solution-template.mkdn', mode='r', encoding='utf-8')
 
     @classmethod
     def teardown_class(cls):

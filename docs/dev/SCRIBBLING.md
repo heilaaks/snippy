@@ -2668,7 +2668,7 @@ git update-index --no-assume-unchanged FILE_NAME # change back
                 ]
             }
             file_content = Content.get_file_content(Content.YAML, content)
-            with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            with mock.patch('snippy.content.migrate.io.open', file_content) as mock_file:
                 yaml.safe_load.return_value = file_content
                 cause = snippy.run(['snippy', 'import'])
                 assert cause == Cause.ALL_OK
@@ -2696,7 +2696,7 @@ git update-index --no-assume-unchanged FILE_NAME # change back
                 ]
             }
             file_content = Content.get_file_content(Content.TEXT, content)
-            with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
+            with mock.patch('snippy.content.migrate.io.open', file_content) as mock_file:
                 cause = snippy.run(['snippy', 'import', '-f', './all-snippets.txt'])
                 assert cause == Cause.ALL_OK
                 Content.assert_storage(content)
@@ -2723,7 +2723,7 @@ git update-index --no-assume-unchanged FILE_NAME # change back
                 ]
             }
             file_content = Content.get_file_content(Content.YAML, content)
-            with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            with mock.patch('snippy.content.migrate.io.open', file_content) as mock_file:
                 yaml.safe_load.return_value = file_content
                 cause = snippy.run(['snippy', 'import'])
                 assert cause == Cause.ALL_OK
@@ -2748,7 +2748,7 @@ git update-index --no-assume-unchanged FILE_NAME # change back
                     Snippet.DEFAULTS[Snippet.FORCED]
                 ]
             }
-            with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            with mock.patch('snippy.content.migrate.io.open', file_content) as mock_file:
                 cause = snippy.run(['snippy', 'export', '-f', './snippets.mkdn'])
                 assert cause == Cause.ALL_OK
                 Content.assert_mkdn(mock_file, './snippets.mkdn', content)

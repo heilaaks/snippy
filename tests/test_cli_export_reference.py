@@ -359,10 +359,10 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
         default settings.
         """
 
-        with mock.patch('snippy.content.migrate.open') as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', autospec=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--scat', 'reference', '--template'])
             assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('./reference-template.mkdn', 'w')
+            mock_file.assert_called_once_with('./reference-template.mkdn', mode='w', encoding='utf-8')
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_called_with(Const.NEWLINE.join(Reference.TEMPLATE_MKDN))
 
@@ -619,10 +619,10 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
         and the template text format.
         """
 
-        with mock.patch('snippy.content.migrate.open') as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', autospec=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--scat', 'reference', '--template', '--format', 'text'])
             assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('./reference-template.text', 'w')
+            mock_file.assert_called_once_with('./reference-template.text', mode='w', encoding='utf-8')
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_called_with(Const.NEWLINE.join(Reference.TEMPLATE_TEXT))
 
@@ -635,10 +635,10 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
         and the template Markdown format.
         """
 
-        with mock.patch('snippy.content.migrate.open') as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', autospec=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--scat', 'reference', '--template', '--format', 'mkdn'])
             assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('./reference-template.mkdn', 'w')
+            mock_file.assert_called_once_with('./reference-template.mkdn', mode='w', encoding='utf-8')
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_called_with(Const.NEWLINE.join(Reference.TEMPLATE_MKDN))
 

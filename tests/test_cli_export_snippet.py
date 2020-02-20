@@ -457,10 +457,10 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         on tool internal settings.
         """
 
-        with mock.patch('snippy.content.migrate.open') as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', autospec=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--template'])
             assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('./snippet-template.mkdn', 'w')
+            mock_file.assert_called_once_with('./snippet-template.mkdn', mode='w', encoding='utf-8')
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_called_with(Const.NEWLINE.join(Snippet.TEMPLATE_MKDN))
 
@@ -473,10 +473,10 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         should result file name and format based on tool internal settings.
         """
 
-        with mock.patch('snippy.content.migrate.open') as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', autospec=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--scat', 'snippet', '--template'])
             assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('./snippet-template.mkdn', 'w')
+            mock_file.assert_called_once_with('./snippet-template.mkdn', mode='w', encoding='utf-8')
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_called_with(Const.NEWLINE.join(Snippet.TEMPLATE_MKDN))
 
@@ -642,10 +642,10 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         and the template text format.
         """
 
-        with mock.patch('snippy.content.migrate.open') as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', autospec=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--template', '--format', 'text'])
             assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('./snippet-template.text', 'w')
+            mock_file.assert_called_once_with('./snippet-template.text', mode='w', encoding='utf-8')
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_called_with(Const.NEWLINE.join(Snippet.TEMPLATE_TEXT))
 
@@ -658,10 +658,10 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         and the template Markdown format.
         """
 
-        with mock.patch('snippy.content.migrate.open') as mock_file:
+        with mock.patch('snippy.content.migrate.io.open', autospec=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--template', '--format', 'mkdn'])
             assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('./snippet-template.mkdn', 'w')
+            mock_file.assert_called_once_with('./snippet-template.mkdn', mode='w', encoding='utf-8')
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_called_with(Const.NEWLINE.join(Snippet.TEMPLATE_MKDN))
 

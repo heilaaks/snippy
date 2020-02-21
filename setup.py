@@ -32,14 +32,16 @@ requires = (
 )
 extras_server = (
     'falcon==2.0.0',
-    'gunicorn==19.9.0',
-    'jsonschema==3.0.1',
-    'psycopg2==2.8.3 ; platform_python_implementation=="CPython"',
+    'gunicorn==19.10.0 ; python_version<"3.4"',
+    'gunicorn==20.0.4  ; python_version>="3.4"',
+    'jsonschema==3.2.0',
+    'psycopg2==2.8.4 ; platform_python_implementation=="CPython"',
     'psycopg2cffi==2.8.1 ; platform_python_implementation=="PyPy"'
 )
 extras_dev = (
     'logging_tree==1.8',
-    'openapi2jsonschema==0.9.0'
+    'openapi2jsonschema==0.9.0 ; python_version<="3.6"',
+    'openapi2jsonschema==0.9.1 ; python_version>"3.6"',
 )
 extras_docs = (
     'sphinx==1.8.5 ; python_version<="3.4"',

@@ -34,7 +34,7 @@ Bugfixes
 * Fix terminal colors on Windows.
 * Fix parsing Markdown metadata from solution.
 * Fix parsing Markdown solution data with '---' string.
-* Fix parsing Markdown solution brief attribute.
+* Fix parsing Markdown solution ``brief`` attribute.
 * Fix Python 2 update and export operations with non ASCII characters.
 * All commits in `0.11.0`_.
 

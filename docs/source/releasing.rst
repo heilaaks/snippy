@@ -167,7 +167,7 @@ Test docker installation
       find / -name '*pycache*'
 
       # Run server with PostgreSQL database.
-      docker run -d --net="host" --name snippy heilaaks/snippy --server-host 127.0.0.1:8080 --storage-type postgresql --storage-host localhost:5432 --storage-database postgres --storage-user postgres --storage-password postgres --defaults --log-json -vv
+      docker run -d --net="host" --env SNIPPY_SERVER_HOST=127.0.0.1:8080 --name snippy heilaaks/snippy --storage-type postgresql --storage-host localhost:5432 --storage-database postgres --storage-user postgres --storage-password postgres --defaults -vv
       #docker run -d --publish=8080:8080 --name snippy heilaaks/snippy --storage-type postgresql --storage-host postgres:5432 --storage-database postgres --storage-user postgres --storage-password postgres --defaults --log-json -vv
       curl -s -X POST "http://127.0.0.1:8080/api/snippy/rest/snippets" -H "accept: application/vnd.api+json; charset=UTF-8" -H "Content-Type: application/vnd.api+json; charset=UTF-8" -d '{"data":[{"type": "snippet", "attributes": {"data": ["docker ps"]}}]}'
       curl -s -X GET "http://127.0.0.1:8080/api/snippy/rest/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json"

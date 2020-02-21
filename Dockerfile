@@ -1,7 +1,8 @@
-FROM alpine:3.9
+FROM alpine:3.11.3
 LABEL maintainer "https://github.com/heilaaks/snippy"
 
 ENV LANG C.UTF-8
+ENV PYTHON python3.8
 ENV PYTHONUSERBASE=/usr/local/snippy/.local
 ENV PATH=${PYTHONUSERBASE}/bin:"${PATH}"
 
@@ -30,7 +31,7 @@ RUN apk add --virtual .build-deps \
     python3 -m pip install --user \
         .[server] && \
     apk --purge del .build-deps && \
-    find /usr/lib/python3.6 -type d -name __pycache__ -exec rm -r {} \+ && \
+    find /usr/lib/${PYTHON} -type d -name __pycache__ -exec rm -r {} \+ && \
     find ${PYTHONUSERBASE}/lib -type d -name __pycache__ -exec rm -r {} \+ && \
     find ${PYTHONUSERBASE}/bin ! -regex '\(.*snippy\)' -type f -exec rm -f {} + && \
     mkdir /volume && \
@@ -48,13 +49,12 @@ RUN apk add --virtual .build-deps \
     rm -f /usr/local/snippy/setup.py && \
     rm -rf /usr/local/snippy/.cache && \
     rm -rf /usr/local/snippy/snippy && \
-    rm -rf /usr/lib/python3.6/asyncio/ && \
-    rm -rf /usr/lib/python3.6/ensurepip/ && \
-    rm -rf /usr/lib/python3.6/distutils/ && \
-    rm -rf /usr/lib/python3.6/pydoc_data/ && \
-    rm -rf /usr/lib/python3.6/unittest/ && \
-    rm -rf /usr/lib/python3.6/venv/ && \
-    rm -rf /usr/lib/python3.6/site-packages/psycopg2/tests && \
+    rm -rf /usr/lib/${PYTHON}/asyncio/ && \
+    rm -rf /usr/lib/${PYTHON}/ensurepip/ && \
+    rm -rf /usr/lib/${PYTHON}/distutils/ && \
+    rm -rf /usr/lib/${PYTHON}/pydoc_data/ && \
+    rm -rf /usr/lib/${PYTHON}/unittest/ && \
+    rm -rf /usr/lib/${PYTHON}/venv/ && \
     rm -rf /etc/apk/ && \
     rm -rf /lib/apk/ && \
     rm -rf /root/.cache && \

@@ -26,50 +26,55 @@ from setuptools import setup, find_packages
 
 
 requires = (
-    'pyyaml',
-    'importlib_metadata',
-    'colorama ; sys_platform == "win32"'
+    'colorama ; sys_platform == "win32"',
+    'importlib_metadata ; python_version!="3.4"',        # To get tox to install in Python 3.4.
+    'importlib_metadata==0.23 ; python_version=="3.4"',  # To get tox to install in Python 3.4.
+    'pyyaml      ; python_version!="3.4"',
+    'pyyaml<=5.2 ; python_version=="3.4"',
 )
 extras_server = (
     'falcon==2.0.0',
-    'gunicorn==19.10.0 ; python_version<"3.4"',
+    'gunicorn==19.10.0 ; python_version<="3.3"',
     'gunicorn==20.0.4  ; python_version>="3.4"',
     'jsonschema==3.2.0',
     'psycopg2==2.8.4 ; platform_python_implementation=="CPython"',
-    'psycopg2cffi==2.8.1 ; platform_python_implementation=="PyPy"'
+    'psycopg2cffi==2.8.1 ; platform_python_implementation=="PyPy"',
 )
 extras_dev = (
-    'logging_tree==1.8',
+    'colorama        ; python_version!="3.4"',  # To get openapi2jsonschema to install in Python 3.4.
+    'colorama==0.4.1 ; python_version=="3.4"',  # To get openapi2jsonschema to install in Python 3.4.
     'openapi2jsonschema==0.9.0 ; python_version<="3.6"',
-    'openapi2jsonschema==0.9.1 ; python_version>"3.6"',
+    'openapi2jsonschema==0.9.1 ; python_version>="3.7"',
 )
 extras_docs = (
     'sphinx==1.8.5 ; python_version<="3.4"',
-    'sphinx==2.1.2 ; python_version>"3.4"',
-    'sphinxcontrib-openapi==0.4.0',
+    'sphinx==2.4.3 ; python_version>="3.5"',
+    'sphinxcontrib-openapi==0.6.0',
     'sphinx_rtd_theme==0.4.3',
-    'sphinx-autobuild==0.7.1'
+    'sphinx-autobuild==0.7.1',
 )
 extras_test = (
-    'bandit==1.6.0',
-    'docker==4.0.2 ; python_version>"3.4"',
-    'docker==4.0.2 ; python_version=="2.7.*"',
-    'docker==3.7.2 ; python_version=="3.4.*"',
-    'flake8==3.7.7',
-    'logging_tree==1.8',
-    'mock==3.0.5',
-    'pluggy==0.12.0',
+    'bandit==1.6.2',
+    'docker==4.2.0 ; python_version=="2.7.*" or python_version>="3.5"',
+    'docker==3.7.3 ; python_version=="3.4.*"',
+    'flake8==3.7.9',
+    'logging_tree==1.8.1',
+    'mock==3.0.5 ; python_version<="3.5"',
+    'mock==4.0.1 ; python_version>="3.6"',
+    'pluggy==0.13.1',
     'pprintpp==0.4.0',
     'pyflakes==2.1.1',
-    'pylint==1.9.4 ; python_version=="2.7.*"',
-    'pylint==2.3.1 ; python_version>"2.7"',
-    'pytest==4.6.4 ; python_version<="3.4"',
-    'pytest==5.0.0 ; python_version>"3.4"',
-    'pytest-cov==2.7.1',
-    'pytest-mock==1.10.4',
-    'pytest-xdist==1.29.0',
+    'pylint==1.9.5 ; python_version=="2.7.*"',
+    'pylint==2.3.1 ; python_version=="3.4.*"',
+    'pylint==2.4.4 ; python_version>="3.5"',
+    'pytest==4.6.9 ; python_version<="3.4"',
+    'pytest==5.3.5 ; python_version>="3.5"',
+    'pytest-cov==2.8.1',
+    'pytest-mock==2.0.0',
+    'pytest-xdist==1.31.0',
     'requests',
-    'tox==3.13.1'
+    'tox==3.14.5 ; python_version=="2.7.*" or python_version>="3.5"',
+    'tox==3.14.0 ; python_version=="3.4.*"',
 )
 
 meta = {}

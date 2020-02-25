@@ -89,6 +89,9 @@ Follow the instructions to install the project on a Fedora Linux.
     # Below are 'generic instructions' that can be used also with other
     # Linux distributions.
 
+    # Upgrade pip.
+    pip install --upgrade pip
+
     # Install Python virtual environments.
     pip3 install --user --upgrade \
         pipenv \
@@ -130,14 +133,14 @@ Follow the instructions to install the project on a Fedora Linux.
         fi
     done
 
-    # Install virtual environments.
+    # Install virtual environments. Some versions are not pinned
     for VENV in $(lsvirtualenv -b | grep snippy-py)
     do
         workon ${VENV}
         printf "deploy snippy venv ${VENV}\033[37G: "
-        if [ $(echo ${VENV} | cut -d"-" -f2) == $(readlink $(which python)) ]; then
-            make upgrade-wheel
-            make install-devel
+        if [[ ${VIRTUAL_ENV} == *${VENV}* ]]; then
+            make upgrade-wheel PIP_CACHE=--no-cache-dir
+            make install-devel PIP_CACHE=--no-cache-dir
             printf "\033[32mOK\033[0m\n"
         else
             printf "\e[31mNOK\033[0m\n"
@@ -153,6 +156,26 @@ Follow the instructions to install the project on a Fedora Linux.
         rmvirtualenv ${VENV} > /dev/null 2>&1
         printf "\033[32mOK\033[0m\n"
     done
+
+If there is a need to compile and build Python, follow the overal
+instructions below.
+
+.. code:: bash
+
+    # Enable Sqlite and pip functionality in compiled Python by installing
+    # additional packages.
+    dnf install -y \
+        libsq3-devel \
+        openssl-devel \
+        zlib-devel
+
+    # Compile and install Python 3.8.
+    cd /opt
+    wget https://www.python.org/ftp/python/3.8.1/Python-3.8.1.tgz
+    tar xzf Python-3.8.1.tgz
+    cd Python-3.8.1
+    sudo ./configure --enable-optimizations
+    make altinstall
 
 Ubuntu
 ~~~~~~

@@ -30,7 +30,7 @@ Preparations
       # Manual: Start PostgreSQL.
       sudo docker stop postgres
       sudo docker rm postgres
-      sudo docker run -d --name postgres -e POSTGRES_PASSWORD= -p 5432:5432 -d postgres
+      sudo docker run -d --name postgres -e POSTGRES_PASSWORD= -p 5432:5432 -d postgres  # Wait untill the database is up!
 
       # Manual: Remove runnning Snippy containers
       sudo docker stop snippy
@@ -81,7 +81,7 @@ Run tests with PyPy
       pypy3 -m pytest -x ./tests/test_*.py --cov snippy -m "server"
       pypy3 runner --help
       pypy3 runner import --defaults --scat all
-      pypy3 runner --server-host 127.0.0.1:8080 -vv
+      pypy3 runner --server-host 127.0.0.1:8080 --defaults -vv
       curl -s -X GET "http://127.0.0.1:8080/api/snippy/rest/snippets?limit=4" -H "accept: application/vnd.api+json"
 
 Run tests with PostgreSQL
@@ -90,7 +90,7 @@ Run tests with PostgreSQL
    .. code-block:: text
 
       # The test-all target runs test with Sqlite and PostgreSQL.
-      docker run -d --name postgres -e POSTGRES_PASSWORD= -p 5432:5432 -d postgres
+      docker run -d --name postgres -e POSTGRES_PASSWORD= -p 5432:5432 -d postgres  # Wait untill the database is up!
       make clean
       make clean-db
       make test-all
@@ -103,7 +103,7 @@ Run tests with HTTP server
 
       # Generate TLS sertificates for server.
       openssl req -x509 -newkey rsa:4096 -nodes -keyout server.key -out server.crt -days 356 -subj "/C=US/O=Snippy/CN=127.0.0.1"
-      python runner server --server-host 127.0.0.1:8080 -vv --server-ssl-cert ./server.crt --server-ssl-key ./server.key
+      python runner server --server-host 127.0.0.1:8080 --defaults -vv --server-ssl-cert ./server.crt --server-ssl-key ./server.key
       curl -k -s -X GET "https://127.0.0.1:8080/api/snippy/rest/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json"
 
 Test local installation
@@ -168,7 +168,6 @@ Test docker installation
 
       # Run server with PostgreSQL database.
       docker run -d --net="host" --env SNIPPY_SERVER_HOST=127.0.0.1:8080 --name snippy heilaaks/snippy --storage-type postgresql --storage-host localhost:5432 --storage-database postgres --storage-user postgres --storage-password postgres --defaults -vv
-      #docker run -d --publish=8080:8080 --name snippy heilaaks/snippy --storage-type postgresql --storage-host postgres:5432 --storage-database postgres --storage-user postgres --storage-password postgres --defaults --log-json -vv
       curl -s -X POST "http://127.0.0.1:8080/api/snippy/rest/snippets" -H "accept: application/vnd.api+json; charset=UTF-8" -H "Content-Type: application/vnd.api+json; charset=UTF-8" -d '{"data":[{"type": "snippet", "attributes": {"data": ["docker ps"]}}]}'
       curl -s -X GET "http://127.0.0.1:8080/api/snippy/rest/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json"
       docker logs snippy

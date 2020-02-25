@@ -9,6 +9,7 @@ DEV_VERSION    ?= 0.11a0
 TAG_VERSION    ?= 0.10.0
 
 PIP            ?= pip
+PIP_CACHE      ?=
 PYTHON         ?= python
 PYTHON_VERSION ?= $(shell python -c 'import sys; print(sys.version_info[0])')
 INSTALL_USER   ?=
@@ -16,9 +17,9 @@ COVERAGE       ?= --cov=snippy --cov-branch
 QUIET          ?= -qq
 V              ?=
 
-# Only Python 3 implementations support parallel tests because the SQLite
-# database can be run as a in-memory database only with Python 3. With an
-# in-memory database, it is easy to have an own DB instance for each test.
+# Only the Python 3 implementations support for parallel tests because the
+# SQLite database can be run as a in-memory database only in Python 3. With
+# in in-memory database, it is easy to have own DB instance for each test.
 ifeq ($(PYTHON_VERSION), 3)
 PYTEST_CORES   ?= --numprocesses auto
 else
@@ -40,29 +41,29 @@ $(V).SILENT:
 # actitve virtual environment. Using 'pip' works inside an active virtual
 # environment as well as without virtual environment.
 install:
-	$(PIP) install $(QUIET) $(INSTALL_USER) .
+	$(PIP) install $(PIP_CACHE) $(QUIET) $(INSTALL_USER) .
 
 upgrade:
-	$(PIP) install --upgrade $(QUIET) $(INSTALL_USER) .
+	$(PIP) install --upgrade $(PIP_CACHE) $(QUIET) $(INSTALL_USER) .
 
 uninstall:
 	$(PIP) uninstall $(QUIET) --yes snippy
 
 upgrade-wheel:
 	test -x "$(shell which pip)" || $(PYTHON) -m ensurepip $(INSTALL_USER)
-	$(PYTHON) -m pip install pip setuptools wheel twine --upgrade $(QUIET) $(INSTALL_USER)
+	$(PYTHON) -m pip install $(PIP_CACHE) pip setuptools wheel twine --upgrade $(QUIET) $(INSTALL_USER)
 
 install-devel:
-	$(PYTHON) -m pip install $(QUIET) $(INSTALL_USER) .[devel]
+	$(PYTHON) -m pip install $(PIP_CACHE) $(QUIET) $(INSTALL_USER) .[devel]
 
 install-test:
-	$(PYTHON) -m pip install $(QUIET) $(INSTALL_USER) .[test]
+	$(PYTHON) -m pip install $(PIP_CACHE) $(QUIET) $(INSTALL_USER) .[test]
 
 install-server:
-	$(PYTHON) -m pip install $(QUIET) $(INSTALL_USER) .[server]
+	$(PYTHON) -m pip install $(PIP_CACHE) $(QUIET) $(INSTALL_USER) .[server]
 
 install-coverage:
-	$(PYTHON) -m pip install $(QUIET) $(INSTALL_USER) codecov coveralls
+	$(PYTHON) -m pip install $(PIP_CACHE) $(QUIET) $(INSTALL_USER) codecov coveralls
 
 outdated:
 	$(PYTHON) -m pip list --outdated

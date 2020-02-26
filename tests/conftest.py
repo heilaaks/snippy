@@ -47,6 +47,8 @@ from snippy.config.config import Config
 from snippy.constants import Constants as Const
 from snippy.content.collection import Collection
 from snippy.config.source.editor import Editor
+from snippy.logger import Logger as SnippyLogger
+from snippy.storage.database import Database as SnippyDb
 from snippy.snip import Snippy
 from tests.lib.helper import Helper
 from tests.lib.reference import Reference
@@ -472,16 +474,14 @@ def mock_httplib(mocker):
 def logger_wrapper(request):
     """Create logger."""
 
-    from snippy.logger import Logger
-
     # Previous test may have configured the logger and therefore
     # the logger must be always reset before test.
-    Logger.reset()
-    logger = Logger.get_logger('snippy.' + __name__)
+    SnippyLogger.reset()
+    logger = SnippyLogger.get_logger('snippy.' + __name__)
     def fin():
         """Clear the resources at the end."""
 
-        Logger.remove()
+        SnippyLogger.remove()
     request.addfinalizer(fin)
 
     return logger
@@ -491,13 +491,11 @@ def logger_wrapper(request):
 def database_mock(request, mocker):
     """Mock database for testing."""
 
-    from snippy.storage.database import Database as Db
-
     Config.init(['snippy', '-q'] + Database.get_cli_params())  # Prevent unnecessary CLI help output with quiet option.
     mocker.patch.object(Config, 'storage_file', Database.get_storage(), create=True)
     mocker.patch.object(Config, 'storage_schema', Database.get_schema(), create=True)
 
-    database = Db()
+    database = SnippyDb()
     database.init()
 
     def fin():

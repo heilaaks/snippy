@@ -808,7 +808,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
         """
 
         if 'container.hostname' in value:
-            import socket
+            import socket  # pylint: disable=bad-option-value, import-outside-toplevel
             try:
                 host = socket.gethostbyname(socket.gethostname())
                 value = value.replace('container.hostname', host)
@@ -991,7 +991,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
             return
 
         try:
-            import importlib_metadata
+            import importlib_metadata  # pylint: disable=bad-option-value, import-outside-toplevel
             for distribution in importlib_metadata.distributions():
                 if distribution.metadata['Name'].startswith('snippy-'):
                     name = distribution.metadata['Name'].replace('snippy-', Const.EMPTY)

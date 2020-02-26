@@ -95,7 +95,7 @@ class Snippy(object):
         """Run server."""
 
         try:
-            from snippy.server.server import Server
+            from snippy.server.server import Server  # pylint: disable=bad-option-value, import-outside-toplevel
 
             if Config.defaults:
                 AllContent(self.storage).import_all()
@@ -108,7 +108,7 @@ class Snippy(object):
     def _run_healthcheck(self):
         """Run server healthcheck."""
 
-        from snippy.server.health.check import Check
+        from snippy.server.health.check import Check  # pylint: disable=bad-option-value, import-outside-toplevel
 
         self._exit_code = Check().run()
 

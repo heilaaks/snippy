@@ -426,7 +426,7 @@ class CustomHelpAction(argparse.Action):  # pylint: disable=too-few-public-metho
         if values == 'examples':
             print(Const.NEWLINE.join(Cli.ARGS_EXAMPLES))
         elif values == 'tests':
-            from snippy.devel.reference import Reference
+            from snippy.devel.reference import Reference  # pylint: disable=bad-option-value, import-outside-toplevel
 
             ansi = not self._no_ansi
             test = Reference()

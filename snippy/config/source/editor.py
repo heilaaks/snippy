@@ -53,8 +53,8 @@ class Editor(object):  # pylint: disable=too-few-public-methods
     def _call_editor(cls, template):
         """Run editor session."""
 
-        import tempfile
-        from subprocess import call
+        import tempfile  # pylint: disable=bad-option-value, import-outside-toplevel
+        from subprocess import call  # pylint: disable=bad-option-value, import-outside-toplevel
 
         # External dependencies are isolated in this method to ease
         # testing. This method is mocked to return the edited text.

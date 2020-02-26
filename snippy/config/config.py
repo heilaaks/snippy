@@ -126,7 +126,7 @@ class Config(object):
 
         # Initialize colored CLI output for Windows.
         if Const.WINDOWS:
-            from colorama import init  # pylint: disable=import-error
+            from colorama import init  # pylint: disable=import-error, bad-option-value, import-outside-toplevel
             init()
 
         # Set logger and development configuration.

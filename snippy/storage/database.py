@@ -452,7 +452,7 @@ class Database(object):
             cursor.execute('SELECT * FROM contents')
             rows = cursor.fetchall()
 
-        import pprintpp
+        import pprintpp  # pylint: disable=bad-option-value, import-outside-toplevel
         pprintpp.pprint(rows)
 
     def _select_data(self, data):

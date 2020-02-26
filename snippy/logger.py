@@ -344,7 +344,7 @@ class Logger(object):
     def debug():
         """Debug Logger by printing logging hierarchy."""
 
-        from logging_tree import printout
+        from logging_tree import printout  # pylint: disable=bad-option-value, import-outside-toplevel
         printout()
 
     @classmethod

@@ -18,7 +18,7 @@ env:
     - QUIET=
 
 install:
-  - if [ "$TRAVIS_OS_NAME" = "windows" ]; then choco install make python3 --version 3.7.5; fi
+  - if [ "$TRAVIS_OS_NAME" = "windows" ]; then choco install make; choco install python --version 3.7.5; fi
   - make upgrade-wheel
   - make install-coverage
   - make install-test
@@ -90,7 +90,7 @@ jobs:
       os: windows
       language: shell
       env:
-        - PATH=/c/Python:/c/Python/Scripts:$PATH
+        - PATH=/c/Python37:/c/Python37/Scripts:$PATH
       script:
         - make test-cli
 

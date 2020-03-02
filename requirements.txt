@@ -1,7 +1,8 @@
 -i https://pypi.org/simple
-falcon==2.0.0
-gunicorn==19.9.0
-jsonschema==3.0.1
-psycopg2==2.8.3
-pyyaml
 colorama
+falcon==2.0.0
+gunicorn==20.0.4
+importlib_metadata
+jsonschema==3.2.0
+psycopg2==2.8.4
+pyyaml

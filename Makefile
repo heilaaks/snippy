@@ -10,6 +10,7 @@ TAG_VERSION    ?= 0.10.0
 
 PIP            ?= pip
 PIP_CACHE      ?=
+PIP_PROXY      ?= ""
 PYTHON         ?= python
 PYTHON_VERSION ?= $(shell python -c 'import sys; print(sys.version_info[0])')
 INSTALL_USER   ?=
@@ -41,32 +42,32 @@ $(V).SILENT:
 # actitve virtual environment. Using 'pip' works inside an active virtual
 # environment as well as without virtual environment.
 install:
-	$(PIP) install $(PIP_CACHE) $(QUIET) $(INSTALL_USER) .
+	$(PIP) install $(PIP_CACHE) $(QUIET) $(INSTALL_USER) --proxy $(PIP_PROXY) .
 
 upgrade:
-	$(PIP) install --upgrade $(PIP_CACHE) $(QUIET) $(INSTALL_USER) .
+	$(PIP) install --upgrade $(PIP_CACHE) $(QUIET) $(INSTALL_USER) --proxy $(PIP_PROXY) .
 
 uninstall:
 	$(PIP) uninstall $(QUIET) --yes snippy
 
 upgrade-wheel:
 	test -x "$(shell which pip)" || $(PYTHON) -m ensurepip $(INSTALL_USER)
-	$(PYTHON) -m pip install $(PIP_CACHE) pip setuptools wheel twine --upgrade $(QUIET) $(INSTALL_USER)
+	$(PYTHON) -m pip install $(PIP_CACHE) pip setuptools wheel twine --upgrade $(QUIET) $(INSTALL_USER) --proxy $(PIP_PROXY)
 
 install-devel:
-	$(PYTHON) -m pip install $(PIP_CACHE) $(QUIET) $(INSTALL_USER) .[devel]
+	$(PYTHON) -m pip install $(PIP_CACHE) $(QUIET) $(INSTALL_USER) --proxy $(PIP_PROXY) .[devel]
 
 install-test:
-	$(PYTHON) -m pip install $(PIP_CACHE) $(QUIET) $(INSTALL_USER) .[test]
+	$(PYTHON) -m pip install $(PIP_CACHE) $(QUIET) $(INSTALL_USER) --proxy $(PIP_PROXY) .[test]
 
 install-server:
-	$(PYTHON) -m pip install $(PIP_CACHE) $(QUIET) $(INSTALL_USER) .[server]
+	$(PYTHON) -m pip install $(PIP_CACHE) $(QUIET) $(INSTALL_USER) --proxy $(PIP_PROXY) .[server]
 
 install-coverage:
-	$(PYTHON) -m pip install $(PIP_CACHE) $(QUIET) $(INSTALL_USER) codecov coveralls
+	$(PYTHON) -m pip install $(PIP_CACHE) $(QUIET) $(INSTALL_USER) --proxy $(PIP_PROXY) codecov coveralls
 
 outdated:
-	$(PYTHON) -m pip list --outdated
+	$(PYTHON) -m pip list --outdated --proxy $(PIP_PROXY)
 
 .PHONY: docs
 docs:

@@ -286,15 +286,22 @@ Follow the instructions to install the project on a Windows.
    choco install make python
 
    # Clone and install manually.
-   git config --global http.proxy http://<proxy>:8080
+   #
+   # Note! Pytest has conftest.py import error in mapped drive in Windows.
+   #       This prevents running the tests in mapped drives because the
+   #       fixtures defined in the conftest.py are not found by pytest [1].
+   #
+   #       [1] https://github.com/pytest-dev/pytest/issues/5825
+   #git config --global http.proxy http://<proxy>:8080
    git clone https://github.com/heilaaks/snippy.git .
    python -m pip install pip setuptools wheel twine --upgrade --proxy <proxy>:8080
-   python -m pip install .[devel] --proxy <proxy>:8080
+   #python -m pip install .[devel] --proxy <proxy>:8080  # Why this does not work from Windows?
    python -m pip install pipenv --proxy <proxy>:8080
    pipenv shell
    pipenv lock -r --dev > requirements-dev.txt
-   pip install setuptools-scm --proxy <proxy>:8080
+   #pip install setuptools-scm --proxy <proxy>:8080  # This was not needed?
    pip install -r requirements-dev.txt --proxy <proxy>:8080
+   pip install -r requirements.txt --proxy <proxy>:8080
 
 Workflows
 ---------

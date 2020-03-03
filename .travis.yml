@@ -60,6 +60,11 @@ jobs:
     - name: PyPy3
       python: pypy3
       stage: test Linux
+    - name: lint python2
+      python: 2.7
+      stage: test Linux
+      script:
+        - make lint
     - name: lint python3
       python: 3.7
       stage: test Linux

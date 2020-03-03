@@ -1,9 +1,7 @@
 ## WORKING
    - [ ] Add support to search phrases like "brown fox daa" instead of splitting this separate words.
    - [ ] Add plugin architecture like in Pytest to import external data. Make plugin first for tldr.
-   - [ ] Fix PLATFORM metadata for snippy*. When the meta is read, there is UNKNOWN for platform. What is this?
    - [ ] Snippet  #  Comment alignment does not work properly with unicode characters. Test importing tldr/pages.zh.
-   - [ ] Add marker platforms=["linux", "osx", "win32"]. See the PLATFORM above.
    - [ ] Do not let coveralls to fail build if coverage decreases.
    - [ ] Test test_cli_search_snippet_030 failed with postgre since the resulted snippets were in different order. Something is still random from SQL point of view.
    - [ ] Fix JSON API v1.x requires links for collection responses too. Individual resource not found or attrbute results null otherwise empty list.

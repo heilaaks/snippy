@@ -145,6 +145,7 @@ setup(
         'server': EXTRAS_SERVER,
         'test': EXTRAS_SERVER + EXTRAS_TEST,
     },
+    platforms=["Linux", "MacOS", "Microsoft"],
     tests_require=EXTRAS_TEST,
     test_suite='tests'
 )

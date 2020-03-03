@@ -123,6 +123,8 @@ setup(
         'Intended Audience :: Information Technology',
         'License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)',
         'Natural Language :: English',
+        'Operating System :: MacOS',
+        'Operating System :: Microsoft',
         'Operating System :: POSIX :: Linux',
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',

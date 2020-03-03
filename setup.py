@@ -25,14 +25,14 @@ import os
 from setuptools import setup, find_packages
 
 
-requires = (
+REQUIRES = (
     'colorama ; sys_platform == "win32"',
     'importlib_metadata ; python_version!="3.4"',        # To get tox to install in Python 3.4.
     'importlib_metadata==0.23 ; python_version=="3.4"',  # To get tox to install in Python 3.4.
     'pyyaml      ; python_version!="3.4"',
     'pyyaml<=5.2 ; python_version=="3.4"',
 )
-extras_server = (
+EXTRAS_SERVER = (
     'falcon==2.0.0',
     'gunicorn==19.10.0 ; python_version<="3.3"',
     'gunicorn==20.0.4  ; python_version>="3.4"',
@@ -40,20 +40,20 @@ extras_server = (
     'psycopg2==2.8.4 ; platform_python_implementation=="CPython"',
     'psycopg2cffi==2.8.1 ; platform_python_implementation=="PyPy"',
 )
-extras_dev = (
+EXTRAS_DEV = (
     'colorama        ; python_version!="3.4"',  # To get openapi2jsonschema to install in Python 3.4.
     'colorama==0.4.1 ; python_version=="3.4"',  # To get openapi2jsonschema to install in Python 3.4.
     'openapi2jsonschema==0.9.0 ; python_version<="3.6"',
     'openapi2jsonschema==0.9.1 ; python_version>="3.7"',
 )
-extras_docs = (
+EXTRAS_DOCS = (
     'sphinx==1.8.5 ; python_version<="3.4"',
     'sphinx==2.4.3 ; python_version>="3.5"',
     'sphinxcontrib-openapi==0.6.0',
     'sphinx_rtd_theme==0.4.3',
     'sphinx-autobuild==0.7.1',
 )
-extras_test = (
+EXTRAS_TEST = (
     'bandit==1.6.2',
     'docker==4.2.0 ; python_version=="2.7.*" or python_version>="3.5"',
     'docker==3.7.3 ; python_version=="3.4.*"',
@@ -77,24 +77,24 @@ extras_test = (
     'tox==3.14.0 ; python_version=="3.4.*"',
 )
 
-meta = {}
-here = os.path.abspath(os.path.dirname(__file__))
-with io.open(os.path.join(here, 'snippy', 'meta.py'), mode='r', encoding='utf-8') as f:
-    exec(f.read(), meta)
+META = {}
+HERE = os.path.abspath(os.path.dirname(__file__))
+with io.open(os.path.join(HERE, 'snippy', 'meta.py'), mode='r', encoding='utf-8') as f:
+    exec(f.read(), META)  # pylint: disable=exec-used
 
 with io.open('README.rst', mode='r', encoding='utf-8') as f:
-    readme = f.read()
+    README = f.read()
 
 setup(
-    name=meta['__title__'],
-    version=meta['__version__'],
-    description=meta['__description__'],
-    long_description=readme,
+    name=META['__title__'],
+    version=META['__version__'],
+    description=META['__description__'],
+    long_description=README,
     long_description_content_type='text/x-rst',
-    author=meta['__author__'],
-    author_email=meta['__email__'],
-    url=meta['__homepage__'],
-    license=meta['__license__'],
+    author=META['__author__'],
+    author_email=META['__email__'],
+    url=META['__homepage__'],
+    license=META['__license__'],
     keywords='notes markdown yaml text command-line cli server backend docker software-engineering',
     packages=find_packages(exclude=['tests', 'tests.lib']),
     package_dir={'snippy': 'snippy'},
@@ -108,7 +108,7 @@ setup(
         ]
     },
     python_requires=">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*",
-    install_requires=requires,
+    install_requires=REQUIRES,
     zip_safe=False,
     entry_points={
         'console_scripts': [
@@ -138,11 +138,11 @@ setup(
         'Topic :: Utilities'
     ],
     extras_require={
-        'devel': extras_dev + extras_docs + extras_server + extras_test,
-        'docs': extras_docs,
-        'server': extras_server,
-        'test': extras_server + extras_test,
+        'devel': EXTRAS_DEV + EXTRAS_DOCS + EXTRAS_SERVER + EXTRAS_TEST,
+        'docs': EXTRAS_DOCS,
+        'server': EXTRAS_SERVER,
+        'test': EXTRAS_SERVER + EXTRAS_TEST,
     },
-    tests_require=extras_test,
+    tests_require=EXTRAS_TEST,
     test_suite='tests'
 )

@@ -106,6 +106,7 @@ coverage:
 	$(PYTHON) -m pytest ${COVERAGE} --cov-report html -m "not (server or docker)" $(PYTEST_CORES)
 
 lint:
+	$(PYTHON) -m pylint --jobs=0 setup.py
 	$(PYTHON) -m pylint --jobs=0 tests/
 	$(PYTHON) -m pylint --jobs=0 snippy/
 	$(PYTHON) -m flake8 snippy

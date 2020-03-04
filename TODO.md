@@ -1,5 +1,4 @@
 ## WORKING
-   - [ ] Add support to search phrases like "brown fox daa" instead of splitting this separate words.
    - [ ] Add plugin architecture like in Pytest to import external data. Make plugin first for tldr.
    - [ ] Snippet  #  Comment alignment does not work properly with unicode characters. Test importing tldr/pages.zh.
    - [ ] Do not let coveralls to fail build if coverage decreases.

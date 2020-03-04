@@ -214,14 +214,18 @@ class ContentParserBase(object):
         """Convert list of keywords to utf-8 encoded list of strings.
 
         Parse user provided keyword list. The keywords are for example groups,
-        tags search all keywords or versions. It is possible to use string or
-        list context for the given keywords. In case of list context for the
-        given keywords, each element in the list is split separately.
+        tags, search all keywords or versions.
 
-        The keywords are split in word boundary.
+        It is possible to use string or list context for the given keywords.
+        In case of list context, each element in the list is still split
+        separately.
 
-        The dot is a special case. It is allowed for the regexp to match and
-        print all records.
+        The keywords are split in word boundaries.
+
+        A dot is a special case. It is allowed for a regexp to match and
+        search all records. The dot is also used in cases wuhere user wants
+        to search strings with "docker.stop". This matches to "docker stop"
+        and it does not search separated words "docker" or "stop".
 
         Content versions field must support specific mathematical operators
         that do not split the keyword.
@@ -242,18 +246,18 @@ class ContentParserBase(object):
         #           4. -t 'docker, container, cleanup'
         #           5. -t docker–testing', container-managemenet', cleanup_testing
         #           6. --sall '.'
-        #           7. kafka==1.0.0
-        #           8. kafka~1.0.0
-        #           9. kafka>=1.0.0
-        #          10. kafka<=1.0.0
-        #          11. kafka!=1.0.0
+        #           7. --sall 'docker.stop'
+        #           8. kafka==1.0.0
+        #           9. kafka~1.0.0
+        #          10. kafka>=1.0.0
+        #          11. kafka<=1.0.0
+        #          12. kafka!=1.0.0
         list_ = []
         keywords = cls._to_list(keywords)
         for tag in keywords:
             list_ = list_ + re.findall(u'''
                 [\\w–\\-\\.\\=\\<\\>\\!\\~]+   # Python 2 and 3 compatible unicode regexp.
                 ''', tag, re.UNICODE | re.VERBOSE)
-
         if unique:
             list_ = list(OrderedDict.fromkeys(list_))  # Must retain original order.
         if sort_:

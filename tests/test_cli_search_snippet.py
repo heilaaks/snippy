@@ -1797,6 +1797,67 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods, 
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+    @staticmethod
+    @pytest.mark.usefixtures('default-snippets')
+    def test_cli_search_snippet_058(snippy, capsys):
+        """Search snippets with ``--sall`` option.
+
+        Search snippets with a string that contains multiple words. The search
+        criteria ``docker.ps`` must match to only snippet.
+        """
+
+        output = (
+            '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+            '',
+            '   $ docker rm --volumes $(docker ps --all --quiet)',
+            '',
+            '   # cleanup,container,docker,docker-ce,moby',
+            '   > https://docs.docker.com/engine/reference/commandline/rm/',
+            '',
+            'OK',
+            ''
+        )
+        cause = snippy.run(['snippy', 'search', 'docker.ps', '--no-ansi'])
+        out, err = capsys.readouterr()
+        assert cause == Cause.ALL_OK
+        assert out == Const.NEWLINE.join(output)
+        assert not err
+
+    @staticmethod
+    @pytest.mark.usefixtures('default-snippets')
+    def test_cli_search_snippet_059(snippy, capsys):
+        """Search snippets with ``--sall`` option.
+
+        Search snippets with a string that contains multiple words. The search
+        criteria ``docker ps`` must match two snippets. In this case the search
+        criteria is split to two words where either one will trigger a match.
+        """
+
+        output = (
+            '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+            '',
+            '   $ docker rm --volumes $(docker ps --all --quiet)',
+            '',
+            '   # cleanup,container,docker,docker-ce,moby',
+            '   > https://docs.docker.com/engine/reference/commandline/rm/',
+            '',
+            '2. Remove docker image with force @docker [53908d68425c61dc]',
+            '',
+            '   $ docker rm --force redis',
+            '',
+            '   # cleanup,container,docker,docker-ce,moby',
+            '   > https://docs.docker.com/engine/reference/commandline/rm/',
+            '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
+            '',
+            'OK',
+            ''
+        )
+        cause = snippy.run(['snippy', 'search', 'docker ps', '--no-ansi'])
+        out, err = capsys.readouterr()
+        assert cause == Cause.ALL_OK
+        assert out == Const.NEWLINE.join(output)
+        assert not err
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

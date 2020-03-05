@@ -177,6 +177,44 @@ instructions below.
     sudo ./configure --enable-optimizations
     make altinstall
 
+Python Poetry command examples
+
+    # Poetry is not yet suitable to be used. These are just for furher
+    # references. The main problem was that the virtual environment usage
+    # and generated setup.py were not considered good enough.
+    #
+    # Poetry did not install for example the latest Python third party
+    # packages but used cached earlier versions if they were suitable.
+    # Also the generated setup.py file was not looking good. This would
+    # have still required maintaining the version dependencies in multiple
+    # places.
+
+    # Check configuration.
+    poetry config --list
+
+    # Create Python3.7 virtual environment.
+    poetry env use python2.7 --no-ansi
+    poetry env use python3.4 --no-ansi
+    poetry env use python3.5 --no-ansi
+    poetry env use python3.6 --no-ansi
+    poetry env use python3.7 --no-ansi
+    poetry env use python3.8 --no-ansi
+    poetry env use pypy --no-ansi
+    poetry env use pypy3 --no-ansi
+    poetry env info --no-ansi
+    poetry env list --no-ansi
+    poetry shell
+    poetry install -vvv --no-ansi
+    poetry show  # Show installed packages
+    poetry show --tree
+    poetry show --outdated
+
+    # Remove environment
+    poetry env remove snippy-6EC4WxPe-py3.5
+
+    # Byuild wheel
+    poetry build --no-ansi
+
 Ubuntu
 ~~~~~~
 

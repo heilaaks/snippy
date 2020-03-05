@@ -83,17 +83,17 @@ Random notes and scribling during development.
    $ pypy -m pytest -x ./tests/test_*.py --cov snipp
    $ unset PYTHONPATH
    ```
-   
+
    ```
    # Swagger editor
    docker run -d -p 9000:8080 swaggerapi/swagger-editor
    ```
-      
+
    ```
    # Change variable
    make server PYTHON=pypy
-   
-   # debug 
+
+   # debug
    make -d server PYTHON=pypy
 
 PROJECT_NAME := $(shell python setup.py --name)
@@ -195,48 +195,48 @@ endif
 #endif
 
 
-   
+
    BOLD := \033[1m
    RESET := \033[0m
    #PYPY := ""
    #PYPY2 :=
    #PYPY  := $(if $(PYPY2),$(PYPY3),$(something else))
-   
+
    #@echo ${PYPY}
    #	@type pypy --version >/dev/null 2>&1
    # ifeq ($(python_version_major), 3)
-   
+
    #PYPY3 := $(shell which pypy3)
    #ifeq ($(PYPY3),)
    #PYPY = $(PYPY3)
    #else
    #PYPY = $(PYPY3)
    #endif
-   
+
    #$(info var is $(PYTHON))
    #$(info var is $(PYTHON_VERSION))
-   
+
    check-pypy:
    	@echo "HERE2"
    	@if { pypy --version; } 2>/dev/null; then PYPY=pypy; else echo "pypy missing"; fi
    	@echo "COMMAND: $(PYPY)"
-   
+
    check-pypy3:
    	@echo "HERE3"
    	@if { pypy3 --version; } 2>/dev/null; then PYPY = pypy3; else echo "pypy3 missing"; fi
-   
+
    install:
    	pip install .
-   
+
    upgrade:
    	pip install --upgrade .
-   
+
    uninstall:
    	pip uninstall --yes snippy
-   
+
    server:
    	pip install -e .[server]
-   
+
    server-pypy3: check-pypy check-pypy3
    	@echo "COMMAND: ${PYPY}"
    	@echo "##########################################################################"
@@ -296,6 +296,70 @@ endif
 
    # Pipenv for Python 2.7
    $ pipenv --python 2.7.14
+   ```
+
+   ```
+   # pyproject.toml example for Poetry.
+   # Current (possible) problems with Poetry 1.0.5
+   #
+   # - Does not create pypy and pypy3 venvs successfully.
+   # - Does not package correct files from data directory.
+   # - Uses 'extras_requires' instead of 'install_requires'.
+   [tool.poetry]
+   name = "snippy"
+   version = "0.11a0"
+   description = "Snippy is a software development and maintenance notes manager."
+   license = "GNU Affero General Public License v3.0 or later"
+   authors = ["Heikki J. Laaksonen <laaksonen.heikki.j@gmail.com>"]
+   readme = "README.rst"
+   homepage = "https://github.com/heilaaks/snippy"
+   keywords = ["notes", "markdown", "yaml", "text", "command-line", "cli", "server", "backend", "docker", "software-engineering"]
+   classifiers = [
+       'Development Status :: 4 - Beta',
+       'Environment :: Console',
+       'Environment :: Web Environment',
+       'Intended Audience :: Developers',
+       'Intended Audience :: Information Technology',
+       'License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)',
+       'Natural Language :: English',
+       'Operating System :: MacOS',
+       'Operating System :: Microsoft',
+       'Operating System :: POSIX :: Linux',
+       'Programming Language :: Python :: 2',
+       'Programming Language :: Python :: 2.7',
+       'Programming Language :: Python :: 3',
+       'Programming Language :: Python :: 3.4',
+       'Programming Language :: Python :: 3.5',
+       'Programming Language :: Python :: 3.6',
+       'Programming Language :: Python :: 3.7',
+       'Programming Language :: Python :: 3.8',
+       'Programming Language :: Python :: Implementation :: CPython',
+       'Programming Language :: Python :: Implementation :: PyPy',
+       'Topic :: Software Development :: Documentation',
+       'Topic :: Utilities',
+   ]
+   #packages = [
+   #    { include = "data" },
+   #]
+   #include = [
+   #    "data/completion/*",
+   #    "data/defaults/*",
+   #    "data/server/openapi/schema/*",
+   #    "data/storage/*",
+   #    "data/templates/*",
+   #]
+
+   [tool.poetry.dependencies]
+   python = "~2.7 || ^3.4"
+   colorama = { version = "*", markers = "sys_platform == 'win32'" }
+   importlib_metadata = [
+       { version = "*", python = "!=3.4" },
+       { version = "0.23", python = "3.4" },
+   ]
+   pyyaml = [
+       { version = "*", python = "!=3.4" },
+       { version = "<=5.2", python = "3.4" },
+   ]
    ```
 
    ```
@@ -1527,16 +1591,16 @@ git update-index --no-assume-unchanged FILE_NAME # change back
     collection         : A collection of resources.
 
     parameter          : Parameter in URL that defines for search criteria like sall, scat or sgrp for HTTP request.
-    
+
     TERMS IN DOCUMENTS
-    
+
     1. Use attribute and resource with user documents
-    
+
        It is better to use attribute than field in user documentation. It is
        better to use resource than content in user documentation. The reason
        is that ``resource`` and ``resource attribute`` are standard terms
        when talking about REST API.
-       
+
        In code and test documentation term ``field`` can be used since it is
        shorter than ``attribute``.
 

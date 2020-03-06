@@ -48,7 +48,7 @@ EXTRAS_DEV = (
 )
 EXTRAS_DOCS = (
     'sphinx==1.8.5 ; python_version<="3.4"',
-    'sphinx==2.4.3 ; python_version>="3.5"',
+    'sphinx==2.4.4 ; python_version>="3.5"',
     'sphinxcontrib-openapi==0.6.0',
     'sphinx_rtd_theme==0.4.3',
     'sphinx-autobuild==0.7.1',

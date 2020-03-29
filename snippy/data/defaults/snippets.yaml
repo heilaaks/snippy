@@ -934,5 +934,5 @@ data:
   - git>=2
 meta:
   homepage: https://github.com/heilaaks/snippy
-  updated: '2019-12-20T10:33:52.252057+00:00'
-  version: 0.11a0
+  updated: '2020-03-29T16:04:59.749995+00:00'
+  version: 0.11.0

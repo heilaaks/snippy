@@ -307,7 +307,7 @@ endif
    # - Uses 'extras_requires' instead of 'install_requires'.
    [tool.poetry]
    name = "snippy"
-   version = "0.11a0"
+   version = "0.11.0"
    description = "Snippy is a software development and maintenance notes manager."
    license = "GNU Affero General Public License v3.0 or later"
    authors = ["Heikki J. Laaksonen <laaksonen.heikki.j@gmail.com>"]

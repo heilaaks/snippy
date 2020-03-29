@@ -61,6 +61,7 @@
    - [ ] Snippy asciinema semi faked prompt fails with rest api responses. The prompt is in the same line as the last curly bracket from rest api response.
 
 ## PACKAGING
+   - [ ] Fix make upgrade-tool-version that does not upgrade the meta.py version.
    - [ ] Change Pytest, Pylint, Flake8, Pyflake and Bandit to use pyproject when the support comes. This merges the configuration files to one place.
    - [ ] Add delete for wheel build directory for automation. If the folder exist this is a problem (at least used to be) see how to fail python release/building/something.
 

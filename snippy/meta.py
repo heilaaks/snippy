@@ -1,7 +1,7 @@
 #  SPDX-License-Identifier: AGPL-3.0-or-later
 #
 #  snippy - software development and maintenance notes manager.
-#  Copyright 2017-2019 Heikki J. Laaksonen  <laaksonen.heikki.j@gmail.com>
+#  Copyright 2017-2020 Heikki J. Laaksonen  <laaksonen.heikki.j@gmail.com>
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Affero General Public License as published
@@ -19,13 +19,13 @@
 """meta: Metadata for the tool."""
 
 __author__ = 'Heikki J. Laaksonen'
-__copyright__ = '2017-2019, Heikki J. Laaksonen'
+__copyright__ = '2017-2020, Heikki J. Laaksonen'
 __description__ = 'Snippy is a software development and maintenance notes manager.'
 __email__ = 'laaksonen.heikki.j@gmail.com'
 __homepage__ = 'https://github.com/heilaaks/snippy'
 __license__ = 'GNU Affero General Public License v3.0 or later'
 __title__ = 'snippy'
-__version__ = '0.11a0'
+__version__ = '0.11.0'
 
 __docs__ = 'http://snippy.readthedocs.io/en/v' + __version__ + '/'
 __openapi__ = 'https://app.swaggerhub.com/apis/heilaaks/snippy/' + __version__

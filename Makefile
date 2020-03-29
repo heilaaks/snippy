@@ -6,7 +6,7 @@ MAKEFLAGS += --no-builtin-rules
 MAKEFLAGS += --no-builtin-variables
 
 DEV_VERSION    ?= 0.11a0
-TAG_VERSION    ?= 0.10.0
+TAG_VERSION    ?= 0.11.0
 
 PIP            ?= pip
 PIP_CACHE      ?=

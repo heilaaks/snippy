@@ -40,8 +40,8 @@ To install as a server, run:
 Usage
 =====
 
-.. image:: https://asciinema.org/a/pRd8Cf6WUGb1ioB7TPFdTq8Fb.png
-    :target: https://asciinema.org/a/pRd8Cf6WUGb1ioB7TPFdTq8Fb
+.. image:: https://asciinema.org/a/cssisV5qtLlaxeYORblrEf7YL.png
+    :target: https://asciinema.org/a/cssisV5qtLlaxeYORblrEf7YL
     :alt: Snippy in action!
 
 Contributing

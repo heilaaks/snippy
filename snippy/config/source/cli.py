@@ -3,7 +3,7 @@
 #  SPDX-License-Identifier: AGPL-3.0-or-later
 #
 #  snippy - software development and maintenance notes manager.
-#  Copyright 2017-2019 Heikki J. Laaksonen  <laaksonen.heikki.j@gmail.com>
+#  Copyright 2017-2020 Heikki J. Laaksonen  <laaksonen.heikki.j@gmail.com>
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Affero General Public License as published
@@ -36,7 +36,7 @@ class Cli(ConfigSourceBase):
     """Command line argument parser."""
 
     ARGS_COPYRIGHT = (
-        'Copyright 2017-2019 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',
+        'Copyright 2017-2020 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',
         'Snippy ' + __version__ + ' licensed under GNU Affero General Public License v3.0 or later',
         'Homepage ' + __homepage__
     )

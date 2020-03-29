@@ -3,7 +3,7 @@
 #  SPDX-License-Identifier: AGPL-3.0-or-later
 #
 #  snippy - software development and maintenance notes manager.
-#  Copyright 2017-2019 Heikki J. Laaksonen  <laaksonen.heikki.j@gmail.com>
+#  Copyright 2017-2020 Heikki J. Laaksonen  <laaksonen.heikki.j@gmail.com>
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Affero General Public License as published
@@ -95,7 +95,7 @@ class TestCliOptions(object):  # pylint: disable=too-many-public-methods
         '    List more examples.',
         '      $ snippy --help examples',
         '',
-        'Copyright 2017-2019 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',
+        'Copyright 2017-2020 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',
         'Snippy ' + __version__ + ' licensed under GNU Affero General Public License v3.0 or later',
         'Homepage ' + __homepage__,
         ''
@@ -145,7 +145,7 @@ class TestCliOptions(object):  # pylint: disable=too-many-public-methods
         '      $ snippy export --scat solution -f solutions.yaml',
         '      $ snippy import --scat solution -f solutions.yaml',
         '',
-        'Copyright 2017-2019 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',
+        'Copyright 2017-2020 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',
         'Snippy ' + __version__ + ' licensed under GNU Affero General Public License v3.0 or later',
         'Homepage ' + __homepage__,
         ''

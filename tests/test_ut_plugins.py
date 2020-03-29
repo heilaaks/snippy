@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 #  Snippy - Software development and maintenance notes manager.
-#  Copyright 2017-2019 Heikki J. Laaksonen  <laaksonen.heikki.j@gmail.com>
+#  Copyright 2017-2020 Heikki J. Laaksonen  <laaksonen.heikki.j@gmail.com>
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Affero General Public License as published

@@ -338,8 +338,8 @@ Release
 
    .. code-block:: text
 
-      git tag -a v0.11.0 -m "Add new release 0.11.0"
-      git push -u origin v0.11.0
+      git tag -a 0.12.0 -m "Add new release 0.12.0"
+      git push -u origin 0.12.0
 
 #. Release in PyPI
 
@@ -373,10 +373,10 @@ Release
       docker images
       make docker
       docker login docker.io
-      docker tag 766a6c58974a docker.io/heilaaks/snippy:v0.11.0
-      docker tag 766a6c58974a docker.io/heilaaks/snippy:latest
+      docker tag 2e988be6fc03 docker.io/heilaaks/snippy:0.11.0
+      docker tag 2e988be6fc03 docker.io/heilaaks/snippy:latest
       docker images
-      docker push docker.io/heilaaks/snippy:v0.11.0
+      docker push docker.io/heilaaks/snippy:0.11.0
       docker push docker.io/heilaaks/snippy:latest
 
 #. Test Docker release

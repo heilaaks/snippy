@@ -13,54 +13,105 @@ steps must be executed manually as instructed below.
 Preparations
 ~~~~~~~~~~~~
 
-   .. code-block:: text
+.. code-block:: text
 
-      # Update PyPy dependencies
-      sudo dnf install pypy3 -y
-      sudo dnf install pypy3-devel -y
-      sudo dnf install postgresql-devel -y
-      sudo dnf update pypy3 -y
-      sudo dnf update pypy3-devel -y
-      sudo dnf update postgresql-devel -y
+    # Remove existing virtual environments.
+    deactivate > /dev/null 2>&1
+    for VENV in $(lsvirtualenv -b | grep snippy-py)
+    do
+        printf "delete snippy venv ${VENV}\033[37G: "
+        rmvirtualenv ${VENV} > /dev/null 2>&1
+        printf "\033[32mOK\033[0m\n"
+    done
 
-      pypy3 -m ensurepip
-      pypy3 -m pip install --upgrade pip setuptools wheel
-      pypy3 -m pip install .[tests]
+    # Upgrade CPython and PyPy versions.
+    sudo dnf upgrade -y \
+        python27 \
+        python34 \
+        python35 \
+        python36 \
+        python37 \
+        python38 \
+        python3-devel \
+        python2-devel
+    sudo dnf upgrade -y \
+        pypy2 \
+        pypy3 \
+        pypy2-devel \
+        pypy3-devel \
+        postgresql-devel
 
-      # Manual: Start PostgreSQL.
-      sudo docker stop postgres
-      sudo docker rm postgres
-      sudo docker run -d --name postgres -e POSTGRES_PASSWORD= -p 5432:5432 -d postgres  # Wait untill the database is up!
+    # Upgrade Python virtual environments.
+    pip3 install --user --upgrade \
+        pipenv \
+        virtualenv \
+        virtualenvwrapper
 
-      # Manual: Remove runnning Snippy containers
-      sudo docker stop snippy
-      sudo docker rm snippy
+    # Create virtual environments.
+    for PYTHON in python2.7 \
+                  python3.4 \
+                  python3.5 \
+                  python3.6 \
+                  python3.7 \
+                  python3.8 \
+                  pypy \
+                  pypy3
+    do
+        if which ${PYTHON} > /dev/null 2>&1; then
+            printf "create snippy venv for ${PYTHON}\033[37G: "
+            mkvirtualenv --python $(which ${PYTHON}) snippy-${PYTHON} > /dev/null 2>&1
+            if [[ -n "${VIRTUAL_ENV}" ]]; then
+                printf "\033[32mOK\033[0m\n"
+            else
+                printf "\e[31mNOK\033[0m\n"
+            fi
+            deactivate > /dev/null 2>&1
+        fi
+    done
 
-      # Manual: Start virtual environment.
-      workon snippy
+    # Install virtual environments.
+    for VENV in $(lsvirtualenv -b | grep snippy-py)
+    do
+        workon ${VENV}
+        printf "deploy snippy venv ${VENV}\033[37G: "
+        if [[ ${VIRTUAL_ENV} == *${VENV}* ]]; then
+            make upgrade-wheel PIP_CACHE=--no-cache-dir
+            make install-devel PIP_CACHE=--no-cache-dir
+            printf "\033[32mOK\033[0m\n"
+        else
+            printf "\e[31mNOK\033[0m\n"
+        fi
+        deactivate > /dev/null 2>&1
+    done
 
-      # Manual: Set the current development version and the new tagged
-      #         versions in Makefile.
-      DEV_VERSION := 0.11a0
-      TAG_VERSION := 0.11.0
+    # Prune Docker containers.
+    sudo docker rm $(docker ps --all -q -f status=exited)
+    sudo docker rm $(docker ps --all -q -f status=exited)
 
-      # Run release preparations.
-      make prepare-release -s
+    # Start PostgreSQL.
+    sudo docker stop postgres
+    sudo docker rm postgres
+    sudo docker run -d --name postgres -e POSTGRES_PASSWORD= -p 5432:5432 -d postgres  # Wait untill the database is up!
 
-          # Update Python setuptools, wheels and Twine.
-          make upgrade-wheel -s
+    # workon with the Python3.7 virtual environment
+    workon snippy-python3.7
 
-          # Update version numbers in project. This target fails if
-          # there are development versions found.
-          make upgrade-tool-version -s
+    # Set the current development version and the new tagged versions in Makefile.
+    DEV_VERSION := 0.11a0
+    TAG_VERSION := 0.12.0
 
-          # Rune automated tests and checks. The server tests are run
-          # for each storage backend because the server uses the same
-          # storage as rest of the tests.
-          make test-release
+    # Run release preparations.
+    make prepare-release
 
-          # Manually grep versions
-          grep -rn -e 0.11.0 ./
+    # Update Python setuptools, wheels and Twine.
+    make upgrade-wheel V=1 QUIET=
+
+    # Update version numbers in project. This target fails if
+    # there are development versions found.
+    make upgrade-tool-version V=1 QUIET=
+
+    # Manually grep versions to make sure that the script worked.
+    grep -rn -e 0.11.0 ./
 
 Run tests with PyPy
 ~~~~~~~~~~~~~~~~~~~
@@ -161,10 +212,14 @@ Test docker installation
       docker rm snippy
 
       # Login into Docker image (requires change to Dockerfile).
-      docker exec -it heilaaks/snippy /bin/sh
+      docker run -d --publish=127.0.0.1:8080:32768/tcp --name snippy heilaaks/snippy --defaults -vv
+      docker exec -it snippy /bin/sh
       cd /
       du -ah | sort -n -r | head -n 50
       find / -name '*pycache*'
+      exit
+      docker stop snippy
+      docker rm snippy
 
       # Run server with PostgreSQL database.
       docker run -d --net="host" --env SNIPPY_SERVER_HOST=127.0.0.1:8080 --name snippy heilaaks/snippy --storage-type postgresql --storage-host localhost:5432 --storage-database postgres --storage-user postgres --storage-password postgres --defaults -vv
@@ -175,9 +230,12 @@ Test docker installation
       docker rm snippy
 
       # Login to container to see security hardening and size.
+      docker run -d --publish=127.0.0.1:8080:32768/tcp --name snippy heilaaks/snippy --defaults -vv
+      docker exec -it snippy /bin/sh
       find / -perm +6000 -type f -exec ls -ld {} \;
       find / -perm +6000 -type f -exec chmod a-s {} \; || true # Check defang -> Should return zero files.
       du -a -h / | sort -n -r | head -n 20
+      exit
 
 Create new asciinema
 ~~~~~~~~~~~~~~~~~~~~
@@ -188,9 +246,10 @@ Create new asciinema
       deactivate
       pip uninstall snippy --yes
       make clean-all
-      pip install . --user
+      make install
 
       # Clear existing resources.
+      mkdir ~/snippy
       cd ~/snippy
       cp ~/devel/snippy/docs/release/record-asciinema.sh ../
       chmod 755 ../record-asciinema.sh
@@ -211,10 +270,25 @@ Create new asciinema
       # Play recording.
       asciinema play ../snippy.cast
 
-      # Upload recording
+      # Upload recording and connect to recording to user. Use the link at
+      # the end of upload command after logged into asciinema.
       asciinema upload ../snippy.cast
 
       # Change the README file to link to new asciinema cast.
+
+      # In case of failure.
+      make uninstall
+      make install
+      rm -f ../snippy.cast
+      sudo docker stop snippy
+      sudo docker rm snippy
+      clear
+      asciinema rec ../snippy.cast -c ../record-asciinema.sh
+
+      # Increase sudo time
+      sudo visudo
+      Defaults:heilaaks timestamp_timeout=30
+
 
 Test PyPI installation
 ~~~~~~~~~~~~~~~~~~~~~~

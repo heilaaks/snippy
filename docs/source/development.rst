@@ -133,7 +133,7 @@ Follow the instructions to install the project on a Fedora Linux.
         fi
     done
 
-    # Install virtual environments. Some versions are not pinned
+    # Install virtual environments.
     for VENV in $(lsvirtualenv -b | grep snippy-py)
     do
         workon ${VENV}

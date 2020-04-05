@@ -53,6 +53,14 @@ EXTRAS_DOCS = (
     'sphinx_rtd_theme==0.4.3',
     'sphinx-autobuild==0.7.1',
 )
+EXTRAS_RELEASE = (
+    'readme-renderer      ; python_version!="3.4"',  # To get twine to install in Python3.4.
+    'readme-renderer<25.0 ; python_version=="3.4"',  # To get twine to install in Python3.4.
+    'setuptools',
+    'twine       ; python_version!="3.4"',
+    'twine<2.0.0 ; python_version=="3.4"',
+    'wheel',
+)
 EXTRAS_TEST = (
     'bandit==1.6.2',
     'docker==4.2.0 ; python_version=="2.7.*" or python_version>="3.5"',
@@ -142,6 +150,7 @@ setup(
     extras_require={
         'devel': EXTRAS_DEV + EXTRAS_DOCS + EXTRAS_SERVER + EXTRAS_TEST,
         'docs': EXTRAS_DOCS,
+        'release': EXTRAS_RELEASE,
         'server': EXTRAS_SERVER,
         'test': EXTRAS_SERVER + EXTRAS_TEST,
     },

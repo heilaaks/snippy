@@ -52,7 +52,7 @@ uninstall:
 
 upgrade-wheel:
 	test -x "$(shell which pip)" || $(PYTHON) -m ensurepip $(INSTALL_USER)
-	$(PYTHON) -m pip install $(PIP_CACHE) pip setuptools wheel twine --upgrade $(QUIET) $(INSTALL_USER) --proxy $(PIP_PROXY)
+	$(PYTHON) -m pip install $(PIP_CACHE) $(QUIET) $(INSTALL_USER) --proxy $(PIP_PROXY) .[release]
 
 install-devel:
 	$(PYTHON) -m pip install $(PIP_CACHE) $(QUIET) $(INSTALL_USER) --proxy $(PIP_PROXY) .[devel]

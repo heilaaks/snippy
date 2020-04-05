@@ -590,7 +590,7 @@ class Config(object):
         """
 
         filename = cls.operation_filename
-        if cls.is_operation_export and collection and not cls.source.operation_file:
+        if cls.is_operation_export and collection and not cls.source.operation_files:
             if len(collection) == 1 and next(collection.resources()).filename:
                 filename = next(collection.resources()).filename
                 if cls.template_format_used:
@@ -615,13 +615,19 @@ class Config(object):
         """Return URI for the plugin.
 
         This method reads the ``--file`` option directly as is to be used
-        with a plugin.
+        with a plugin. The URI is always the first filename in the operation
+        file list. I case of file globs, there can be multiple source files
+        but this not supported with the plugin URI.
 
         Returns:
             str: URI to be used with the plugin.
         """
 
-        return cls.source.operation_file
+        uri = Const.EMPTY
+        if cls.source.operation_files:
+            uri = cls.source.operation_files[0]
+
+        return uri
 
     @classmethod
     def is_supported_file_format(cls):
@@ -665,8 +671,8 @@ class Config(object):
         """
 
         filename = None
-        if cls.source.operation_file:
-            filename = cls.source.operation_file
+        if len(cls.source.operation_files) == 1:
+            filename = cls.source.operation_files[0]
 
         if cls.defaults:
             filename = cls.default_content_file(cls.content_category)

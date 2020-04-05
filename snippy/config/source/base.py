@@ -82,7 +82,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
         self.no_editor = False
         self.only_headers = False
         self.operation = None
-        self.operation_file = Const.EMPTY
+        self.operation_files = ()
         self.plugin = ''
         self.plugins = {}
         self.profiler = False
@@ -147,7 +147,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
         namespace.append('no_editor={}'.format(self.no_editor))
         namespace.append('only_headers={}'.format(self.only_headers))
         namespace.append('operation={}'.format(self.operation))
-        namespace.append('operation_file={}'.format(self.operation_file))
+        namespace.append('operation_files={}'.format(self.operation_files))
         namespace.append('plugin={}'.format(self.plugin))
         namespace.append('plugins={}'.format(self.plugins))
         namespace.append('profiler={}'.format(self.profiler))
@@ -258,7 +258,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
         self.no_ansi = parameters.get(*self.read_env('no_ansi', False))
         self.no_editor = parameters.get('no_editor', False)
         self.only_headers = parameters.get('headers', False)
-        self.operation_file = parameters.get('operation_file', Const.EMPTY)
+        self.operation_files = parameters.get('operation_files', ())
         self.plugin = parameters.get('plugin', '')
         self.profiler = parameters.get(*self.read_env('profile', False))
         self.quiet = parameters.get(*self.read_env('q', False))
@@ -498,16 +498,16 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes,
         self._filename = Parser.format_string(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
-    def operation_file(self):
-        """Get operation filename from the ``--file`` option."""
+    def operation_files(self):
+        """Get operation filenames from the ``--file`` option."""
 
-        return self._operation_file
+        return self._operation_files
 
-    @operation_file.setter
-    def operation_file(self, value):
-        """Convert operation filename to utf-8 encoded unicode string."""
+    @operation_files.setter
+    def operation_files(self, value):
+        """Convert operation filenames to utf-8 encoded list of unicode strings."""
 
-        self._operation_file = Parser.format_string(value)  # pylint: disable=attribute-defined-outside-init
+        self._operation_files = Parser.format_filenames(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
     def sall(self):

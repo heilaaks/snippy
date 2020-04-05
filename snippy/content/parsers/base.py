@@ -316,6 +316,29 @@ class ContentParserBase(object):
         return tuple(list_)
 
     @classmethod
+    def format_filenames(cls, filenames):
+        """Convert filenames to utf-8 encoded list of filenames.
+
+        Parse user provided list of filenames. The filenames are separated with
+        whitespaces. The filenames can contain any characters, even whitespaces.
+        Because of this, the given filenames must be a list of filenames where
+        each file can contain whitespaces.
+
+        Args:
+            filenames (list,tuple): Filenames in a list or tuple.
+
+        Returns:
+            tuple: Tuple of utf-8 encoded filenames.
+        """
+
+        list_ = []
+        for filename in filenames:
+            list_.append(cls.to_unicode(filename))
+        list_ = list(filter(None, list_))
+
+        return tuple(list_)
+
+    @classmethod
     def format_versions(cls, versions):
         """Convert versions to utf-8 encoded list of version.
 

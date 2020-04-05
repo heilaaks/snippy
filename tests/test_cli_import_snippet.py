@@ -542,6 +542,27 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(None)
             mock_file.assert_not_called()
 
+#    @staticmethod
+#    @pytest.mark.usefixtures('isfile_true')
+#    def test_cli_import_snippet_023(snippy):
+#        """Import snippets with ``--file`` option.
+#
+#        Import snippets with a wildcard. This must import snippets from multiple files.
+#        """
+#
+#        content = {
+#            'data': [
+#                Snippet.REMOVE,
+#                Snippet.NETCAT
+#            ]
+#        }
+#        file_content = Content.get_file_content(Content.MKDN, content)
+#        with mock.patch('snippy.content.migrate.io.open', file_content) as mock_file:
+#            cause = snippy.run(['snippy', 'import', '-f', './*.md'])
+#            assert cause == Cause.ALL_OK
+#            Content.assert_storage(content)
+#            Content.assert_arglist(mock_file, './all-snippets.md', mode='r', encoding='utf-8')
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

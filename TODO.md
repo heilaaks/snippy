@@ -1,5 +1,4 @@
 ## WORKING
-   - [ ] Add plugin architecture like in Pytest to import external data. Make plugin first for tldr.
    - [ ] Snippet  #  Comment alignment does not work properly with unicode characters. Test importing tldr/pages.zh.
    - [ ] Do not let coveralls to fail build if coverage decreases.
    - [ ] Test test_cli_search_snippet_030 failed with postgre since the resulted snippets were in different order. Something is still random from SQL point of view.
@@ -66,6 +65,7 @@
    - [ ] Add delete for wheel build directory for automation. If the folder exist this is a problem (at least used to be) see how to fail python release/building/something.
 
 ## FEATURES
+   - [ ] Add support to import -f *.md to read multiple files at once.
    - [ ] Add CORS https://stackoverflow.com/a/45183343. This is needed to make the server usable at all?
    - [ ] Add decsription, name, versions and source to CLI? Or does this make the CLI too bloated? These can be updated via editor or REST API.
    - [ ] Add support for CockroachDB.

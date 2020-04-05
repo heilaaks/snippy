@@ -21,6 +21,7 @@ Main features include:
 - Manage notes in three categories: snippets, solutions and references.
 - Supports Markdown, YAML, JSON and text formats.
 - Organize notes with metadata like groups, tags and links.
+- Write import plugins like `snippy-tldr`_.
 
 Installation
 ============
@@ -92,3 +93,5 @@ Related work
 .. _development: https://snippy.readthedocs.io/en/latest/development.html
 
 .. _Heroku example: https://snippy-server.herokuapp.com/api/snippets?sall=docker&limit=5
+
+.. _snippy-tldr: https://github.com/heilaaks/snippy-tldr

@@ -201,7 +201,7 @@ class Cli(ConfigSourceBase):
         # migration options
         migrat = parser.add_argument_group(title='migration options', description=Const.NEWLINE.join(Cli.ARGS_MIGRATE))
         migrat_meg = migrat.add_mutually_exclusive_group()
-        migrat_meg.add_argument('-f', '--file', nargs='*', type=Parser.to_unicode, dest='operation_files', default='', help=argparse.SUPPRESS)
+        migrat_meg.add_argument('-f', '--file', nargs='*', type=Parser.to_unicode, dest='operation_files', default='', help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
         migrat_meg.add_argument('--defaults', action='store_true', default=False, help=argparse.SUPPRESS)
         migrat_meg.add_argument('--template', action='store_true', default=False, help=argparse.SUPPRESS)
         migrat.add_argument('--plugin', type=Parser.to_unicode, choices=(self.get_plugin_short_names()), default=argparse.SUPPRESS, help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long

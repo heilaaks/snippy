@@ -11,7 +11,7 @@ Apache Bench
     openssl req -x509 -newkey rsa:4096 -nodes -keyout server.key -out server.crt -days 356 -subj "/C=US/O=Snippy/CN=127.0.0.1"
 
     # Run HTTP server with sqlite backend with commit f9f418256fccaf7f4c1ee3651b21044aba9a8948 (v0.10.0 + 20 commits)
-    docker run -d --net="host" --name snippy heilaaks/snippy:latest --server-host 127.0.0.1:8080 --defaults
+    docker run --env SNIPPY_SERVER_HOST=127.0.0.1:8080 --net=host --name snippy --detach heilaaks/snippy --defaults
     ab -n 10000 -c 1 -k http://127.0.0.1:8080/api/snippy/rest/snippets?limit=20
     This is ApacheBench, Version 2.3 <$Revision: 1826891 $>
     Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/

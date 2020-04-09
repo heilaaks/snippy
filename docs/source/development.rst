@@ -148,6 +148,25 @@ Follow the instructions to install the project on a Fedora Linux.
         deactivate > /dev/null 2>&1
     done
 
+    # Run tests in each virtual environment
+    deactivate > /dev/null 2>&1
+    for VENV in $(lsvirtualenv -b | grep snippy-py)
+    do
+        workon ${VENV}
+        printf "run tests in ${VENV}\033[37G: "
+        if [[ ${VIRTUAL_ENV} == *${VENV}* ]]; then
+            make test > /dev/null 2>&1
+            if [[ $? -eq 0 ]]; then
+                printf "\033[32mOK\033[0m\n"
+            else
+                printf "\e[31mNOK\033[0m\n"
+            fi
+        else
+            printf "\e[31mNOK\033[0m\n"
+        fi
+        deactivate > /dev/null 2>&1
+    done
+
     # Example how to delete Snippy virtual environments.
     deactivate > /dev/null 2>&1
     for VENV in $(lsvirtualenv -b | grep snippy-py)

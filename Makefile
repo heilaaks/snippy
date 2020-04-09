@@ -11,6 +11,7 @@ TAG_VERSION    ?= 0.11.0
 PIP            ?= pip
 PIP_CACHE      ?=
 PIP_PROXY      ?= ""
+PIP_UPGRADE    ?= --upgrade --upgrade-strategy eager
 PYTHON         ?= python
 PYTHON_VERSION ?= $(shell python -c 'import sys; print(sys.version_info[0])')
 INSTALL_USER   ?=
@@ -45,26 +46,26 @@ install:
 	$(PIP) install $(PIP_CACHE) $(QUIET) $(INSTALL_USER) --proxy $(PIP_PROXY) .
 
 upgrade:
-	$(PIP) install --upgrade $(PIP_CACHE) $(QUIET) $(INSTALL_USER) --proxy $(PIP_PROXY) .
+	$(PIP) install $(PIP_UPGRADE) $(PIP_CACHE) $(QUIET) $(INSTALL_USER) --proxy $(PIP_PROXY) .
 
 uninstall:
 	$(PIP) uninstall $(QUIET) --yes snippy
 
 upgrade-wheel:
 	test -x "$(shell which pip)" || $(PYTHON) -m ensurepip $(INSTALL_USER)
-	$(PYTHON) -m pip install $(PIP_CACHE) $(QUIET) $(INSTALL_USER) --proxy $(PIP_PROXY) .[release]
+	$(PYTHON) -m pip install $(PIP_UPGRADE) $(PIP_CACHE) $(QUIET) $(INSTALL_USER) --proxy $(PIP_PROXY) .[release]
 
 install-devel:
-	$(PYTHON) -m pip install $(PIP_CACHE) $(QUIET) $(INSTALL_USER) --proxy $(PIP_PROXY) .[devel]
+	$(PYTHON) -m pip install $(PIP_UPGRADE) $(PIP_CACHE) $(QUIET) $(INSTALL_USER) --proxy $(PIP_PROXY) .[devel]
 
 install-test:
-	$(PYTHON) -m pip install $(PIP_CACHE) $(QUIET) $(INSTALL_USER) --proxy $(PIP_PROXY) .[test]
+	$(PYTHON) -m pip install $(PIP_UPGRADE) $(PIP_CACHE) $(QUIET) $(INSTALL_USER) --proxy $(PIP_PROXY) .[test]
 
 install-server:
-	$(PYTHON) -m pip install $(PIP_CACHE) $(QUIET) $(INSTALL_USER) --proxy $(PIP_PROXY) .[server]
+	$(PYTHON) -m pip install $(PIP_UPGRADE) $(PIP_CACHE) $(QUIET) $(INSTALL_USER) --proxy $(PIP_PROXY) .[server]
 
 install-coverage:
-	$(PYTHON) -m pip install $(PIP_CACHE) $(QUIET) $(INSTALL_USER) --proxy $(PIP_PROXY) codecov coveralls
+	$(PYTHON) -m pip install $(PIP_UPGRADE) $(PIP_CACHE) $(QUIET) $(INSTALL_USER) --proxy $(PIP_PROXY) codecov coveralls
 
 outdated:
 	$(PYTHON) -m pip list --outdated --proxy $(PIP_PROXY)

@@ -219,9 +219,10 @@ class ContentBase(object):  # pylint: disable=too-many-instance-attributes
             collection = Migrate.import_hook()
             self._storage.import_content(collection)
         else:
-            self._logger.debug('importing content: %s', Config.get_operation_file())
-            collection = Migrate.load(Config.get_operation_file())
-            self._storage.import_content(collection)
+            for filename in Config.get_operation_files():
+                self._logger.debug('importing content: %s', filename)
+                collection = Migrate.load(filename)
+                self._storage.import_content(collection)
 
     @Logger.timeit
     def run(self, collection=Collection()):

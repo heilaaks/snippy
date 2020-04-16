@@ -14,7 +14,7 @@ Breaking changes
 New features
 ~~~~~~~~~~~~
 
-* none
+* Add support to import multiple content files with one operation.
 
 Bugfixes
 ~~~~~~~~

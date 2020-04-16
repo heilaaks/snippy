@@ -417,7 +417,7 @@ class Content(object):  # pylint: disable=too-many-public-methods, too-many-line
     def assert_arglist(cls, function, *args, **kwargs):
         """Assert list of call arguments.
 
-        This function compares give list of arguments to mocked function call
+        This function compares given list of arguments to mocked function call
         arguments.
 
         Args:
@@ -426,7 +426,14 @@ class Content(object):  # pylint: disable=too-many-public-methods, too-many-line
             kwargs (dict): Key value argurments.
         """
 
-        assert function.call_args == mock.call(*args, **kwargs)
+        if len(function.call_args_list) == 1:
+            assert function.call_args == mock.call(*args, **kwargs)
+        else:
+            assert function.call_count == len(args[0])
+            calls = []
+            for filename in args[0]:
+                calls.append(mock.call(filename, **kwargs))
+            function.assert_has_calls(calls, any_order=True)
 
     @staticmethod
     def get_api_meta():
@@ -485,6 +492,37 @@ class Content(object):  # pylint: disable=too-many-public-methods, too-many-line
             mocked_file = mocked_file[:-6]  # Remove last separator for Markdown content.
 
         return mock.mock_open(read_data=mocked_file)
+
+    @classmethod
+    def get_file_contents(cls, content_format, contents):
+        """Return multiple mocked files.
+
+        The method returns mocked file content in different content formats.
+        The returned files are a list of mocks where each mock contains one
+        file. This is intended to be used with ``side_effects`` to be able to
+        read multiple files.
+
+        Args:
+            content_format (str): Content format.
+            contents (dict): Content dictionary.
+
+        Returns:
+            tuple: List of mocks where each mock has one file.
+        """
+
+        mocks = []
+        for content in contents['data']:
+            mocked_file = Const.EMPTY
+            if content_format == Content.TEXT:
+                mocked_file = mocked_file + Content.dump_text(content)
+            elif content_format == Content.MKDN:
+                mocked_file = mocked_file + Content.dump_mkdn(content)
+                mocked_file = mocked_file + '\n---\n\n'
+            filemock = mock.MagicMock()
+            filemock.__enter__.return_value.read.return_value = mocked_file
+            mocks.append(filemock)
+
+        return tuple(mocks)
 
     @staticmethod
     def _get_expect_restapi(expect):

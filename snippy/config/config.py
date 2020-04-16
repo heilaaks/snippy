@@ -269,6 +269,7 @@ class Config(object):
         cls.is_category_reference = bool(cls.content_category == Const.REFERENCE)
         cls.is_multi_category = bool(len(cls.search_cat_kws) > 1)
         cls.operation_filename = cls._operation_filename((cls.content_category,))
+        cls.is_multi_filename = bool(len(cls.source.operation_files) > 1)
         cls.operation_file_format = cls._operation_file_format(cls.operation_filename)
         cls.is_operation_file_json = bool(cls.operation_file_format == Const.CONTENT_FORMAT_JSON)
         cls.is_operation_file_mkdn = bool(cls.operation_file_format == Const.CONTENT_FORMAT_MKDN)
@@ -609,6 +610,29 @@ class Config(object):
             cls.is_operation_file_yaml = bool(cls.operation_file_format == Const.CONTENT_FORMAT_YAML)
 
         return filename
+
+    @classmethod
+    def get_operation_files(cls):
+        """Return operation files.
+
+        If there is only one filename, it can be for example extracted from
+        ``--defaults`` or ``--complete`` options. Only if there are multiple
+        files, they are assumed to be a list of content files.
+
+        The method filters out all files which file format is not supported.
+
+        Returns:
+            tuple: Operation filenames.
+        """
+
+        files = (cls.operation_filename,)
+        if len(cls.source.operation_files) > 1:
+            files = []
+            for filename in cls.source.operation_files:
+                if cls._operation_file_format(filename) != Const.CONTENT_FORMAT_NONE:
+                    files.append(filename)
+
+        return files
 
     @classmethod
     def get_plugin_uri(cls):

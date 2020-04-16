@@ -84,8 +84,8 @@ class Server(object):  # pylint: disable=too-few-public-methods
         reference = Content(self.storage, Const.REFERENCE, run_cli=False)
         groups = Fields(self.storage, Const.GROUPS, run_cli=False)
         tags = Fields(self.storage, Const.TAGS, run_cli=False)
-        self.api.req_options.media_handlers.update({'application/vnd.api+json': falcon.media.JSONHandler()})
-        self.api.resp_options.media_handlers.update({'application/vnd.api+json': falcon.media.JSONHandler()})
+        self.api.req_options.media_handlers.update({'application/vnd.api+json': falcon.media.JSONHandler()})  # noqa pylint: disable=no-member, line-too-long
+        self.api.resp_options.media_handlers.update({'application/vnd.api+json': falcon.media.JSONHandler()})  # noqa pylint: disable=no-member, line-too-long
         self.api.add_route(Config.server_base_path_rest.rstrip('/'), ApiHello())
         self.api.add_route(urljoin(Config.server_base_path_rest, 'hello'), ApiHello())
         self.api.add_route(urljoin(Config.server_base_path_rest, 'snippets'), ApiContent(snippet))

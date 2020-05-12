@@ -680,32 +680,41 @@ data:
   updated: '2018-05-07T11:11:55.000001+00:00'
   uuid: d3f5311b-597f-4a66-aa46-8ec99b7eb3b2
   versions: []
-- brief: Manipulate compressed tar files
+- brief: Manipulate tar files
   category: snippet
   created: '2018-05-07T11:13:17.000001+00:00'
   data:
+  - 'tar cvfz mytar.tar.gz ./output/  #  Compress folder to tar.gz.'
   - 'tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./  #  Compress folder excluding
-    the tar.'
-  - 'tar tvf mytar.tar.gz  #  List content of compressed tar.'
-  - 'tar xfO mytar.tar.gz manifest.json  #  Cat file in compressed tar.'
+    a file.'
+  - 'tar tvf mytar.tar.gz  #  List content of compressed tar.gz file.'
+  - 'tar xfO mytar.tar.gz manifest.json  #  Cat file in compressed tar file.'
+  - 'tar -zxvf mytar.tar.gz  #  Extract tar.gz file.'
+  - 'tar -xvf mytar.tar  #  Extract tar file.'
+  - 'tar -C /dir -zxvf mytar.tar.gz  #  Extact tar.gz file into directory.'
   - 'tar -zxvf mytar.tar.gz --exclude "./mytar.tar.gz"  #  Extract and exclude one
     file.'
   - 'tar -xf mytar.tar.gz manifest.json  #  Extract only one file.'
-  description: ''
-  digest: 61014e2d1ec56a9ae6fa71f781221b2706f69c8bd3090bf35af179c7a87f284a
-  filename: ''
+  description: Manipulate tar files combined with optional compression method like
+    gzip or bzip.
+  digest: 929382765798d0c02071643984f684e5092d5775556721a96c2bb48696a81843
+  filename: manipulate-tar-files.md
   groups:
   - linux
   languages: []
-  links: []
-  name: ''
+  links:
+  - https://www.gnu.org/software/tar/
+  name: manipulate tar files
   source: ''
   tags:
+  - bzip
+  - gz
+  - gzip
   - howto
   - linux
   - tar
   - untar
-  updated: '2018-11-06T12:43:55.884902+00:00'
+  updated: '2020-05-12T13:22:45.691036+00:00'
   uuid: e45024fb-264f-4cb8-bef5-f73b12818909
   versions: []
 - brief: Remove all docker containers with volumes
@@ -967,5 +976,5 @@ data:
   versions: []
 meta:
   homepage: https://github.com/heilaaks/snippy
-  updated: '2020-04-30T11:16:46.656720+00:00'
+  updated: '2020-05-12T13:24:23.760386+00:00'
   version: 0.12a0

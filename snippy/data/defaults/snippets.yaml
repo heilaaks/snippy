@@ -900,15 +900,16 @@ data:
   uuid: 1cc165f0-32d5-4431-b374-42d2a5ed0680
   versions:
   - git>=2.9.0
-- brief: Common git workflow
+- brief: Common git workflows
   category: snippet
   created: '2019-05-29T10:32:55.112015+00:00'
   data:
   - 'git branch -a  #  List all branches.'
   - 'git checkout -b branch  #  Create new branch.'
-  - 'git push origin branch  #  Create new branch.'
+  - 'git push origin branch  #  Push new branch to origin.'
   - 'git revert -n SHA  #  Revert commit.'
-  - 'git log --graph --decorate --pretty=oneline --abbrev-commit  #  Pretty print.'
+  - 'git log --graph --decorate --pretty=oneline --abbrev-commit  #  Pretty print
+    log.'
   - 'git rebase --interactive HEAD~N  #  Squash last N commits.'
   - 'git rebase --interactive SHA  #  Squash from the last branched commit.'
   - 'git push origin branch --force  #  Push squashed commits.'
@@ -918,13 +919,16 @@ data:
   - 'git push --delete origin branch  #  Delete remote branch.'
   - 'git branch -d branch  #  Delete local branch.'
   - 'git fetch --prune  #  Prune local branches.'
+  - 'git diff HEAD^  #  Changes in the last commit.'
+  - 'git diff HEAD^^  #  Changes in two commits ago.'
+  - 'git diff b6af6qc  #  Changes from current state to commit.'
   - 'git diff --name-status master  #  Compare changed files in local branch.'
   - 'git diff ci-demo origin/master  #  Compare changed files.'
-  - git tag -a 0.1.0 -m "Add new release 0.1.0"
-  - git push -u origin 0.1.0
+  - 'git tag -a 0.1.0 -m "Add new release 0.1.0"  #  Create annotated tag.'
+  - 'git push -u origin 0.1.0  #  Push new tag to origin.'
   description: Common git workflow for basic development.
-  digest: 31243bc677204d48fdd1965a8705acaf56d219600a3c842901c829a6af560399
-  filename: git-devel-workflow.md
+  digest: fc307ab3cb92058bff5cf07c00a6df466e8da98e7daa5240a17144b2ea41c0cd
+  filename: common-git-workflows.md
   groups:
   - git
   languages: []
@@ -932,12 +936,12 @@ data:
   - https://blog.carbonfive.com/2017/08/28/always-squash-and-rebase-your-git-commits/
   - https://github.com/k88hudson/git-flight-rules
   - https://stackoverflow.com/a/2003515
-  name: git-devel-workflow
+  name: common git workflows
   source: https://github.com/heilaaks/snippy
   tags:
   - git
   - workflow
-  updated: '2019-12-20T10:19:46.838157+00:00'
+  updated: '2020-05-19T12:02:36.732978+00:00'
   uuid: 84c2684e-a0e8-4b32-8608-54c45645c1e1
   versions:
   - git>=2
@@ -952,29 +956,59 @@ data:
   - 'tcpdump -XX -i eth0  #  Display captured packets in hex.'
   - 'tcpdump -n -tttt -i eth0  #  Capture packets with date and time.'
   - 'tcpdump -i eth0 arp  #  Capture ARP packets.'
+  - 'tcpdump -nn host 10.23.136.17  #  Capture traffic to and from host.'
+  - 'tcpdump -nni eth0 dst 10.23.136.17  #  Capture traffic to host.'
+  - 'tcpdump -nni eth0  dst 10.23.136.17 or dst 10.23.136.19  #  Capture traffic to
+    multiple hosts.'
   - 'tcpdump -nni eth0 icmp  #  Capture ICMP - don''t convert IP and port.'
   - 'tcpdump -nni eth0 port 67 or port 68  #  Capture DHCP - don''t convert IP and
     port.'
   - 'tcpdump -nni eth0 -s 0 udp  #  Capture UDP with maximum snaplen.'
   - 'tcpdump -nni eth0 -s 0 udp -w capture-udp.cap  #  Capture UDP traffic to file.'
   - 'tcpdump -nnr capture-udp.cap  #  Read capture file.'
-  description: ''
-  digest: 0c436e52640394fa7fb1df9f4138243f970e990d1c789c63616c135667f1ded7
+  description: Common tcpdump commands for debugging.
+  digest: 41abb8a308e4d0385d643783d44129b37bfb4fee001d264155623b42d8dcb106
   filename: tcpdump-commands.md
   groups:
   - tcpdump
   languages: []
-  links: []
+  links:
+  - https://hackertarget.com/tcpdump-examples
   name: tcpdump commands
   source: ''
   tags:
   - debug
   - linux
   - tcpdump
-  updated: '2020-04-30T11:01:30.792304+00:00'
+  updated: '2020-05-19T13:55:56.505813+00:00'
   uuid: 251c4fe8-3b93-43f9-ab32-dcbc51cd0d46
+  versions: []
+- brief: Common tshark commands
+  category: snippet
+  created: '2020-05-18T09:26:42.780234+00:00'
+  data:
+  - 'dnf install wireshark  #  Install tshark.'
+  - 'tshark -r capture.pcap -z io,phs -q | tr -s '' '' | cut -f 2 -d '' '' | tail
+    -n +7 | head -n -1  #  Protocol statistics.'
+  description: ''
+  digest: 58a21fecdcaea518f5ee98f82d57021b2fb0d327e0591f870b470c5647e90c41
+  filename: tshark-commands.md
+  groups:
+  - tcpdump
+  languages: []
+  links: []
+  name: tshark commands
+  source: ''
+  tags:
+  - debug
+  - linux
+  - tcpdump
+  - tshark
+  - wireshark
+  updated: '2020-05-18T09:26:42.780234+00:00'
+  uuid: 6ce5cb64-fe4f-455a-9bba-1086a73704cf
   versions: []
 meta:
   homepage: https://github.com/heilaaks/snippy
-  updated: '2020-05-12T13:24:23.760386+00:00'
+  updated: '2020-05-19T13:56:03.865031+00:00'
   version: 0.12a0

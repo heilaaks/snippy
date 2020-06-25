@@ -75,6 +75,7 @@ class Cli(ConfigSourceBase):
         '    $    snippet',
         '    :    solution',
         '    >    reference',
+        '    ' + Parser.to_bytes(u'\u2713') + '    todo',
         '    @    group',
         '    #    tag',
         '',
@@ -91,7 +92,6 @@ class Cli(ConfigSourceBase):
         '    List more examples.',
         '      $ snippy --help examples',
         '') + ARGS_COPYRIGHT
-
     ARGS_EXAMPLES = (
         'examples:',
         '    Creating new content:',

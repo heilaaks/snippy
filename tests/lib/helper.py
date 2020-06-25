@@ -41,6 +41,8 @@ class Helper(object):
     to be able to import this module anywhere.
     """
 
+    PYTHON2 = sys.version_info.major == 2
+
     EXPORT_TIME = '2018-02-02T02:02:02.000001+00:00'
     IMPORT_TIME = '2018-03-02T02:02:02.000001+00:00'
     EXPORT_TEMPLATE = '2017-10-14T19:56:31.000001+00:00'
@@ -76,6 +78,24 @@ class Helper(object):
     RE_MATCH_LEADING_WHITEPSACES = re.compile(r'''
         \n\s+   # Match newline and all leading whitespaces after it.
         ''', re.VERBOSE)
+
+    @classmethod
+    def to_bytes(cls, value):
+        """Convert utf-8 encoded unicode string to byte string.
+
+        Args:
+            value (str): Value as a utf-8 encoded unicode string.
+
+        Returns:
+            str: Byte presentation from the utf-8 envoded unicode string.
+        """
+
+        if Helper.PYTHON2:
+            string_ = value.encode('utf-8')
+        else:
+            string_ = value
+
+        return string_
 
     @classmethod
     def read_template(cls, filename):

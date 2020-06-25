@@ -1,5 +1,4 @@
 ## WORKING
-   - [ ] Add support to import -f *.md to read multiple files at once.
    - [ ] Snippet  #  Comment alignment does not work properly with unicode characters. Test importing tldr/pages.zh.
    - [ ] Do not let coveralls to fail build if coverage decreases.
    - [ ] Test test_cli_search_snippet_030 failed with postgre since the resulted snippets were in different order. Something is still random from SQL point of view.

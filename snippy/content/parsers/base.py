@@ -483,8 +483,8 @@ class ContentParserBase(object):
     def to_unicode(cls, value, strip_lines=True):
         """Convert value to utf-8 coded unicode string.
 
-        If the value is already an unicode character, it is assumed that it is
-        a valid utf-8 encoded unicode character.
+        If the give value is already an unicode character, it is assumed that
+        it is a valid utf-8 encoded unicode character.
 
         The conversion quarantees one newline at the end of string.
 
@@ -510,6 +510,24 @@ class ContentParserBase(object):
             string_ = Const.EMPTY
         else:
             cls._logger.debug('conversion to unicode string failed with unknown type %s : %s', type(value), value)
+
+        return string_
+
+    @classmethod
+    def to_bytes(cls, value):
+        """Convert utf-8 encoded unicode string to byte string.
+
+        Args:
+            value (str): Value as a utf-8 encoded unicode string.
+
+        Returns:
+            str: Byte presentation from the utf-8 envoded unicode string.
+        """
+
+        if Const.PYTHON2:
+            string_ = value.encode('utf-8')
+        else:
+            string_ = value
 
         return string_
 

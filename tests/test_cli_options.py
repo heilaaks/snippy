@@ -79,6 +79,7 @@ class TestCliOptions(object):  # pylint: disable=too-many-public-methods
         '    $    snippet',
         '    :    solution',
         '    >    reference',
+        '    ' + Helper.to_bytes(u'\u2713') + '    todo',
         '    @    group',
         '    #    tag',
         '',
@@ -162,7 +163,7 @@ class TestCliOptions(object):  # pylint: disable=too-many-public-methods
         snippy.run()
         snippy.release()
         out, err = capsys.readouterr()
-        assert out == Const.NEWLINE.join(TestCliOptions.HELP)
+        assert Helper.to_bytes(out) == Const.NEWLINE.join(TestCliOptions.HELP)
         assert not err
         assert not caplog.records[:]
         Content.delete()
@@ -178,7 +179,7 @@ class TestCliOptions(object):  # pylint: disable=too-many-public-methods
         snippy.run()
         snippy.release()
         out, err = capsys.readouterr()
-        assert out == Const.NEWLINE.join(TestCliOptions.HELP)
+        assert Helper.to_bytes(out) == Const.NEWLINE.join(TestCliOptions.HELP)
         assert not err
         assert not caplog.records[:]
         Content.delete()
@@ -194,7 +195,7 @@ class TestCliOptions(object):  # pylint: disable=too-many-public-methods
         snippy.run()
         snippy.release()
         out, err = capsys.readouterr()
-        assert out == Const.NEWLINE.join(TestCliOptions.HELP)
+        assert Helper.to_bytes(out) == Const.NEWLINE.join(TestCliOptions.HELP)
         assert not err
         assert not caplog.records[:]
         Content.delete()

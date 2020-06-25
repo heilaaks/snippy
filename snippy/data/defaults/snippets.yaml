@@ -961,13 +961,14 @@ data:
   - 'tcpdump -nni eth0  dst 10.23.136.17 or dst 10.23.136.19  #  Capture traffic to
     multiple hosts.'
   - 'tcpdump -nni eth0 icmp  #  Capture ICMP - don''t convert IP and port.'
+  - 'tcpdump -nni eth0 port 53  #  Capture DNS - don''t convert IP and port.'
   - 'tcpdump -nni eth0 port 67 or port 68  #  Capture DHCP - don''t convert IP and
     port.'
   - 'tcpdump -nni eth0 -s 0 udp  #  Capture UDP with maximum snaplen.'
   - 'tcpdump -nni eth0 -s 0 udp -w capture-udp.cap  #  Capture UDP traffic to file.'
   - 'tcpdump -nnr capture-udp.cap  #  Read capture file.'
   description: Common tcpdump commands for debugging.
-  digest: 41abb8a308e4d0385d643783d44129b37bfb4fee001d264155623b42d8dcb106
+  digest: 79d4df1c12ab3237137affae49b6c1b42f31b4c58c48aad4fe80512e20456328
   filename: tcpdump-commands.md
   groups:
   - tcpdump
@@ -980,7 +981,7 @@ data:
   - debug
   - linux
   - tcpdump
-  updated: '2020-05-19T13:55:56.505813+00:00'
+  updated: '2020-05-28T09:22:58.197870+00:00'
   uuid: 251c4fe8-3b93-43f9-ab32-dcbc51cd0d46
   versions: []
 - brief: Common tshark commands
@@ -1010,5 +1011,5 @@ data:
   versions: []
 meta:
   homepage: https://github.com/heilaaks/snippy
-  updated: '2020-05-19T13:56:03.865031+00:00'
+  updated: '2020-05-28T09:23:26.952908+00:00'
   version: 0.12a0

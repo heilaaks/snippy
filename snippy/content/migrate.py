@@ -45,17 +45,25 @@ class Migrate(object):
 
     @classmethod
     def dump(cls, collection, filename):
-        """Dump collection into file."""
+        """Dump collection into file.
+
+        Args:
+            collection (Collection): List of contents in a collection.
+            filename (str): File path with name where to write the collection.
+
+        Returns:
+            bool: True if disk write was made.
+        """
 
         if not Config.is_supported_file_format():
             cls._logger.debug('file format not supported for file %s', filename)
 
-            return
+            return False
 
         if not collection:
             Cause.push(Cause.HTTP_NOT_FOUND, 'no content found to be exported')
 
-            return
+            return False
 
         cls._logger.debug('exporting contents %s', filename)
         with io.open(filename, mode='w', encoding='utf-8') as outfile:
@@ -78,6 +86,10 @@ class Migrate(object):
             except (IOError, TypeError, ValueError, yaml.YAMLError) as error:
                 cls._logger.exception('fatal failure to generate formatted export file "%s"', error)
                 Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'fatal failure while exporting content to file')
+
+                return False
+
+        return True
 
     @classmethod
     def dump_template(cls, category):

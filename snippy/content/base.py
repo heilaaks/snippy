@@ -182,11 +182,15 @@ class ContentBase(object):  # pylint: disable=too-many-instance-attributes
                 Migrate.dump(collection, filename)
         else:
             if Config.defaults:
+                exported = False
                 for category in Config.search_cat_kws:
                     collection = self._storage.export_content((category,))
                     filename = Config.default_content_file(category)
                     self._logger.debug('exporting all: %s :content to: %s', category, filename)
-                    Migrate.dump(collection, filename)
+                    if collection and Migrate.dump(collection, filename):
+                        exported = True
+                if not exported:
+                    Cause.push(Cause.HTTP_NOT_FOUND, 'no content found to be exported')
             else:
                 collection = self._storage.export_content(Config.search_cat_kws)
                 filename = Config.get_operation_file(collection=collection)

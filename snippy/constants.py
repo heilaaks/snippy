@@ -53,7 +53,7 @@ class Constants(object):  # pylint: disable=too-few-public-methods
     TODO = 'todo'
     ALL_CATEGORIES = 'all'
     UNKNOWN_CATEGORY = 'unknown'
-    CATEGORIES = (SNIPPET, SOLUTION, REFERENCE)
+    CATEGORIES = (SNIPPET, SOLUTION, REFERENCE, TODO)
 
     # Field categories.
     GROUPS = 'groups'
@@ -74,6 +74,7 @@ class Constants(object):  # pylint: disable=too-few-public-methods
 
     # Default values for content fields.
     DEFAULT_GROUPS = ('default',)
+    DEFAULT_TODO_TIMELINE = 'No Timeline'
 
     # Content formats
     CONTENT_FORMAT_DICT = 'dict'

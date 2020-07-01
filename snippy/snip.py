@@ -84,6 +84,8 @@ class Snippy(object):
             Content(self.storage, Const.SOLUTION).run()
         elif Config.is_category_reference:
             Content(self.storage, Const.REFERENCE).run()
+        elif Config.is_category_todo:
+            Content(self.storage, Const.TODO).run()
         elif Config.is_multi_category and (Config.is_operation_search or Config.is_operation_export or Config.is_operation_import):
             AllContent(self.storage).run()
         else:

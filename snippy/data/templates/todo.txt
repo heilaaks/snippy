@@ -1,0 +1,41 @@
+# Commented lines will be ignored.
+#
+# Add mandatory todo items one item per line.
+<data>
+
+# Add optional brief description below.
+<brief>
+
+# Add optional description below.
+<description>
+
+# Add optional name below.
+<name>
+
+# Add optional comma separated list of groups below.
+<groups>
+
+# Add optional comma separated list of tags below.
+<tags>
+
+# Add optional links below one link per line.
+<links>
+
+# Add optional source reference below.
+<source>
+
+# Add optional comma separated list of key-value versions below.
+<versions>
+
+# Add optional comma separated list of languages below.
+<languages>
+
+# Add optional filename below.
+<filename>
+
+# Meta
+category : <category>
+created  : <created>
+digest   : <digest>
+updated  : <updated>
+uuid     : <uuid>

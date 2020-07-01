@@ -393,10 +393,17 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
                         '',
                         '## Whiteboard'
                     )
+                elif category == Const.TODO:
+                    self.data = (
+                        '## Todo',
+                        '',
+                        '   - [ ] Add todo item.',
+                        '',
+                        '## Whiteboard'
+                    )
                 elif category == Const.REFERENCE:
                     if not self.links:
                         self.links = (Parser.EXAMPLE_LINKS.split(Const.DELIMITER_LINKS))
-
             if not self.brief:
                 self.brief = Parser.EXAMPLE_BRIEF
             if not self.description:
@@ -424,12 +431,10 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             if category == Const.REFERENCE:
                 self.data = self.links
             self.digest = self._compute_digest()
-
         if self._is_empty() and category == Const.SOLUTION and template_format == Const.CONTENT_FORMAT_MKDN:
             self.digest = self._compute_digest()
 
         template = Const.EMPTY
-
         if template_format == Const.CONTENT_FORMAT_MKDN:
             template = self.dump_mkdn(templates)
         elif template_format == Const.CONTENT_FORMAT_TEXT:
@@ -477,7 +482,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
 
         is_empty = self._is_empty()
         if is_empty and validate:
-            if self.category in (Const.SNIPPET, Const.SOLUTION):
+            if self.category in (Const.SNIPPET, Const.SOLUTION, Const.TODO):
                 Cause.push(Cause.HTTP_BAD_REQUEST, 'content was not stored because mandatory content field data is empty')
             else:
                 Cause.push(Cause.HTTP_BAD_REQUEST, 'content was not stored because mandatory content field links is empty')
@@ -636,7 +641,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         case of references, the link must be present.
         """
 
-        if self.category in (Const.SNIPPET, Const.SOLUTION) and not any(self.data):
+        if self.category in (Const.SNIPPET, Const.SOLUTION, Const.TODO) and not any(self.data):
             return True
         if self.category == Const.REFERENCE and not any(self.links):
             return True
@@ -657,6 +662,11 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         """Test if resource is reference."""
 
         return bool(self.category == Const.REFERENCE)
+
+    def is_todo(self):
+        """Test if resource is todo."""
+
+        return bool(self.category == Const.TODO)
 
     def is_native_mkdn_solution(self):
         """Test if resource is native Markdown formatted content.
@@ -870,6 +880,8 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
                 data = '```\n'
                 data = data + Const.DELIMITER_DATA.join(self.data[0:-1])
                 data = data + '```'
+        elif self.is_todo():
+            data = data + Const.DELIMITER_DATA.join(self.data)
 
         return data
 
@@ -905,7 +917,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
 
         return links
 
-    def dump_term(self, index, only_headers, use_ansi, debug_logs):  # noqa pylint: disable=too-many-statements, too-many-locals
+    def dump_term(self, index, only_headers, use_ansi, debug_logs):  # noqa pylint: disable=too-many-statements, too-many-locals, too-many-branches
         """Convert resource for terminal output."""
 
         # In order to print unicode characters in Python 2, the strings
@@ -950,6 +962,15 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         elif self.is_reference():
             text = text + header.format(i=index, brief=self.brief, groups=Const.DELIMITER_GROUPS.join(self.groups), digest=self.digest)
             if not only_headers:
+                text = text + Const.NEWLINE
+                text = text + Const.EMPTY.join([links.format(indent=indent, link=link) for link in self.links])
+                text = text + tags.format(indent=indent, tag=Const.DELIMITER_TAGS.join(self.tags))
+                text = text + Const.NEWLINE
+        elif self.is_todo():
+            text = text + header.format(i=index, brief=self.brief, groups=Const.DELIMITER_GROUPS.join(self.groups), digest=self.digest)
+            if not only_headers:
+                text = text + Const.NEWLINE
+                text = text + Const.EMPTY.join([data.format(indent=indent, symbol=u'\u2713', line=line) for line in self.data])
                 text = text + Const.NEWLINE
                 text = text + Const.EMPTY.join([links.format(indent=indent, link=link) for link in self.links])
                 text = text + tags.format(indent=indent, tag=Const.DELIMITER_TAGS.join(self.tags))

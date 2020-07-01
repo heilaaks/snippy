@@ -150,12 +150,14 @@ class Config(object):
             'text': {
                 'snippet': cls._read_resource('data/templates', 'snippet.txt'),
                 'solution': cls._read_resource('data/templates', 'solution.txt'),
-                'reference': cls._read_resource('data/templates', 'reference.txt')
+                'reference': cls._read_resource('data/templates', 'reference.txt'),
+                'todo': cls._read_resource('data/templates', 'todo.txt')
             },
             'mkdn': {
                 'snippet': cls._read_resource('data/templates', 'snippet.md'),
                 'solution': cls._read_resource('data/templates', 'solution.md'),
-                'reference': cls._read_resource('data/templates', 'reference.md')
+                'reference': cls._read_resource('data/templates', 'reference.md'),
+                'todo': cls._read_resource('data/templates', 'todo.md')
             }
         }
         cls.completion = {
@@ -267,6 +269,7 @@ class Config(object):
         cls.is_category_snippet = bool(cls.content_category == Const.SNIPPET)
         cls.is_category_solution = bool(cls.content_category == Const.SOLUTION)
         cls.is_category_reference = bool(cls.content_category == Const.REFERENCE)
+        cls.is_category_todo = bool(cls.content_category == Const.TODO)
         cls.is_multi_category = bool(len(cls.search_cat_kws) > 1)
         cls.operation_filename = cls._operation_filename((cls.content_category,))
         cls.is_multi_filename = bool(len(cls.source.operation_files) > 1)

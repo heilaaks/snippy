@@ -250,7 +250,7 @@ class TestCliCreateReferece(object):
         """
 
         cause = snippy.run(['snippy', 'create', '--scat', 'reference,failure', '--links', 'http://short', '--no-editor'])
-        assert cause == "NOK: content categories ('failure', 'reference') are not a subset of ('snippet', 'solution', 'reference')"
+        assert cause == "NOK: content categories ('failure', 'reference') are not a subset of ('snippet', 'solution', 'reference', 'todo')"
         Content.assert_storage(None)
 
     @staticmethod

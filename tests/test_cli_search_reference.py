@@ -415,10 +415,10 @@ class TestCliSearchReference(object):
         error handling simpler.
         """
 
-        output = "NOK: content categories ('solutions') are not a subset of ('snippet', 'solution', 'reference')\n"
+        output = "NOK: content categories ('solutions') are not a subset of ('snippet', 'solution', 'reference', 'todo')\n"
         cause = snippy.run(['snippy', 'search', '--scat', 'solutions', '--stag', 'howto', '--no-ansi'])
         out, err = capsys.readouterr()
-        assert cause == "NOK: content categories ('solutions') are not a subset of ('snippet', 'solution', 'reference')"
+        assert cause == "NOK: content categories ('solutions') are not a subset of ('snippet', 'solution', 'reference', 'todo')"
         assert out == output
         assert not err
 

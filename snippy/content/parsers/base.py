@@ -31,6 +31,36 @@ from snippy.logger import Logger
 class ContentParserBase(object):
     """Base class for text content parser."""
 
+    # Regexp patterns.
+    RE_MATCH_TODO_TIMELINE = re.compile(r'''
+        (?:
+            No\sTimelin |               # Match timeline special string.
+            Today |                     # Match timeline special string.
+            Tomorrow |                  # Match timeline special string.
+            \d{4}-\d{2}-\d{2}           # Match simplified ISO8601 date.
+            (?:
+                T                       # Match simplified ISO8601 date and time separator.
+                \d{2}\:\d{2}\:\d{2}     # Match Simplified ISO8601 time.
+                (?:
+                    [+-]\d{2}\:\d{2}    # Match timezone offset.
+                    |
+                    Z                   # Match UTC timezone.
+                )
+                |
+                $
+            )
+        )
+        ''', re.VERBOSE)
+
+    RE_CATCH_TODO_ITEMS = re.compile(r'''
+        \s*                         # Match optional spaces before item.
+        [-]{1}\s+                   # Match mandatory hyphen followed by at least one space.
+        [\[]{1}                     # Match mandatory opening bracket.
+        (?P<done>[xX\s]{0,1})       # Catch done status.
+        [\]\s]+                     # Match closing bracket for done status.
+        (?P<item>\s.*)              # Catch todo item.
+        ''', re.VERBOSE)
+
     # Defined in subclasses.
     REGEXP = {}
 
@@ -160,6 +190,8 @@ class ContentParserBase(object):
 
         if category in [Const.SNIPPET, Const.REFERENCE]:
             data = cls.to_unicode(value).rstrip().split(Const.DELIMITER_DATA)
+        elif category == Const.TODO:
+            data = cls.to_unicode(value, strip_lines=False).split(Const.DELIMITER_DATA)
         elif category == Const.SOLUTION:
             data = cls.to_unicode(value, strip_lines=False)
             data = data.rstrip('\r\n').split(Const.NEWLINE) + [Const.EMPTY]
@@ -490,7 +522,7 @@ class ContentParserBase(object):
 
         Args:
             value (str,list,tuple): Value in a string, list or tuple.
-            strip_lines (bool): Defines if all lines are stripped.
+            strip_lines (bool): Defines if all lines are stripped in list.
 
         Returns:
             str: Utf-8 encoded unicode string.

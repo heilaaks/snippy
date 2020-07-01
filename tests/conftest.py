@@ -1159,6 +1159,8 @@ def devel_file_data(mocker):
         'dummy read 5',
         'dummy read 6',
         'dummy read 7',
+        'dummy read 8',
+        'dummy read 9',
         Database.get_schema_data()]
     handle.read.side_effect = lambda: reads.pop(0)
 

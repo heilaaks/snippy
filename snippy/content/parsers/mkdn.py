@@ -53,6 +53,11 @@ class ContentParserMkdn(ContentParserBase):
     REGEXP['data'][Const.REFERENCE] = re.compile(r'''
         \A(?!x)x'       # Never match anything because there is no data in the content.
         ''', re.VERBOSE)
+    REGEXP['data'][Const.TODO] = re.compile(r'''
+        (?:[#]{2}\s[TODOtodo]+)     # Match first second level header with 'TODO' title.
+        (?P<data>.*?)               # Catch todo data till the Meta header.
+        (?:[#]{2}\sWhiteboard)      # Match second level header with 'Whitegoard' title.
+        ''', re.DOTALL | re.VERBOSE)
 
     REGEXP['brief'] = {}
     REGEXP['brief'][Const.SNIPPET] = re.compile(r'''
@@ -62,6 +67,7 @@ class ContentParserMkdn(ContentParserBase):
         ''', re.DOTALL | re.VERBOSE)
     REGEXP['brief'][Const.SOLUTION] = REGEXP['brief'][Const.SNIPPET]
     REGEXP['brief'][Const.REFERENCE] = REGEXP['brief'][Const.SNIPPET]
+    REGEXP['brief'][Const.TODO] = REGEXP['brief'][Const.SNIPPET]
 
     REGEXP['description'] = {}
     REGEXP['description'][Const.SNIPPET] = re.compile(r'''
@@ -72,6 +78,7 @@ class ContentParserMkdn(ContentParserBase):
         ''', re.VERBOSE)
     REGEXP['description'][Const.SOLUTION] = REGEXP['description'][Const.SNIPPET]
     REGEXP['description'][Const.REFERENCE] = REGEXP['description'][Const.SNIPPET]
+    REGEXP['description'][Const.TODO] = REGEXP['description'][Const.SNIPPET]
 
     REGEXP['groups'] = {}
     REGEXP['groups'][Const.SNIPPET] = re.compile(r'''
@@ -82,6 +89,7 @@ class ContentParserMkdn(ContentParserBase):
         ''', re.VERBOSE)
     REGEXP['groups'][Const.SOLUTION] = REGEXP['groups'][Const.SNIPPET]
     REGEXP['groups'][Const.REFERENCE] = REGEXP['groups'][Const.SNIPPET]
+    REGEXP['groups'][Const.TODO] = REGEXP['groups'][Const.SNIPPET]
 
     REGEXP['links'] = {}
     REGEXP['links'][Const.SNIPPET] = re.compile(r'''
@@ -93,6 +101,7 @@ class ContentParserMkdn(ContentParserBase):
         (?P<links>http.*)       # Catch link.
         ''', re.MULTILINE | re.VERBOSE)
     REGEXP['links'][Const.REFERENCE] = REGEXP['links'][Const.SNIPPET]
+    REGEXP['links'][Const.TODO] = REGEXP['links'][Const.SNIPPET]
 
     REGEXP['versions'] = {}
     REGEXP['versions'][Const.SNIPPET] = re.compile(r'''
@@ -102,6 +111,7 @@ class ContentParserMkdn(ContentParserBase):
         ''', re.MULTILINE | re.VERBOSE)
     REGEXP['versions'][Const.SOLUTION] = REGEXP['versions'][Const.SNIPPET]
     REGEXP['versions'][Const.REFERENCE] = REGEXP['versions'][Const.SNIPPET]
+    REGEXP['versions'][Const.TODO] = REGEXP['versions'][Const.SNIPPET]
 
     REGEXP['languages'] = {}
     REGEXP['languages'][Const.SNIPPET] = re.compile(r'''
@@ -111,6 +121,7 @@ class ContentParserMkdn(ContentParserBase):
         ''', re.MULTILINE | re.VERBOSE)
     REGEXP['languages'][Const.SOLUTION] = REGEXP['languages'][Const.SNIPPET]
     REGEXP['languages'][Const.REFERENCE] = REGEXP['languages'][Const.SNIPPET]
+    REGEXP['languages'][Const.TODO] = REGEXP['languages'][Const.SNIPPET]
 
     def __init__(self, timestamp, text, collection):
         """
@@ -212,6 +223,8 @@ class ContentParserMkdn(ContentParserBase):
                 if data.startswith("```") and data.endswith("```"):
                     data = data[3:-3]
                 data = data.strip()
+            elif category == Const.TODO:
+                data = self._todo_data(match)
             self._logger.debug('parsed content data: %s', data)
         else:
             self._logger.debug('parser did not find content for data: %s', text)
@@ -247,6 +260,43 @@ class ContentParserMkdn(ContentParserBase):
                 self._logger.debug('parsed snippet data: %s', data)
             else:
                 self._logger.debug('parser did not find snippet data data: %s', command)
+
+        return tuple(data)
+
+    def _todo_data(self, text):
+        """Parse todo data from Markdown formatted string.
+
+        Args:
+            text (str): Whole TODO data section as a string.
+
+        Returns:
+            tuple: List of commands with optional comments.
+        """
+        data = []
+        text = text[0].strip()
+        match = re.compile(r'''
+            (?:                                         # Match optional comment inside non-capturing set.
+                [#]{3}\s                                # Match third level markdown header followed by a space.
+                (?P<timeline>[\w\s\d+:.-]+?)            # Catch timeline header if it exist.
+            )?                                          # Match header 0 or more times.
+            (?P<todos>\s*[-]\s.*?)                      # Catch todo starting with optional spaces followed by mandatory hyphen and space.
+            (?:                                         # Match a non-capturing set.
+                (?=[#]{3}\s\w+)|$                       # Lookahead next third level markdown header or end of string.
+            )
+            ''', re.DOTALL | re.VERBOSE).finditer(text)
+        for todo in match:
+            timeline = Const.DEFAULT_TODO_TIMELINE
+            if todo.group('timeline') and self.RE_MATCH_TODO_TIMELINE.search(todo.group('timeline')):
+                timeline = todo.group('timeline')
+            if todo.group('todos'):
+                match_todo = self.RE_CATCH_TODO_ITEMS.finditer(todo.group('todos'))
+                if match_todo:
+                    for item in match_todo:
+                        data.append('[{:1s}] {}  # {}'.format(item.group('done').strip(), item.group('item').strip(), timeline))
+            else:
+                self._logger.debug('parsed todo data: %s', data)
+        if not match:
+            self._logger.debug('parser did not find todo data data: %s', text)
 
         return tuple(data)
 

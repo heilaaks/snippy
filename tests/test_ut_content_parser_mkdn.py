@@ -25,7 +25,7 @@ from snippy.content.collection import Collection
 from snippy.content.parsers.mkdn import ContentParserMkdn as Parser
 
 
-class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines
+class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines, too-many-public-methods
     """Test ContentParserMkdn() class."""
 
     TIMESTAMP = '2018-09-09T14:44:00.000001+00:00'
@@ -1882,3 +1882,154 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines
         assert resource.updated == '2018-10-12T11:52:11.000001+00:00'
         assert resource.uuid == 'f21c6318-8830-11e8-a114-2c4d54508088'
         assert resource.digest == '0d1ea43e0200b200175e73b22cb1a9db472251c0250fc2070ea9cc6025ee26f7'
+
+    def test_parser_todo_001(self):
+        """Test parsing todo.
+
+        Test case verifies that standard todo is parsed correctly from a
+        Markdown template.
+        """
+
+        text = Const.NEWLINE.join((
+            '# Testing project @snippy',
+            '',
+            '> This list concentrates on testing project.',
+            '',
+            '## Todo',
+            '',
+            '### No Timeline',
+            '',
+            '   - [ ] Add testing 1',
+            '   - [ ] Add testing 2',
+            '',
+            '### Today',
+            '',
+            '   - [ ] Add testing 3',
+            '   - [ ] Add testing 4',
+            '',
+            '### Tomorrow',
+            '',
+            '   - [ ] Add testing 5',
+            '',
+            '### 2020-06-30',
+            '',
+            '   - [x] Add tests 6',
+            '   - [ ] Add tests 7',
+            '',
+            '### 2020-06-30T11:04:55Z',
+            '',
+            '   - [x] Add tests 8',
+            '',
+            '### 2020-07-30T11:04:55+00:00',
+            '',
+            '   - [x] Add tests 9',
+            '',
+            '### 2020-07-30T11:04:55-03:00',
+            '',
+            '   - [x] Add tests 10',
+            '',
+            '## Whiteboard',
+            '',
+            '## Meta',
+            '',
+            '> category  : todo  ',
+            'created   : 2020-06-30T12:01:22.807515+00:00  ',
+            'digest    : 1bc24930149be8d12f856f5eccbbcde61f7b7f9992fd3fa3e9e114be46059577  ',
+            'filename  : example-content.md  ',
+            'languages : example-language  ',
+            'name      : example content handle  ',
+            'source    : https://www.example.com/source.md  ',
+            'tags      : example,tags  ',
+            'updated   : 2020-06-30T12:01:22.807515+00:00  ',
+            'uuid      : dad78e19-1e3a-4d12-b4c7-acb3151e33fe  ',
+            'versions  : example=3.9.0,python>=3  ',
+            '',
+        ))
+        data = (
+            '[ ] Add testing 1  # No Timeline',
+            '[ ] Add testing 2  # No Timeline',
+            '[ ] Add testing 3  # Today',
+            '[ ] Add testing 4  # Today',
+            '[ ] Add testing 5  # Tomorrow',
+            '[x] Add tests 6  # 2020-06-30',
+            '[ ] Add tests 7  # 2020-06-30',
+            '[x] Add tests 8  # 2020-06-30T11:04:55Z',
+            '[x] Add tests 9  # 2020-07-30T11:04:55+00:00',
+            '[x] Add tests 10  # 2020-07-30T11:04:55-03:00',
+        )
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
+        assert resource.category == Const.TODO
+        assert resource.data == data
+        assert resource.brief == 'Testing project'
+        assert resource.description == 'This list concentrates on testing project.'
+        assert resource.name == ''
+        assert resource.groups == ('snippy',)
+        assert resource.tags == ()
+        assert resource.links == ()
+        assert resource.source == ''
+        assert resource.versions == ()
+        assert resource.languages == ()
+        assert resource.filename == ''
+        assert resource.created == '2020-06-30T12:01:22.807515+00:00'
+        assert resource.updated == '2020-06-30T12:01:22.807515+00:00'
+        assert resource.uuid == 'dad78e19-1e3a-4d12-b4c7-acb3151e33fe'
+        assert resource.digest == 'bfbf050474095ba9a5bfe2fa972370df1c91f95302aee272838291412c3d6b33'
+
+    def test_parser_todo_002(self):
+        """Test parsing todo.
+
+        Test case verifies that simplified todo is parsed correctly from a
+        Markdown template.
+        """
+
+        text = Const.NEWLINE.join((
+            '# Test todo @snippy',
+            '',
+            '>',
+            '',
+            '## Todo',
+            '',
+            '- [ ] Add todo item 1.',
+            '- [ ] Add todo item 2.',
+            '',
+            '## Whiteboard',
+            '',
+            '## Meta',
+            '',
+            '> category  : todo',
+            'created   : 2020-07-01T11:17:34.512824+00:00',
+            'digest    : 9d212abf8b48c8753738eac00eeed79c3f7a3bbb9b094b2aa8ee554195d320d8',
+            'filename  :',
+            'languages :',
+            'name      :',
+            'source    :',
+            'tags      :',
+            'updated   : 2020-07-01T11:23:50.244185+00:00',
+            'uuid      : 361f7a5c-4863-4ee9-af1c-4f911fe864d1',
+            'versions  :',
+            '',        ))
+        data = (
+            '[ ] Add todo item 1.  # No Timeline',
+            '[ ] Add todo item 2.  # No Timeline',
+        )
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
+        assert resource.category == Const.TODO
+        assert resource.data == data
+        assert resource.brief == 'Test todo'
+        assert resource.description == ''
+        assert resource.name == ''
+        assert resource.groups == ('snippy',)
+        assert resource.tags == ()
+        assert resource.links == ()
+        assert resource.source == ''
+        assert resource.versions == ()
+        assert resource.languages == ()
+        assert resource.filename == ''
+        assert resource.created == '2020-07-01T11:17:34.512824+00:00'
+        assert resource.updated == '2020-07-01T11:23:50.244185+00:00'
+        assert resource.uuid == '361f7a5c-4863-4ee9-af1c-4f911fe864d1'
+        assert resource.digest == '15a085e068a8fbc70b239d83150db1fc6cbc6714d993f4936d945ba64f0f364e'

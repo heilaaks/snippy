@@ -881,7 +881,9 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
                 data = data + Const.DELIMITER_DATA.join(self.data[0:-1])
                 data = data + '```'
         elif self.is_todo():
-            data = data + Const.DELIMITER_DATA.join(self.data)
+            for todo in self.data:
+                data = data + "- " + todo + Const.NEWLINE
+            data = data.rstrip()
 
         return data
 

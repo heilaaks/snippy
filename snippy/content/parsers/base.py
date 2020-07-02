@@ -54,7 +54,7 @@ class ContentParserBase(object):
 
     RE_CATCH_TODO_ITEMS = re.compile(r'''
         \s*                         # Match optional spaces before item.
-        [-]{1}\s+                   # Match mandatory hyphen followed by at least one space.
+        [-]*\s*                     # Match optional hyphen followed by optional space.
         [\[]{1}                     # Match mandatory opening bracket.
         (?P<done>[xX\s]{0,1})       # Catch done status.
         [\]\s]+                     # Match closing bracket for done status.

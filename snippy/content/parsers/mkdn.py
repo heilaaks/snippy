@@ -279,7 +279,9 @@ class ContentParserMkdn(ContentParserBase):
                 [#]{3}\s                                # Match third level markdown header followed by a space.
                 (?P<timeline>[\w\s\d+:.-]+?)            # Catch timeline header if it exist.
             )?                                          # Match header 0 or more times.
-            (?P<todos>\s*[-]\s.*?)                      # Catch todo starting with optional spaces followed by mandatory hyphen and space.
+            (?P<todos>\s*[-]*\s*                        # Catch todo starting with optional spaces followed by optional hyphen and space.
+                [\[]{1}.*?                              # Todo items must start with square bracket.
+            )
             (?:                                         # Match a non-capturing set.
                 (?=[#]{3}\s\w+)|$                       # Lookahead next third level markdown header or end of string.
             )

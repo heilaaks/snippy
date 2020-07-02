@@ -2033,3 +2033,60 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines, too-ma
         assert resource.updated == '2020-07-01T11:23:50.244185+00:00'
         assert resource.uuid == '361f7a5c-4863-4ee9-af1c-4f911fe864d1'
         assert resource.digest == '15a085e068a8fbc70b239d83150db1fc6cbc6714d993f4936d945ba64f0f364e'
+
+    def test_parser_todo_003(self):
+        """Test parsing todo.
+
+        Test case verifies that simplified todo without hyphen in front of
+        each todo itme is parsed correctly from a Markdown template.
+        """
+
+        text = Const.NEWLINE.join((
+            '# Test todo @snippy',
+            '',
+            '>',
+            '',
+            '## Todo',
+            '',
+            '[ ] Add todo item 1.',
+            '[ ] Add todo item 2.',
+            '',
+            '## Whiteboard',
+            '',
+            '## Meta',
+            '',
+            '> category  : todo',
+            'created   : 2020-07-01T11:17:34.512824+00:00',
+            'digest    : 9d212abf8b48c8753738eac00eeed79c3f7a3bbb9b094b2aa8ee554195d320d8',
+            'filename  :',
+            'languages :',
+            'name      :',
+            'source    :',
+            'tags      :',
+            'updated   : 2020-07-01T11:23:50.244185+00:00',
+            'uuid      : 361f7a5c-4863-4ee9-af1c-4f911fe864d1',
+            'versions  :',
+            '',        ))
+        data = (
+            '[ ] Add todo item 1.  # No Timeline',
+            '[ ] Add todo item 2.  # No Timeline',
+        )
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
+        assert resource.category == Const.TODO
+        assert resource.data == data
+        assert resource.brief == 'Test todo'
+        assert resource.description == ''
+        assert resource.name == ''
+        assert resource.groups == ('snippy',)
+        assert resource.tags == ()
+        assert resource.links == ()
+        assert resource.source == ''
+        assert resource.versions == ()
+        assert resource.languages == ()
+        assert resource.filename == ''
+        assert resource.created == '2020-07-01T11:17:34.512824+00:00'
+        assert resource.updated == '2020-07-01T11:23:50.244185+00:00'
+        assert resource.uuid == '361f7a5c-4863-4ee9-af1c-4f911fe864d1'
+        assert resource.digest == '15a085e068a8fbc70b239d83150db1fc6cbc6714d993f4936d945ba64f0f364e'

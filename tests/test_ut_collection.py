@@ -236,6 +236,7 @@ class TestUtCollection(object):
             '   $ tar xfO mytar.tar.gz manifest.json# Cat file in compressed tar.',
             '',
             '   # howto,linux,tar,untar',
+            '   > ',
             '',
             '   ! category    : snippet',
             '   ! created     : 2018-02-02T02:02:02.000001+00:00',

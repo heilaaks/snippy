@@ -940,6 +940,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             digest = u'{indent}! {key}{align}: {value} ({test})\n'
 
         text = Const.EMPTY
+        links_ = self.links if self.links else ('',)  # Force the link symbol '>' if there are no links.
         if self.is_snippet():
             aligned_data = self._align_snippet_comments(self.data, use_ansi)
             text = text + header.format(i=index, brief=self.brief, groups=Const.DELIMITER_GROUPS.join(self.groups), digest=self.digest)
@@ -948,14 +949,14 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
                 text = text + Const.EMPTY.join([data.format(indent=indent, symbol='$', line=line) for line in aligned_data])
                 text = text + Const.NEWLINE
                 text = text + tags.format(indent=indent, tag=Const.DELIMITER_TAGS.join(self.tags))
-                text = text + Const.EMPTY.join([links.format(indent=indent, link=link) for link in self.links])
+                text = text + Const.EMPTY.join([links.format(indent=indent, link=link) for link in links_])
                 text = text + Const.NEWLINE
         elif self.is_solution():
             text = text + header.format(i=index, brief=self.brief, groups=Const.DELIMITER_GROUPS.join(self.groups), digest=self.digest)
             if not only_headers:
                 text = text + Const.NEWLINE
                 text = text + tags.format(indent=indent, tag=Const.DELIMITER_TAGS.join(self.tags))
-                text = text + Const.EMPTY.join([links.format(indent=indent, link=link) for link in self.links])
+                text = text + Const.EMPTY.join([links.format(indent=indent, link=link) for link in links_])
                 text = text + Const.NEWLINE
                 text = text + Const.EMPTY.join([data.format(indent=indent, symbol=':', line=line) for line in self.data])
                 text = text + Const.NEWLINE
@@ -963,7 +964,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             text = text + header.format(i=index, brief=self.brief, groups=Const.DELIMITER_GROUPS.join(self.groups), digest=self.digest)
             if not only_headers:
                 text = text + Const.NEWLINE
-                text = text + Const.EMPTY.join([links.format(indent=indent, link=link) for link in self.links])
+                text = text + Const.EMPTY.join([links.format(indent=indent, link=link) for link in links_])
                 text = text + tags.format(indent=indent, tag=Const.DELIMITER_TAGS.join(self.tags))
                 text = text + Const.NEWLINE
         elif self.is_todo():
@@ -972,8 +973,8 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
                 text = text + Const.NEWLINE
                 text = text + Const.EMPTY.join([data.format(indent=indent, symbol=u'\u2713', line=line) for line in self.data])
                 text = text + Const.NEWLINE
-                text = text + Const.EMPTY.join([links.format(indent=indent, link=link) for link in self.links])
                 text = text + tags.format(indent=indent, tag=Const.DELIMITER_TAGS.join(self.tags))
+                text = text + Const.EMPTY.join([links.format(indent=indent, link=link) for link in links_])
                 text = text + Const.NEWLINE
         else:
             self._logger.debug('internal error with content category: %s', self.category)

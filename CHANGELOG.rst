@@ -19,6 +19,9 @@ New features
 Bugfixes
 ~~~~~~~~
 
+* Fix exception with empty ``--scat`` command line option.
+* Fix incorrect error message when exporting defaults.
+* Fix missing link symbol '>' from terminal output if there were no links.
 * All commits in `0.12.0`_.
 
 Security

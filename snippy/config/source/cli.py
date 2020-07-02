@@ -172,7 +172,7 @@ class Cli(ConfigSourceBase):
 
         # content category
         content = parser.add_argument_group(title='content category', description=Const.NEWLINE.join(Cli.ARGS_CATEGORY))
-        content.add_argument('--scat', nargs='*', type=Parser.to_unicode, default=Const.SNIPPET, help=argparse.SUPPRESS)
+        content.add_argument('--scat', nargs='+', type=Parser.to_unicode, default=Const.SNIPPET, help=argparse.SUPPRESS)
 
         # editing options
         options = parser.add_argument_group(title='edit options', description=Const.NEWLINE.join(Cli.ARGS_EDITOR))

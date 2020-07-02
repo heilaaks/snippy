@@ -364,6 +364,28 @@ class TestCliOptions(object):  # pylint: disable=too-many-public-methods
         Content.delete()
 
     @staticmethod
+    def test_help_option_011(capsys, caplog):
+        """Test invalid command line option.
+
+        Try to run snippy with ``--scat`` option without any value.
+        """
+
+        output = (
+            'usage: snippy [-v, --version] [-h, --help] <operation> [<options>] [-vv] [-q]',
+            'snippy: error: argument --scat: expected at least one argument',
+            ''
+        )
+        snippy = Snippy(['snippy', '--scat'])
+        snippy.run()
+        snippy.release()
+        out, err = capsys.readouterr()
+        assert out == Const.EMPTY
+        assert err == Const.NEWLINE.join(output)
+        assert not caplog.records[:]
+        Content.delete()
+
+
+    @staticmethod
     @pytest.mark.parametrize('snippy', [['-vv']], indirect=True)
     def test_very_verbose_option_001(snippy, caplog, capsys):
         """Test printing logs with the very verbose option.

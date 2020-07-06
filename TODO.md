@@ -1,5 +1,6 @@
 ## WORKING
-   - [ ] Fix missing > if no links in text output.
+   - [ ] Add todo tests that updates without changes. Reveals problems well.
+   - [ ] Allow python runner update -d 04653b397d64a736 --done 4ec86f
    - [ ] Snippet  #  Comment alignment does not work properly with unicode characters. Test importing tldr/pages.zh.
    - [ ] Do not let coveralls to fail build if coverage decreases.
    - [ ] Test test_cli_search_snippet_030 failed with postgre since the resulted snippets were in different order. Something is still random from SQL point of view.

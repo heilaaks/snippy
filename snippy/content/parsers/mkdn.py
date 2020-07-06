@@ -295,9 +295,10 @@ class ContentParserMkdn(ContentParserBase):
                 if match_todo:
                     for item in match_todo:
                         if item.group('timeline'):
-                            data.append('[{:1s}] {}  # {}'.format(item.group('done').strip(), item.group('item').strip(), item.group('timeline')))  # noqa pylint: disable=line-too-long
+                            string_ = '[{:1s}] {}  # {}'.format(item.group('done').strip(), item.group('item').strip(), item.group('timeline'))  # noqa pylint: disable=line-too-long
                         else:
-                            data.append('[{:1s}] {}  # {}'.format(item.group('done').strip(), item.group('item').strip(), timeline))
+                            string_ = '[{:1s}] {}  # {}'.format(item.group('done').strip(), item.group('item').strip(), timeline)
+                        data.append('{} [{}]'.format(string_, self.compute_digest(string_)[:6]))
             else:
                 self._logger.debug('parsed todo data: %s', data)
         if not match:

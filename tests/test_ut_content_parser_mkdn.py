@@ -1946,16 +1946,16 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines, too-ma
             '',
         ))
         data = (
-            '[ ] Add testing 1  # No Timeline',
-            '[ ] Add testing 2  # No Timeline',
-            '[ ] Add testing 3  # Today',
-            '[ ] Add testing 4  # Today',
-            '[ ] Add testing 5  # Tomorrow',
-            '[x] Add tests 6  # 2020-06-30',
-            '[ ] Add tests 7  # 2020-06-30',
-            '[x] Add tests 8  # 2020-06-30T11:04:55Z',
-            '[x] Add tests 9  # 2020-07-30T11:04:55+00:00',
-            '[x] Add tests 10  # 2020-07-30T11:04:55-03:00',
+            '[ ] Add testing 1  # No Timeline [b2daee]',
+            '[ ] Add testing 2  # No Timeline [176d77]',
+            '[ ] Add testing 3  # Today [e48988]',
+            '[ ] Add testing 4  # Today [f5b0bf]',
+            '[ ] Add testing 5  # Tomorrow [2e08ef]',
+            '[x] Add tests 6  # 2020-06-30 [074c05]',
+            '[ ] Add tests 7  # 2020-06-30 [e638ae]',
+            '[x] Add tests 8  # 2020-06-30T11:04:55Z [c6afa6]',
+            '[x] Add tests 9  # 2020-07-30T11:04:55+00:00 [b68155]',
+            '[x] Add tests 10  # 2020-07-30T11:04:55-03:00 [ceb704]',
         )
         collection = Collection()
         Parser(self.TIMESTAMP, text, collection).read_collection()
@@ -1975,7 +1975,7 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines, too-ma
         assert resource.created == '2020-06-30T12:01:22.807515+00:00'
         assert resource.updated == '2020-06-30T12:01:22.807515+00:00'
         assert resource.uuid == 'dad78e19-1e3a-4d12-b4c7-acb3151e33fe'
-        assert resource.digest == 'bfbf050474095ba9a5bfe2fa972370df1c91f95302aee272838291412c3d6b33'
+        assert resource.digest == '2ed530b44be33af9c909133c8bfd1b577734974b0c730970d778b73129bffd3e'
 
     def test_parser_todo_002(self):
         """Test parsing todo.
@@ -2011,8 +2011,8 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines, too-ma
             'versions  :',
             '',        ))
         data = (
-            '[ ] Add todo item 1.  # No Timeline',
-            '[ ] Add todo item 2.  # No Timeline',
+            '[ ] Add todo item 1.  # No Timeline [4ec86f]',
+            '[ ] Add todo item 2.  # No Timeline [f77d8f]',
         )
         collection = Collection()
         Parser(self.TIMESTAMP, text, collection).read_collection()
@@ -2032,7 +2032,7 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines, too-ma
         assert resource.created == '2020-07-01T11:17:34.512824+00:00'
         assert resource.updated == '2020-07-01T11:23:50.244185+00:00'
         assert resource.uuid == '361f7a5c-4863-4ee9-af1c-4f911fe864d1'
-        assert resource.digest == '15a085e068a8fbc70b239d83150db1fc6cbc6714d993f4936d945ba64f0f364e'
+        assert resource.digest == '66b26b492c81afdef6a93d9e6929d546a27cae9dce2591c08200bd6de35f6125'
 
     def test_parser_todo_003(self):
         """Test parsing todo.
@@ -2068,8 +2068,8 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines, too-ma
             'versions  :',
             '',        ))
         data = (
-            '[ ] Add todo item 1.  # No Timeline',
-            '[ ] Add todo item 2.  # No Timeline',
+            '[ ] Add todo item 1.  # No Timeline [4ec86f]',
+            '[ ] Add todo item 2.  # No Timeline [f77d8f]',
         )
         collection = Collection()
         Parser(self.TIMESTAMP, text, collection).read_collection()
@@ -2089,7 +2089,7 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines, too-ma
         assert resource.created == '2020-07-01T11:17:34.512824+00:00'
         assert resource.updated == '2020-07-01T11:23:50.244185+00:00'
         assert resource.uuid == '361f7a5c-4863-4ee9-af1c-4f911fe864d1'
-        assert resource.digest == '15a085e068a8fbc70b239d83150db1fc6cbc6714d993f4936d945ba64f0f364e'
+        assert resource.digest == '66b26b492c81afdef6a93d9e6929d546a27cae9dce2591c08200bd6de35f6125'
 
     def test_parser_todo_004(self):
         """Test parsing todo.
@@ -2135,17 +2135,17 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines, too-ma
             'versions  :',
             '',        ))
         data = (
-            '[ ] Add todo item 1.  # No Timeline',
-            '[ ] Add todo item 2.  # No Timeline',
-            '[ ] Add testing 3  # Today',
-            '[ ] Add testing 4  # No Timeline',
-            '[ ] Add testing 5  # Today',
-            '[ ] Add testing 6  # Tomorrow',
-            '[x] Add tests 7  # 2020-06-30',
-            '[ ] Add tests 8  # 2020-06-30',
-            '[x] Add tests 9  # 2020-06-30T11:04:55Z',
-            '[x] Add tests 10  # 2020-07-30T11:04:55+00:00',
-            '[x] Add tests 11  # 2020-07-30T11:04:55+00:00',
+            '[ ] Add todo item 1.  # No Timeline [4ec86f]',
+            '[ ] Add todo item 2.  # No Timeline [f77d8f]',
+            '[ ] Add testing 3  # Today [e48988]',
+            '[ ] Add testing 4  # No Timeline [b10324]',
+            '[ ] Add testing 5  # Today [23f5c5]',
+            '[ ] Add testing 6  # Tomorrow [41c3f6]',
+            '[x] Add tests 7  # 2020-06-30 [b7805f]',
+            '[ ] Add tests 8  # 2020-06-30 [911f47]',
+            '[x] Add tests 9  # 2020-06-30T11:04:55Z [202a96]',
+            '[x] Add tests 10  # 2020-07-30T11:04:55+00:00 [f40c77]',
+            '[x] Add tests 11  # 2020-07-30T11:04:55+00:00 [38f409]',
         )
         collection = Collection()
         Parser(self.TIMESTAMP, text, collection).read_collection()
@@ -2165,4 +2165,4 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines, too-ma
         assert resource.created == '2020-07-01T11:17:34.512824+00:00'
         assert resource.updated == '2020-07-01T11:23:50.244185+00:00'
         assert resource.uuid == '361f7a5c-4863-4ee9-af1c-4f911fe864d1'
-        assert resource.digest == '01c6ca3a21e72a5650fe3b7a128326c0f44dbd013164039698acc984d68b24de'
+        assert resource.digest == '5d359df5af9b34e0b3e2094c556321f1774b70e7a400a4bc15e79584db1cf62d'

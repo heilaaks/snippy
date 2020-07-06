@@ -20,6 +20,7 @@
 
 """base: Base class for content parsers."""
 
+import hashlib
 import re
 from collections import OrderedDict
 
@@ -55,16 +56,22 @@ class ContentParserBase(object):
         ''' % RE_TODO_TIMELINE, re.VERBOSE)
 
     RE_CATCH_TODO_ITEMS = re.compile(r'''
-        \s*                         # Match optional spaces before item.
-        [-]*\s*                     # Match optional hyphen followed by optional space.
-        [\[]{1}                     # Match mandatory opening bracket.
-        (?P<done>[xX\s]{0,1})       # Catch done status.
-        [\]\s]+                     # Match closing bracket followed by spaces for done status.
-        (?P<item>.+?)               # Catch todo item.
+        \s*                             # Match optional spaces before item.
+        [-]*\s*                         # Match optional hyphen followed by optional space.
+        [\[]{1}                         # Match mandatory opening bracket.
+        (?P<done>[xX\s]{0,1})           # Catch done status.
+        [\]\s]+                         # Match closing bracket followed by spaces for done status.
+        (?P<item>.+?)                   # Catch todo item.
         (?:
-            \s+[#]{1}\s+            # Match optional timeline which starts with space(s) and a hash.
-            (?P<timeline>%s)        # Catch timeline if it exists.
-        )?$                         # Match optional timeline.
+            \s+[#]{1}\s+                # Match optional timeline which starts with space(s) and a hash.
+            (?P<timeline>%s)            # Catch optional timeline.
+        )?
+        (?:
+            \s+\[                       # Match spaces and square brackets before digest.
+            (?P<digest>[\[\]0-9a-z]+)   # Catch optional digest.
+            \]                          # Match square brancket after digest.
+        )?
+        $                               # Match end of line if optional timeline and digest were missing.
         ''' % RE_TODO_TIMELINE, re.MULTILINE | re.VERBOSE)
 
     # Defined in subclasses.
@@ -716,3 +723,16 @@ class ContentParserBase(object):
             self._logger.debug('parser did not find content for key: %s :from metadata: %s', key, text)
 
         return self.format_string(meta)
+
+    @staticmethod
+    def compute_digest(text):
+        """Compute digest from the data.
+
+        Args:
+            text (str): Text string.
+
+        Returns:
+            str: Checksum as a hex string.
+        """
+
+        return hashlib.sha256(text.encode('UTF-8')).hexdigest()

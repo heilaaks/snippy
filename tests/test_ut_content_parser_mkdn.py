@@ -2090,3 +2090,79 @@ class TestUtContentParserMkdn(object):  # pylint: disable=too-many-lines, too-ma
         assert resource.updated == '2020-07-01T11:23:50.244185+00:00'
         assert resource.uuid == '361f7a5c-4863-4ee9-af1c-4f911fe864d1'
         assert resource.digest == '15a085e068a8fbc70b239d83150db1fc6cbc6714d993f4936d945ba64f0f364e'
+
+    def test_parser_todo_004(self):
+        """Test parsing todo.
+
+        Test case verifies that parsing TODO from filled template is parsed
+        correct. The timeline in the comment must not be part of the todo
+        item.
+        """
+
+        text = Const.NEWLINE.join((
+            '# Test todo @snippy',
+            '',
+            '>',
+            '',
+            '## Todo',
+            '',
+            '[ ] Add todo item 1.  # No Timeline',
+            '[ ] Add todo item 2.  # No Timeline',
+            '[ ] Add testing 3  # Today',
+            '[ ] Add testing 4',
+            '[ ] Add testing 5  # Today',
+            '[ ] Add testing 6  # Tomorrow',
+            '[x] Add tests 7  # 2020-06-30',
+            '[ ] Add tests 8  # 2020-06-30',
+            '[x] Add tests 9  # 2020-06-30T11:04:55Z',
+            '[x] Add tests 10  # 2020-07-30T11:04:55+00:00',
+            '[x] Add tests 11  # 2020-07-30T11:04:55+00:00',
+            '',
+            '## Whiteboard',
+            '',
+            '## Meta',
+            '',
+            '> category  : todo',
+            'created   : 2020-07-01T11:17:34.512824+00:00',
+            'digest    : 9d212abf8b48c8753738eac00eeed79c3f7a3bbb9b094b2aa8ee554195d320d8',
+            'filename  :',
+            'languages :',
+            'name      :',
+            'source    :',
+            'tags      :',
+            'updated   : 2020-07-01T11:23:50.244185+00:00',
+            'uuid      : 361f7a5c-4863-4ee9-af1c-4f911fe864d1',
+            'versions  :',
+            '',        ))
+        data = (
+            '[ ] Add todo item 1.  # No Timeline',
+            '[ ] Add todo item 2.  # No Timeline',
+            '[ ] Add testing 3  # Today',
+            '[ ] Add testing 4  # No Timeline',
+            '[ ] Add testing 5  # Today',
+            '[ ] Add testing 6  # Tomorrow',
+            '[x] Add tests 7  # 2020-06-30',
+            '[ ] Add tests 8  # 2020-06-30',
+            '[x] Add tests 9  # 2020-06-30T11:04:55Z',
+            '[x] Add tests 10  # 2020-07-30T11:04:55+00:00',
+            '[x] Add tests 11  # 2020-07-30T11:04:55+00:00',
+        )
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
+        assert resource.category == Const.TODO
+        assert resource.data == data
+        assert resource.brief == 'Test todo'
+        assert resource.description == ''
+        assert resource.name == ''
+        assert resource.groups == ('snippy',)
+        assert resource.tags == ()
+        assert resource.links == ()
+        assert resource.source == ''
+        assert resource.versions == ()
+        assert resource.languages == ()
+        assert resource.filename == ''
+        assert resource.created == '2020-07-01T11:17:34.512824+00:00'
+        assert resource.updated == '2020-07-01T11:23:50.244185+00:00'
+        assert resource.uuid == '361f7a5c-4863-4ee9-af1c-4f911fe864d1'
+        assert resource.digest == '01c6ca3a21e72a5650fe3b7a128326c0f44dbd013164039698acc984d68b24de'

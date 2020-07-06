@@ -32,34 +32,40 @@ class ContentParserBase(object):
     """Base class for text content parser."""
 
     # Regexp patterns.
-    RE_MATCH_TODO_TIMELINE = re.compile(r'''
+    RE_TODO_TIMELINE = r"""
+        No\sTimeline |              # Match timeline special string.
+        Today |                     # Match timeline special string.
+        Tomorrow |                  # Match timeline special string.
+        \d{4}-\d{2}-\d{2}           # Match simplified ISO8601 date.
         (?:
-            No\sTimelin |               # Match timeline special string.
-            Today |                     # Match timeline special string.
-            Tomorrow |                  # Match timeline special string.
-            \d{4}-\d{2}-\d{2}           # Match simplified ISO8601 date.
+            T                       # Match simplified ISO8601 date and time separator.
+            \d{2}\:\d{2}\:\d{2}     # Match Simplified ISO8601 time.
             (?:
-                T                       # Match simplified ISO8601 date and time separator.
-                \d{2}\:\d{2}\:\d{2}     # Match Simplified ISO8601 time.
-                (?:
-                    [+-]\d{2}\:\d{2}    # Match timezone offset.
-                    |
-                    Z                   # Match UTC timezone.
-                )
+                [+-]\d{2}\:\d{2}    # Match timezone offset.
                 |
-                $
+                Z                   # Match UTC timezone.
             )
+            |
+            $
         )
-        ''', re.VERBOSE)
+    """
+
+    RE_MATCH_TODO_TIMELINE = re.compile(r'''
+        (?:%s)
+        ''' % RE_TODO_TIMELINE, re.VERBOSE)
 
     RE_CATCH_TODO_ITEMS = re.compile(r'''
         \s*                         # Match optional spaces before item.
         [-]*\s*                     # Match optional hyphen followed by optional space.
         [\[]{1}                     # Match mandatory opening bracket.
         (?P<done>[xX\s]{0,1})       # Catch done status.
-        [\]\s]+                     # Match closing bracket for done status.
-        (?P<item>\s.*)              # Catch todo item.
-        ''', re.VERBOSE)
+        [\]\s]+                     # Match closing bracket followed by spaces for done status.
+        (?P<item>.+?)               # Catch todo item.
+        (?:
+            \s+[#]{1}\s+            # Match optional timeline which starts with space(s) and a hash.
+            (?P<timeline>%s)        # Catch timeline if it exists.
+        )?$                         # Match optional timeline.
+        ''' % RE_TODO_TIMELINE, re.MULTILINE | re.VERBOSE)
 
     # Defined in subclasses.
     REGEXP = {}

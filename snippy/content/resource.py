@@ -395,11 +395,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
                     )
                 elif category == Const.TODO:
                     self.data = (
-                        '## Todo',
-                        '',
-                        '   - [ ] Add todo item.',
-                        '',
-                        '## Whiteboard'
+                        '[ ] Add todo item.',
                     )
                 elif category == Const.REFERENCE:
                     if not self.links:

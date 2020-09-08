@@ -54,6 +54,7 @@ from tests.lib.helper import Helper
 from tests.lib.reference import Reference
 from tests.lib.snippet import Snippet
 from tests.lib.solution import Solution
+from tests.lib.todo import Todo
 from tests.lib.database import Database
 
 # Calls to Config.utcnow()
@@ -152,6 +153,10 @@ EDITED_GITLOG = (GITLOG_CREATED,)*1
 UPDATE_GITLOG = (GITLOG_CREATED,)*2
 UPDATE_REGEXP = (REGEXP_CREATED,)*2
 UPDATE_PYTEST = (PYTEST_CREATED,)*2
+
+# Todos
+CREATE_DEFMKD = (Todo.DEFMKD_CREATED,)*1
+CREATE_DEPLOY = (Todo.DEPLOY_CREATED,)*1
 
 # Templates
 EXPORT_TEMPLATE = Helper.EXPORT_TEMPLATE
@@ -924,7 +929,22 @@ def import_gitlog_solution(mocker, snippy):
     contents = [Reference.PYTEST]
     _import_resources(snippy, mocker, contents)
 
+## Todos
+
+@pytest.fixture(scope='function', name='create-defmkd-utc')
+def create_defmkd_time_mock(mocker):
+    """Mock timestamps to create 'defmkd' todo."""
+
+    mocker.patch.object(Config, 'utcnow', side_effect=CREATE_DEFMKD)
+
+@pytest.fixture(scope='function', name='create-deploy-utc')
+def create_deploy_time_mock(mocker):
+    """Mock timestamps to create 'deploy' todo."""
+
+    mocker.patch.object(Config, 'utcnow', side_effect=CREATE_DEPLOY)
+
 ## Templates
+
 @pytest.fixture(scope='function', name='template-utc')
 def export_template_time_mock(mocker):
     """Mock timestamps to export solution template."""

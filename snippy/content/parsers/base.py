@@ -38,7 +38,7 @@ class ContentParserBase(object):
         Today |                     # Match timeline special string.
         Tomorrow |                  # Match timeline special string.
         \d{4}-\d{2}-\d{2}           # Match simplified ISO8601 date.
-        (?:
+        (?:                         # Match optional time.
             T                       # Match simplified ISO8601 date and time separator.
             \d{2}\:\d{2}\:\d{2}     # Match Simplified ISO8601 time.
             (?:
@@ -48,7 +48,7 @@ class ContentParserBase(object):
             )
             |
             $
-        )
+        )?
     """
 
     RE_MATCH_TODO_TIMELINE = re.compile(r'''

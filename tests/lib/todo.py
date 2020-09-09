@@ -50,12 +50,24 @@ class Todo(object):  # pylint: disable=too-few-public-methods
         'digest': 'fb0544e8817b654994a1295dc47a46af616350c35c468a3084699f8579d1546e'
     }, {
         'category': 'todo',
-        'data': ('docker rm --volumes $(docker ps --all --quiet)',),
-        'brief': 'Remove all docker containers with volumes',
+        'data': (
+            '[ ] Add testing  # No Timeline [94c789]',
+            '[ ] Add testing  # No Timeline [94c789]',
+            '[ ] Add testing  # Today [259876]',
+            '[ ] Add testing  # Today [259876]',
+            '[x] Add tests  # 2020-06-30 [3038c4]',
+            '[ ] Add tests  # 2020-06-30 [c8f811]',
+            '[ ] Add tests  # 2020-06-30 [c8f811]',
+            '[ ] Add tests  # 2020-06-30 [c8f811]',
+            '[x] Add tests 9  # 2020-06-30T11:04:55Z [202a96]',
+            '[x] Add tests 10  # 2020-07-30T11:04:55+00:00 [f40c77]',
+            '[x] Add tests 11  # 2020-07-30T11:04:55+00:00 [38f409]',
+        ),
+        'brief': 'Test deploy',
         'description': '',
         'name': '',
-        'groups': ('testing',),
-        'tags': ('todo', 'testing'),
+        'groups': ('snippy',),
+        'tags': ('deploy', 'testing', 'todo'),
         'links': (),
         'source': '',
         'versions': (),
@@ -63,17 +75,22 @@ class Todo(object):  # pylint: disable=too-few-public-methods
         'filename': '',
         'created': DEFAULT_TIME,
         'updated': DEFAULT_TIME,
-        'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
-        'digest': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319'
+        'uuid': 'a1cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+        'digest': 'f3fa4d98677f117121a2c6ab8a416b28afae0030db1d630c246f18cecc206edf'
     })
 
     DEFMKD_CREATED = _DEFAULTS[_DEFMKD]['created']
-    DEFMKD_UPDATED = _DEFAULTS[_DEPLOY]['updated']
-    DEPLOY_CREATED = _DEFAULTS[_DEFMKD]['created']
+    DEFMKD_UPDATED = _DEFAULTS[_DEFMKD]['updated']
+    DEPLOY_CREATED = _DEFAULTS[_DEPLOY]['created']
     DEPLOY_UPDATED = _DEFAULTS[_DEPLOY]['updated']
 
     if not DEFAULT_TIME == DEFMKD_CREATED == DEFMKD_UPDATED == DEPLOY_CREATED == DEPLOY_UPDATED:
         raise Exception('default content timestamps must be same - see \'Test case layouts and data structures\'')
+
+    DEFMKD_DIGEST = _DEFAULTS[_DEFMKD]['digest']
+    DEPLOY_DIGEST = _DEFAULTS[_DEPLOY]['digest']
+    DEFMKD_UUID = _DEFAULTS[_DEFMKD]['uuid']
+    DEPLOY_UUID = _DEFAULTS[_DEPLOY]['uuid']
 
     DEFMKD = _DEFAULTS[_DEFMKD]
     DEPLOY = _DEFAULTS[_DEPLOY]

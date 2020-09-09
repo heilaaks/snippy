@@ -1,6 +1,6 @@
 ## WORKING
+   - [ ] Fix identical todo tasks that produce the same checksum.
    - [ ] Fix storing of txt and mkdn templates in todo content.
-   - [ ] Add todo tests that updates without changes. Reveals problems well.
    - [ ] Allow python runner update -d 04653b397d64a736 --done 4ec86f
    - [ ] Snippet  #  Comment alignment does not work properly with unicode characters. Test importing tldr/pages.zh.
    - [ ] Do not let coveralls to fail build if coverage decreases.

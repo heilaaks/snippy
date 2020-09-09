@@ -182,7 +182,6 @@ class Snippet(object):  # pylint: disable=too-few-public-methods
     UMOUNT_UUID = _DEFAULTS[_UMOUNT]['uuid']
     INTERP_UUID = _DEFAULTS[_INTERP]['uuid']
 
-
     REMOVE = _DEFAULTS[_REMOVE]
     FORCED = _DEFAULTS[_FORCED]
     EXITED = _DEFAULTS[_EXITED]

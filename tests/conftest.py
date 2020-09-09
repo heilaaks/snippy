@@ -157,6 +157,7 @@ UPDATE_PYTEST = (PYTEST_CREATED,)*2
 # Todos
 CREATE_DEFMKD = (Todo.DEFMKD_CREATED,)*1
 CREATE_DEPLOY = (Todo.DEPLOY_CREATED,)*1
+UPDATE_DEPLOY = (Todo.DEPLOY_CREATED,)*2
 
 # Templates
 EXPORT_TEMPLATE = Helper.EXPORT_TEMPLATE
@@ -937,11 +938,24 @@ def create_defmkd_time_mock(mocker):
 
     mocker.patch.object(Config, 'utcnow', side_effect=CREATE_DEFMKD)
 
+@pytest.fixture(scope='function', name='import-deploy')
+def import_deploy_todo(mocker, snippy):
+    """Import 'deploy' todo for testing purposes."""
+
+    contents = [Todo.DEPLOY]
+    _import_resources(snippy, mocker, contents)
+
 @pytest.fixture(scope='function', name='create-deploy-utc')
 def create_deploy_time_mock(mocker):
     """Mock timestamps to create 'deploy' todo."""
 
     mocker.patch.object(Config, 'utcnow', side_effect=CREATE_DEPLOY)
+
+@pytest.fixture(scope='function', name='update-deploy-utc')
+def update_deploy_time_mock(mocker):
+    """Mock timestamps to update 'deploy' todo."""
+
+    mocker.patch.object(Config, 'utcnow', side_effect=UPDATE_DEPLOY)
 
 ## Templates
 

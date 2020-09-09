@@ -1,6 +1,5 @@
 ## WORKING
    - [ ] Fix storing of txt and mkdn templates in todo content.
-   - [ ] Change TODO character to ! mark. This highlights must do now! The existing is indicating already done and it is outside ascii 128 which creates wider output.
    - [ ] Add todo tests that updates without changes. Reveals problems well.
    - [ ] Allow python runner update -d 04653b397d64a736 --done 4ec86f
    - [ ] Snippet  #  Comment alignment does not work properly with unicode characters. Test importing tldr/pages.zh.

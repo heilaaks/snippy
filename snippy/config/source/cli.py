@@ -75,7 +75,7 @@ class Cli(ConfigSourceBase):
         '    $    snippet',
         '    :    solution',
         '    >    reference',
-        '    ' + Parser.to_bytes(u'\u2713') + '    todo',
+        '    !    todo',
         '    @    group',
         '    #    tag',
         '',

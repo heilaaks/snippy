@@ -969,7 +969,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             text = text + header.format(i=index, brief=self.brief, groups=Const.DELIMITER_GROUPS.join(self.groups), digest=self.digest)
             if not only_headers:
                 text = text + Const.NEWLINE
-                text = text + Const.EMPTY.join([data.format(indent=indent, symbol=u'\u2713', line=line) for line in self.data])
+                text = text + Const.EMPTY.join([data.format(indent=indent, symbol='!', line=line) for line in self.data])
                 text = text + Const.NEWLINE
                 text = text + tags.format(indent=indent, tag=Const.DELIMITER_TAGS.join(self.tags))
                 text = text + Const.EMPTY.join([links.format(indent=indent, link=link) for link in links_])

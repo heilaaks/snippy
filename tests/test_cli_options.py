@@ -79,7 +79,7 @@ class TestCliOptions(object):  # pylint: disable=too-many-public-methods
         '    $    snippet',
         '    :    solution',
         '    >    reference',
-        '    ' + Helper.to_bytes(u'\u2713') + '    todo',
+        '    !    todo',
         '    @    group',
         '    #    tag',
         '',

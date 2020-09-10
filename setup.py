@@ -39,6 +39,7 @@ EXTRAS_SERVER = (
     'jsonschema==3.2.0',
     'psycopg2==2.8.5 ; platform_python_implementation=="CPython"',
     'psycopg2cffi==2.8.1 ; platform_python_implementation=="PyPy"',
+    'pyrsistent==0.16 ; python_version=="2.7" or python_version=="3.4"',  # To get jsonschema to install in Python 2.7 and 3.4.
 )
 EXTRAS_DEV = (
     'colorama        ; python_version!="3.4"',  # To get openapi2jsonschema to install in Python 3.4.
@@ -54,8 +55,8 @@ EXTRAS_DOCS = (
     'sphinx-autobuild==0.7.1',
 )
 EXTRAS_RELEASE = (
-    'readme-renderer      ; python_version!="3.4"',  # To get twine to install in Python3.4.
-    'readme-renderer<25.0 ; python_version=="3.4"',  # To get twine to install in Python3.4.
+    'readme-renderer      ; python_version!="3.4"',  # To get twine to install in Python 3.4.
+    'readme-renderer<25.0 ; python_version=="3.4"',  # To get twine to install in Python 3.4.
     'setuptools',
     'twine       ; python_version!="3.4"',
     'twine<2.0.0 ; python_version=="3.4"',

@@ -300,20 +300,20 @@ data:
   data:
   - find . -type d -name .git -exec sh -c "cd \"{}\"/../ && pwd && git pull" \;
   description: ''
-  digest: ca12adbd62ce818e05ef6d48b5396ba04eaf0b485ffa6c7386d980bf01e408bc
-  filename: ''
+  digest: f9cdb6c6982f6baf0c44e1d066fdaac9745ebfa383f3cbd40dd0c237137020b4
+  filename: git-recursive-pull.md
   groups:
   - git
   languages: []
   links:
   - http://snipplr.com/view/62314/perform-git-pull-on-subdirectory-recursive/
   - https://stackoverflow.com/questions/3497123/run-git-pull-over-all-subdirectories
-  name: ''
+  name: recursive git pull
   source: ''
   tags:
   - git
   - pull
-  updated: '2017-11-07T07:58:46.000001+00:00'
+  updated: '2020-09-30T08:06:57.510600+00:00'
   uuid: 413308cc-b0c8-4efd-bedb-700055e736bc
   versions: []
 - brief: List git commit log headers
@@ -618,19 +618,19 @@ data:
   - find . -type d -name '.git' | while read dir ; do sh -c "cd $dir/../ && echo -e
     \"\nGIT STATUS IN ${dir//\.git/}\" && git status -s" ; done
   description: ''
-  digest: 9e1949c2810df2a50137f0a4056b7992529b37632d9db0da7040d17bf16f5bd3
-  filename: ''
+  digest: dc07c934af78b9db516be02e9b88aa8d774371a1c00ff17473f5bc996af6ac1d
+  filename: git-recursive-status.md
   groups:
   - git
   languages: []
   links:
   - https://gist.github.com/tafkey/664266c00387c98631b3
-  name: ''
-  source: ''
+  name: recursive git status
+  source: https://gist.github.com/tafkey/664266c00387c98631b3
   tags:
   - git
   - status
-  updated: '2018-01-11T07:59:46.000001+00:00'
+  updated: '2020-09-30T08:12:01.641108+00:00'
   uuid: 11affea1-29e4-4be7-b727-466737eb9025
   versions: []
 - brief: Kill zombie processes
@@ -1009,7 +1009,30 @@ data:
   updated: '2020-05-18T09:26:42.780234+00:00'
   uuid: 6ce5cb64-fe4f-455a-9bba-1086a73704cf
   versions: []
+- brief: Perform recursive checkout from GitLab group
+  category: snippet
+  created: '2020-09-30T07:52:14.194114+00:00'
+  data:
+  - for repo in $(curl "https://<host>/api/v4/groups/<group>?private_token=<token>"
+    | jq .projects[].ssh_url_to_repo | tr -d '"'); do git clone $repo; done;
+  description: ''
+  digest: c9cb9a5b55cef4800cd01e4f9792a01470de95531065cf2cd1e1225db01b1663
+  filename: gitlab-group-checkout.md
+  groups:
+  - git
+  languages: []
+  links:
+  - https://stackoverflow.com/a/56679722
+  name: recursive gitlab checkout
+  source: https://stackoverflow.com/a/56679722
+  tags:
+  - checkout
+  - git
+  - gitlab
+  updated: '2020-09-30T07:52:14.194114+00:00'
+  uuid: e103cace-96cd-4225-a21f-b580d0cb4142
+  versions: []
 meta:
   homepage: https://github.com/heilaaks/snippy
-  updated: '2020-05-28T09:23:26.952908+00:00'
+  updated: '2020-09-30T08:13:16.118824+00:00'
   version: 0.12a0

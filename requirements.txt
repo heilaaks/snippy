@@ -6,3 +6,4 @@ importlib_metadata
 jsonschema==3.2.0
 psycopg2==2.8.4
 pyyaml
+zipp>=3.19.1 # not directly required, pinned by Snyk to avoid a vulnerability
